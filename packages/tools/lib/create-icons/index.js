@@ -73,6 +73,10 @@ const svgTemplate = (pathData, viewBox) => `<svg xmlns="http://www.w3.org/2000/s
 const createIcons = async (argv) => {
 	const collectionName = argv[2] || "SAP-icons-v4";
 	const collectionVersion = argv[3];
+	// --skip-wrappers: when multiple versions are built in parallel, each run would
+	// overwrite the shared top-level wrapper files (dist/accept.js etc.). To avoid
+	// the race, all but the last version pass --skip-wrappers; the last one writes them.
+	const skipWrappers = argv.includes("--skip-wrappers");
 	const srcFile = collectionVersion ? path.normalize(`src/${collectionVersion}/${collectionName}.json`) : path.normalize(`src/${collectionName}.json`);
 	const destDir = collectionVersion ? path.normalize(`dist/${collectionVersion}/`) : path.normalize("dist/");
 	await fs.mkdir(destDir, { recursive: true });
@@ -100,8 +104,9 @@ const createIcons = async (argv) => {
 		// For example, the top level "@ui5/ui5-webcomponents-icons/dist/accept.js" imports:
 		// - "@ui5/ui5-webcomponents-icons/dist/v5/accept.js"
 		// - "@ui5/ui5-webcomponents-icons/dist/v4/accept.js"
+		// --skip-wrappers lets parallel version runs omit this step; the last version run writes them.
 
-		if (versioned) {
+		if (versioned && !skipWrappers) {
 			// The exported value from the top level (unversioned) icon module depends on whether the collection is the default,
 			// to add or not the collection name to the exported value:
 			// For the default collection (SAPIcons) we export just the icon name - "export default { 'accept' }"
