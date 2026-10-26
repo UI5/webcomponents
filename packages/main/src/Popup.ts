@@ -696,19 +696,26 @@ abstract class Popup extends UI5Element {
 	 */
 	_getInertPath(): Array<HTMLElement> {
 		const path: Array<HTMLElement> = [];
-		let element: HTMLElement = this;
 
-		for (;;) {
-			path.push(element);
+		Popup._collectInertPath(this, path);
 
-			const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+		return path;
+	}
 
-			if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
-				return path;
-			}
+	/**
+	 * Adds the given element to the path and continues with its parent element,
+	 * crossing shadow DOM boundaries, until the document is reached.
+	 */
+	static _collectInertPath(element: HTMLElement, path: Array<HTMLElement>) {
+		path.push(element);
 
-			element = ((parent as ShadowRoot).host || parent) as HTMLElement;
+		const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+
+		if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+			return;
 		}
+
+		Popup._collectInertPath(((parent as ShadowRoot).host || parent) as HTMLElement, path);
 	}
 
 	/**
@@ -723,13 +730,13 @@ abstract class Popup extends UI5Element {
 			return;
 		}
 
-		for (const child of Array.from(parent.children)) {
+		Array.from(parent.children).forEach(child => {
 			if (child !== element && Popup._shouldBeInert(child)) {
 				child.setAttribute("inert", "");
 				child.setAttribute(POPUP_INERT_ATTR, "");
 				this._inertElements.push(child as HTMLElement);
 			}
-		}
+		});
 	}
 
 	/**
