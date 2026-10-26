@@ -45,6 +45,18 @@ createBlockingStyle();
 
 const pageScrollingBlockers = new Set<Popup>();
 
+/**
+ * Marks an element whose `inert` attribute was set by a popup (and therefore should be
+ * cleared again when the popup closes). Elements that were already `inert` before the
+ * popup opened do not get this marker, so their author-set `inert` is left untouched.
+ */
+const POPUP_INERT_ATTR = "data-ui5-dialog-old-no-inert";
+
+/**
+ * Elements that are not rendered and therefore must not be marked as `inert`.
+ */
+const NON_RENDERED_ELEMENTS = ["SCRIPT", "STYLE", "LINK", "META", "TEMPLATE", "TITLE", "BASE", "HEAD"];
+
 type PopupScrollEventDetail = {
 	scrollTop: number;
 	targetRef: HTMLElement;
@@ -253,6 +265,8 @@ abstract class Popup extends UI5Element {
 	_opened = false;
 	_open = false;
 	_resizeHandlerRegistered = false;
+	_inertElements: Array<HTMLElement> = [];
+	_unInertedElements: Array<HTMLElement> = [];
 
 	constructor() {
 		super();
@@ -309,6 +323,7 @@ abstract class Popup extends UI5Element {
 			this._removeOpenedPopup();
 		}
 
+		this._revertInert();
 		this._deregisterResizeHandler();
 		this._detachBrowserEvents();
 		this._deregisterInvisibleMessageRegion();
@@ -670,7 +685,145 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
+			this._escapeInertness();
 		}
+	}
+
+	/**
+	 * Returns the path from the popup to the top-most element of the DOM tree,
+	 * crossing shadow DOM boundaries.
+	 * @protected
+	 */
+	_getInertPath(): Array<HTMLElement> {
+		const path: Array<HTMLElement> = [];
+		let element: HTMLElement = this;
+
+		for (;;) {
+			path.push(element);
+
+			const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+
+			if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+				return path;
+			}
+
+			element = ((parent as ShadowRoot).host || parent) as HTMLElement;
+		}
+	}
+
+	/**
+	 * Marks all siblings of the given element as `inert`, so they become non-focusable,
+	 * non-clickable and hidden from assistive technology.
+	 * @protected
+	 */
+	_inertSiblings(element: HTMLElement) {
+		const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+
+		if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+			return;
+		}
+
+		for (const child of Array.from(parent.children)) {
+			if (child !== element && Popup._shouldBeInert(child)) {
+				child.setAttribute("inert", "");
+				child.setAttribute(POPUP_INERT_ATTR, "");
+				this._inertElements.push(child as HTMLElement);
+			}
+		}
+	}
+
+	/**
+	 * Popups are displayed in the top layer, but still inherit the `inert` state of their DOM
+	 * ancestors. Therefore, when a popup is opened from within a branch that another popup has
+	 * marked as `inert`, the inertness is "pushed down" - the ancestors of this popup are no longer
+	 * `inert`, but their remaining content is, so the modality of the other popup is preserved.
+	 *
+	 * The changes are reverted when this popup closes.
+	 * @protected
+	 */
+	_escapeInertness() {
+		const path = this._getInertPath();
+		let lastInertIndex = -1;
+
+		path.forEach((element, index) => {
+			if (index > 0 && Popup._isInertedByPopup(element)) {
+				lastInertIndex = index;
+			}
+		});
+
+		if (lastInertIndex === -1) {
+			return;
+		}
+
+		for (let index = 0; index <= lastInertIndex; index++) {
+			const element = path[index];
+
+			if (index > 0 && Popup._isInertedByPopup(element)) {
+				element.removeAttribute("inert");
+				this._unInertedElements.push(element);
+			}
+
+			if (index < lastInertIndex) {
+				this._inertSiblings(element);
+			}
+		}
+	}
+
+	/**
+	 * Reverts the `inert` attribute on the elements this popup marked with `POPUP_INERT_ATTR`
+	 * and restores the `inert` of the ancestors this popup has cleared, in case the popup that
+	 * has set it is still open. Any author-set `inert` is left untouched.
+	 * @protected
+	 */
+	_revertInert() {
+		this._inertElements.forEach(element => {
+			if (element.hasAttribute(POPUP_INERT_ATTR)) {
+				element.removeAttribute("inert");
+				element.removeAttribute(POPUP_INERT_ATTR);
+			}
+		});
+
+		this._unInertedElements.forEach(element => {
+			if (element.hasAttribute(POPUP_INERT_ATTR)) {
+				element.setAttribute("inert", "");
+			}
+		});
+
+		this._inertElements = [];
+		this._unInertedElements = [];
+	}
+
+	/**
+	 * Determines whether the given element should be marked as `inert` by a popup.
+	 */
+	static _shouldBeInert(element: Element) {
+		if (NON_RENDERED_ELEMENTS.includes(element.tagName)) {
+			return false;
+		}
+
+		// an author-set "inert", as well as an "inert", set by another popup, must not be touched
+		if (element.hasAttribute("inert")) {
+			return false;
+		}
+
+		// elements in the top layer (open popups) are not part of the background,
+		// as well as popups that could be opened on top of this one later on
+		return !element.matches(":popover-open") && !Popup._isPopup(element);
+	}
+
+	/**
+	 * Determines whether the `inert` of the given element is managed by a popup.
+	 */
+	static _isInertedByPopup(element: Element) {
+		return element.hasAttribute(POPUP_INERT_ATTR) && element.hasAttribute("inert");
+	}
+
+	/**
+	 * Duck-typing check whether the given element is a popup (popover, dialog, menu, etc.),
+	 * as such elements are displayed in the top layer and must not be inerted.
+	 */
+	static _isPopup(element: Element) {
+		return "isModal" in element && "open" in element;
 	}
 
 	_registerResizeHandler() {
@@ -692,6 +845,7 @@ abstract class Popup extends UI5Element {
 	 * @protected
 	 */
 	hide() {
+		this._revertInert();
 		this.isConnected && this.hidePopover();
 	}
 

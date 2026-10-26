@@ -51,13 +51,6 @@ import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
  */
 const STEP_SIZE = 16;
 
-/**
- * Marks an element whose `inert` attribute was set by a dialog (and therefore should be
- * cleared again when the dialog closes). Elements that were already `inert` before the
- * dialog opened do not get this marker, so their author-set `inert` is left untouched.
- */
-const OLD_NO_INERT_ATTR = "data-ui5-dialog-old-no-inert";
-
 const FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES = {
 	ariaKeyShortcuts: "Shift+Ctrl+F",
 };
@@ -484,72 +477,17 @@ class Dialog extends Popup {
 	}
 
 	/**
-	 * @override
-	 */
-	hide() {
-		this._removeInert();
-		super.hide();
-	}
-
-	/**
-	 * @override
-	 */
-	onExitDOM() {
-		this._removeInert();
-		super.onExitDOM();
-	}
-
-	/**
 	 * Mirrors the native `<dialog>.showModal()` behavior by marking everything
 	 * outside the dialog's branch as `inert`, so background content becomes
 	 * non-focusable, non-clickable and hidden from assistive technology.
 	 *
-	 * Elements inerted by the dialog are tagged with `OLD_NO_INERT_ATTR` so they can be
-	 * reverted on close, while elements that were already `inert` are left untouched.
+	 * Elements inerted by the dialog are tagged so they can be reverted on close
+	 * (see `Popup#_revertInert`), while elements that were already `inert` are left untouched.
 	 * @private
 	 */
 	_setInert() {
-		if (!this.isModal || !this.isConnected) {
-			return;
-		}
-
-		let current: HTMLElement = this;
-		let parent = current.parentElement;
-
-		while (parent) {
-			for (const child of Array.from(parent.children) as Array<HTMLElement>) {
-				// skip the dialog's own ancestor branch and any open popup (e.g. an already-open dialog)
-				if (child === current || child.hasAttribute("popover")) {
-					continue;
-				}
-
-				// never touch (and therefore never later clear) an author-set inert
-				if (!child.inert) {
-					child.inert = true;
-					child.setAttribute(OLD_NO_INERT_ATTR, "");
-				}
-			}
-
-			if (parent === document.body) {
-				break;
-			}
-
-			current = parent;
-			parent = current.parentElement;
-		}
-	}
-
-	/**
-	 * Reverts the `inert` attribute on the elements this dialog marked with
-	 * `OLD_NO_INERT_ATTR`, leaving any author-set `inert` untouched.
-	 * @private
-	 */
-	_removeInert() {
-		const inertedElements = document.querySelectorAll<HTMLElement>(`[${OLD_NO_INERT_ATTR}]`);
-
-		inertedElements.forEach(element => {
-			element.inert = false;
-			element.removeAttribute(OLD_NO_INERT_ATTR);
+		this._getInertPath().forEach(element => {
+			this._inertSiblings(element);
 		});
 	}
 

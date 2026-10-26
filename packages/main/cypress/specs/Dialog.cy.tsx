@@ -12,6 +12,7 @@ import Toolbar from "../../src/Toolbar.js";
 import ToolbarButton from "../../src/ToolbarButton.js";
 import Tokenizer from "../../src/Tokenizer.js";
 import Token from "../../src/Token.js";
+import Popover from "../../src/Popover.js";
 import {
 	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
 	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
@@ -2276,5 +2277,89 @@ describe("Inert background", () => {
 		cy.get("#dialog2").invoke("prop", "open", false);
 
 		cy.get("#dialog1").should("not.have.attr", "inert");
+	});
+
+	it("does not inherit inert from an inerted ancestor when opened", () => {
+		cy.mount(
+			<>
+				<div id="wrapper1">
+					<Dialog id="dialog1">
+						<Button id="inside1">Inside 1</Button>
+					</Dialog>
+				</div>
+				<div id="wrapper2">
+					<button id="background2"></button>
+					<Dialog id="dialog2">
+						<Button id="inside2">Inside 2</Button>
+					</Dialog>
+				</div>
+			</>
+		);
+
+		cy.get("#dialog1").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get("#wrapper2").should("have.attr", "inert");
+
+		// a dialog, opened from within the first one, must be interactive
+		cy.get("#dialog2").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog2").ui5DialogOpened();
+
+		cy.get("#wrapper2").should("not.have.attr", "inert");
+		cy.get("#background2").should("have.attr", "inert");
+		cy.get("#wrapper1").should("have.attr", "inert");
+
+		cy.get("#inside2").realClick();
+		cy.get("#inside2").should("be.focused");
+
+		cy.get("#dialog2").invoke("prop", "open", false);
+
+		// the inert state, set by the first dialog, is restored
+		cy.get("#wrapper2").should("have.attr", "inert");
+		cy.get("#wrapper1").should("not.have.attr", "inert");
+
+		cy.get("#dialog1").invoke("prop", "open", false);
+
+		cy.get("#wrapper2").should("not.have.attr", "inert");
+	});
+
+	it("does not inert a popover, opened from within the dialog", () => {
+		cy.mount(
+			<>
+				<div id="wrapper1">
+					<Dialog id="dialogId">
+						<Button id="inside">Inside</Button>
+					</Dialog>
+				</div>
+				<div id="wrapper2">
+					<button id="background2"></button>
+					<Popover id="popoverId" opener="inside">
+						<Button id="insidePopover">Inside Popover</Button>
+					</Popover>
+				</div>
+			</>
+		);
+
+		cy.get("#dialogId").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialogId").ui5DialogOpened();
+
+		cy.get("#wrapper2").should("have.attr", "inert");
+
+		cy.get("#popoverId").invoke("prop", "open", true);
+		cy.get("#popoverId").should("have.attr", "open");
+
+		// the popover must be interactive, but the background around it - not
+		cy.get("#wrapper2").should("not.have.attr", "inert");
+		cy.get("#popoverId").should("not.have.attr", "inert");
+		cy.get("#background2").should("have.attr", "inert");
+
+		cy.get("#insidePopover").realClick();
+		cy.get("#insidePopover").should("be.focused");
+
+		cy.get("#popoverId").invoke("prop", "open", false);
+
+		// the inert state, set by the dialog, is restored
+		cy.get("#wrapper2").should("have.attr", "inert");
+		cy.get("#background2").should("not.have.attr", "inert");
 	});
 });
