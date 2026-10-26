@@ -176,7 +176,7 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get hasSecondaryCalendarType() {
-		return !!this.secondaryCalendarType && this.secondaryCalendarType !== this.primaryCalendarType;
+		return !!this._secondaryCalendarType && this._secondaryCalendarType !== this._primaryCalendarType;
 	}
 
 	_getMinMaxCalendarDateFromString(date: string) {
