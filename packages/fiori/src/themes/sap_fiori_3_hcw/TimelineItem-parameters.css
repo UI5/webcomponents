@@ -5,7 +5,7 @@
 	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.6875rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_timeline_tli_indicator_after_height: 50%;
 		--_ui5_timeline_tli_indicator_after_top: -50%;

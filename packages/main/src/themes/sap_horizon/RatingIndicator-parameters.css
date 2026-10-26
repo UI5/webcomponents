@@ -6,7 +6,7 @@
 	--_ui5_rating_indicator_readonly_item_spacing: 0.1875rem 0.1875rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_rating_indicator_item_height: 1em;
 		--_ui5_rating_indicator_item_width: 1em;
