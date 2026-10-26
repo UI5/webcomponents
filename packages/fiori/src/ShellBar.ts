@@ -555,10 +555,7 @@ class ShellBar extends UI5Element {
 	accessibility: ShellBarAccessibility = new ShellBarAccessibility();
 
 	private _searchAdaptor = new ShellBarSearch(this.getSearchDeps());
-	private _searchAdaptorLegacy = new ShellBarSearchLegacy({
-		...this.getSearchDeps(),
-		getDisableSearchCollapse: () => this.disableSearchCollapse,
-	});
+	private _searchAdaptorLegacy = new ShellBarSearchLegacy(this.getSearchDeps());
 
 	/* =================== Legacy Members =================== */
 
@@ -921,6 +918,7 @@ class ShellBar extends UI5Element {
 			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
 			handleSearchButtonClick: () => this.handleSearchButtonClick(),
 			getOverflowed: () => this.overflow.isOverflowing(this.overflowOuter!, this.overflowInner!),
+			getDisableSearchCollapse: () => this.disableSearchCollapse,
 		};
 	}
 

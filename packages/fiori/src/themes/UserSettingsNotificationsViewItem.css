@@ -58,7 +58,7 @@
 	pointer-events: none;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_user_settings_notifications_item_end_margin: 1rem;
 		min-height: var(--sapElement_Compact_LineHeight);
@@ -99,7 +99,7 @@
 	text-overflow: ellipsis;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	.ui5-user-settings-notifications-item-title {
 		font-size: var(--sapFontSize);
 	}
@@ -137,7 +137,7 @@
 	min-height: 5rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	.ui5-user-settings-notifications-item.has-byline {
 		min-height: 4rem;
 	}

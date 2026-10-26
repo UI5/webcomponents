@@ -7,7 +7,7 @@
 	--_ui5_select_icon_wrapper_state_height: 100%;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_select_icon_width: 2rem;
 	}

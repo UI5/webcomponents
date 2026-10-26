@@ -18,7 +18,6 @@ import {
 	isPageDown,
 	isHome,
 	isEnd,
-	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 
 import SearchTemplate from "./SearchTemplate.js";
@@ -554,15 +553,6 @@ class Search extends SearchField {
 
 	_popoupHasAnyContent() {
 		return this.items.length > 0 || this.illustration.length > 0 || this.messageArea.length > 0 || this.loading || this.action.length > 0;
-	}
-
-	_onFooterButtonKeyDown(e: KeyboardEvent) {
-		if (isUp(e)) {
-			this._flattenItems[this._flattenItems.length - 1].focus();
-		}
-		if (isTabPrevious(e)) {
-			this._getItemsList().focus();
-		}
 	}
 
 	_onItemKeydown(e: KeyboardEvent) {

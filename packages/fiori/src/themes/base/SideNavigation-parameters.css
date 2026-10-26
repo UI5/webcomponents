@@ -66,7 +66,7 @@
 	--_ui5_side_navigation_active_text_color: var(--sapList_Active_TextColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_side_navigation_item_height: 2rem;
 		--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;

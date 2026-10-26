@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **ui5-bar:** deprecate accessibleRole and remove toolbar role default ([#14074](https://github.com/UI5/webcomponents/issues/14074)) ([f748b79](https://github.com/UI5/webcomponents/commit/f748b799ad0be301f9998de7f01d08123a5c6e33))
+* **ui5-form:** align labelContent slot text to right on side row form item ([#14173](https://github.com/UI5/webcomponents/issues/14173)) ([9600458](https://github.com/UI5/webcomponents/commit/96004583244b3d52b66c7ad1e2b34b174a618593))
+* **ui5-form:** truncate long header texts ([#14172](https://github.com/UI5/webcomponents/issues/14172)) ([0d9b4d9](https://github.com/UI5/webcomponents/commit/0d9b4d98fa9b6ee2508f90447b86f09b2401d532))
+
+
+
+
+
 # [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
 
 
