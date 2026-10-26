@@ -57,6 +57,13 @@ const POPUP_INERT_ATTR = "data-ui5-dialog-old-no-inert";
  */
 const NON_RENDERED_ELEMENTS = ["SCRIPT", "STYLE", "LINK", "META", "TEMPLATE", "TITLE", "BASE", "HEAD"];
 
+/**
+ * IDs of shared, body-level containers that host popups rendered in a portal (e.g. OpenUI5's static
+ * UIArea). Such containers are not background content - they hold popups that can be opened on top of
+ * this one - so they must not be marked as `inert`, otherwise those popups become non-interactive.
+ */
+const PORTAL_CONTAINER_IDS = ["sap-ui-static"];
+
 type PopupScrollEventDetail = {
 	scrollTop: number;
 	targetRef: HTMLElement;
@@ -805,6 +812,12 @@ abstract class Popup extends UI5Element {
 	 */
 	static _shouldBeInert(element: Element) {
 		if (NON_RENDERED_ELEMENTS.includes(element.tagName)) {
+			return false;
+		}
+
+		// shared portal containers host popups that can be opened on top of this one,
+		// so they are not part of the background and must stay interactive
+		if (element.id && PORTAL_CONTAINER_IDS.includes(element.id)) {
 			return false;
 		}
 
