@@ -1,26 +1,26 @@
 import InputTableSuggest from "../../src/InputTableSuggest.js";
-import TableHeaderRow from "../../src/TableHeaderRow.js";
-import TableHeaderCell from "../../src/TableHeaderCell.js";
-import TableRow from "../../src/TableRow.js";
-import TableCell from "../../src/TableCell.js";
+import InputTableSuggestHeaderRow from "../../src/InputTableSuggestHeaderRow.js";
+import InputTableSuggestHeaderCell from "../../src/InputTableSuggestHeaderCell.js";
+import InputTableSuggestRow from "../../src/InputTableSuggestRow.js";
+import InputTableSuggestCell from "../../src/InputTableSuggestCell.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 
 describe("InputTableSuggest - Basic Rendering", () => {
 	it("renders with tabular suggestions", () => {
 		cy.mount(
 			<InputTableSuggest>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-					<TableHeaderCell>Country</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-					<TableCell>USA</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-					<TableCell>UK</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+					<InputTableSuggestHeaderCell>Country</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+					<InputTableSuggestCell>USA</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+					<InputTableSuggestCell>UK</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -29,15 +29,42 @@ describe("InputTableSuggest - Basic Rendering", () => {
 		cy.get("[ui5-input-table-suggest]").find("[ui5-table-row]").should("have.length", 2);
 	});
 
+	it("owned row/cell types reflect both their own tag and the base table attribute", () => {
+		cy.mount(
+			<InputTableSuggest>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		// The owned elements carry their own registered tag as an attribute...
+		cy.get("[ui5-input-table-suggest]").find("[ui5-input-table-suggest-header-row]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-input-table-suggest-header-cell]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-input-table-suggest-row]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-input-table-suggest-cell]").should("have.length", 1);
+
+		// ...and re-toggle the base table attribute so InputTableSuggest's
+		// attribute-based lookups and the table CSS keep working unchanged.
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-header-row]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-header-cell]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-row]").should("have.length", 1);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-cell]").should("have.length", 1);
+	});
+
+
 	it("opens suggestions popover on focus and type", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -56,12 +83,12 @@ describe("InputTableSuggest - Basic Rendering", () => {
 	it("closes suggestions popover on Escape", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -89,18 +116,18 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("navigates through rows with Arrow Down/Up", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jack</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jack</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -126,15 +153,15 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("selects text during navigation", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -157,15 +184,15 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("moves visual focus back to the input when typing after navigating", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -191,18 +218,18 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("keeps the popover open when navigating to a row whose first cell has no text", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Icon</TableHeaderCell>
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell></TableCell>
-					<TableCell>Alice</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell></TableCell>
-					<TableCell>Anna</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Icon</InputTableSuggestHeaderCell>
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell></InputTableSuggestCell>
+					<InputTableSuggestCell>Alice</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell></InputTableSuggestCell>
+					<InputTableSuggestCell>Anna</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -232,12 +259,12 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("restores typed value when pressing Arrow Up from first row", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -259,12 +286,12 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 
 		cy.mount(
 			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -293,15 +320,15 @@ describe("InputTableSuggest - Row Selection", () => {
 
 		cy.mount(
 			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -325,15 +352,15 @@ describe("InputTableSuggest - Row Selection", () => {
 
 		cy.mount(
 			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -352,15 +379,15 @@ describe("InputTableSuggest - Row Selection", () => {
 
 		cy.mount(
 			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -385,15 +412,15 @@ describe("InputTableSuggest - Typeahead", () => {
 	it("performs typeahead with first matching row", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -414,15 +441,15 @@ describe("InputTableSuggest - Typeahead", () => {
 	it("resets row selection on backspace after typeahead", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -454,15 +481,15 @@ describe("InputTableSuggest - Typeahead", () => {
 	it("keeps the row selected when the typed value matches a row exactly", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -483,12 +510,12 @@ describe("InputTableSuggest - Typeahead", () => {
 	it("disables typeahead with noTypeahead property", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -506,12 +533,12 @@ describe("InputTableSuggest - Clear Icon", () => {
 	it("shows clear icon when value is present", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions showClearIcon>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -530,12 +557,12 @@ describe("InputTableSuggest - Clear Icon", () => {
 	it("clears value when clicking clear icon", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions showClearIcon>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -558,12 +585,12 @@ describe("InputTableSuggest - Value State", () => {
 	it("displays value state", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions valueState="Negative">
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -574,12 +601,12 @@ describe("InputTableSuggest - Value State", () => {
 	it("shows value state header in suggestions popover", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions valueState="Negative">
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -605,12 +632,12 @@ describe("InputTableSuggest - Value State", () => {
 	it("shows custom value state message from slot", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions valueState="Information">
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 				<div slot="valueStateMessage">Custom info message</div>
 			</InputTableSuggest>
 		);
@@ -630,12 +657,12 @@ describe("InputTableSuggest - Value State", () => {
 	it("shows standalone value state popover when focused without typing", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions valueState="Negative">
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -659,12 +686,12 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 	it("does not open suggestions popover when showSuggestions is false", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions={false}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -683,12 +710,12 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 	it("does not open suggestions popover when showSuggestions is not set (defaults to false)", () => {
 		cy.mount(
 			<InputTableSuggest>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -707,12 +734,12 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 	it("opens suggestions popover when showSuggestions is true", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -733,15 +760,15 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 
 		cy.mount(
 			<InputTableSuggest showSuggestions={false} onSelectionChange={onSelectionChange}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -768,12 +795,12 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 	it("shows value state popover when showSuggestions is false and has value state", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions={false} valueState="Negative">
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -797,12 +824,12 @@ describe("InputTableSuggest - Disabled and Readonly", () => {
 	it("does not open popover when disabled", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions disabled>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -819,12 +846,12 @@ describe("InputTableSuggest - Disabled and Readonly", () => {
 	it("does not open popover when readonly", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions readonly>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -843,15 +870,15 @@ describe("InputTableSuggest - Popover open (app-owned filtering)", () => {
 	it("opens popover with all items even when the typed value matches no row", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -875,12 +902,12 @@ describe("InputTableSuggest - Popover open (app-owned filtering)", () => {
 	it("keeps popover open when the value no longer matches any row", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -906,15 +933,15 @@ describe("InputTableSuggest - Popover open (app-owned filtering)", () => {
 	it("does not open popover when the app hides all rows", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -945,12 +972,12 @@ describe("InputTableSuggest - Popover open (app-owned filtering)", () => {
 	it("closes popover when the value is deleted (empty)", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -980,12 +1007,12 @@ describe("InputTableSuggest - Live slotted content", () => {
 	it("reflects app-driven cell mutations without re-mounting (real elements, not clones)", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1016,12 +1043,12 @@ describe("InputTableSuggest - Live slotted content", () => {
 	it("navigation uses the mutated cell value", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1047,18 +1074,18 @@ describe("InputTableSuggest - Accessibility", () => {
 	it("announces row position and all column values during navigation", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-					<TableHeaderCell>Country</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow>
-					<TableCell>John</TableCell>
-					<TableCell>USA</TableCell>
-				</TableRow>
-				<TableRow>
-					<TableCell>Jane</TableCell>
-					<TableCell>UK</TableCell>
-				</TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+					<InputTableSuggestHeaderCell>Country</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+					<InputTableSuggestCell>USA</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+					<InputTableSuggestCell>UK</InputTableSuggestCell>
+				</InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1093,11 +1120,11 @@ describe("InputTableSuggest - change event", () => {
 		const onChange = cy.spy().as("onChange");
 		cy.mount(
 			<InputTableSuggest showSuggestions={false} onChange={onChange}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow><TableCell>John</TableCell></TableRow>
-				<TableRow><TableCell>Jane</TableCell></TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1118,11 +1145,11 @@ describe("InputTableSuggest - change event", () => {
 		const onChange = cy.spy().as("onChange");
 		cy.mount(
 			<InputTableSuggest showSuggestions onChange={onChange} noTypeahead>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow><TableCell>John</TableCell></TableRow>
-				<TableRow><TableCell>Jane</TableCell></TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1139,11 +1166,11 @@ describe("InputTableSuggest - change event", () => {
 		const onChange = cy.spy().as("onChange");
 		cy.mount(
 			<InputTableSuggest showSuggestions onChange={onChange}>
-				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell>Name</TableHeaderCell>
-				</TableHeaderRow>
-				<TableRow><TableCell>John</TableCell></TableRow>
-				<TableRow><TableCell>Jane</TableCell></TableRow>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
 			</InputTableSuggest>
 		);
 
@@ -1162,11 +1189,11 @@ describe("InputTableSuggest - change event", () => {
 		cy.mount(
 			<>
 				<InputTableSuggest showSuggestions onChange={onChange}>
-					<TableHeaderRow slot="headerRow">
-						<TableHeaderCell>Name</TableHeaderCell>
-					</TableHeaderRow>
-					<TableRow><TableCell>John</TableCell></TableRow>
-					<TableRow><TableCell>Jane</TableCell></TableRow>
+					<InputTableSuggestHeaderRow slot="headerRow">
+						<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+					</InputTableSuggestHeaderRow>
+					<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+					<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
 				</InputTableSuggest>
 				<button id="outside">outside</button>
 			</>
