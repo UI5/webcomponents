@@ -552,6 +552,33 @@ describe("Slots", () => {
 				.should("exist");
 		});
 
+		// Regression: at narrow widths a legacy search field moves to a full-width overlay, which
+		// removes the in-bar `.ui5-shellbar-search-field` from the DOM. The overflow algorithm keeps
+		// measuring `.ui5-shellbar-search-field-area`, so the `ui5-shellbar-gap-start` (8px) spacing
+		// must sit on that always-present area - not on the inner field. If it sits on the inner
+		// field, the 8px is counted only while in the bar, so the measured width differs by 8px
+		// between the in-bar and full-width states, `showFullWidthSearch` oscillates, and the render
+		// queue throws "Web component processed too many times".
+		it("Test legacy search gap is on the always-present area (prevents full-width render loop)", () => {
+			cy.mount(
+				<ShellBar id="shellbar" showSearchField={true}>
+					<Input slot="searchField"></Input>
+				</ShellBar>
+			);
+
+			cy.get("#shellbar").shadow().as("shellbar");
+
+			// The gap lives on the always-rendered area...
+			cy.get("@shellbar")
+				.find(".ui5-shellbar-search-field-area")
+				.should("have.class", "ui5-shellbar-gap-start");
+
+			// ...and not on the inner field that is removed when the search goes full-width.
+			cy.get("@shellbar")
+				.find(".ui5-shellbar-search-field")
+				.should("not.have.class", "ui5-shellbar-gap-start");
+		});
+
 		it("Test search button is not visible when a self-collapsible search field slot is empty", () => {
 			cy.mount(
 				<ShellBar id="shellbar">
@@ -1829,6 +1856,29 @@ describe("Component Behavior", () => {
 			expect($shellbar[0].legacyAdaptor.logoAriaLabel).to.equal(LOGO_CUSTOM_TOOLTIP);
 		});
 	});
+
+		it("notifications button announces a single accessible name (no duplicate badge count)", () => {
+			cy.mount(
+				<ShellBar
+					showNotifications
+					notificationsCount="5"
+				/>
+			);
+
+			// The accessible name must be the "X Notifications" text, not the generic
+			// "X items" badge description that the Button derives from a count badge.
+			// Otherwise JAWS announces both aria-label ("5 items") and title ("5 Notifications").
+			cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
+				const expectedName = $shellbar[0].actionsAccessibilityInfo.notifications.title;
+
+				cy.get("[ui5-shellbar]")
+					.shadow()
+					.find(".ui5-shellbar-bell-button")
+					.shadow()
+					.find("button")
+					.should("have.attr", "aria-label", expectedName);
+			});
+		});
 
 		it("tests accessibilityAttributes property", () => {
 			const NOTIFICATIONS_BTN_ARIA_HASPOPUP = "dialog";

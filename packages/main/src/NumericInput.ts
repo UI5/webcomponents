@@ -91,7 +91,7 @@ type NumericInputValueStateChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/NumericInput.js";`
  * @constructor
  * @extends UI5Element
- * @since 2.27.0
+ * @since 2.28.0
  * @experimental
  * @public
  */
@@ -213,7 +213,7 @@ class NumericInput extends UI5Element implements IFormInputElement {
 	 * **Note:** When no placeholder is set, the format pattern is displayed as a placeholder.
 	 * Passing an empty string as the value of this property will make the component appear empty - without placeholder or format pattern.
 	 * @default undefined
-	 * @private
+	 * @public
 	 */
 	@property()
 	placeholder?: string;

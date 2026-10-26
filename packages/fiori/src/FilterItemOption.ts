@@ -21,7 +21,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
  * @constructor
  * @extends UI5Element
  * @abstract
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @customElement("ui5-filter-item-option")

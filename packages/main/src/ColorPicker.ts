@@ -85,7 +85,7 @@ type ColorChannelInput = {
  *
  * `import "@ui5/webcomponents/dist/ColorPicker.js";`
  * @constructor
- * @since 1.0.0-rc.12
+ * @since 1.0.0
  * @extends UI5Element
  * @public
  */

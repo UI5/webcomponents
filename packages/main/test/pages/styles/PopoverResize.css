@@ -23,8 +23,36 @@ h1 {
 }
 
 .popoverOpenerContainer {
-	flex: 1;
+	flex: 0 0 auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	min-height: 200px;
+}
+
+.bigOpenerSection {
+	display: flex;
+	gap: 4rem;
+	align-items: flex-start;
+	padding: 1rem 0;
+}
+
+.bigOpenerCase {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.bigOpenerLabel {
+	margin: 0;
+	font-family: var(--sapFontFamily);
+	font-weight: bold;
+	color: var(--sapTextColor);
+}
+
+.bigOpenerHint {
+	margin: 0;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapContent_LabelColor);
 }

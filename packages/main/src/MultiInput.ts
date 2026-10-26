@@ -67,7 +67,7 @@ type MultiInputTokenDeleteEventDetail = {
  * `import "@ui5/webcomponents/dist/MultiInput.js";`
  * @constructor
  * @extends Input
- * @since 1.0.0-rc.9
+ * @since 1.0.0
  * @public
  */
 @customElement({

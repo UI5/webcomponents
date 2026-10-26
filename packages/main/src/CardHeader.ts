@@ -37,7 +37,7 @@ import cardHeaderCss from "./generated/themes/CardHeader.css.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  * @csspart root - Used to style the root DOM element of the CardHeader
  * @csspart title - Used to style the title of the CardHeader
  * @csspart subtitle - Used to style the subtitle of the CardHeader

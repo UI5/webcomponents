@@ -69,7 +69,7 @@ type Star = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 
 @customElement({
@@ -109,7 +109,7 @@ class RatingIndicator extends UI5Element {
 	 * The number of displayed rating symbols.
 	 * @default 5
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Number })
 	max: number = 5;
@@ -160,7 +160,7 @@ class RatingIndicator extends UI5Element {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -197,7 +197,7 @@ class RatingIndicator extends UI5Element {
 	 *
 	 * @default "favorite"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	ratedIcon = "favorite";
@@ -206,7 +206,7 @@ class RatingIndicator extends UI5Element {
 	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
 	 * @default "unfavorite"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	unratedIcon = "unfavorite";

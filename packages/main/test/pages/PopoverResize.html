@@ -34,7 +34,10 @@
 
 			hideArrowSwitch.addEventListener("ui5-change", event => {
 				popoverId.hideArrow = hideArrowSwitch.checked;
-			})
+			});
+
+			bigTallBtn.onclick = function () { bigTallPopover.open = true; };
+			bigWideBtn.onclick = function () { bigWidePopover.open = true; };
 		});
 	</script>
 </head>
@@ -88,6 +91,29 @@
 					<ui5-button design="Emphasized" id="closeDialogStateButton" slot="endContent">OK</ui5-button>
 				</ui5-bar>
 			</ui5-popover>
+		</div>
+
+		<ui5-title level="H2" style="margin-top: 2rem;">Keyboard Resize — Big Opener</ui5-title>
+		<p style="color: var(--sapTextColor); font-family: var(--sapFontFamily); margin: 0.5rem 0 1rem;">
+			Use Shift+Tab to focus the resize handle, then Shift+Arrow keys to resize. The popover must not escape the opener.
+		</p>
+		<div class="bigOpenerSection">
+			<div class="bigOpenerCase">
+				<p class="bigOpenerLabel">Tall opener — Start/End placement</p>
+				<p class="bigOpenerHint">Shift+Down (Start) / Shift+Up (End) must stop before the opener escapes</p>
+				<ui5-button id="bigTallBtn" style="height: 200px; display: block;">Tall Opener<br>(200 px)</ui5-button>
+				<ui5-popover id="bigTallPopover" opener="bigTallBtn" placement="Start" resizable header-text="Tall opener popover">
+					<div style="width: 200px; height: 100px; padding: 1rem;">Smaller than opener</div>
+				</ui5-popover>
+			</div>
+			<div class="bigOpenerCase">
+				<p class="bigOpenerLabel">Wide opener — Bottom/Top placement</p>
+				<p class="bigOpenerHint">Shift+Left (Bottom/Top) must stop before the opener escapes</p>
+				<ui5-button id="bigWideBtn" style="width: 300px;">Wide Opener (300 px)</ui5-button>
+				<ui5-popover id="bigWidePopover" opener="bigWideBtn" placement="Bottom" resizable header-text="Wide opener popover">
+					<div style="width: 100px; height: 100px; padding: 1rem;">Narrower</div>
+				</ui5-popover>
+			</div>
 		</div>
 	</div>
 </body>

@@ -105,7 +105,7 @@ type TextAreaInputEventDetail = {
 /**
  * Fired when the value of the component changes at each keystroke or when
  * something is pasted.
- * @since 1.0.0-rc.5
+ * @since 1.0.0
  * @param {boolean} escapePressed Indicates whether the Escape key was pressed, which triggers a revert to the previous value
  * @public
  */
@@ -174,7 +174,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * Defines whether the component is required.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.3
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	required = false;
@@ -194,7 +194,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * the component turns into "Critical" state once the characters exceeds the limit.
 	 * In this case, only the "Negative" state is considered and can be applied.
 	 * @default "None"
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()
@@ -287,7 +287,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -296,7 +296,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the textarea.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -365,7 +365,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed if the component has
 	 * `valueState` of type `Information`, `Critical` or `Negative`.
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

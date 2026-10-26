@@ -67,13 +67,27 @@ const getTypeRefs = (ts, node, member) => {
     return typeRefs?.length ? typeRefs : undefined;
 };
 
-const getSinceStatus = (jsdocComment) => {
+const sinceVersionRegExp = /^\d+\.\d+\.\d+$/;
+
+const getSinceStatus = (jsdocComment, modulePath) => {
     const sinceTag = findTag(jsdocComment, "since");
-    return sinceTag
-        ? sinceTag.description
-            ? `${sinceTag.name} ${sinceTag.description}`
-            : sinceTag.name
-        : undefined;
+    if (!sinceTag) return undefined;
+
+    const value = sinceTag.description
+        ? `${sinceTag.name} ${sinceTag.description}`
+        : sinceTag.name;
+
+    if (modulePath && !sinceVersionRegExp.test(value)) {
+        logDocumentationError(modulePath, `@since value "${value}" must follow the pattern number.number.number (e.g. 2.0.0)`);
+    }
+
+    return value;
+};
+
+const getSubcomponentStatus = (jsdocComment) => {
+    const tags = findAllTags(jsdocComment, "ui5subcomponent");
+    if (!tags.length) return undefined;
+    return tags.map(tag => tag.name).filter(Boolean);
 };
 
 const getPrivacyStatus = (jsdocComment) => {
@@ -240,7 +254,7 @@ const allowedTags = {
     event: [...commonTags, "param", "native", "allowPreventDefault"],
     eventParam: [...commonTags],
     method: [...commonTags, "param", "returns", "override"],
-    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart", "cssstate", "cssState"],
+    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart", "cssstate", "cssState", "ui5subcomponent"],
     enum: [...commonTags, "experimental",],
     enumMember: [...commonTags, "experimental",],
     interface: [...commonTags, "experimental",],
@@ -335,6 +349,8 @@ const validateJSDocTag = (tag) => {
             return !tag.type && tag.name && tag.description;
         case "since":
             return !tag.type && tag.name;
+        case "ui5subcomponent":
+            return !tag.type && tag.name && !tag.description;
         case "returns":
             return !tag.type && tag.name;
         case "default":
@@ -411,6 +427,7 @@ const formatSlotTypes = (typeText) => {
 export {
     getPrivacyStatus,
     getSinceStatus,
+    getSubcomponentStatus,
     getDeprecatedStatus,
     getExperimentalStatus,
     getType,

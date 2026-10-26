@@ -39,6 +39,7 @@ import cardCss from "./generated/themes/Card.css.js";
  * @public
  * @csspart root - Used to style the root DOM element of the card component
  * @csspart content - Used to style the content of the card
+ * @ui5subcomponent CardHeader
  */
 @customElement({
 	tag: "ui5-card",
@@ -54,7 +55,7 @@ class Card extends UI5Element {
 	 * **Note:** `accessibleName` should be always set, unless `accessibleNameRef` is set.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	*/
 	@property()
 	accessibleName?: string;
@@ -63,7 +64,7 @@ class Card extends UI5Element {
 	 * Defines the IDs of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	*/
 	@property()
 	accessibleNameRef?: string;
@@ -79,7 +80,7 @@ class Card extends UI5Element {
 	 * Defines the header of the component.
 	 *
 	 * **Note:** Use `ui5-card-header` for the intended design.
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	*/
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })

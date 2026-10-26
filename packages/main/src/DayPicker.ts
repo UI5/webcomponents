@@ -164,7 +164,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** For calendars other than Gregorian,
 	 * the week numbers are not displayed regardless of what is set.
 	 * @default false
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideWeekNumbers = false;
@@ -514,11 +514,13 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			target = target.parentNode as HTMLElement;
 		}
 
-		if (!this._isDayPressed(target)) {
+		const pendingMouseTimestamp = !setTimestamp ? this._mousedownTimestamp : undefined;
+
+		if (!this._isDayPressed(target) && pendingMouseTimestamp === undefined) {
 			return;
 		}
 
-		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (pendingMouseTimestamp ?? this.timestamp!);
 		this._mousedownTimestamp = undefined;
 
 		if (setTimestamp) {

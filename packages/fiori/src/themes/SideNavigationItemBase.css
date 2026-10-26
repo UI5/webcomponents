@@ -125,7 +125,7 @@ and there is an additional border that appears on hover. */
 	cursor: unset;
 }
 
-:host(:not([ui5-side-navigation-item][in-popover][unselectable])) .ui5-sn-item:not(.ui5-sn-item-disabled):not(.ui5-sn-item-selected):hover {
+:host(:not([ui5-side-navigation-item][in-popover][unselectable]):not(.ui5-sn-item-no-match)) .ui5-sn-item:not(.ui5-sn-item-disabled):not(.ui5-sn-item-selected):hover {
 	background: var(--sapList_Hover_Background);
 }
 
@@ -149,7 +149,7 @@ and there is an additional border that appears on hover. */
 
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected:active,
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected.ui5-sn-item-active,
-:host(:not([ui5-side-navigation-item][in-popover][unselectable])) .ui5-sn-item:not(.ui5-sn-item-disabled):active,
+:host(:not([ui5-side-navigation-item][in-popover][unselectable]):not(.ui5-sn-item-no-match)) .ui5-sn-item:not(.ui5-sn-item-disabled):active,
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-active,
 :host(.ui5-sn-item-overflow.ui5-sn-item-active) .ui5-sn-item,
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected:active,
@@ -407,4 +407,10 @@ and there is an additional border that appears on hover. */
 
 .ui5-sn-item-separator {
 	min-height: 0.625rem;
+}
+
+.ui5-sn-item-highlight {
+	background-color: var(--sapContent_SearchHighlightColor);
+	font-family: var(--sapFontBoldFamily);
+	font-size: var(--sapFontSize);
 }

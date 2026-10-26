@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
+
+
+### Features
+
+* **base:** allow components to provide their own slot accessor ([#14128](https://github.com/UI5/webcomponents/issues/14128)) ([2196121](https://github.com/UI5/webcomponents/commit/2196121936bfef06989b4b04be7d07ece415ea9c))
+* **ui5-side-navigation:** implement search and filter feature ([#14063](https://github.com/UI5/webcomponents/issues/14063)) ([3c45594](https://github.com/UI5/webcomponents/commit/3c45594c1c54d442455a3152da6294745ddf070a))
+
+
+
+
+
 ## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
 
 

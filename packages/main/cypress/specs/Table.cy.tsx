@@ -16,6 +16,32 @@ import Button from "../../src/Button.js";
 
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
+class TableSlotForwarder extends HTMLElement {
+	connectedCallback() {
+		if (this.shadowRoot) {
+			return;
+		}
+
+		const table = new Table();
+		table.id = "inner-table";
+
+		const headerRowSlot = this.ownerDocument.createElement("slot");
+		headerRowSlot.name = "headerRow";
+		headerRowSlot.slot = "headerRow";
+
+		table.append(headerRowSlot, this.ownerDocument.createElement("slot"));
+		this.attachShadow({ mode: "open" }).append(table);
+	}
+
+	get table() {
+		return this.shadowRoot!.querySelector("#inner-table") as Table;
+	}
+}
+
+if (!customElements.get("table-slot-forwarder")) {
+	customElements.define("table-slot-forwarder", TableSlotForwarder);
+}
+
 describe("Table - Rendering", () => {
 	function checkWidth(id: string, expectedWidth: number) {
 		cy.get(id).then($cell => {
@@ -1382,5 +1408,57 @@ describe("Table - Dummy Cell", () => {
 			.should("have.attr", "data-excluded-from-navigation", "nofocus");
 		cy.get("#row1").shadow().find("[data-ui5-custom-outline='start']").should("exist");
 		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
+	});
+});
+
+describe("Table - Slot forwarding", () => {
+	beforeEach(() => {
+		cy.on("uncaught:exception", () => false);
+		cy.mount(
+			<table-slot-forwarder id="wrapper">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnB</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow rowKey="1">
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+				</TableRow>
+				<TableRow rowKey="2">
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+				</TableRow>
+			</table-slot-forwarder>
+		);
+
+		cy.get<TableSlotForwarder>("#wrapper").as("wrapper");
+	});
+
+	it("keeps the forwarded rows in the light DOM of the wrapper", () => {
+		cy.get<TableSlotForwarder>("@wrapper").should($el => {
+			const authoredRow = $el[0].querySelector("[ui5-table-row]")!;
+
+			expect($el[0].table.rows[0]).to.equal(authoredRow);
+			expect(authoredRow.parentElement).to.equal($el[0]);
+		});
+	});
+
+	it("reflects rows added to and removed from the wrapper", () => {
+		cy.get("#wrapper").then($el => {
+			const row = new TableRow();
+			row.rowKey = "3";
+			row.appendChild(new TableCell());
+			$el[0].appendChild(row);
+		});
+
+		cy.get<TableSlotForwarder>("@wrapper").should($el => {
+			expect($el[0].table.rows.map(row => row.rowKey)).to.deep.equal(["1", "2", "3"]);
+		});
+
+		cy.get("[ui5-table-row]").last().then($el => $el[0].remove());
+
+		cy.get<TableSlotForwarder>("@wrapper").should($el => {
+			expect($el[0].table.rows.map(row => row.rowKey)).to.deep.equal(["1", "2"]);
+		});
 	});
 });

@@ -9,7 +9,7 @@
 	--_ui5_side_navigation_item_height: 2.5rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_side_navigation_item_height: 2rem;
 	}

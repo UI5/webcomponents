@@ -1,5 +1,6 @@
 import SearchItem from "../../src/SearchItem.js";
 import ShellBarSearch from "../../src/ShellBarSearch.js";
+import ShellBarSearchController from "../../src/shellbar/ShellBarSearch.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import {
@@ -289,5 +290,25 @@ describe("Open property", () => {
 			.shadow()
 			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
+	});
+});
+
+describe("disableSearchCollapse", () => {
+	it("does not change the search state on resize when disableSearchCollapse is set", () => {
+		const setSearchState = cy.stub().as("setSearchState");
+
+		const adaptor = new ShellBarSearchController({
+			getOverflowed: () => true,
+			getSearchState: () => true,
+			setSearchState,
+			handleSearchButtonClick: () => true,
+			getSearchField: () => ({} as any),
+			getCSSVariable: () => "400px",
+			getDisableSearchCollapse: () => true,
+		});
+
+		adaptor.autoManageSearchState(5, 0);
+
+		cy.get("@setSearchState").should("not.have.been.called");
 	});
 });

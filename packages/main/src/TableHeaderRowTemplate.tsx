@@ -2,8 +2,6 @@ import TableHeaderCell from "./TableHeaderCell.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 
 export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColIndex: number = 1) {
-	const SelectionComponent = this._selectionComponent;
-	const ClearAllComponent = this._clearAllComponent;
 	return (
 		<>
 			{ this._hasSelector &&
@@ -15,30 +13,7 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 					data-ui5-table-selection-cell
 					data-ui5-acc-text=""
 				>
-					{ !this._isMultiSelect ?
-						<></>
-						:
-						this._shouldRenderClearAll ?
-							(ClearAllComponent &&
-								<ClearAllComponent
-									name={this._clearAllIcon}
-									mode="Decorative"
-									showTooltip={true}
-									accessibleName={this._i18nDeselectAllRows}
-									design={this._hasSelectedRows ? "Default" : "NonInteractive"}
-									onClick={this._onSelectionChange}
-								></ClearAllComponent>
-							)
-							:
-							SelectionComponent &&
-							<SelectionComponent id="selection-component"
-								tabindex={-1}
-								checked={this._isSelected}
-								onChange={this._onSelectionChange}
-								accessibleName={this._i18nRowSelector}
-								title={this._isSelected ? this._i18nDeselectAllRows : this._i18nSelectAllRows}
-							></SelectionComponent>
-					}
+					{ this._tableSelection!.renderHeaderSelectionCell(this) }
 				</TableHeaderCell>
 			}
 

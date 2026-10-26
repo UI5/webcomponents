@@ -213,6 +213,9 @@ type ListAccessibilityAttributes = {
  * @public
  * @csspart growing-button - Used to style the button, that is used for growing of the component
  * @csspart growing-button-inner - Used to style the button inner element
+ * @ui5subcomponent ListItemCustom
+ * @ui5subcomponent ListItemGroup
+ * @ui5subcomponent ListItemStandard
  */
 @customElement({
 	tag: "ui5-list",
@@ -245,7 +248,7 @@ type ListAccessibilityAttributes = {
  * not to be confused with `item-delete`.
  * @param {HTMLElement} item the item about to be closed.
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @event("item-close", {
 	bubbles: true,
@@ -257,7 +260,7 @@ type ListAccessibilityAttributes = {
  * **Note:** This event is only applicable to list items that can be toggled (such as notification group list items).
  * @param {HTMLElement} item the toggled item.
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @event("item-toggle", {
 	bubbles: true,
@@ -292,7 +295,7 @@ type ListAccessibilityAttributes = {
  *
  * **Note:** The event is fired when the `growing='Scroll'` property is enabled.
  * @public
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  */
 @event("load-more", {
 	bubbles: true,
@@ -400,7 +403,7 @@ class List extends UI5Element {
 	 * **Restrictions:** `growing="Scroll"` is not supported for Internet Explorer,
 	 * on IE the component will fallback to `growing="Button"`.
 	 * @default "None"
-	 * @since 1.0.0-rc.13
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()
@@ -413,7 +416,7 @@ class List extends UI5Element {
 	 *
 	 * **Note:** This property takes effect if the `growing` property is set to the `Button`.
 	 * @default undefined
-	 * @since 1.24
+	 * @since 1.24.0
 	 * @public
 	 */
 	@property()
@@ -423,7 +426,7 @@ class List extends UI5Element {
 	 * Defines if the component would display a loading indicator over the list.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.6
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	loading = false;
@@ -451,7 +454,7 @@ class List extends UI5Element {
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -483,7 +486,7 @@ class List extends UI5Element {
 	 * Defines the IDs of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -524,7 +527,7 @@ class List extends UI5Element {
 	 * Defines the accessible role of the component.
 	 * @public
 	 * @default "List"
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleRole: `${ListAccessibleRole}` = "List";

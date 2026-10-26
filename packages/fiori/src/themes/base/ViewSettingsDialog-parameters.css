@@ -6,7 +6,7 @@
 	--_ui5_vsd_expand_content_height: 26.1875rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_vsd_header_container: 2.5rem;
 		--_ui5_vsd_sub_header_container_height: 2rem;
