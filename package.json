@@ -82,6 +82,9 @@
     "vite-tsconfig-paths": "^4.2.1",
     "yarnhook": "^0.6.0"
   },
+  "resolutions": {
+    "nwsapi": "^2.2.25"
+  },
   "workspaces": [
     "packages/theming",
     "packages/cypress-ct-ui5-webc",

@@ -815,7 +815,6 @@ abstract class Popup extends UI5Element {
 
 		// elements in the top layer (open popups) are not part of the background,
 		// as well as popups that could be opened on top of this one later on
-		// eslint-disable-next-line
 		return !element.matches(":popover-open") && !Popup._isPopup(element);
 	}
 
