@@ -474,32 +474,12 @@ class Table extends UI5Element {
 		this._events.forEach(eventType => this.removeEventListener(eventType, this._onEventBound));
 	}
 
-	/**
-	 * The effective rows of the table. Resolves any projected `<slot>` element in the
-	 * `rows` slot to its flattened assigned rows (chained slotting), and returns real
-	 * rows unchanged otherwise. Internal logic and features must read rows through this.
-	 * @private
-	 */
-	get _rows(): TableRow[] {
-		return this.getSlottedNodes<TableRow>("rows");
-	}
-
-	/**
-	 * Returns the header row(s), flattening any chained `<slot>` projection so that
-	 * consumers always receive the real `ui5-table-header-row` even when the table is
-	 * nested inside another component (e.g. `ui5-input-table-suggest`).
-	 * @private
-	 */
-	get _headerRow(): TableHeaderRow[] {
-		return this.getSlottedNodes<TableHeaderRow>("headerRow");
-	}
-
 	onBeforeRendering(): void {
 		let alternateIndex = 0;
 		const hasFlexibleColumns = this._hasFlexibleColumns;
-		const rowActionCount = this.rowActionCount > 0 && this._rows.length > 0 ? this.rowActionCount : 0;
-		this._renderNavigated = this._rows.some(row => row.navigated);
-		[...this._headerRow, ...this._rows].forEach(row => {
+		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
+		this._renderNavigated = this.rows.some(row => row.navigated);
+		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
 				row._rowActionCount = rowActionCount;
 				row._renderDummyCell = !hasFlexibleColumns;
@@ -606,14 +586,14 @@ class Table extends UI5Element {
 	}
 
 	_scrollElementIntoView(element: HTMLElement) {
-		const verticalStickyElements = this._headerRow.filter(row => row.sticky);
+		const verticalStickyElements = this.headerRow.filter(row => row.sticky);
 		if (verticalStickyElements.length) {
 			const verticalScrollContainer = findVerticalScrollContainer(this._tableElement, true);
 			const deltaY = computeAxisScrollDelta(element, verticalScrollContainer, verticalStickyElements, "y");
 			verticalScrollContainer.scrollBy({ top: deltaY });
 		}
 
-		const horizontalStickyElements = this.overflowMode === "Scroll" ? this._headerRow[0]._stickyCells : [];
+		const horizontalStickyElements = this.overflowMode === "Scroll" ? this.headerRow[0]._stickyCells : [];
 		if (horizontalStickyElements.length) {
 			const horizontalScrollContainer = this._tableElement;
 			const deltaX = computeAxisScrollDelta(element, horizontalScrollContainer, horizontalStickyElements, "x");
@@ -626,7 +606,7 @@ class Table extends UI5Element {
 	}
 
 	_getPopinOrderedColumns(reverse: boolean) {
-		let headers = [...this._headerRow[0].cells];
+		let headers = [...this.headerRow[0].cells];
 		headers = headers.reverse(); // reverse the "visual" order
 		headers = headers.sort((a, b) => a.importance - b.importance); // sort by importance (asc)
 		headers.pop(); // remove the most important column, as it will not be popped in
@@ -645,16 +625,16 @@ class Table extends UI5Element {
 	 * @private
 	 */
 	_refreshPopinState() {
-		this._headerRow[0]?.cells.forEach(header => {
+		this.headerRow[0]?.cells.forEach(header => {
 			this._setHeaderPopinState(header, header._popin, header._popinWidth);
 		});
 	}
 
 	_setHeaderPopinState(headerCell: TableHeaderCell, inPopin: boolean, popinWidth: number) {
-		const headerIndex = this._headerRow[0].cells.indexOf(headerCell);
+		const headerIndex = this.headerRow[0].cells.indexOf(headerCell);
 		headerCell._popin = inPopin && this.overflowMode === TableOverflowMode.Popin;
 		headerCell._popinWidth = popinWidth;
-		this._rows.forEach(row => {
+		this.rows.forEach(row => {
 			const cell = row.cells[headerIndex];
 			if (cell) {
 				cell._popinHidden = headerCell.popinHidden;
@@ -679,7 +659,7 @@ class Table extends UI5Element {
 	get styles() {
 		const virtualizer = this._getVirtualizer();
 		const headerStyleMap: Record<string, string> = {};
-		this._headerRow[0]?.cells.forEach(headerCell => {
+		this.headerRow[0]?.cells.forEach(headerCell => {
 			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
 		});
 		return {
@@ -696,12 +676,12 @@ class Table extends UI5Element {
 	}
 
 	get _gridTemplateColumns() {
-		if (!this._headerRow[0]) {
+		if (!this.headerRow[0]) {
 			return;
 		}
 
 		const widths = [];
-		const visibleHeaderCells = this._headerRow[0]._visibleCells;
+		const visibleHeaderCells = this.headerRow[0]._visibleCells;
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {
@@ -727,7 +707,7 @@ class Table extends UI5Element {
 		}
 
 		// Row Action Cell Width
-		if (this.rowActionCount > 0 && this._rows.length > 0) {
+		if (this.rowActionCount > 0 && this.rows.length > 0) {
 			widths.push(`calc(var(--_ui5_button_base_min_width) * ${this.rowActionCount} + var(--_ui5_table_row_actions_gap) * ${this.rowActionCount - 1} + var(--_ui5_table_cell_horizontal_padding) * 2)`);
 		}
 
@@ -744,15 +724,15 @@ class Table extends UI5Element {
 	}
 
 	get _hasPopin() {
-		return this.overflowMode === TableOverflowMode.Popin && this._headerRow?.[0]?._hasPopin;
+		return this.overflowMode === TableOverflowMode.Popin && this.headerRow?.[0]?._hasPopin;
 	}
 
 	get _hasFlexibleColumns(): boolean {
-		return this._headerRow?.[0]?._visibleCells.some(cell => !isValidColumnWidth(cell.width));
+		return this.headerRow?.[0]?._visibleCells.some(cell => !isValidColumnWidth(cell.width));
 	}
 
 	get _isRowSelectorRequired() {
-		return this._rows.length > 0 && this._getSelection()?.isRowSelectorRequired();
+		return this.rows.length > 0 && this._getSelection()?.isRowSelectorRequired();
 	}
 
 	get _scrollContainer() {
@@ -772,22 +752,22 @@ class Table extends UI5Element {
 	}
 
 	get _ariaRowCount() {
-		return this._getVirtualizer()?.rowCount || this._rows.length + 1;
+		return this._getVirtualizer()?.rowCount || this.rows.length + 1;
 	}
 
 	get _ariaColCount() {
-		if (!this._headerRow[0]) {
+		if (!this.headerRow[0]) {
 			return 0;
 		}
 
-		let ariaColCount = this._headerRow[0]._visibleCells.length;
+		let ariaColCount = this.headerRow[0]._visibleCells.length;
 		if (this._isRowSelectorRequired) {
 			ariaColCount++;
 		}
-		if (this.rowActionCount > 0 && this._rows.length > 0) {
+		if (this.rowActionCount > 0 && this.rows.length > 0) {
 			ariaColCount++;
 		}
-		if (this._headerRow[0]._popinCells.length > 0) {
+		if (this.headerRow[0]._popinCells.length > 0) {
 			ariaColCount++;
 		}
 
@@ -796,7 +776,7 @@ class Table extends UI5Element {
 
 	get _ariaMultiSelectable() {
 		const selection = this._getSelection();
-		return (selection?.isSelectable() && this._rows.length) ? selection.isMultiSelectable() : undefined;
+		return (selection?.isSelectable() && this.rows.length) ? selection.isMultiSelectable() : undefined;
 	}
 
 	get isTable() {

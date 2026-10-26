@@ -40,7 +40,7 @@ export default class TableDragAndDrop extends TableExtension {
 		}
 
 		const closestPosition = findClosestPosition(
-			this._table._rows,
+			this._table.rows,
 			e.clientY,
 			Orientation.Vertical,
 		);
