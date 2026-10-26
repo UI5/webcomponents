@@ -77,7 +77,7 @@ import datePickerCss from "./generated/themes/DatePicker.css.js";
 import datePickerPopoverCss from "./generated/themes/DatePickerPopover.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
-import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 
@@ -483,6 +483,12 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	onResponsivePopoverBeforeOpen() {
 		this._calendar.timestamp = this._calendarTimestamp;
 		this._calendarCurrentPicker = this.firstPicker;
+	}
+
+	onInvalidation(changeInfo: ChangeInfo) {
+		if (changeInfo.type === "property" && changeInfo.name === "disabled" && this._dateTimeInput) {
+			this._dateTimeInput.disabled = !!changeInfo.newValue;
+		}
 	}
 
 	onBeforeRendering() {
