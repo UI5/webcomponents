@@ -27,6 +27,7 @@ import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.j
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import getParentElement from "@ui5/webcomponents-base/dist/util/getParentElement.js";
 import { registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import PopupTemplate from "./PopupTemplate.js";
 import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
@@ -55,7 +56,7 @@ const POPUP_INERT_ATTR = "data-ui5-dialog-old-no-inert";
 /**
  * Elements that are not rendered and therefore must not be marked as `inert`.
  */
-const NON_RENDERED_ELEMENTS = ["SCRIPT", "STYLE", "LINK", "META", "TEMPLATE", "TITLE", "BASE", "HEAD"];
+const NON_RENDERED_ELEMENTS = ["SCRIPT", "STYLE", "LINK", "META", "TEMPLATE", "TITLE", "BASE", "HEAD", "UI5-ANNOUNCEMENT-AREA"];
 
 /**
  * IDs of shared, body-level containers that host popups rendered in a portal (e.g. OpenUI5's static
@@ -722,18 +723,29 @@ abstract class Popup extends UI5Element {
 			return;
 		}
 
-		Popup._collectInertPath(((parent as ShadowRoot).host || parent) as HTMLElement, path);
+		Popup._collectInertPath((getParentElement(element) || parent) as HTMLElement, path);
 	}
 
 	/**
 	 * Marks all siblings of the given element as `inert`, so they become non-focusable,
 	 * non-clickable and hidden from assistive technology.
+	 *
+	 * Only siblings in the light DOM (the document tree) are inerted. When the popup is rendered
+	 * inside its host component's shadow DOM (e.g. a ComboBox rendering its picker next to its own
+	 * input), the elements along the path that still live in that shadow root are the host's own
+	 * internals, not background content - inerting them would break the host's focus handling. The
+	 * host element itself is still inerted as a sibling once the path reaches the light DOM.
 	 * @protected
 	 */
 	_inertSiblings(element: HTMLElement) {
 		const parent = element.parentNode as (Element | ShadowRoot | Document | null);
 
 		if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+			return;
+		}
+
+		// skip siblings inside a shadow root - they belong to the popup's host component
+		if (element.getRootNode() !== element.ownerDocument) {
 			return;
 		}
 
