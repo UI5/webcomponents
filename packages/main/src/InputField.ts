@@ -203,7 +203,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 * Defines whether the component is required.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.3
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	required = false;
@@ -258,7 +258,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 *
 	 * **Note:** This property is not compatible with the ui5-input type InputType.Number. If the ui5-input type is set to Number, the maxlength value is ignored.
 	 * @default undefined
-	 * @since 1.0.0-rc.5
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property({ type: Number })
@@ -268,7 +268,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -277,7 +277,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 * Receives ID (or many IDs) of the elements that label the input.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -398,7 +398,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the component is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.6
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot({
