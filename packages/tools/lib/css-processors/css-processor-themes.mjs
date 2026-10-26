@@ -5,6 +5,7 @@ import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
+import postcssPlugin from "./postcss-plugin.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import scopeVariables from "./scope-variables.mjs";
 import { mergeLightDark } from "./merge-light-dark.mjs";
@@ -74,7 +75,8 @@ const generate = async (argv) => {
     const processComponentPackageFile = async (f) => {
         if (CSS_VARIABLES_TARGET) {
             const result = await postcss([
-                combineDuplicatedSelectors
+                combineDuplicatedSelectors,
+                postcssPlugin
             ]).process(f.text, { from: undefined });
 
             return { css: result.css };
@@ -90,8 +92,8 @@ const generate = async (argv) => {
 
     /**
      * Generate auto theme CSS by merging light and dark theme outputs.
-     * For the theming package adds color-scheme.
-     * For component packages merges the variables.
+     * For the theming package (:root), adds color-scheme and toggle variables.
+     * For component packages (:host), just merges the variables.
      */
     const generateAutoThemes = async (processedCSS) => {
         for (const { light, dark, auto } of AUTO_THEME_PAIRS) {
@@ -102,12 +104,13 @@ const generate = async (argv) => {
 
                 const darkPath = lightPath.replace(lightPattern, (match) => match.replace(light, dark));
                 const darkCSS = processedCSS.get(darkPath);
-                if (darkCSS === undefined) continue;
+                if (!darkCSS) continue;
 
-                let autoCSS = mergeLightDark(lightCSS, darkCSS);
+                const selector = isThemingPackage(lightPath) ? ":root" : CSS_VARIABLES_TARGET ? ":host" : ":root";
+                let autoCSS = mergeLightDark(lightCSS, darkCSS, selector);
 
                 // For the theming package, add color-scheme and toggle setup
-                if (isThemingPackage(lightPath)) {
+                if (selector === ":root") {
                     autoCSS = addAutoThemeSetup(autoCSS);
                 }
 
@@ -160,17 +163,51 @@ const generate = async (argv) => {
         await esbuild.build(config);
     }
 }
+
 /**
- * Adds auto theme setup CSS: color-scheme declaration.
+ * Adds auto theme setup CSS: color-scheme declaration and
+ * light/dark toggle variables with @media switching.
+ *
+ * In light mode (default):
+ *   --_ui5-light-scheme is guaranteed-invalid → var() fallbacks resolve to light values
+ *   --_ui5-dark-scheme is valid empty → var() fallbacks are NOT used
+ *
+ * In dark mode (@media prefers-color-scheme: dark):
+ *   --_ui5-light-scheme is valid empty → var() fallbacks are NOT used
+ *   --_ui5-dark-scheme is guaranteed-invalid → var() fallbacks resolve to dark values
+ *
  * @param {string} mergedCSS - The merged :root CSS from mergeLightDark()
  * @returns {string} CSS with toggle setup and @media rule appended
  */
 const addAutoThemeSetup = (mergedCSS) => {
     const root = postcss.parse(mergedCSS);
 
+    // Add color-scheme and toggle defaults to the :root rule
     root.walkRules(":root", rule => {
-        rule.prepend(postcss.decl({ prop: "color-scheme", value: "light dark" }));
+        rule.prepend(
+            postcss.decl({ prop: "--_ui5-dark-scheme", value: " " }),
+        );
+        rule.prepend(
+            postcss.decl({ prop: "--_ui5-light-scheme", value: "var(--_ui5-f2d95f8)" }),
+        );
+        rule.prepend(
+            postcss.decl({ prop: "color-scheme", value: "light dark" }),
+        );
     });
+
+    // Add @media rule for dark mode - flips the toggles
+    const mediaRule = postcss.atRule({
+        name: "media",
+        params: "(prefers-color-scheme: dark)",
+    });
+    const darkRoot = postcss.rule({ selector: ":root" });
+    darkRoot.append(
+        postcss.decl({ prop: "--_ui5-light-scheme", value: " " }),
+        postcss.decl({ prop: "--_ui5-dark-scheme", value: "var(--_ui5-f2d95f8)" }),
+        postcss.decl({ prop: "color-scheme", value: "dark" }),
+    );
+    mediaRule.append(darkRoot);
+    root.append(mediaRule);
 
     return root.toString();
 };

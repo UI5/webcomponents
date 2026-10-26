@@ -233,7 +233,7 @@ The `:host(:dir(rtl))` and `:host(:dir(ltr))` selectors allow you to apply speci
 
 There are two main content density modes:
 
-- **Cozy:** This mode provides more spacing around elements, making them larger and more comfortable to interact with. It's suited for touch-based devices or scenarios where users need a clear distinction between different UI components.
+- **Cozy:** This mode provides more spacing around, making them larger and more comfortable to interact with. It's suited for touch-based devices or scenarios where users need a clear distinction between different UI components.
 
 - **Compact:** In this mode, UI elements are more tightly packed with less spacing between them. It's ideal for scenarios where maximizing the amount of visible content is crucial, such as desktop applications or complex dashboards.
 
@@ -303,7 +303,7 @@ Alternatively, you can define density variables using selectors `[data-ui5-compa
 ```js
 // package-scripts.cjs
 const options = {
-	cssVariablesTarget: "root",
+	cssVariablesTarget: "host",
 };
 
 const scripts = getScripts(options);
