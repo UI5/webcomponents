@@ -35,7 +35,7 @@ function TreeItemTemplate(this: SideNavigationGroup) {
 				 title={this._tooltip}
 				 aria-owns={this._groupId}
 			>
-				<div class="ui5-sn-item-text">{this.text}</div>
+				<div class="ui5-sn-item-text" dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
 				{!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
 						  name={this.expanded ? navDownArrow : navRightArrow}

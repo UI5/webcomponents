@@ -45,7 +45,7 @@
 	--_ui5_checkbox_right_focus_distance: 0;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_checkbox_label_offset: var(--_ui5_checkbox_compact_wrapper_padding);
 	}

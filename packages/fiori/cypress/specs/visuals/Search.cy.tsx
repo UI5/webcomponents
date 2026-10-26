@@ -30,7 +30,7 @@ describe("Search visual", () => {
 				<SearchItem text="Canada" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -47,7 +47,7 @@ describe("Search visual", () => {
 				</SearchItemGroup>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -59,7 +59,7 @@ describe("Search visual", () => {
 				<SearchItemShowMore itemsToShowCount={12} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -73,7 +73,7 @@ describe("Search visual", () => {
 				/>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -83,7 +83,7 @@ describe("Search visual", () => {
 				<IllustratedMessage slot="illustration" name="NoSearchResults" />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -95,7 +95,7 @@ describe("Search visual", () => {
 				<SearchItem text="Bulgaria" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -109,7 +109,7 @@ describe("Search visual", () => {
 				<SearchItem text="Bulgaria" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -119,7 +119,7 @@ describe("Search visual", () => {
 				<SearchItem text="Algeria" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -152,7 +152,7 @@ describe("Search visual", () => {
 				</Search>
 			</div>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });

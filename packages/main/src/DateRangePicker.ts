@@ -66,7 +66,7 @@ const DEFAULT_DELIMITER = "-";
  * - [Shift] + [Ctrl] + [Page Up] - Increments the corresponding year by one
  * @constructor
  * @extends DatePicker
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  */
 @customElement({

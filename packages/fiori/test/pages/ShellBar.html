@@ -57,6 +57,54 @@
 		};
 	</script>
 
+	<!--
+		disable-search-collapse honored by ui5-shellbar-search, with and without a content slot.
+		Resize the window narrow and wide repeatedly: because collapse is disabled, the search
+		field must STAY EXPANDED the whole time in BOTH shellbars (never shrink to a button and
+		never switch to the full-width overlay). Previously disable-search-collapse was ignored
+		by the modern search adaptor, so the search still auto-collapsed / went full-width.
+	-->
+	<p style="margin: 1rem 0 0.25rem;">disable-search-collapse — WITH content slot</p>
+	<ui5-shellbar
+		id="sbSearchResizeWithContent"
+		show-notifications
+		disable-search-collapse
+		show-search-field
+	>
+		<ui5-button icon="menu2" slot="startButton"></ui5-button>
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+		<ui5-shellbar-search slot="searchField" show-clear-icon placeholder="Search Apps, Products"></ui5-shellbar-search>
+		<b slot="content">Foobar</b>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-toggle-button icon="sap-icon://da" design="Transparent" tooltip="Joule" slot="assistant"></ui5-toggle-button>
+		<ui5-avatar slot="profile">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_3.png" />
+		</ui5-avatar>
+	</ui5-shellbar>
+
+	<p style="margin: 1rem 0 0.25rem;">disable-search-collapse — WITHOUT content slot (regression test)</p>
+	<ui5-shellbar
+		id="sbSearchResizeNoContent"
+		show-notifications
+		disable-search-collapse
+		show-search-field
+	>
+		<ui5-button icon="menu2" slot="startButton"></ui5-button>
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+		<ui5-shellbar-search slot="searchField" show-clear-icon placeholder="Search Apps, Products"></ui5-shellbar-search>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-toggle-button icon="sap-icon://da" design="Transparent" tooltip="Joule" slot="assistant"></ui5-toggle-button>
+		<ui5-avatar slot="profile">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_3.png" />
+		</ui5-avatar>
+	</ui5-shellbar>
+
 	<ui5-shellbar
 			class="shellbar-example"
 			secondary-title="Second Title"
@@ -257,6 +305,45 @@
 	<ui5-shellbar id="test-invalidation">
 		<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
 		<ui5-shellbar-item icon="discussion" count="2" id="test-invalidation-item"></ui5-shellbar-item>
+	</ui5-shellbar>
+
+	<!-- Badge Scenarios (Figma spec) -->
+
+	<h3>Badge Scenarios</h3>
+
+	<!-- Scenario 1: Single item visible in bar with counter badge -->
+	<ui5-shellbar id="sb-badge-single" class="shellbar-example">
+		<ui5-shellbar-branding slot="branding">Badge - Single Visible</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="activities" text="Tasks"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="bell" text="Notifications" count="72"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="activity-2" text="Work Items" count="5"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="discussion" text="Messages"></ui5-shellbar-item>
+	</ui5-shellbar>
+
+	<!-- Scenario 2: One badged item overflowed -> overflow button shows counter badge -->
+	<ui5-shellbar id="sb-badge-overflow-counter" class="shellbar-example" primary-title="SAP Fiori App" secondary-title="Badge Overflow Counter">
+		<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"/>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+		<ui5-shellbar-item icon="activities" text="Tasks"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="discussion" text="Messages"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="email" text="Email"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="bell" text="Notifications" count="72"></ui5-shellbar-item>
+	</ui5-shellbar>
+
+	<!-- Scenario 3: Multiple badged items overflowed -> overflow button shows attention dot -->
+	<ui5-shellbar id="sb-badge-overflow-attention" class="shellbar-example" primary-title="SAP Fiori App" secondary-title="Badge Attention Dot">
+		<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"/>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+		<ui5-shellbar-item icon="activities" text="Tasks"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="discussion" count="33" text="Messages"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="bell" text="Notifications dasdasd dsd. wdwad  sadsa dsd" count="72"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="activity-2" text="Work Items dasdsa dassd adsadasd " count="5"></ui5-shellbar-item>
 	</ui5-shellbar>
 
 	<ui5-toast id="wcToastTC">Custom Action Fired</ui5-toast>

@@ -2,7 +2,7 @@
  * Selectors of the table header row in multi-selection scenarios.
  *
  * @public
- * @since 2.12
+ * @since 2.12.0
  */
 enum TableSelectionMultiHeaderSelector {
 	/**

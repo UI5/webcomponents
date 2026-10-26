@@ -9,6 +9,7 @@ interface ShellBarSearchConstructorParams {
 	handleSearchButtonClick: () => boolean;
 	getSearchField: () => IShellBarSearchField | null;
 	getCSSVariable: (variable: string) => string;
+	getDisableSearchCollapse: () => boolean;
 }
 
 /**
@@ -29,6 +30,7 @@ class ShellBarSearch implements IShellBarSearchController {
 	private setSearchState: (expanded: boolean) => void;
 	private handleSearchButtonClick: () => boolean;
 	private getCSSVariable: (variable: string) => string;
+	private getDisableSearchCollapse: () => boolean;
 	private initialRender = true;
 
 	constructor({
@@ -38,6 +40,7 @@ class ShellBarSearch implements IShellBarSearchController {
 		getSearchState,
 		getCSSVariable,
 		handleSearchButtonClick,
+		getDisableSearchCollapse,
 	}: ShellBarSearchConstructorParams) {
 		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
@@ -45,6 +48,7 @@ class ShellBarSearch implements IShellBarSearchController {
 		this.getSearchState = getSearchState;
 		this.setSearchState = setSearchState;
 		this.handleSearchButtonClick = handleSearchButtonClick;
+		this.getDisableSearchCollapse = getDisableSearchCollapse;
 	}
 
 	subscribe(searchField: HTMLElement | null = this.getSearchField()) {
@@ -72,6 +76,11 @@ class ShellBarSearch implements IShellBarSearchController {
 	 */
 	autoManageSearchState(hiddenItems: number, availableSpace: number) {
 		if (!this.hasSearchField) {
+			return;
+		}
+
+		// Auto-collapse/expand disabled by the application; leave the search as-is.
+		if (this.getDisableSearchCollapse()) {
 			return;
 		}
 

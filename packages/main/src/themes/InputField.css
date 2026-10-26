@@ -253,7 +253,7 @@
 	content: none;
 }
 
-:host(:not([readonly]):not([disabled])[value-state]:not([value-state="None"])) {
+:host(:not([readonly]):not([disabled])[value-state]:not([value-state="None"]):not([value-state="Positive"]):not([value-state="Information"])) {
 	border-width: var(--_ui5_input_state_border_width);
 }
 

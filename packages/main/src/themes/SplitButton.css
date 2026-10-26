@@ -7,6 +7,8 @@
 	border-radius: var(--_ui5_button_border_radius);
 	background-color: var(--sapButton_Background);
 	box-shadow: var(--_ui5_split_button_host_default_box_shadow);
+	min-width: 0;
+	max-width: 100%;
 }
 
 :host([active-arrow-button][design="Negative"]) .ui5-split-arrow-button,
@@ -134,6 +136,7 @@
 	position: relative;
 	width: inherit;
 	height: 100%;
+	min-width: 0;
 }
 
 .ui5-split-button-root:focus,
@@ -390,6 +393,6 @@
 }
 
 .ui5-split-text-button::part(button) {
-    justify-content: flex-start;
+	justify-content: flex-start;
 	padding: 0 var(--_ui5_button_base_padding);
 }

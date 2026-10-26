@@ -41,8 +41,8 @@ describe("Date Picker Tests", () => {
 
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-			.then(async api => {
-				await api.setLanguage("bg");
+			.then(api => {
+				return api.setLanguage("bg");
 			});
 
 		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
@@ -65,6 +65,11 @@ describe("Date Picker Tests", () => {
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetPopoverDate(timestamp_11_Dec_2018)
 			.should("have.class", "ui5-dp-item--selected");
+
+		cy.wrap({ setLanguage })
+			.then(api => {
+				return api.setLanguage("en");
+			});
 	});
 
 	it("custom formatting", () => {
@@ -324,8 +329,8 @@ describe("Date Picker Tests", () => {
 
 	it("respect first day of the week - monday", () => {
 		cy.wrap({ setLanguage })
-			.then(async api => {
-				await api.setLanguage("bg");
+			.then(api => {
+				return api.setLanguage("bg");
 			});
 
 		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
@@ -344,6 +349,11 @@ describe("Date Picker Tests", () => {
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetPopoverDate(timestamp_3_Feb_2019)
 			.should("have.class", "ui5-dp-wday6");
+
+		cy.wrap({ setLanguage })
+			.then(api => {
+				return api.setLanguage("en");
+			});
 	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
@@ -988,6 +998,14 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "Delivery date");
 	});
 
+	it("placeholder is not set on inner input when value is present", () => {
+		cy.mount(<DatePicker value="Sep 9, 2026" formatPattern="MMM d, y"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("not.have.attr", "placeholder");
+	});
+
 	it("Going under the minimum date changes value state", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y" minDate="Jan 1, 2000"></DatePicker>);
 
@@ -1571,6 +1589,50 @@ describe("Date Picker Tests", () => {
 
 		cy.get<DatePicker>("@datePicker")
 			.should("have.attr", "value-state", "None");
+	});
+
+	it("selects an in-range day from the max month when clicked from the previous month view", () => {
+		cy.mount(<DatePicker id="datePicker1" maxDate="2026-12-10" value="2026-11-15"></DatePicker>);
+
+		cy.get<DatePicker>("#datePicker1")
+			.as("datePicker");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		const dec4Timestamp = new Date(Date.UTC(2026, 11, 4, 0, 0, 0)).valueOf() / 1000;
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.as("daypicker");
+
+		cy.get("@daypicker")
+			.shadow()
+			.find(`div[data-sap-timestamp=${dec4Timestamp}]`)
+			.realMouseDown();
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-root")
+			.realClick({ x: 0, y: 0 });
+
+		cy.get<DatePicker>("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.attr", "value", "2026-12-04");
 	});
 
 	it("Min and max dates are set, with no format pattern provided, using valid ISO format", () => {

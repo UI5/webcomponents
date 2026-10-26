@@ -23,7 +23,7 @@ import type FilterItemOption from "./FilterItemOption.js";
  * @constructor
  * @extends UI5Element
  * @abstract
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @customElement("ui5-filter-item")

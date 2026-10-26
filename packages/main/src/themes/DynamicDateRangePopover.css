@@ -107,11 +107,10 @@
 }
 
 .ui5-ddr-arrow-back-btn {
-	border: var(--_ui5_calendar_header_arrow_button_border);
-	border-radius: var(--_ui5_calendar_header_arrow_button_border_radius);
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_Lite_BorderColor);
+	border-radius: var(--_ui5_calendar_header_arrow_button_border_radius, var(--sapButton_BorderCornerRadius));
 	display:flex;
 	background-color: var(--sapButton_Lite_Background);
-	border-color: var(--sapButton_Lite_BorderColor);
 }
 
 .ui5-ddr-arrow-back-btn-arrow-icon {

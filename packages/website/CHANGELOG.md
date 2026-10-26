@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **website:** apply UI5 theme to main document on theme change ([#14158](https://github.com/UI5/webcomponents/issues/14158)) ([756fe3b](https://github.com/UI5/webcomponents/commit/756fe3b5e32cae3a4525f6fb28e8173a3baeddda))
+* **website:** improve playground editor dark mode styling ([#14159](https://github.com/UI5/webcomponents/issues/14159)) ([a376794](https://github.com/UI5/webcomponents/commit/a37679461372b031fc1a41bd3e52eaf2cc054af7))
+
+
+
+
+
+# [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
+
+
+### Bug Fixes
+
+* **ui5-numeric-input:** bump since tag version to the correct one ([eb2647a](https://github.com/UI5/webcomponents/commit/eb2647a4a6350eac254f77f2bb996b21fa2f993b))
+* **ui5-numeric-input:** rename component ([#14089](https://github.com/UI5/webcomponents/issues/14089)) ([f28463b](https://github.com/UI5/webcomponents/commit/f28463b707c4babc6a7c8feb45c4f51fd89b986e))
+
+
+### Features
+
+* **ui5-popover:** add keyboard resize via Shift+Arrow keys ([#14106](https://github.com/UI5/webcomponents/issues/14106)) ([4c16226](https://github.com/UI5/webcomponents/commit/4c1622699119a6a3753d0adc52885f1ef5c4b628))
+* **ui5-side-navigation:** implement search and filter feature ([#14063](https://github.com/UI5/webcomponents/issues/14063)) ([3c45594](https://github.com/UI5/webcomponents/commit/3c45594c1c54d442455a3152da6294745ddf070a))
+* **ui5-textarea:** introduce new character counter mode ([#14098](https://github.com/UI5/webcomponents/issues/14098)) ([c303318](https://github.com/UI5/webcomponents/commit/c303318fe685a9d6aa37e643a68ae6cc5c994be9))
+
+
+
+
+
+## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** update Joule assistant button icon in website samples ([#14038](https://github.com/UI5/webcomponents/issues/14038)) ([a042bc8](https://github.com/UI5/webcomponents/commit/a042bc832401fab01d7959cbacdf842616a01241)), closes [#14021](https://github.com/UI5/webcomponents/issues/14021)
+
+
+### Features
+
+* **ui5-avatar-badge:** add colorScheme property for extended color palette ([#14009](https://github.com/UI5/webcomponents/issues/14009)) ([849466d](https://github.com/UI5/webcomponents/commit/849466d29075aac4265190b62b3c8dcaafe08f4e)), closes [#13925](https://github.com/UI5/webcomponents/issues/13925)
+* **ui5-toolbar:** add overflow-group property for atomic group overflow ([#13949](https://github.com/UI5/webcomponents/issues/13949)) ([bf491e7](https://github.com/UI5/webcomponents/commit/bf491e75b16f6e51c95f69db63a8a15951e0fdcb))
+* **ui5-user-settings-notifications-view:** introduce NotificationsView in UserSettingsDialog ([#13885](https://github.com/UI5/webcomponents/issues/13885)) ([5ef9250](https://github.com/UI5/webcomponents/commit/5ef92502c6d2d9d5e0fae011cd168f28d292f8c1))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 

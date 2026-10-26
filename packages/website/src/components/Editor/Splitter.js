@@ -62,23 +62,27 @@ export default function Splitter({ preview, editor }) {
                 <div style={{ width: leftColumnSize, minWidth: "10%", transition: "width 0.15s linear" }}>{preview}</div>
                 <div
                     style={{
-                        width: "1rem",
-                        backgroundColor: "gainsboro",
+                        width: "5px",
+                        backgroundColor: "var(--ifm-color-emphasis-200)",
                         display: "flex",
                         alignItems: "center",
+                        justifyContent: "center",
                         flexShrink: 0,
                         userSelect: "none",
                         touchAction: "none",
-                        cursor: "col-resize"
+                        cursor: "col-resize",
+                        position: "relative",
                     }}
                     onMouseDown={mousedownHandler}
                     onTouchStart={mousedownHandler}
                 >
-                    <svg viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-                        <g role="presentation">
-                            <path d="M176 0q20 0 34 14t14 34-14 34-34 14-34-14-14-34 14-34 34-14zm160 96q-20 0-34-14t-14-34 14-34 34-14 34 14 14 34-14 34-34 14zm-160 42q20 0 34 14t14 34-14 34-34 14-34-14-14-34 14-34 34-14zm160 0q20 0 34 14t14 34-14 34-34 14-34-14-14-34 14-34 34-14zM176 278q20 0 34 14t14 34q0 19-14.5 33.5T176 374t-33.5-14.5T128 326q0-20 14-34t34-14zm160 0q20 0 34 14t14 34q0 19-14.5 33.5T336 374t-33.5-14.5T288 326q0-20 14-34t34-14zM176 416q20 0 34 14t14 34-14 34-34 14-34-14-14-34 14-34 34-14zm160 0q20 0 34 14t14 34-14 34-34 14-34-14-14-34 14-34 34-14z"></path>
-                        </g>
-                    </svg>
+                    <div style={{
+                        position: "absolute",
+                        width: "3px",
+                        height: "24px",
+                        borderRadius: "2px",
+                        backgroundColor: "var(--ifm-color-emphasis-400)",
+                    }} />
                 </div>
                 <div style={{ width: rightColumnSize, minWidth: "10%", transition: "width 0.15s linear" }}>{editor}</div>
             </div>

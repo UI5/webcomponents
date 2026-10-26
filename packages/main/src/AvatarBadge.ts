@@ -87,11 +87,29 @@ class AvatarBadge extends UI5Element {
 	 * - `Negative` - Red, used for error/rejected states
 	 * - `Information` - Blue, used for informational states
 	 *
+	 * **Note:** `state` takes precedence over `colorScheme`. When `state` is set
+	 * to any value other than `None`, the semantic styling applies and `colorScheme` is ignored.
+	 *
 	 * @default "None"
 	 * @public
 	 */
 	@property()
 	state: `${ValueState}` = ValueState.None;
+
+	/**
+	 * Defines the color scheme of the badge using the indication color palette.
+	 *
+	 * Available options are `"1"` through `"10"`, matching the indication colors.
+	 *
+	 * **Note:** `state` takes precedence - when `state` is set to any value other than `None`,
+	 * the semantic state styling applies and `colorScheme` is ignored.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.27.0
+	 */
+	@property()
+	colorScheme?: string;
 
 	/**
 	 * @private

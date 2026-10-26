@@ -1,6 +1,7 @@
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
+import type TableRowBase from "./TableRowBase.js";
 
 const isInstanceOfTable = createInstanceChecker<Table>("isTable");
 
@@ -14,6 +15,10 @@ const isHeaderSelectionCell = (e: Event) => {
 
 const findRowInPath = (composedPath: Array<EventTarget>) => {
 	return composedPath.find((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-row")) as TableRow;
+};
+
+const findRowBaseInPath = (composedPath: Array<EventTarget>) => {
+	return composedPath.find((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-row-base")) as TableRowBase | undefined;
 };
 
 const findVerticalScrollContainer = (element: HTMLElement, requireOverflow = false): HTMLElement => {
@@ -131,6 +136,7 @@ export {
 	isSelectionCell,
 	isHeaderSelectionCell,
 	findRowInPath,
+	findRowBaseInPath,
 	findVerticalScrollContainer,
 	computeAxisScrollDelta,
 	isFeature,

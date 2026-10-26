@@ -135,6 +135,10 @@ type InputSuggestionScrollEventDetail = {
  * @csspart root - Used to style the root DOM element of the Input component
  * @csspart input - Used to style the native input element
  * @csspart clear-icon - Used to style the clear icon, which can be pressed to clear user input text
+ * @ui5subcomponent InputIcon
+ * @ui5subcomponent SuggestionItem
+ * @ui5subcomponent SuggestionItemCustom
+ * @ui5subcomponent SuggestionItemGroup
  */
 @customElement({
 	tag: "ui5-input",
@@ -171,7 +175,7 @@ type InputSuggestionScrollEventDetail = {
  * @param {Integer} scrollTop The current scroll position.
  * @param {HTMLElement} scrollContainer The scroll container.
  * @protected
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @event("suggestion-scroll", {
 	bubbles: true,
@@ -211,11 +215,12 @@ class Input extends InputField implements SuggestionComponent {
 	 * **Note:** takes effect when `showSuggestions` is set to `true`
 	 * @default false
 	 * @private
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	highlight = false;
 
+	/**
 	/**
 	 * Defines whether the value will be autcompleted to match an item
 	 * @default false
@@ -234,6 +239,7 @@ class Input extends InputField implements SuggestionComponent {
 	@property({ type: Boolean })
 	showSuggestions = false;
 
+	/**
 	/**
 	 * Defines whether the suggestions picker is open.
 	 * The picker will not open if the `showSuggestions` property is set to `false`, the input is disabled or the input is readonly.

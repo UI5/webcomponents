@@ -38,6 +38,18 @@
 	color: var(--sapInformativeTextColor);
 }
 
+/* Extended color palette - applies only when state is None */
+:host([color-scheme="1"][state="None"]) { background: var(--sapIndicationColor_1_Background); border-color: var(--sapIndicationColor_1_BorderColor); color: var(--sapIndicationColor_1_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="2"][state="None"]) { background: var(--sapIndicationColor_2_Background); border-color: var(--sapIndicationColor_2_BorderColor); color: var(--sapIndicationColor_2_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="3"][state="None"]) { background: var(--sapIndicationColor_3_Background); border-color: var(--sapIndicationColor_3_BorderColor); color: var(--sapIndicationColor_3_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="4"][state="None"]) { background: var(--sapIndicationColor_4_Background); border-color: var(--sapIndicationColor_4_BorderColor); color: var(--sapIndicationColor_4_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="5"][state="None"]) { background: var(--sapIndicationColor_5_Background); border-color: var(--sapIndicationColor_5_BorderColor); color: var(--sapIndicationColor_5_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="6"][state="None"]) { background: var(--sapIndicationColor_6_Background); border-color: var(--sapIndicationColor_6_BorderColor); color: var(--sapIndicationColor_6_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="7"][state="None"]) { background: var(--sapIndicationColor_7_Background); border-color: var(--sapIndicationColor_7_BorderColor); color: var(--sapIndicationColor_7_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="8"][state="None"]) { background: var(--sapIndicationColor_8_Background); border-color: var(--sapIndicationColor_8_BorderColor); color: var(--sapIndicationColor_8_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="9"][state="None"]) { background: var(--sapIndicationColor_9_Background); border-color: var(--sapIndicationColor_9_BorderColor); color: var(--sapIndicationColor_9_TextColor); box-shadow: var(--sapContent_Shadow1); }
+:host([color-scheme="10"][state="None"]) { background: var(--sapIndicationColor_10_Background); border-color: var(--sapIndicationColor_10_BorderColor); color: var(--sapIndicationColor_10_TextColor); box-shadow: var(--sapContent_Shadow1); }
+
 .ui5-avatar-badge-icon {
 	width: var(--_ui5-avatar-badge-icon-size);
 	height: var(--_ui5-avatar-badge-icon-size);

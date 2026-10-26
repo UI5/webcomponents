@@ -1,3 +1,5 @@
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -12,6 +14,7 @@ import "@ui5/webcomponents-icons/dist/menu2.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
@@ -24,6 +27,20 @@ const Text = createReactComponent(TextClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
+  const [jouleIconEmea, setJouleIconEmea] = useState("da");
+  const [jouleIconApj, setJouleIconApj] = useState("da");
+
+  const handleEmeaToggleClick = (
+    e: UI5CustomEvent<ToggleButtonClass, "click">,
+  ) => {
+    setJouleIconEmea(e.currentTarget.pressed ? "da-2" : "da");
+  };
+  const handleApjToggleClick = (
+    e: UI5CustomEvent<ToggleButtonClass, "click">,
+  ) => {
+    setJouleIconApj(e.currentTarget.pressed ? "da-2" : "da");
+  };
+
   return (
     <>
       <ShellBar
@@ -50,7 +67,13 @@ function App() {
         />
 
         <ShellBarItem icon="sys-help" text="Help" />
-        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <ToggleButton
+          icon={jouleIconEmea}
+          design="Transparent"
+          tooltip="Joule"
+          slot="assistant"
+          onClick={handleEmeaToggleClick}
+        />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
         </Avatar>
@@ -78,7 +101,13 @@ function App() {
         />
 
         <ShellBarItem icon="sys-help" text="Help" />
-        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <ToggleButton
+          icon={jouleIconApj}
+          design="Transparent"
+          tooltip="Joule"
+          slot="assistant"
+          onClick={handleApjToggleClick}
+        />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
         </Avatar>

@@ -118,6 +118,8 @@ const SCROLL_THRESHOLD = 10; // px
  * @csspart content - Used to style the content of the component
  * @csspart fit-content - Used to style the fit content container of the component.
  * @csspart footer - Used to style the footer of the component
+ * @ui5subcomponent DynamicPageHeader
+ * @ui5subcomponent DynamicPageTitle
  */
 @customElement({
 	tag: "ui5-dynamic-page",
@@ -356,6 +358,12 @@ class DynamicPage extends UI5Element {
 
 	get _hidePinButton() {
 		return this.hidePinButton || isPhone();
+	}
+
+	get _actionsBarStickyTop(): number {
+		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
+		const headerHeight = this.headerInTitle ? (this.dynamicPageHeader?.getBoundingClientRect().height || 0) : 0;
+		return titleHeight + headerHeight;
 	}
 
 	/**

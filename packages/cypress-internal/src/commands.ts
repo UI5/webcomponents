@@ -1,7 +1,14 @@
 import { mount } from '@ui5/cypress-ct-ui5-webc';
 import { renderFinished } from '@ui5/webcomponents-base/dist/Render.js';
+import { setAnimationMode } from '@ui5/webcomponents-base/dist/config/AnimationMode.js';
 import "cypress-real-events";
 import '@cypress/code-coverage/support';
+
+if (Cypress.env("VISUAL")) {
+	before(() => {
+		cy.wrap(null).then(() => setAnimationMode("none"));
+	});
+}
 
 Cypress.Commands.add('waitRenderFinished', () => {
 	return cy.wrap(renderFinished(), { log: false });

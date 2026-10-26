@@ -15,6 +15,8 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -35,6 +37,8 @@ import {
 	SIDE_NAVIGATION_OVERFLOW_ACCESSIBLE_NAME,
 	SIDE_NAVIGATION_FLEXIBLE_LIST_LABEL,
 	SIDE_NAVIGATION_FIXED_LIST_LABEL,
+	SIDE_NAVIGATION_SEARCH_MATCH_COUNT_SINGULAR,
+	SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -107,8 +111,11 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * `import "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";` (for `ui5-side-navigation-sub-item`)
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
+ * @ui5subcomponent SideNavigationGroup
+ * @ui5subcomponent SideNavigationItem
+ * @ui5subcomponent SideNavigationSubItem
  */
 
 @customElement({
@@ -214,10 +221,32 @@ class SideNavigation extends UI5Element {
 	 * **Note:** The header is displayed when the component is expanded - the property `collapsed` is false;
 	 *
 	 * @public
-	 * @since 1.0.0-rc.11
+	 * @since 1.0.0
 	 */
 	@slot()
 	header!: Slot<HTMLElement>;
+
+	/**
+	 * Defines the filter section of the `ui5-side-navigation`.
+	 *
+	 * **Note:** The filter section is displayed when the component is expanded - the property `collapsed` is false;
+	 *
+	 * @public
+	 * @since 2.28.0
+	 */
+	@slot()
+	filterSection!: Slot<HTMLElement>;
+
+	/**
+	 * Specifies a term to be highlighted in the navigation items' text.
+	 * When set, matching portions of item and group texts are visually emphasized during rendering.
+	 *
+	 * @public
+	 * @since 2.28.0
+	 * @default undefined
+	 */
+	@property()
+	highlightedText?: string;
 
 	/**
 	 * @private
@@ -280,6 +309,7 @@ class SideNavigation extends UI5Element {
 				item.inPopover = this.inPopover;
 				item.sideNavigation = this;
 				item.sideNavAnimating = this._bAnimating;
+				item._highlightedText = this.highlightedText;
 			});
 
 		this.initGroupsSettings(this.items);
@@ -470,6 +500,14 @@ class SideNavigation extends UI5Element {
 
 	get hasFixedItems() {
 		return !!this.fixedItems.length;
+	}
+
+	get noMatchText() {
+		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, 0);
+	}
+
+	get showNoMatchText() {
+		return !!this.highlightedText && !this.items.length && !this.fixedItems.length;
 	}
 
 	get _rootRole() {
@@ -928,6 +966,24 @@ class SideNavigation extends UI5Element {
 				ref.appendChild(clonedTag);
 			});
 		}
+	}
+
+	/**
+	 * Announces the number of search matches found in the side navigation to assistive technologies.
+	 *
+	 * This method uses an invisible live region message so screen readers can inform users
+	 * about the current number of search matches.
+	 *
+	 * @param count The number of matching navigation items.
+	 * @since 2.28.0
+	 * @public
+	 */
+	announceSearchMatchCount(count: number): void {
+		const message = count === 1
+			? SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_SINGULAR, count)
+			: SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, count);
+
+		announce(message, InvisibleMessageMode.Polite);
 	}
 }
 

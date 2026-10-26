@@ -161,7 +161,7 @@
 	--___ui5-test-both: red;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--___ui5-test-both: blue;
 		--___ui5-test-compact-only: blue;
@@ -350,9 +350,9 @@
 		/* SplitButton */
 		--_ui5_split_button_middle_separator_height: 1.625rem;
 
-		/* NumberInput / StepInput */
-		--_ui5_number_input_min_width: 6rem;
-		--_ui5_number_input_padding_with_step_buttons: 2rem;
+		/* NumericInput / StepInput */
+		--_ui5_numeric_input_min_width: 6rem;
+		--_ui5_numeric_input_padding_with_step_buttons: 2rem;
 
 		/* Tree */
 		--_ui5-tree-indent-step: 0.5rem;

@@ -8,7 +8,7 @@ describe("SearchMessageArea visual", () => {
 				<SearchMessageArea slot="messageArea" text="No results found" />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -22,7 +22,7 @@ describe("SearchMessageArea visual", () => {
 				/>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -36,7 +36,7 @@ describe("SearchMessageArea visual", () => {
 				/>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -52,7 +52,7 @@ describe("SearchMessageArea visual", () => {
 				</Search>
 			</div>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });

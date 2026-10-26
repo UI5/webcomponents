@@ -49,7 +49,7 @@ type ColorPalettePopoverItemClickEventDetail = ColorPaletteItemClickEventDetail;
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-color-palette-popover",
@@ -225,7 +225,7 @@ class ColorPalettePopover extends UI5Element {
 	/**
 	 * Returns if the component is opened.
 	 * @protected
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	isOpen() {
 		return this.open;

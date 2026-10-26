@@ -64,6 +64,8 @@ type NotificationItemCloseEventDetail = NotificationItemEventDetail;
  * @extends UI5Element
  * @since 2.0.0
  * @public
+ * @ui5subcomponent NotificationListGroupItem
+ * @ui5subcomponent NotificationListItem
  */
 @customElement({
 	tag: "ui5-notification-list",

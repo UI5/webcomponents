@@ -106,7 +106,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;

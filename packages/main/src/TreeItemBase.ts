@@ -159,7 +159,7 @@ class TreeItemBase extends ListItem {
 	 * Available options are: `"None"` (by default), `"Positive"`, `"Critical"`, `"Information"` and `"Negative"`.
 	 * @default "None"
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	additionalTextState: `${ValueState}` = "None";
@@ -175,14 +175,14 @@ class TreeItemBase extends ListItem {
 
 	/**
 	 * @private
-	 * @since 1.0.0-rc.11
+	 * @since 1.0.0
 	 */
 	@property({ type: Number, noAttribute: true })
 	forcedSetsize = 1;
 
 	/**
 	 * @private
-	 * @since 1.0.0-rc.11
+	 * @since 1.0.0
 	 */
 	@property({ type: Number, noAttribute: true })
 	forcedPosinset = 1;

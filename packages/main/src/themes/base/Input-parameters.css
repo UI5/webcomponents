@@ -73,7 +73,7 @@
 	--_ui5_input_tokenizer_min_width: 3.5rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_min_width: 2rem;
 		--_ui5_input_min_width_tokenizer_available: 2rem;
