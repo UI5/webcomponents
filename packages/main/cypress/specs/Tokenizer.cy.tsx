@@ -2173,3 +2173,235 @@ describe("Token deletion announcements", () => {
 			.should("have.text", "3 tokens deleted");
 	});
 });
+
+// ── Responsive Overflow Handling (refactored layout engine) ──────────────────
+
+describe("Tokenizer responsive overflow – layout states", () => {
+	it("State A: all tokens fit – no n-more button rendered", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "600px" }}>
+				<Tokenizer>
+					<Token text="Alpha"></Token>
+					<Token text="Beta"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+
+		cy.get("[ui5-token]").each(token => {
+			cy.wrap(token).should("not.have.attr", "overflows");
+		});
+	});
+
+	it("State B: some tokens overflow – n-more button shows correct count", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "120px" }}>
+				<Tokenizer onui5TokenDelete={onTokenDelete}>
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+					<Token text="Denmark"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist");
+
+		// The n-more count must equal the number of tokens with overflows attr.
+		cy.get("[ui5-tokenizer]").then($tokenizer => {
+			const overflowCount = [...$tokenizer[0].querySelectorAll("[ui5-token]")]
+				.filter((t: Element) => t.hasAttribute("overflows")).length;
+
+			cy.get("[ui5-tokenizer]")
+				.shadow()
+				.find(".ui5-tokenizer-more-text")
+				.invoke("text")
+				.then(text => {
+					const n = parseInt(text.match(/\d+/)![0], 10);
+					expect(n).to.equal(overflowCount);
+				});
+		});
+	});
+
+	it("State B: at least one token is visible alongside the n-more button", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "120px" }}>
+				<Tokenizer>
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		cy.get("[ui5-token]")
+			.filter(":not([overflows])")
+			.should("have.length.gte", 1);
+	});
+
+	it("State C: no tokens fit – fallback button shows total item count", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "10px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will never fit"></Token>
+					<Token text="Another very long token that cannot fit either"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// All tokens hidden.
+		cy.get("[ui5-token]").each(token => {
+			cy.wrap(token).should("have.attr", "overflows");
+		});
+
+		// Fallback button present.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.invoke("text")
+			.should("match", /2 items/i);
+	});
+
+	it("hidden measurement span is invisible and does not affect layout", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "300px" }}>
+				<Tokenizer>
+					<Token text="Alpha"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--measure-nmore")
+			.should("exist")
+			.then($span => {
+				const style = getComputedStyle($span[0]);
+				expect(style.visibility).to.equal("hidden");
+				expect(style.pointerEvents).to.equal("none");
+			});
+	});
+});
+
+describe("Tokenizer responsive overflow – resize behavior", () => {
+	it("transitions from state B to state A when container grows", () => {
+		cy.mount(
+			<div id="resize-container" style={{ display: "flex", width: "120px" }}>
+				<Tokenizer>
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// Initially overflow.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist");
+
+		// Expand container.
+		cy.get("#resize-container")
+			.invoke("css", "width", "600px");
+
+		// n-more button must disappear.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+	});
+
+	it("transitions from state A to state B when container shrinks", () => {
+		cy.mount(
+			<div id="shrink-container" style={{ display: "flex", width: "600px" }}>
+				<Tokenizer>
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// No overflow initially.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+
+		// Shrink container.
+		cy.get("#shrink-container")
+			.invoke("css", "width", "120px");
+
+		// n-more button must appear.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist");
+	});
+
+	it("keeps n-more count accurate after repeated resize", () => {
+		cy.mount(
+			<div id="resize-repeat" style={{ display: "flex", width: "300px" }}>
+				<Tokenizer>
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+					<Token text="Denmark"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		const getCount = () =>
+			cy.get("[ui5-tokenizer]")
+				.shadow()
+				.find(".ui5-tokenizer-more-text")
+				.invoke("text")
+				.then(t => parseInt(t.match(/\d+/)![0], 10));
+
+		cy.get("#resize-repeat").invoke("css", "width", "120px");
+		getCount().then(c1 => {
+			cy.get("#resize-repeat").invoke("css", "width", "300px");
+			cy.get("#resize-repeat").invoke("css", "width", "120px");
+			getCount().should("equal", c1);
+		});
+	});
+});
+
+describe("Tokenizer responsive overflow – token list changes", () => {
+	it("updates layout when a token is added", () => {
+		cy.mount(
+			<div style={{ display: "flex", width: "300px" }}>
+				<Tokenizer id="dynamic-add">
+					<Token text="Alpha"></Token>
+					<Token text="Beta"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+
+		cy.get("[ui5-tokenizer]").then($t => {
+			const token = document.createElement("ui5-token") as any;
+			token.setAttribute("text", "Very long token that causes overflow");
+			$t[0].appendChild(token);
+		});
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist");
+	});
+});
+

@@ -121,3 +121,20 @@
 	color: var(--sapLink_Active_Color);
 	text-decoration: var(--_ui5_link_active_text_decoration);
 }
+
+/* ── Hidden measurement span ────────────────────────────────────────────────
+   Used to measure the rendered width of "+N more" / "N Items" button text
+   before committing to a layout.  Must:
+   - Be invisible and out of document flow (no scrollbars, no layout shift).
+   - Remain measurable (avoid display:none — browsers return 0 for those).
+   - Not intercept pointer events or receive focus.                          */
+.ui5-tokenizer--measure-nmore {
+	visibility: hidden;
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+	white-space: nowrap;
+	pointer-events: none;
+	user-select: none;
+	margin: 0;
+}

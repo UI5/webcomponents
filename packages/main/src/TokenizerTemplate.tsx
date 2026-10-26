@@ -45,6 +45,14 @@ export default function TokenizerTemplate(this: Tokenizer) {
 				}
 			</div>
 
+			{/* Hidden span used to measure "+N more" / "N Items" button widths before
+			    committing to a layout. Positioned out of flow so it never affects the
+			    visible layout, causes scrollbars, or intercepts pointer events. */}
+			<span
+				aria-hidden="true"
+				class="ui5-tokenizer-more-text ui5-tokenizer--measure-nmore"
+			></span>
+
 			{ TokenizerPopoverTemplate.call(this) }
 		</>
 	);
