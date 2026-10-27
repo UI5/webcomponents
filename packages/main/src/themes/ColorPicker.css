@@ -98,10 +98,6 @@
     display: none;
 }
 
-[ui5-slider]::part(progress-bar) {
-    background: transparent;
-}
-
 [ui5-slider].ui5-color-picker-hue-slider::part(scale) {
     background-size: 100%;
     background-image: -webkit-linear-gradient(left, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
@@ -239,7 +235,7 @@
     display: none;
 }
 
-:dir(rtl) [ui5-slider].ui5-color-picker-hue-slider::part(progress-container) {
+:dir(rtl) [ui5-slider].ui5-color-picker-hue-slider::part(scale) {
     background-image: -webkit-linear-gradient(right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
     background-image: -moz-linear-gradient(right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
     background-image: linear-gradient(right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
