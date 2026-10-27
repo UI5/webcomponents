@@ -4,3 +4,4 @@ overlay
 package-scripts.js
 .eslintrc.cjs
 src/generated
+src/openui5-types.d.ts
