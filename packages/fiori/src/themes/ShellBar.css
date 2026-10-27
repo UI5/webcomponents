@@ -365,14 +365,19 @@ slot[name="profile"] {
 
 .ui5-shellbar-overflow-branding {
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: flex-start;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
 	gap: 0.125rem;
 	min-height: 2.5rem;
-	/* Grow to the content width so the hover/active background spans the full horizontal
-	   scroll width when the logo is wider than the popover. */
-	width: max-content;
+	/* Hug the content: width follows the widest unbreakable unit (the logo, or the title's
+	   longest word), so once the title wraps below the logo the popover shrinks to the content
+	   width instead of keeping the wide side-by-side width. max-width bounds the row to the
+	   popover/List; an oversized logo (wider than that) overflows and is scrolled by the List's
+	   own horizontal scroll container, so the scrollbar sits at the bottom of the popover rather
+	   than under the branding row. min-width keeps short content filling the row. */
+	width: min-content;
+	max-width: 100%;
 	min-width: 100%;
 	/* Align the branding row inset with the List items below it */
 	padding: 0.25rem 1rem;
@@ -390,7 +395,7 @@ slot[name="profile"] {
 
 .ui5-shellbar-overflow-branding-logo {
 	display: block;
-	flex-shrink: 0;
+	flex: 0 0 auto;
 	/* Spec B2: logo spacing modelled as padding-right on the logo itself */
 	padding-inline-end: 0.25rem;
 }
@@ -406,10 +411,13 @@ slot[name="profile"] {
 	color: var(--sapList_TextColor);
 	white-space: normal;
 	word-break: break-word;
-	min-width: 0;
-	/* 16rem matches the overflow popover width (20rem) minus its horizontal padding,
-	   so the title wraps naturally without stretching the popover. */
-	max-width: 16rem;
+	/* Keep the title at its natural width beside the logo so it does NOT wrap into the thin
+	   strip left over next to a wide logo; min-content stops it shrinking below its longest
+	   word, which forces flex-wrap to drop it onto its own full-width line instead. Once there,
+	   it wraps normally within the popover width. No flex-grow, so on its own line it stays at
+	   its natural width rather than stretching the popover and leaving empty space. */
+	flex: 0 1 auto;
+	min-width: min-content;
 }
 
 .ui5-shellbar-overflow-branding-separator {

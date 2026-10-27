@@ -66,6 +66,11 @@
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — appears at top of overflow popover with separator, shows only the hidden parts (identifier and/or logo)</td>
 			</tr>
 			<tr>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Overflow popover width</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Fixed <code>max-width: 20rem</code> box — title capped and forced to wrap inside it</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW (designer directive) — popover sizes to its content: grows to fit the logo + identifier and shrinks to hug them (no empty space), <code>min-width: 100px</code> floor, horizontal scrollbar only when the logo exceeds the viewport. See scenario 14.</td>
+			</tr>
+			<tr>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Title wrapping</strong></td>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>white-space: nowrap</code> + ellipsis — title always on one line</td>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;"><code>-webkit-line-clamp: 2</code> — title can wrap up to 2 lines before it overflows</td>
@@ -355,21 +360,76 @@
 
 <!-- ═══════════════════════════════════════════════════════════════
      13. OVERSIZED LOGO — horizontal scroll in overflow popover
-     Expected: a logo wider than the overflow popover shows a horizontal
-     scrollbar inside the branding entry instead of overflowing the popover.
+     Expected: a logo wider than the viewport shows a horizontal
+     scrollbar in the popover (the popover can't grow past the viewport).
      ═══════════════════════════════════════════════════════════════ -->
 <div class="scenario">
 	<span class="scenario-label">13 · Oversized logo — scroll in overflow popover</span>
 	<p class="scenario-desc">
 		Resize very narrow until the logo overflows, then open the overflow menu. The 400px-wide
-		custom logo is bounded to the popover width and gets a horizontal scrollbar; the title
-		wraps below it.
+		custom logo is wider than the popover can grow (bounded by the viewport), so the popover
+		content gets a horizontal scrollbar. The title wraps onto its own line below the logo.
 	</p>
 	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
 		<ui5-shellbar-branding slot="branding">
 			Long Product Identifier which is very Long
 			<img slot="logo" alt="Custom Logo 400x30" width="400" height="30"
 				src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='400'%20height='30'%3E%3Crect%20width='400'%20height='30'%20fill='%23a06cd5'/%3E%3Ctext%20x='12'%20y='20'%20fill='white'%20font-size='14'%3ECustom%20Logo%20400x30%3C/text%3E%3C/svg%3E" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     14. OVERFLOW POPOVER WIDTH — grows/shrinks with content
+     Designer directive: "the popover takes the space it needs, so it
+     grows — the size depends on the content." No fixed max-width; the
+     popover hugs its content rather than reserving a wide fixed box.
+     min-width 100px floor; side-by-side when both fit, title wraps
+     below the logo (and the popover shrinks to hug it) when they don't.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">14 · Overflow popover width — grows to fit content</span>
+	<p class="scenario-desc">
+		THE branding-width feature. Resize so branding overflows, then open the menu at a few
+		widths. The popover is NOT a fixed-width box — it grows to fit the logo + identifier and
+		shrinks back to hug them, so there is never empty space on the right. When the logo and
+		identifier fit on one line they sit side by side; when they don't, the identifier wraps
+		onto its own line below the logo and the popover narrows to that content (min-width 100px).
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Long Product Identifier which is very Long
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     15. EXTRA-WIDE LOGO — aspect-ratio scaling + scroll
+     A 900x30 logo: same height band as a normal logo but much wider.
+     Once height is capped to 25px in the popover the width stays huge
+     (~750px), well past the viewport, so the popover content scrolls
+     horizontally and the identifier wraps below the logo.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">15 · Extra-wide logo — aspect-ratio scaling + scroll</span>
+	<p class="scenario-desc">
+		A 900&times;30 custom logo — long and thin. The height cap (25px in the popover) keeps the
+		aspect ratio, so the width stays about 750px, far wider than the popover can grow. The
+		popover content therefore gets a horizontal scrollbar and the identifier wraps onto its own
+		line below the logo. (Unlike a tall, squat logo, which the height cap makes <em>narrower</em>.)
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Long Product Identifier which is very Long
+			<img slot="logo" alt="Wide Logo 900x30" width="900" height="30"
+				src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='900'%20height='30'%3E%3Crect%20width='900'%20height='30'%20fill='%23227a52'/%3E%3Ctext%20x='16'%20y='21'%20fill='white'%20font-size='16'%20font-family='sans-serif'%3EWide%20Logo%20900x30%20%E2%80%94%20scrolls%20in%20the%20overflow%20popover%3C/text%3E%3C/svg%3E" />
 		</ui5-shellbar-branding>
 		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
 		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>

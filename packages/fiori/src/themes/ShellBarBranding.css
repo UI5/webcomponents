@@ -13,7 +13,7 @@
 	min-height: 2.5rem;
 	min-width: 0;
 	padding-block: 0.25rem;
-	padding-inline: 0.25rem 2rem;
+	padding-inline: 0.25rem 0.5rem;
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--sapButton_Lite_Background);
@@ -90,7 +90,9 @@
 }
 
 ::slotted([slot="logo"]) {
-	max-height: 1.5625rem;
+	/* In-bar logo is 30px (spec mockups "Custom Logo 255x30"); the 25px / 1.5625rem figure
+	   in spec B2 applies only to the logo inside the overflow popover. */
+	max-height: 1.875rem;
 	width: auto;
 	padding-block: 0.0625rem;
 	padding-inline: 0.25rem;

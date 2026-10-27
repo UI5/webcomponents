@@ -3,10 +3,12 @@
 	padding: 0;
 }
 
-/* Bound the overflow popover so a long branding title wraps within it
-   instead of stretching the popover to the title's full width. */
+/* The popover grows to fit its content (logo + title side by side).
+   min-width keeps it from collapsing on very short content. The oversized-logo
+   horizontal scrollbar lives on the branding row itself (see ShellBar.css),
+   because the List between here and the row would otherwise clip it. */
 .ui5-shellbar-overflow-popover::part(content) {
-	max-width: 20rem;
+	min-width: 6.25rem;
 }
 
 .ui5-shellbar-overflow-popover [ui5-li]::part(icon) {
