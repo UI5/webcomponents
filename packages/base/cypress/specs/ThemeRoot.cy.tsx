@@ -51,6 +51,8 @@ describe("ThemeRoot via URL param — without meta tag", () => {
 		{ label: "protocol-relative (different origin)", themeRoot: "//example2.com/themes/", blocked: true },
 		{ label: "protocol-relative (different port)", themeRoot: "//example:9090.com/themes/", blocked: true },
 		{ label: "protocol-relative (same host, no meta tag)", themeRoot: "//example.com/themes/", blocked: true },
+		{ label: "backslash bypass (resolves cross-origin)", themeRoot: "/\\example.com/themes/", blocked: true },
+		{ label: "backslash bypass minimal (resolves cross-origin)", themeRoot: "/\\example.com", blocked: true },
 		{ label: "root-relative", themeRoot: "/themes/", blocked: false },
 		{ label: "relative (current dir)", themeRoot: "./themes/", blocked: false },
 		{ label: "relative (parent dir)", themeRoot: "../themes/", blocked: false },
@@ -101,6 +103,8 @@ describe("ThemeRoot via URL param — with meta tag (allowed: http://example.com
 		{ label: "absolute URL (different port)", themeRoot: "http://example:9090.com/themes/" },
 		{ label: "protocol-relative (different origin)", themeRoot: "//example2.com/themes/" },
 		{ label: "protocol-relative (different port)", themeRoot: "//example:9090.com/themes/" },
+		{ label: "backslash bypass (resolves cross-origin)", themeRoot: "/\\example.com/themes/" },
+		{ label: "backslash bypass minimal (resolves cross-origin)", themeRoot: "/\\example.com" },
 	];
 
 	const allowed = [

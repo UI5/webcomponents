@@ -66,6 +66,16 @@
 			<br /> (resolves to the current page's origin, e.g. http://localhost:8080/themes/) <br /> Same-origin — expected link element
 			<br /> <button onclick="testSetThemeRoot('/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
+		<li>❌ <a href="?sap-ui-theme=sap_horizon@/\example.com/themes/">?sap-ui-theme=sap_horizon@/\example.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=/\example.com/themes/">?sap-ui-themeRoot=/\example.com/themes/</a>
+			<br /> /\example.com/themes/ — backslash bypass: WHATWG URL parser normalizes \\ to / making this resolve to http://example.com/themes/ — no meta tag present, must be blocked
+			<br /> <button onclick="testSetThemeRoot('/\\example.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
+		</li>
+		<li>❌ <a href="?sap-ui-theme=sap_horizon@/\example.com">?sap-ui-theme=sap_horizon@/\example.com</a>
+			<br /><a href="?sap-ui-themeRoot=/\example.com">?sap-ui-themeRoot=/\example.com</a>
+			<br /> /\example.com — minimal backslash bypass, resolves to http://example.com/ — no meta tag present, must be blocked
+			<br /> <button onclick="testSetThemeRoot('/\\example.com', this)">Test setThemeRoot</button> <span class="result"></span>
+		</li>
 		<li>✅ <a href="?sap-ui-theme=sap_horizon@./themes/">?sap-ui-theme=sap_horizon@./themes/</a>
 			<br /><a href="?sap-ui-themeRoot=./themes/">?sap-ui-themeRoot=./themes/</a>
 			<br /> ./themes/
