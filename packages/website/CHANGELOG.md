@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **website:** apply UI5 theme to main document on theme change ([#14158](https://github.com/UI5/webcomponents/issues/14158)) ([756fe3b](https://github.com/UI5/webcomponents/commit/756fe3b5e32cae3a4525f6fb28e8173a3baeddda))
+* **website:** improve playground editor dark mode styling ([#14159](https://github.com/UI5/webcomponents/issues/14159)) ([a376794](https://github.com/UI5/webcomponents/commit/a37679461372b031fc1a41bd3e52eaf2cc054af7))
+
+
+
+
+
 # [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
 
 

@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **release:** disable npm provenance for all release jobs ([#14187](https://github.com/UI5/webcomponents/issues/14187)) ([67c99ad](https://github.com/UI5/webcomponents/commit/67c99adfded749b03e930069d33c8b76de48102a))
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **ui5-bar:** deprecate accessibleRole and remove toolbar role default ([#14074](https://github.com/UI5/webcomponents/issues/14074)) ([f748b79](https://github.com/UI5/webcomponents/commit/f748b799ad0be301f9998de7f01d08123a5c6e33))
+* **ui5-form:** align labelContent slot text to right on side row form item ([#14173](https://github.com/UI5/webcomponents/issues/14173)) ([9600458](https://github.com/UI5/webcomponents/commit/96004583244b3d52b66c7ad1e2b34b174a618593))
+* **ui5-form:** truncate long header texts ([#14172](https://github.com/UI5/webcomponents/issues/14172)) ([0d9b4d9](https://github.com/UI5/webcomponents/commit/0d9b4d98fa9b6ee2508f90447b86f09b2401d532))
+* **ui5-search, ui5-shellbar, ui5-shellbar-search:** fix 'disable-search-collapse' behaviour ([4b9a290](https://github.com/UI5/webcomponents/commit/4b9a29093be2dc770291ff4e310a8087de38f404)), closes [#14150](https://github.com/UI5/webcomponents/issues/14150)
+* **ui5-search:** remove dead code ([#14145](https://github.com/UI5/webcomponents/issues/14145)) ([1b950e8](https://github.com/UI5/webcomponents/commit/1b950e8650b103d0f16438625187fb3cfe601051))
+* **ui5-shellbar:** legacy logo styles fixed ([#14119](https://github.com/UI5/webcomponents/issues/14119)) ([87cfe6f](https://github.com/UI5/webcomponents/commit/87cfe6f6e0983d092795de635775bef5fc77806e))
+* **ui5-shellbar:** prevent double announcement of notifications count ([#14134](https://github.com/UI5/webcomponents/issues/14134)) ([6d0fb3c](https://github.com/UI5/webcomponents/commit/6d0fb3cafdda208cd313e0bb3b85fe357bd0df2b)), closes [#11284](https://github.com/UI5/webcomponents/issues/11284) [#11396](https://github.com/UI5/webcomponents/issues/11396)
+* **ui5-shellbar:** prevent render loop when legacy search is full-width ([#14167](https://github.com/UI5/webcomponents/issues/14167)) ([04afa80](https://github.com/UI5/webcomponents/commit/04afa8060c6b983dff264a6033b7b7354809e5ea)), closes [#14149](https://github.com/UI5/webcomponents/issues/14149)
+* **website:** apply UI5 theme to main document on theme change ([#14158](https://github.com/UI5/webcomponents/issues/14158)) ([756fe3b](https://github.com/UI5/webcomponents/commit/756fe3b5e32cae3a4525f6fb28e8173a3baeddda))
+* **website:** improve playground editor dark mode styling ([#14159](https://github.com/UI5/webcomponents/issues/14159)) ([a376794](https://github.com/UI5/webcomponents/commit/a37679461372b031fc1a41bd3e52eaf2cc054af7))
+
+
+
+
+
 # [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
 
 

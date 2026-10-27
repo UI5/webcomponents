@@ -42,7 +42,7 @@
 	--_ui5_timeline_tli_horizontal_indicator_short_after_width: 100%;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		/* Timeline (container) */
 		--_ui5_tl_bubble_padding: .5rem;

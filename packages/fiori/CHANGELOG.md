@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **ui5-search, ui5-shellbar, ui5-shellbar-search:** fix 'disable-search-collapse' behaviour ([4b9a290](https://github.com/UI5/webcomponents/commit/4b9a29093be2dc770291ff4e310a8087de38f404)), closes [#14150](https://github.com/UI5/webcomponents/issues/14150)
+* **ui5-search:** remove dead code ([#14145](https://github.com/UI5/webcomponents/issues/14145)) ([1b950e8](https://github.com/UI5/webcomponents/commit/1b950e8650b103d0f16438625187fb3cfe601051))
+* **ui5-shellbar:** legacy logo styles fixed ([#14119](https://github.com/UI5/webcomponents/issues/14119)) ([87cfe6f](https://github.com/UI5/webcomponents/commit/87cfe6f6e0983d092795de635775bef5fc77806e))
+* **ui5-shellbar:** prevent double announcement of notifications count ([#14134](https://github.com/UI5/webcomponents/issues/14134)) ([6d0fb3c](https://github.com/UI5/webcomponents/commit/6d0fb3cafdda208cd313e0bb3b85fe357bd0df2b)), closes [#11284](https://github.com/UI5/webcomponents/issues/11284) [#11396](https://github.com/UI5/webcomponents/issues/11396)
+* **ui5-shellbar:** prevent render loop when legacy search is full-width ([#14167](https://github.com/UI5/webcomponents/issues/14167)) ([04afa80](https://github.com/UI5/webcomponents/commit/04afa8060c6b983dff264a6033b7b7354809e5ea)), closes [#14149](https://github.com/UI5/webcomponents/issues/14149)
+
+
+
+
+
 # [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
 
 
