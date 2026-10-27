@@ -41,9 +41,18 @@
 .ui5-dt-picker-header {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	width: 100%;
 	margin-top: 1rem;
 	box-sizing: border-box;
+}
+
+.ui5-dt-time-mode-toggle {
+	margin-inline-start: 0.5rem;
+}
+
+.ui5-dt-mode-inputs {
+	padding: 1rem;
 }
 
 .ui5-dt-picker-separator {

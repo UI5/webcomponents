@@ -3,10 +3,18 @@
 }
 
 .ui5-time-picker-popover .ui5-responsive-popover-header .row {
-	justify-content: flex-start;
+	justify-content: space-between;
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader5Size);
 	color: var(--sapPageHeader_TextColor);
+}
+
+.ui5-tp-mode-toggle {
+	margin-inline-start: auto;
+}
+
+.ui5-tp-mode-inputs {
+	padding: 1rem;
 }
 
 .ui5-time-picker-footer {
@@ -23,9 +31,4 @@
 
 .ui5-time-picker-popover::part(content) {
 	padding: 0;
-}
-
-.ui5-time-picker-inputs-popover::part(header) {
-	padding: 0;
-	width: 100%;
 }

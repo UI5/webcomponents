@@ -1,6 +1,5 @@
 import type TimePicker from "./TimePicker.js";
 import Button from "./Button.js";
-import Popover from "./Popover.js";
 import Icon from "./Icon.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import TimeSelectionClocks from "./TimeSelectionClocks.js";
@@ -10,79 +9,56 @@ import error from "@ui5/webcomponents-icons/dist/error.js";
 import alert from "@ui5/webcomponents-icons/dist/alert.js";
 import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import information from "@ui5/webcomponents-icons/dist/information.js";
+import keyboardAndMouse from "@ui5/webcomponents-icons/dist/keyboard-and-mouse.js";
+import timeEntryRequest from "@ui5/webcomponents-icons/dist/time-entry-request.js";
 
 export default function TimePickerPopoverTemplate(this: TimePicker) {
 	return (
-		<>
-			<ResponsivePopover
-				id={`${this._id}-responsive-popover`}
-				class="ui5-time-picker-popover ui5-popover-with-value-state-header-phone"
-				placement="Bottom"
-				horizontalAlign="Start"
-				opener={this}
-				open={this.open}
-				allowTargetOverlap={true}
-				_hideHeader={this._shouldHideHeader}
-				hideArrow={true}
-				preventInitialFocus={this._preventPickerInitialFocus}
-				accessibleName={this.pickerAccessibleName}
-				onClose={this.onResponsivePopoverAfterClose}
-				onBeforeOpen={this.onResponsivePopoverBeforeOpen}
-				onOpen={this.onResponsivePopoverAfterOpen}
-				onWheel={this._handleWheel}
-				onKeyDown={this._onkeydown}
-			>
-				{ !!this.showHeader && defaultHeader.call(this) }
+		<ResponsivePopover
+			id={`${this._id}-responsive-popover`}
+			class="ui5-time-picker-popover ui5-popover-with-value-state-header-phone"
+			placement="Bottom"
+			horizontalAlign="Start"
+			opener={this}
+			open={this.open}
+			allowTargetOverlap={true}
+			_hideHeader={this._shouldHideHeader}
+			hideArrow={true}
+			preventInitialFocus={this._preventPickerInitialFocus}
+			accessibleName={this.pickerAccessibleName}
+			onClose={this.onResponsivePopoverAfterClose}
+			onBeforeOpen={this.onResponsivePopoverBeforeOpen}
+			onOpen={this.onResponsivePopoverAfterOpen}
+			onWheel={this._handleWheel}
+			onKeyDown={this._onkeydown}
+		>
+			{ !!this.showHeader && defaultHeader.call(this) }
 
-				{ this.shouldDisplayValueStateMessageInResponsivePopover && valueStateTextHeader.call(this) }
+			{ this.shouldDisplayValueStateMessageInResponsivePopover && valueStateTextHeader.call(this) }
 
-				<TimeSelectionClocks
+			{ this._useInputsMode
+				? <TimeSelectionInputs
+					id={`${this._id}-time-sel`}
+					class="ui5-tp-mode-inputs"
+					value={this._timeSelectionValue}
+					formatPattern={this._formatPattern}
+					_showLabels={true}
+					onChange={this.onTimeSelectionChange}
+				/>
+				: <TimeSelectionClocks
 					id={`${this._id}-time-sel`}
 					value={this._timeSelectionValue}
 					formatPattern={this._formatPattern}
 					onChange={this.onTimeSelectionChange}
 					onClosePicker={this.submitPickers}
 				/>
-
-				<div slot="footer" class="ui5-time-picker-footer">
-					<Button id="submit" design="Emphasized" onClick={this.submitPickers}>{this.submitButtonLabel}</Button>
-					<Button id="close" design="Transparent" onClick={this._togglePicker}>{this.cancelButtonLabel}</Button>
-				</div>
-			</ResponsivePopover>
-
-			{this._isMobileDevice &&
-				<Popover
-					id={`${this._id}-popover`}
-					class="ui5-time-picker-inputs-popover"
-					placement="Bottom"
-					horizontalAlign="Start"
-					allow-target-overlap
-					_hide-header
-					hide-arrow
-					onOpen={this.onInputsPopoverAfterOpen}
-					onClose={this.onInputsPopoverAfterClose}
-					onWheel={this._handleWheel}
-					onKeyDown={this._onkeydown}
-				>
-					{ this.hasValueStateText && valueStateTextHeader.call(this) }
-
-					<div class="popover-content">
-						<TimeSelectionInputs
-							id={`${this._id}-time-sel-inputs`}
-							value={this._timeSelectionValue}
-							formatPattern={this._formatPattern}
-							onChange={this.onTimeSelectionChange}
-							onCloseInputs={this.submitInputsPopover}
-						/>
-					</div>
-
-					<div slot="footer" class="ui5-time-picker-footer">
-						<Button id="submitInputs" design="Emphasized" onClick={this.submitInputsPopover}>{this.submitButtonLabel}</Button>
-						<Button id="closeInputs" design="Transparent" onClick={this.closeInputsPopover}>{this.cancelButtonLabel}</Button>
-					</div>
-				</Popover>
 			}
-		</>
+
+			<div slot="footer" class="ui5-time-picker-footer">
+				<Button id="submit" design="Emphasized" onClick={this.submitPickers}>{this.submitButtonLabel}</Button>
+				<Button id="close" design="Transparent" onClick={this._togglePicker}>{this.cancelButtonLabel}</Button>
+			</div>
+		</ResponsivePopover>
 	);
 }
 
@@ -91,6 +67,13 @@ function defaultHeader(this: TimePicker) {
 		<div slot="header" class="ui5-responsive-popover-header">
 			<div class="row">
 				<span>{this._headerTitleText}</span>
+				<Button
+					class="ui5-tp-mode-toggle"
+					design="Transparent"
+					icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
+					tooltip={this._pickerModeToggleLabel}
+					onClick={this._togglePickerMode}
+				/>
 			</div>
 		</div>
 	);
