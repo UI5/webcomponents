@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import "../../test/pages/modules/LabelPageCustomElement.js";
 import {
 	LABEL_COLON,

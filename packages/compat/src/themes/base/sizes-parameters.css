@@ -9,7 +9,7 @@
 	--ui5_table_group_row_height: 2rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		/* Table */
 		--_ui5_load_more_text_height: 2.625rem;

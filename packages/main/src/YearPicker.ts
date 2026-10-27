@@ -160,7 +160,7 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	_buildYears() {
 		const pageSize = this._getPageSize();
 		const oYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
-		const oYearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this.secondaryCalendarType });
+		const oYearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
 
 		const calendarDate = this._calendarDate; // store the value of the expensive getter
 		const minDate = this._minDate; // store the value of the expensive getter

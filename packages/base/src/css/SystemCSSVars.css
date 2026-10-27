@@ -12,7 +12,7 @@
 	--_ui5-cozy-size: var(--_ui5-f2d95f8);
 
 	--_ui5-compact-size: ;
-	--ui5_content_density: cozy;
+	--_ui5_content_density: cozy;
 }
 
 [data-ui5-compact-size],
@@ -30,5 +30,5 @@
 	always considered invalid and undefined.
 	*/
 	--_ui5-compact-size: var(--_ui5-f2d95f8);
-	--ui5_content_density: compact;
+	--_ui5_content_density: compact;
 }

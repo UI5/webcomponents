@@ -17,7 +17,7 @@
 	--_ui5_input_icon_success_pressed_color: var(--sapButton_Accept_Selected_TextColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_icon_padding: .3125rem .5rem .25rem .5rem;
 	}

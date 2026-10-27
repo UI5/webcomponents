@@ -36,7 +36,13 @@ const validateThemeRoot = (themeRoot: string) => {
 			// new URL("/newExmPath", "http://example.com/exmPath") => http://example.com/newExmPath
 			// new URL("./newExmPath", "http://example.com/exmPath") => http://example.com/exmPath/newExmPath
 			// new URL("../newExmPath", "http://example.com/exmPath") => http://example.com/newExmPath
-			resultUrl = new URL(themeRoot, getLocationHref()).toString();
+			const resolvedUrl = new URL(themeRoot, getLocationHref());
+			const currentOrigin = new URL(getLocationHref()).origin;
+
+			if (resolvedUrl.origin !== currentOrigin) {
+				return undefined;
+			}
+			resultUrl = resolvedUrl.toString();
 			isSameOrigin = true;
 		} else {
 			// Protocol-relative URLs (//host/path) need a base to resolve the protocol

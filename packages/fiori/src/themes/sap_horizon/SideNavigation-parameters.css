@@ -46,7 +46,7 @@
 	--_ui5_side_navigation_item_collapsed_padding: 3rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_side_navigation_item_height: 2rem;
 	}
