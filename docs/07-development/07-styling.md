@@ -257,10 +257,12 @@ And, your web component is used normally:
 
 As expected, the `--my-component-width` variable will be `2.75rem` and the `--my-component-padding` variable  will be `1rem`.
 
-To write `Compact` styles and define `Compact` CSS variables, use CSS container queries:
+To write `Compact` styles and define `Compact` CSS variables, use the `@ui5-compact-size` custom at-rule:
+
+> **Note:** `@ui5-compact-size` is a **build-time custom at-rule** processed by the UI5 Web Components tooling. It is not a native CSS at-rule and will not work in browsers directly — it is compiled away during the build step.
 
 ```css
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--my-component-width: 1rem;
 		--my-component-padding: 0.5rem;
@@ -268,7 +270,7 @@ To write `Compact` styles and define `Compact` CSS variables, use CSS container 
 }
 ```
 
-**Important:** To use container queries for content density, you must configure `cssVariablesTarget: "host"` in the `package-scripts.cjs` options for your package:
+**Important:** To use `@ui5-compact-size` for content density, you must configure `cssVariablesTarget: "host"` in the `package-scripts.cjs` options for your package:
 
 ```js
 // package-scripts.cjs
@@ -283,7 +285,7 @@ module.exports = {
 };
 ```
 
-This approach provides better encapsulation and follows the CSS container queries specification.
+This approach provides better encapsulation than CSS selectors.
 
 Alternatively, you can define density variables using selectors `[data-ui5-compact-size], .ui5-content-density-compact {}` for compact and `:root` for cozy(this is the old approach). When using these selectors, the `cssVariablesTarget` configuration should either not be set or should be set to `"root"`:
 
@@ -325,7 +327,7 @@ To enable `Compact` content density mode, consumers or app developers can use th
 
 Then, `--my-component-width` will have `1rem` and `--my-component-padding` will be `0.5rem`, making the `my-component` appear smaller, e.g compact.
 
-**Conclusion**: To support the `Compact` density mode, use container queries to define `Compact` CSS variables with `@container style(--ui5_content_density: compact)` and configure `cssVariablesTarget: "host"` in your package-scripts. Alternatively, use traditional selectors like `[data-ui5-compact-size]`, `.ui5-content-density-compact`, or `:root` with `cssVariablesTarget: "root"` or no configuration.
+**Conclusion**: To support the `Compact` density mode, use the `@ui5-compact-size` custom at-rule to define `Compact` CSS variables and configure `cssVariablesTarget: "host"` in your package-scripts. Alternatively, use traditional selectors like `[data-ui5-compact-size]`, `.ui5-content-density-compact`, or `:root` with `cssVariablesTarget: "root"` or no configuration.
 
 ## Theming Assets
 

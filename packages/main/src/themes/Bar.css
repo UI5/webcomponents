@@ -99,7 +99,7 @@
 	--_ui5_button_overlay_badge_offset: -0.25rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	::slotted([ui5-button]) {
 		--_ui5_button_overlay_badge_offset: initial;
 	}

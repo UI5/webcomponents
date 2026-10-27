@@ -1,6 +1,6 @@
 @import "../base/sizes-parameters.css";
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		/* ColorPicker */
 		--_ui5_color_picker_slider_handle_container_margin_top: 0.0625rem;

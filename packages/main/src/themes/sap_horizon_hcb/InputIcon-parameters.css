@@ -4,7 +4,7 @@
 	--_ui5_input_icon_padding: .5rem .5rem .5rem .5625rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_icon_padding: .1875rem .375rem .1875rem .4375rem;
 	}
