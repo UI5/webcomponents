@@ -14,6 +14,9 @@
 			"@ui5/webcomponents-base/dist/*": [
 				"../base/src/*"
 			],
+			"@ui5/openui5-types/sap/*": [
+				"./src/openui5-types.d.ts"
+			],
 		},
 	},
 	"references": [

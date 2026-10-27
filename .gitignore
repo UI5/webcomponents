@@ -106,3 +106,5 @@ packages/playground/assets/*.gif
 packages/playground/assets/*.css
 packages/playground/assets/test/pages/*.css
 packages/playground/assets/test/pages/*.js
+**/src/openui5-types.d.ts
+**/dist/openui5-types.d.ts

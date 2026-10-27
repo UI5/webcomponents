@@ -1,4 +1,4 @@
-import type CaledndarUtilsOpenui5T from "sap/ui/core/date/CalendarUtils";
+import type CaledndarUtilsOpenui5T from "@ui5/openui5-types/sap/ui/core/date/CalendarUtils";
 // @ts-ignore
 import CalendarUtilsNative from "./sap/ui/core/date/CalendarUtils.js";
 

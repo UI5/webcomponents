@@ -1,10 +1,10 @@
-import type DateFormatT from "sap/ui/core/format/DateFormat";
+import type DateFormatT from "@ui5/openui5-types/sap/ui/core/format/DateFormat";
 // @ts-ignore
 import DateFormatNative from "./sap/ui/core/format/DateFormat.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import LocaleWrapped from "./Locale.js";
-import type CalendarWeekNumbering from "sap/base/i18n/date/CalendarWeekNumbering";
-import type CalendarType from "sap/base/i18n/date/CalendarType";
+import type CalendarWeekNumbering from "@ui5/openui5-types/sap/base/i18n/date/CalendarWeekNumbering";
+import type CalendarType from "@ui5/openui5-types/sap/base/i18n/date/CalendarType";
 
 type DateFormatOptions = {
 	calendarWeekNumbering?: CalendarWeekNumbering | keyof typeof CalendarWeekNumbering;

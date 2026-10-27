@@ -6,6 +6,8 @@ const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/ind
 const amdToES6 = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/index.js");
 const noRequire = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/no-remaining-require.js");
 const generateCLDR = resolve.sync("@ui5/webcomponents-localization/lib/generate-json-imports/cldr.js");
+const extractOpenui5Types = path.join(__dirname, "lib/extract-openui5-types/index.js");
+const bundleOpenui5Types = path.join(__dirname, "lib/bundle-openui5-types/index.js");
 
 const scripts = {
 	clean: {
@@ -14,13 +16,17 @@ const scripts = {
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
 	lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
-	generate: "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports",
+	generate: "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports extract.openui5-types",
 	build: {
-		"default": "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports build.typescript build.no-remaining-require",
+		"default": "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports extract.openui5-types build.typescript build.bundle-openui5-types build.no-remaining-require",
 		"amd-to-es6": `ui5nps-script "${amdToES6}" dist/`,
 		"no-remaining-require": `ui5nps-script "${noRequire}" dist/`,
 		typescript: "tsc --build",
+		"bundle-openui5-types": `node "${bundleOpenui5Types}"`,
 		jsonImports: `ui5nps-script ${generateCLDR}`,
+	},
+	extract: {
+		"openui5-types": `node "${extractOpenui5Types}"`,
 	},
 	typescript: "tsc --build",
 	copy: {

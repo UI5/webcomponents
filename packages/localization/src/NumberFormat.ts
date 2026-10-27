@@ -1,4 +1,4 @@
-import type NumberFormatT from "sap/ui/core/format/NumberFormat";
+import type NumberFormatT from "@ui5/openui5-types/sap/ui/core/format/NumberFormat";
 // @ts-ignore
 import NumberFormatNative from "./sap/ui/core/format/NumberFormat.js";
 

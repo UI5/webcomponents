@@ -1,5 +1,5 @@
 import type Locale from "@ui5/webcomponents-base/dist/locale/Locale.js";
-import type LocaleT from "sap/ui/core/Locale";
+import type LocaleT from "@ui5/openui5-types/sap/ui/core/Locale";
 import LocaleData from "./LocaleData.js";
 
 const cache = new Map<Locale, LocaleData>();

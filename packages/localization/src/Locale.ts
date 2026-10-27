@@ -1,4 +1,4 @@
-import type LocaleOpenUI5T from "sap/ui/core/Locale";
+import type LocaleOpenUI5T from "@ui5/openui5-types/sap/ui/core/Locale";
 // @ts-ignore
 import LocaleNative from "./sap/ui/core/Locale.js";
 
