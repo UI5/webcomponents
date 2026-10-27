@@ -722,7 +722,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return !this.disabled && !this.readonly;
 	}
 
-
 	_getInputField() {
 		const input = this._dateTimeInput;
 		return input && input.getInputDOMRef();
