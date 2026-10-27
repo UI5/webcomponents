@@ -21,7 +21,7 @@
 }
 
 :host([in-popover]) .ui5-sn-item-level1 .ui5-sn-item-text-tag-container {
-	padding-inline-end: 0.375rem;
+	padding-inline-end: 0.5rem;
 }
 
 .ui5-sn-item.ui5-sn-item-level1.ui5-sn-item-overflow {
