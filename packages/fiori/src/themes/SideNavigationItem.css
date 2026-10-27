@@ -20,6 +20,10 @@
 	line-height: var(--_ui5_side_navigation_popup_title_line_height);
 }
 
+:host([in-popover]) .ui5-sn-item-level1 .ui5-sn-item-text-tag-container {
+	padding-inline-end: 0.375rem;
+}
+
 .ui5-sn-item.ui5-sn-item-level1.ui5-sn-item-overflow {
 	margin-top: auto;
 }
