@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import BusyIndicator from "../../src/BusyIndicator.js";
 import Button from "../../src/Button.js";
 import Card from "../../src/Card.js";
