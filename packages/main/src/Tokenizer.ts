@@ -381,6 +381,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 */
 	_scrollToEndOnExpand = false;
 
+	// Tracks the previous _nMoreCount to detect render-loop oscillation at the
+	// "Show All" boundary (where the n-more text switches between two variants
+	// with different rendered widths, flipping the overflow count each render).
+	_prevNMoreCount = -1;
+
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
 	}
@@ -509,7 +514,21 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const tokensArray = this._tokens;
 		const firstToken = tokensArray[0];
 
-		this._nMoreCount = this.overflownTokens.length;
+		const newCount = this.overflownTokens.length;
+		// Guard against render loops at the "Show All" boundary: when all tokens are
+		// hidden the n-more text switches to a narrower "Show All (N)" string, which
+		// makes one token appear to fit, switching back to the wider "N More" string,
+		// which hides it again — oscillating every render.
+		// The oscillation signature: count would return to exactly the value it held
+		// before the last update (i.e. we've already been here and bounced).
+		const isOscillating = this._nMoreCount === tokensArray.length
+			&& newCount === tokensArray.length - 1
+			&& this._prevNMoreCount === newCount;
+
+		if (newCount !== this._nMoreCount && !isOscillating) {
+			this._prevNMoreCount = this._nMoreCount;
+			this._nMoreCount = newCount;
+		}
 
 		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
@@ -1272,25 +1291,47 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		const tokensArray = this._tokens;
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
+		// Reset overflow to measure all tokens
 		tokensArray.forEach(token => {
 			token.overflows = false;
 		});
 
-		return tokensArray.filter(token => {
-			const parentRect = this.contentDom.getBoundingClientRect();
+		const parentRect = this.contentDom.getBoundingClientRect();
+		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentStart = Number(parentRect.left.toFixed(2));
+
+		// Measure "n more" width
+		let nMoreWidth = 0;
+		const nMoreElement = this.moreLink;
+		if (nMoreElement) {
+			nMoreWidth = nMoreElement.getBoundingClientRect().width;
+		}
+
+		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
+		let firstOverflowIndex = -1;
+
+		tokensArray.forEach((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const parentEnd = Number(parentRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
-			const parentStart = Number(parentRect.left.toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > parentEnd));
+			const isLastToken = index === tokensArray.length - 1;
 
-			return token.overflows;
+			// For the last token, check if it fits without "n more"
+			// For other tokens, check if token + "n more" fits together
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+
+			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+
+			if (tokenOverflows && firstOverflowIndex === -1) {
+				firstOverflowIndex = index;
+			}
+
+			// Mark this and all subsequent tokens as overflow
+			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
+
+		return tokensArray.filter(token => token.overflows);
 	}
 
 	get _isPhone() {
