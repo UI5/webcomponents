@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.24.3](https://github.com/UI5/webcomponents/compare/v2.24.2...v2.24.3) (2026-10-27)
+
+
+### Bug Fixes
+
+* **ui5-tokenizer:** fix token overflow loop error  ([#14206](https://github.com/UI5/webcomponents/issues/14206)) ([40c4c08](https://github.com/UI5/webcomponents/commit/40c4c087d2a38c80796a64c2d8edb6215959b492)), closes [#13857](https://github.com/UI5/webcomponents/issues/13857)
+
+
+
+
+
 ## [2.24.2](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.24.2) (2026-07-24)
 
 
