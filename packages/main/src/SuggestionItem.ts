@@ -49,7 +49,7 @@ class SuggestionItem extends ListItemBase implements IInputSuggestionItemSelecta
 	 * @since 2.0.0
 	 * @private
 	 */
-	@property()
+	@property({ noAttribute: true })
 	markupText = "";
 
 	onEnterDOM() {
