@@ -47,7 +47,6 @@ export default function InputFieldTemplate(this: InputField, hooks?: {
 						required={this.required}
 						placeholder={this._placeholder}
 						maxlength={this.maxlength}
-						role={this.accInfo.role}
 						enterkeyhint={this.hint}
 						aria-controls={this.accInfo.ariaControls}
 						aria-invalid={this.accInfo.ariaInvalid}
@@ -55,7 +54,6 @@ export default function InputFieldTemplate(this: InputField, hooks?: {
 						aria-describedby={this.accInfo.ariaDescribedBy}
 						aria-roledescription={this.accInfo.ariaRoledescription}
 						aria-autocomplete={this.accInfo.ariaAutoComplete}
-						aria-expanded={this.accInfo.ariaExpanded}
 						aria-label={this.accInfo.ariaLabel}
 						aria-required={this.required}
 						autocomplete="off"

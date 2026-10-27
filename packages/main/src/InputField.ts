@@ -6,6 +6,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type {
+	AriaAutoComplete,
 	AriaRole,
 	AriaHasPopup,
 	ClassMap,
@@ -79,7 +80,7 @@ type InputAccInfo = {
 	ariaRoledescription?: string,
 	ariaDescribedBy?: string,
 	ariaHasPopup?: AriaHasPopup,
-	ariaAutoComplete?: "list" | "none" | "inline" | "both",
+	ariaAutoComplete?: AriaAutoComplete,
 	role?: AriaRole,
 	ariaControls?: string,
 	ariaRequired?: boolean,
@@ -1047,7 +1048,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 
 	get iconsCount(): number {
 		const slottedIconsCount = this.icon ? this.icon.length : 0;
-		const clearIconCount = Number(this._effectiveShowClearIcon) ?? 0;
+		const clearIconCount = Number(this._effectiveShowClearIcon);
 		return slottedIconsCount + clearIconCount;
 	}
 

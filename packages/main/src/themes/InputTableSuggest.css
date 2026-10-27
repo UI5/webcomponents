@@ -32,10 +32,6 @@
 	display: none;
 }
 
-.ui5-input-table-suggest-table [ui5-table-header-row] {
-	border-top: none;
-}
-
 ::slotted([ui5-table-row]:last-of-type) {
 	border-bottom: none;
 }

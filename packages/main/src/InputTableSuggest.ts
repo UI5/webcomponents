@@ -223,6 +223,22 @@ class InputTableSuggest extends InputField {
 		return this.showSuggestions && this._useTableSuggestions;
 	}
 
+	get _suggestionsPopoverId() {
+		return `${this._id}-popover`;
+	}
+
+	get accInfo() {
+		const base = super.accInfo;
+		const showSuggestions = this._effectiveShowSuggestions;
+
+		return {
+			...base,
+			ariaHasPopup: base.ariaHasPopup || (showSuggestions ? "dialog" : undefined),
+			ariaAutoComplete: base.ariaAutoComplete || (showSuggestions ? "list" as const : undefined),
+			ariaControls: base.ariaControls || (showSuggestions ? this._suggestionsPopoverId : undefined),
+		};
+	}
+
 	/**
 	 * The header cells of the app-provided `ui5-table-header-row`. Read straight from the
 	 * light DOM so the value is available synchronously, before the header row's own slots

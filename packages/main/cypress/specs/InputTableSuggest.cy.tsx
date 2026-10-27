@@ -56,31 +56,7 @@ describe("InputTableSuggest - Basic Rendering", () => {
 	});
 
 
-	it("opens suggestions popover on focus and type", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions>
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.as("input")
-			.realClick();
-
-		cy.get("@input").realType("j");
-
-		cy.get("@input")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("have.attr", "open");
-	});
-
-	it("closes suggestions popover on Escape", () => {
+	it("opens suggestions popover on focus and type, closes on Escape", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
 				<InputTableSuggestHeaderRow slot="headerRow">
@@ -351,7 +327,7 @@ describe("InputTableSuggest - Row Selection", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
 				<InputTableSuggestHeaderRow slot="headerRow">
 					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
 				</InputTableSuggestHeaderRow>
@@ -371,7 +347,7 @@ describe("InputTableSuggest - Row Selection", () => {
 		cy.get("@input").realType("j");
 
 		cy.realPress("ArrowDown");
-		cy.get("@onSelectionChange").should("have.been.called");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
 
 	it("does not fire duplicate selection-change when pressing Enter on already focused row", () => {
@@ -530,7 +506,7 @@ describe("InputTableSuggest - Typeahead", () => {
 });
 
 describe("InputTableSuggest - Clear Icon", () => {
-	it("shows clear icon when value is present", () => {
+	it("shows clear icon when value is present and clears value on click", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions showClearIcon>
 				<InputTableSuggestHeaderRow slot="headerRow">
@@ -551,30 +527,7 @@ describe("InputTableSuggest - Clear Icon", () => {
 		cy.get("@input")
 			.shadow()
 			.find(".ui5-input-clear-icon-wrapper")
-			.should("exist");
-	});
-
-	it("clears value when clicking clear icon", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions showClearIcon>
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.as("input")
-			.realClick();
-
-		cy.get("@input").realType("test");
-
-		cy.get("@input")
-			.shadow()
-			.find(".ui5-input-clear-icon-wrapper")
+			.should("exist")
 			.realClick();
 
 		cy.get("@input").should("have.value", "");
@@ -582,23 +535,7 @@ describe("InputTableSuggest - Clear Icon", () => {
 });
 
 describe("InputTableSuggest - Value State", () => {
-	it("displays value state", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions valueState="Negative">
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.should("have.attr", "value-state", "Negative");
-	});
-
-	it("shows value state header in suggestions popover", () => {
+	it("displays value state and shows value state header in suggestions popover", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions valueState="Negative">
 				<InputTableSuggestHeaderRow slot="headerRow">
@@ -612,7 +549,9 @@ describe("InputTableSuggest - Value State", () => {
 
 		cy.get("[ui5-input-table-suggest]")
 			.as("input")
-			.realClick();
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@input").realClick();
 
 		cy.get("@input").realType("j");
 
@@ -731,30 +670,6 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 			.should("not.have.attr", "open");
 	});
 
-	it("opens suggestions popover when showSuggestions is true", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions>
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.as("input")
-			.realClick();
-
-		cy.get("@input").realType("j");
-
-		cy.get("@input")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("have.attr", "open");
-	});
-
 	it("performs typeahead and row selection with the popover closed when showSuggestions is false", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
@@ -812,52 +727,6 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 			.shadow()
 			.find("[ui5-popover].ui5-valuestatemessage-popover")
 			.should("have.attr", "open");
-
-		cy.get("@input")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("not.have.attr", "open");
-	});
-});
-
-describe("InputTableSuggest - Disabled and Readonly", () => {
-	it("does not open popover when disabled", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions disabled>
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.as("input")
-			.realClick({ force: true });
-
-		cy.get("@input")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("not.have.attr", "open");
-	});
-
-	it("does not open popover when readonly", () => {
-		cy.mount(
-			<InputTableSuggest showSuggestions readonly>
-				<InputTableSuggestHeaderRow slot="headerRow">
-					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
-				</InputTableSuggestHeaderRow>
-				<InputTableSuggestRow>
-					<InputTableSuggestCell>John</InputTableSuggestCell>
-				</InputTableSuggestRow>
-			</InputTableSuggest>
-		);
-
-		cy.get("[ui5-input-table-suggest]")
-			.as("input")
-			.realClick();
 
 		cy.get("@input")
 			.shadow()

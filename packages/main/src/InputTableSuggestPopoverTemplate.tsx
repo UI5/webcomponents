@@ -21,6 +21,7 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 		<>
 			<ResponsivePopover
 				class="ui5-suggestions-popover"
+				id={this._suggestionsPopoverId}
 				hideArrow={true}
 				preventFocusRestore={true}
 				preventInitialFocus={true}
