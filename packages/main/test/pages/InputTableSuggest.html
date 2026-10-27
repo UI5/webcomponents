@@ -139,7 +139,6 @@
 			id="richSearch"
 			placeholder="Search team members..."
 			show-suggestions
-			no-typeahead
 		>
 			<ui5-input-table-suggest-header-row slot="headerRow">
 				<ui5-input-table-suggest-header-cell width="80px">Avatar</ui5-input-table-suggest-header-cell>
@@ -854,7 +853,7 @@
 			popover without reopening it.
 		</p>
 
-		<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;">
+		<div style="display: flex; flex-direction: row; align-items: center; gap: 1rem;">
 			<ui5-input-table-suggest
 				id="liveSearch"
 				placeholder="Type 'w' to open, then click the button..."
@@ -976,7 +975,15 @@
 			const names = ['Widget Omega', 'Widget Sigma', 'Widget Delta'];
 
 			const cell = document.getElementById('liveCell');
-			document.getElementById('liveMutateBtn').addEventListener('click', () => {
+			const btn = document.getElementById('liveMutateBtn');
+
+			document.addEventListener('mousedown', e => {
+				if (e.composedPath().includes(btn)) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+				}
+			}, { capture: true });
+			btn.addEventListener('click', () => {
 				cell.textContent = names[counter % names.length];
 				counter++;
 			});
@@ -990,7 +997,9 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
+			// Query by tag name (not a marker attribute): this classic script runs before the
+			// module bundle upgrades the elements, so framework-set marker attributes aren't present yet.
+			const rows = Array.from(input.querySelectorAll("ui5-input-table-suggest-row"));
 
 			// startsWithPerTerm: the typed value must match the start of any word
 			// in the row's text (same semantics as ui5-input's StartsWithPerTerm filter).
@@ -1062,7 +1071,9 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
+			// Query by tag name (not a marker attribute): this classic script runs before the
+			// module bundle upgrades the elements, so framework-set marker attributes aren't present yet.
+			const rows = Array.from(input.querySelectorAll("ui5-input-table-suggest-row"));
 			// Snapshot the plain text of every cell so highlighting can be reapplied/cleared.
 			const originalText = rows.map(row => Array.from(row.children).map(cell => cell.textContent));
 
@@ -1072,7 +1083,10 @@
 				rows.forEach((row, rowIndex) => {
 					Array.from(row.children).forEach((cell, cellIndex) => {
 						const original = originalText[rowIndex][cellIndex];
-						cell.innerHTML = value ? highlight(original, value) : original;
+						// Keep the markup inside a single span: the cell is display:flex, so sibling
+						// nodes (<b>James</b> + " Wilson") would become separate flex items and the
+						// whitespace between them would be stripped. One span preserves the space.
+						cell.innerHTML = `<span>${value ? highlight(original, value) : original}</span>`;
 					});
 				});
 			});
@@ -1086,7 +1100,9 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
+			// Query by tag name (not a marker attribute): this classic script runs before the
+			// module bundle upgrades the elements, so framework-set marker attributes aren't present yet.
+			const rows = Array.from(input.querySelectorAll("ui5-input-table-suggest-row"));
 			// The first cell is plain text; snapshot it to re-highlight/clear on every keystroke.
 			const nameCells = rows.map(row => {
 				const cell = row.children[0];
@@ -1106,7 +1122,9 @@
 				rows.forEach((row, index) => {
 					const { cell, text } = nameCells[index];
 					row.hidden = query.length > 0 && !reg.test(text.toLowerCase());
-					cell.innerHTML = value ? highlight(text, value) : text;
+					// Single span: the cell is display:flex, so bare sibling nodes would lose the
+					// whitespace between them (e.g. "James Wilson" -> "JamesWilson").
+					cell.innerHTML = `<span>${value ? highlight(text, value) : text}</span>`;
 				});
 			});
 		}
@@ -1140,7 +1158,9 @@
 				rows.forEach((row, index) => {
 					const { label, text } = nameLabels[index];
 					row.hidden = query.length > 0 && !reg.test(text.toLowerCase());
-					label.innerHTML = value ? highlight(text, value) : text;
+					// Single span: ui5-label is inline-flex, so bare sibling nodes would lose the
+					// whitespace between them (e.g. "James Wilson" -> "JamesWilson").
+					label.innerHTML = `<span>${value ? highlight(text, value) : text}</span>`;
 				});
 			});
 		}

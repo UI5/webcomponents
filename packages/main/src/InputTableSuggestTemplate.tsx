@@ -11,14 +11,6 @@ export default function InputTableSuggestTemplate(this: InputTableSuggest) {
 				}
 			</>
 		),
-		popoverTemplate: () => tabularPopoverTemplate.call(this),
+		popoverTemplate: () => InputTableSuggestPopoverTemplate.call(this),
 	});
-}
-
-function tabularPopoverTemplate(this: InputTableSuggest) {
-	if (!this._useTableSuggestions) {
-		return;
-	}
-
-	return InputTableSuggestPopoverTemplate.call(this);
 }

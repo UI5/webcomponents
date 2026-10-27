@@ -28,7 +28,10 @@ input.addEventListener("input", () => {
         const { cell, text } = nameCells[index];
         // Filtering: hide rows whose name does not match (rich cells stay intact).
         row.hidden = query.length > 0 && !text.toLowerCase().includes(query);
-        // Highlighting: wrap the matched substring of the plain-text name in <b>.
-        cell.innerHTML = value ? generateHighlightedMarkupFirstMatch(text, value) : text;
+        // Highlighting: wrap the matched substring of the plain-text name in <b>. Keep it
+        // inside a single span: ui5-table-cell is display:flex, so sibling nodes (e.g.
+        // <b>Alice</b> + " Brown") would become separate flex items and the whitespace
+        // between them would be stripped ("AliceBrown"). One span preserves the space.
+        cell.innerHTML = `<span>${value ? generateHighlightedMarkupFirstMatch(text, value) : text}</span>`;
     });
 });

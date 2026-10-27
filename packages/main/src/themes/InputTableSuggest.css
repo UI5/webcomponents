@@ -26,8 +26,6 @@
 	width: 100%;
 }
 
-/* Rows are projected via <slot>, so they stay in the host's light DOM and must
-   be targeted with ::slotted rather than a descendant selector. */
 ::slotted([ui5-table-row][hidden]) {
 	display: none;
 }

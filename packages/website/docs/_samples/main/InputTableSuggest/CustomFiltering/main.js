@@ -18,15 +18,16 @@ const employees = [
 
 const input = document.getElementById("employee-input");
 
+function startsWithPerTerm(name, query) {
+    const escaped = query.toLowerCase().replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
+    return new RegExp(`(^|\\s)${escaped}`).test(name.toLowerCase());
+}
+
 function updateSuggestions(filterValue) {
     input.querySelectorAll("[ui5-table-row]").forEach(row => row.remove());
 
     const filtered = filterValue
-        ? employees.filter(emp =>
-            emp.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-            emp.department.toLowerCase().includes(filterValue.toLowerCase()) ||
-            emp.location.toLowerCase().includes(filterValue.toLowerCase())
-          )
+        ? employees.filter(emp => startsWithPerTerm(emp.name, filterValue))
         : employees;
 
     filtered.forEach(emp => {
@@ -36,7 +37,13 @@ function updateSuggestions(filterValue) {
             const cell = document.createElement("ui5-table-cell");
             // App-side highlighting: wrap every matching substring in <b> using the same
             // utility the component uses internally (it escapes the text, then bolds matches).
-            cell.innerHTML = filterValue ? generateHighlightedMarkup(value, filterValue) : value;
+            // The markup must live inside a single element: ui5-table-cell is display:flex, so
+            // sibling nodes (e.g. <b>James</b> + " Wilson") would become separate flex items and
+            // the whitespace between them would be stripped ("JamesWilson"). One span keeps it
+            // as normal inline flow and preserves the space.
+            const span = document.createElement("span");
+            span.innerHTML = filterValue ? generateHighlightedMarkup(value, filterValue) : value;
+            cell.appendChild(span);
             row.appendChild(cell);
         });
 

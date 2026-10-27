@@ -29,8 +29,6 @@ function App() {
     setSearch(e.currentTarget.value);
   };
 
-  // App-side highlighting using the same utility the component used internally.
-  // It escapes the text and wraps the first matching term in a <b> tag.
   const markup = (text: string) => generateHighlightedMarkupFirstMatch(text, search);
 
   return (

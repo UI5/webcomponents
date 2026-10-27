@@ -2,14 +2,8 @@ import type InputTableSuggest from "./InputTableSuggest.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 
 import Icon from "./Icon.js";
-import error from "@ui5/webcomponents-icons/dist/error.js";
-import alert from "@ui5/webcomponents-icons/dist/alert.js";
-import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
-import information from "@ui5/webcomponents-icons/dist/information.js";
 
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
-import Popover from "./Popover.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import { ValueStatePopover, valueStateMessageInputIcon } from "./InputFieldTemplate.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import Button from "./Button.js";
 import Title from "./Title.js";
@@ -19,6 +13,7 @@ import Table from "./Table.js";
 export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest): JsxTemplateResult {
 	return (
 		<>
+			{this._useTableSuggestions &&
 			<ResponsivePopover
 				class="ui5-suggestions-popover"
 				id={this._suggestionsPopoverId}
@@ -88,38 +83,15 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 					</div>
 				}
 			</ResponsivePopover>
+			}
 
-			{this.hasValueStateMessage && (
-				<Popover
-					preventInitialFocus={true}
-					preventFocusRestore={true}
-					hideArrow={true}
-					class="ui5-valuestatemessage-popover"
-					placement="Bottom"
-					tabindex={-1}
-					horizontalAlign={PopoverHorizontalAlign.Start}
-					opener={this}
-					open={this.valueStateOpen}
-					onClose={this._handleValueStatePopoverAfterClose}
-				>
-					<div slot="header" class={this.classes.popoverValueState}>
-						{valueStateMessage.call(this, this.valueStateOpen)}
-					</div>
-				</Popover>
-			)}
+			{ValueStatePopover.call(this)}
 		</>
 	);
 }
 
 function valueStateMessage(this: InputTableSuggest, open: boolean) {
-	const iconPerValueState = {
-		Negative: error,
-		Critical: alert,
-		Positive: sysEnter2,
-		Information: information,
-	};
-
-	const iconName = this.valueState !== ValueState.None ? iconPerValueState[this.valueState as keyof typeof iconPerValueState] : "";
+	const iconName = valueStateMessageInputIcon.call(this);
 
 	return (
 		<>

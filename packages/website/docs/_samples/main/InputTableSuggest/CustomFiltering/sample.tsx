@@ -33,13 +33,17 @@ function App() {
   };
 
   const query = search.trim().toLowerCase();
+
+  // Match the component's typeahead, which works on the first column only. "Per term"
+  // means the query must start a word in the name (so "James" and "Wilson" both match
+  // "James Wilson"), mirroring ui5-input's default StartsWithPerTerm filter.
+  const startsWithPerTerm = (name: string) => {
+    const escaped = query.replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
+    return new RegExp(`(^|\\s)${escaped}`).test(name.toLowerCase());
+  };
+
   const filteredEmployees = query
-    ? employees.filter(
-        (emp) =>
-          emp.name.toLowerCase().includes(query) ||
-          emp.department.toLowerCase().includes(query) ||
-          emp.location.toLowerCase().includes(query),
-      )
+    ? employees.filter((emp) => startsWithPerTerm(emp.name))
     : employees;
 
   // App-side highlighting using the same utility the component uses internally.

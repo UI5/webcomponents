@@ -31,11 +31,12 @@ products.forEach(product => {
     input.appendChild(row);
 });
 
-// App-side highlighting using the same utility the component used internally.
-// It escapes the text and wraps the first matching term in a <b> tag.
 function highlightSuggestions(search) {
     cellRefs.forEach(({ cell, text }) => {
-        cell.innerHTML = generateHighlightedMarkupFirstMatch(text, search);
+        // Keep the markup inside a single span: ui5-table-cell is display:flex, so sibling
+        // nodes (e.g. <b>Laptop</b> + " Pro 15") would become separate flex items and the
+        // whitespace between them would be stripped ("LaptopPro 15"). One span preserves it.
+        cell.innerHTML = `<span>${generateHighlightedMarkupFirstMatch(text, search)}</span>`;
     });
 }
 
