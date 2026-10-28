@@ -368,7 +368,6 @@ slot[name="profile"] {
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 0.125rem;
 	min-height: 2.5rem;
 	/* Hug the content: width follows the widest unbreakable unit (the logo, or the title's
 	   longest word), so once the title wraps below the logo the popover shrinks to the content
