@@ -117,7 +117,7 @@ describe("Basic mobile picker rendering and interaction", () => {
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
-		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").should("be.focused").realType("A");
 
 		cy.get("@popover").should("have.attr", "open");
 
@@ -218,6 +218,7 @@ describe("Eventing", () => {
 			.find("[ui5-responsive-popover] [ui5-input]")
 			.shadow()
 			.find("input")
+			.should("be.focused")
 			.realType("ABC");
 
 		cy.get("@inputSpy").should('have.been.called');
@@ -468,6 +469,9 @@ describe("Picker filtering", () => {
 		cy.get("[ui5-combobox]")
 			.shadow()
 			.find("[ui5-responsive-popover] [ui5-input]")
+			.shadow()
+			.find("input")
+			.should("be.focused")
 			.realType("B");
 
 		cy.get("[ui5-combobox]")
@@ -509,6 +513,9 @@ describe("Picker filtering", () => {
 		cy.get("[ui5-combobox]")
 			.shadow()
 			.find("[ui5-responsive-popover] [ui5-input]")
+			.shadow()
+			.find("input")
+			.should("be.focused")
 			.realType("B");
 
 		cy.get("[ui5-combobox]")
@@ -568,7 +575,7 @@ describe("Mobile Highlighting", () => {
 			.ui5ResponsivePopoverOpened();
 
 		// Type in mobile input
-		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").should("be.focused").realType("A");
 
 		// Check that SuggestionItems are highlighted
 		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
@@ -603,7 +610,7 @@ describe("Mobile Highlighting", () => {
 			.ui5ResponsivePopoverOpened();
 
 		// Type in mobile input
-		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").should("be.focused").realType("A");
 
 		// Check that the first three suggestion items are highlighted (Argentina, Australia, South Africa)
 		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
