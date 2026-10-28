@@ -1,6 +1,6 @@
 import ListItemBaseTemplate from "./ListItemBaseTemplate.js";
 import type SuggestionItem from "./SuggestionItem.js";
-import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
+import highlightText from "@ui5/webcomponents-base/dist/util/highlightText.js";
 
 export default function SuggestionItemTemplate(this: SuggestionItem) {
 	return [ListItemBaseTemplate.call(this, { listItemContent }, { role: "option" })];
@@ -8,7 +8,7 @@ export default function SuggestionItemTemplate(this: SuggestionItem) {
 
 function listItemContent(this: SuggestionItem) {
 	const text = this.text ?? "";
-	const highlightedMarkup = this.markupText ? generateHighlightedMarkup(text, this.markupText) : undefined;
+	const highlightedMarkup = this.markupText ? highlightText(text, this.markupText) : undefined;
 
 	return <div part="content" id="content" class="ui5-li-content">
 		<div class="ui5-li-text-wrapper">

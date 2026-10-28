@@ -1,6 +1,7 @@
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import arrowRight from "@ui5/webcomponents-icons/dist/arrow-right.js";
 import type SideNavigationSubItem from "./SideNavigationSubItem.js";
+import SideNavigationItemTextTemplate from "./SideNavigationItemTextTemplate.js";
 
 export default function SideNavigationSubItemTemplate(this: SideNavigationSubItem) {
 	const EffectiveTag = this._effectiveTag;
@@ -29,7 +30,7 @@ export default function SideNavigationSubItemTemplate(this: SideNavigationSubIte
 				{this.icon &&
 					<Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text" id={this._textId} dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
+				{SideNavigationItemTextTemplate(this, this._textId)}
 				{this.hasTag &&
 					<div id={this._tagId} class="ui5-sn-item-tag-slot">
 						<slot name="tag"></slot>

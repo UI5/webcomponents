@@ -4,7 +4,6 @@ import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import SearchItemTemplate from "./SearchItemTemplate.js";
 import SearchItemCss from "./generated/themes/SearchItem.css.js";
-import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import {
@@ -23,8 +22,6 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 /**
  * @class
@@ -142,8 +139,6 @@ class SearchItem extends ListItemBase {
 	@slot()
 	actions!: Slot<HTMLElement>;
 
-	_markupText = "";
-
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -253,13 +248,6 @@ class SearchItem extends ListItemBase {
 		if (isSpace(e) || isEnter(e)) {
 			this.fireDecoratorEvent("delete");
 		}
-	}
-
-	onBeforeRendering(): void {
-		super.onBeforeRendering();
-
-		// bold the matched text
-		this._markupText = this.highlightText ? generateHighlightedMarkup((this.text || ""), this.highlightText) : encodeXML(this.text || "");
 	}
 
 	get _deleteButtonTooltip() {

@@ -2,6 +2,7 @@ import Icon from "@ui5/webcomponents/dist/Icon.js";
 import navRightArrow from "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import navDownArrow from "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 import type SideNavigationGroup from "./SideNavigationGroup.js";
+import SideNavigationItemTextTemplate from "./SideNavigationItemTextTemplate.js";
 
 export default function SideNavigationGroupTemplate(this: SideNavigationGroup) {
 	if (this.sideNavCollapsed) {
@@ -35,7 +36,7 @@ function TreeItemTemplate(this: SideNavigationGroup) {
 				 title={this._tooltip}
 				 aria-owns={this._groupId}
 			>
-				<div class="ui5-sn-item-text" dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
+				{SideNavigationItemTextTemplate(this)}
 				{!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
 						  name={this.expanded ? navDownArrow : navRightArrow}
