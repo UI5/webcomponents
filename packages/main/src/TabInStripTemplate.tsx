@@ -1,5 +1,4 @@
 import type Tab from "./Tab.js";
-import Button from "./Button.js";
 import Icon from "./Icon.js";
 import slimArrowDownIcon from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 
@@ -74,18 +73,8 @@ export default function TabInStripTemplate(this: Tab) {
 			{this.requiresExpandButton &&
 				<>
 					<div class="ui5-tab-expand-button-separator"></div>
-					<div
-						class="ui5-tab-expand-button"
-					>
-						<Button
-							ref={this.captureButtonRef.bind(this)}
-							icon={slimArrowDownIcon}
-							design="Transparent"
-							tabindex={ -1 }
-							disabled={this.disabled}
-							tooltip={this.expandButtonTitle}
-							accessibilityAttributes={this.expandBtnAccessibilityAttributes}
-						/>
+					<div class="ui5-tab-expand-button" title={this.expandButtonTitle}>
+						<Icon class="ui5-tab-expand-icon" name={slimArrowDownIcon}/>
 					</div>
 				</>
 			}

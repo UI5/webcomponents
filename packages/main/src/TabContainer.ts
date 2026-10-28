@@ -737,7 +737,7 @@ class TabContainer extends UI5Element {
 		e.stopPropagation();
 		e.preventDefault();
 
-		if ((e.target as HTMLElement).hasAttribute("ui5-button")) {
+		if ((e.target as HTMLElement).closest(".ui5-tab-expand-button")) {
 			this._onTabExpandButtonClick(e);
 			return;
 		}
@@ -767,10 +767,11 @@ class TabContainer extends UI5Element {
 			tabInstance.focus();
 		}
 
-		let opener = e.target as HTMLElement;
+		const target = e.target as HTMLElement;
+		let opener = target.closest<HTMLElement>(".ui5-tab-expand-button") ?? target;
 
 		if (e.type === "keydown" && !(e.target as TabInStrip).realTabReference.isSingleClickArea) {
-			opener = (e.target as TabInStrip).querySelector(".ui5-tab-expand-button [ui5-button]")!;
+			opener = (e.target as TabInStrip).querySelector<HTMLElement>(".ui5-tab-expand-button")!;
 		}
 
 		// if clicked between the expand button and the tab
