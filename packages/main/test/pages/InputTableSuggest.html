@@ -39,6 +39,7 @@
 			font-family: monospace;
 			font-size: 0.875rem;
 			min-height: 2rem;
+			white-space: pre-wrap;
 		}
 		.narrow-container {
 			width: 350px;
@@ -50,6 +51,11 @@
 <body>
 	<div class="section">
 		<ui5-title class="section-title" level="H2">Basic example. No filtering, No Highlighting</ui5-title>
+		<p class="description">
+			Every event the component fires (<code>open</code>, <code>close</code>,
+			<code>type-ahead</code>, <code>selection-change</code>, <code>change</code>,
+			<code>suggestion-scroll</code>) is logged below, together with the currently selected row.
+		</p>
 		<ui5-input-table-suggest
 			id="productSearch"
 			placeholder="Search for products..."
@@ -94,7 +100,7 @@
 			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
-		<div class="output" id="productOutput">Selected: (none)</div>
+		<div class="output" id="productOutput" style="max-height: 14rem; overflow: auto;">Event log: interact with the input above (type, navigate, select, scroll)...</div>
 	</div>
 
 	<div class="section">
@@ -945,6 +951,10 @@
 		function wireSelectionOutputs() {
 			document.querySelectorAll('ui5-input-table-suggest').forEach(input => {
 				const inputId = input.getAttribute('id') || '';
+				// productSearch has its own full event log (see logProductSearchEvents).
+				if (inputId === 'productSearch') {
+					return;
+				}
 				const output = inputId.includes('Search')
 					? document.getElementById(inputId.replace('Search', 'Output'))
 					: null;
@@ -960,12 +970,49 @@
 			});
 		}
 
+		// First example: print every event the component fires, together with the
+		// currently selected row, into the on-page output (not just the console).
 		function logProductSearchEvents() {
-			document.getElementById('productSearch').addEventListener('selection-change', (e) => {
-				console.log('selection-change event:', e.detail);
-			});
-			document.getElementById('productSearch').addEventListener('change', (e) => {
-				console.log('change event - value:', e.target.value);
+			const input = document.getElementById('productSearch');
+			const output = document.getElementById('productOutput');
+			if (!input || !output) {
+				return;
+			}
+
+			const eventNames = ['open', 'close', 'type-ahead', 'selection-change', 'change', 'suggestion-scroll'];
+			const lines = [];
+			let selectedRow = '(none)';
+
+			const rowToText = row => {
+				if (!row) {
+					return '(none)';
+				}
+				const cells = row.querySelectorAll('[ui5-input-table-suggest-cell]');
+				return Array.from(cells).map(cell => cell.textContent.trim()).join(' | ');
+			};
+
+			const log = (name, extra) => {
+				const time = new Date().toLocaleTimeString();
+				const detail = extra ? ` {${extra}}` : '';
+				lines.unshift(`${time}  ${name}${detail}  →  selected row: ${selectedRow}`);
+				if (lines.length > 30) {
+					lines.pop();
+				}
+				output.textContent = lines.join('\n');
+			};
+
+			eventNames.forEach(name => {
+				input.addEventListener(name, e => {
+					let extra = '';
+					if (name === 'selection-change') {
+						selectedRow = rowToText(e.detail && e.detail.row);
+					} else if (name === 'change') {
+						extra = `value: "${e.target.value}"`;
+					} else if (name === 'suggestion-scroll') {
+						extra = `scrollTop: ${Math.round(e.detail.scrollTop)}`;
+					}
+					log(name, extra);
+				});
 			});
 		}
 

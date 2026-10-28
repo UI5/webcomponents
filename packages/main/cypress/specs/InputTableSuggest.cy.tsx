@@ -1079,3 +1079,204 @@ describe("InputTableSuggest - change event", () => {
 		cy.get("@onChange").should("have.been.calledOnce");
 	});
 });
+
+describe("InputTableSuggest - open/close/type-ahead events", () => {
+	it("fires open when the popover opens", () => {
+		const onOpen = cy.spy().as("onOpen");
+
+		cy.mount(
+			<InputTableSuggest showSuggestions onOpen={onOpen}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@onOpen").should("have.been.called");
+	});
+
+	it("fires close when the popover closes", () => {
+		const onClose = cy.spy().as("onClose");
+
+		cy.mount(
+			<InputTableSuggest showSuggestions onClose={onClose}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("j");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+		cy.get("@onClose").should("have.been.called");
+	});
+
+	it("fires type-ahead when the value is autocompleted", () => {
+		const onTypeAhead = cy.spy().as("onTypeAhead");
+
+		cy.mount(
+			<InputTableSuggest showSuggestions onTypeAhead={onTypeAhead}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("jo");
+
+		cy.get("@input").should("have.value", "john");
+		cy.get("@onTypeAhead").should("have.been.called");
+	});
+});
+
+describe("InputTableSuggest - Home/End/PageUp/PageDown navigation", () => {
+	const manyRows = Array.from({ length: 15 }, (_, i) => {
+		const value = `Row ${String(i + 1).padStart(2, "0")}`;
+		return (
+			<InputTableSuggestRow key={value}>
+				<InputTableSuggestCell>{value}</InputTableSuggestCell>
+			</InputTableSuggestRow>
+		);
+	});
+
+	const mountManyRows = () => cy.mount(
+		<InputTableSuggest showSuggestions noTypeahead>
+			<InputTableSuggestHeaderRow slot="headerRow">
+				<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+			</InputTableSuggestHeaderRow>
+			{manyRows}
+		</InputTableSuggest>
+	);
+
+	it("jumps to the first and last row with Home and End", () => {
+		mountManyRows();
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("r");
+
+		cy.realPress("End");
+		cy.get("@input").should("have.value", "Row 15");
+
+		cy.realPress("Home");
+		cy.get("@input").should("have.value", "Row 01");
+	});
+
+	it("jumps by a page with PageDown and PageUp", () => {
+		mountManyRows();
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("r");
+
+		cy.realPress("Home");
+		cy.get("@input").should("have.value", "Row 01");
+
+		cy.realPress("PageDown");
+		cy.get("@input").should("have.value", "Row 11");
+
+		cy.realPress("PageDown");
+		cy.get("@input").should("have.value", "Row 15");
+
+		cy.realPress("PageUp");
+		cy.get("@input").should("have.value", "Row 05");
+	});
+});
+
+describe("InputTableSuggest - Tab to accept", () => {
+	it("accepts the highlighted row on Tab and moves focus away", () => {
+		const onChange = cy.spy().as("onChange");
+
+		cy.mount(
+			<>
+				<InputTableSuggest showSuggestions noTypeahead onChange={onChange}>
+					<InputTableSuggestHeaderRow slot="headerRow">
+						<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+					</InputTableSuggestHeaderRow>
+					<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+					<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+				</InputTableSuggest>
+				<button id="outside">outside</button>
+			</>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("j");
+
+		cy.realPress("ArrowDown");
+		cy.get("@input").should("have.value", "John");
+
+		cy.realPress("Tab");
+
+		cy.get("@input").should("have.value", "John");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+});
+
+describe("InputTableSuggest - suggestion-scroll event", () => {
+	it("fires suggestion-scroll when the popover content is scrolled", () => {
+		const onSuggestionScroll = cy.spy().as("onSuggestionScroll");
+
+		const rows = Array.from({ length: 30 }, (_, i) => {
+			const value = `Row ${String(i + 1).padStart(2, "0")}`;
+			return (
+				<InputTableSuggestRow key={value}>
+					<InputTableSuggestCell>{value}</InputTableSuggestCell>
+				</InputTableSuggestRow>
+			);
+		});
+
+		cy.mount(
+			<InputTableSuggest showSuggestions noTypeahead onSuggestionScroll={onSuggestionScroll}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				{rows}
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("r");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find(".ui5-input-table-suggest-wrapper")
+			.scrollTo("bottom");
+
+		cy.get("@onSuggestionScroll").should("have.been.called");
+		cy.get("@onSuggestionScroll")
+			.its("firstCall.args.0.detail.scrollContainer")
+			.should("exist");
+	});
+});

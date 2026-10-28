@@ -103,7 +103,7 @@ function valueStateMessage(this: InputTableSuggest, open: boolean) {
 
 function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 	return (
-		<div class="ui5-input-table-suggest-wrapper" onClick={this._onTableRowClick}>
+		<div class="ui5-input-table-suggest-wrapper" onClick={this._onTableRowClick} onScroll={this._onTableScroll}>
 			<Table
 				class="ui5-input-table-suggest-table"
 				overflowMode={this._overflowMode}

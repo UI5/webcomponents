@@ -13,6 +13,12 @@ import {
 	isBackSpace,
 	isDelete,
 	isEscape,
+	isHome,
+	isEnd,
+	isPageUp,
+	isPageDown,
+	isTabNext,
+	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
@@ -51,6 +57,11 @@ type InputTableSuggestSelectionChangeEventDetail = {
 	row: ITableSuggestionRow | null;
 }
 
+type InputTableSuggestScrollEventDetail = {
+	scrollTop: number;
+	scrollContainer: HTMLElement;
+}
+
 /**
  * @class
  * ### Overview
@@ -79,7 +90,7 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * - `headerRow`: Table header cells defining the columns
  * - `rows` (default slot): Table rows with cells containing the suggestion data
  *
- * **Note:** Autocomplete (typeahead) is base on the first column of suggestion rows only.
+ * **Note:** Autocomplete (typeahead) is based on the first column of suggestion rows only.
  *
  *
  * ### ES6 Module Import
@@ -99,10 +110,39 @@ type InputTableSuggestSelectionChangeEventDetail = {
 	template: InputTableSuggestTemplate,
 	styles: [InputField.styles, SuggestionsCss, InputTableSuggestStyles],
 })
+/**
+ * Fired when a suggestion row is highlighted during navigation or selected by the user.
+ * @param {HTMLElement | null} row The highlighted or selected suggestion row.
+ * @public
+ */
 @event("selection-change", { bubbles: true })
+
+/**
+ * Fired when the suggestions picker is opened.
+ * @public
+ */
 @event("open", { bubbles: true })
+
+/**
+ * Fired when the suggestions picker is closed.
+ * @public
+ */
 @event("close")
+
+/**
+ * Fired when the user navigates with the keyboard and the input value is autocompleted
+ * (type-ahead) to the first matching suggestion row.
+ * @public
+ */
 @event("type-ahead")
+
+/**
+ * Fired when the user scrolls the suggestions picker.
+ * @param {Integer} scrollTop The current scroll position.
+ * @param {HTMLElement} scrollContainer The scroll container.
+ * @public
+ */
+@event("suggestion-scroll", { bubbles: true })
 
 class InputTableSuggest extends InputField {
 	eventDetails!: InputField["eventDetails"] & {
@@ -110,6 +150,7 @@ class InputTableSuggest extends InputField {
 		"open": void,
 		"close": void,
 		"type-ahead": void,
+		"suggestion-scroll": InputTableSuggestScrollEventDetail,
 	}
 
 	/**
@@ -545,6 +586,45 @@ class InputTableSuggest extends InputField {
 				return;
 			}
 
+			if (isHome(e) || isEnd(e) || isPageUp(e) || isPageDown(e)) {
+				const visibleRows = this._visibleRows;
+
+				if (visibleRows.length === 0) {
+					return;
+				}
+
+				e.preventDefault();
+				this._isKeyNavigation = true;
+
+				const lastIndex = visibleRows.length - 1;
+				const currentIndex = visibleRows.findIndex(row => row.focused || row.selected);
+
+				let targetIndex: number;
+				if (isHome(e)) {
+					targetIndex = 0;
+				} else if (isEnd(e)) {
+					targetIndex = lastIndex;
+				} else {
+					const from = currentIndex < 0 ? 0 : currentIndex;
+					targetIndex = isPageDown(e)
+						? Math.min(from + 10, lastIndex)
+						: Math.max(from - 10, 0);
+				}
+
+				this._focusRowAtIndex(targetIndex);
+				return;
+			}
+
+			if (isTabNext(e) || isTabPrevious(e)) {
+				const visibleRows = this._visibleRows;
+				const rowToSelect = visibleRows.find(row => row.focused) || this._matchedTabularRow;
+
+				if (rowToSelect) {
+					// Accept the highlighted row but let the default Tab move focus to the next control.
+					this._selectRow(rowToSelect, true);
+				}
+			}
+
 			if (isEnter(e)) {
 				const visibleRows = this._visibleRows;
 				const focusedRow = visibleRows.find(row => row.focused);
@@ -601,22 +681,38 @@ class InputTableSuggest extends InputField {
 			nextIndex = currentIndex - 1;
 		}
 
+		this._focusRowAtIndex(nextIndex);
+	}
+
+	/**
+	 * Moves visual focus to the visible row at the given index, previews its value,
+	 * announces it and scrolls it into view. Shared by arrow keys and Home/End/PageUp/PageDown.
+	 *
+	 * @private
+	 */
+	_focusRowAtIndex(index: number) {
+		const visibleRows = this._visibleRows;
+
+		if (index < 0 || index >= visibleRows.length) {
+			return;
+		}
+
 		this._deselectAllRows();
 		this._matchedTabularRow = undefined;
 
-		visibleRows[nextIndex].focused = true;
+		visibleRows[index].focused = true;
 		this._rowFocused = true;
 		this._updateRowClasses();
 
-		const previewValue = this._getRowValue(visibleRows[nextIndex]);
+		const previewValue = this._getRowValue(visibleRows[index]);
 		this.value = previewValue;
 		this._performTextSelection = true;
 
-		this._announceSelectedRow(nextIndex);
-		this._scrollRowIntoView(nextIndex);
+		this._announceSelectedRow(index);
+		this._scrollRowIntoView(index);
 
 		this.fireDecoratorEvent("selection-change", {
-			row: visibleRows[nextIndex],
+			row: visibleRows[index],
 		});
 	}
 
@@ -700,6 +796,19 @@ class InputTableSuggest extends InputField {
 	 */
 	_getTabularPopover() {
 		return this.shadowRoot?.querySelector<ResponsivePopover>(".ui5-suggestions-popover");
+	}
+
+	/**
+	 * Forwards the suggestions scroll as a public `suggestion-scroll` event.
+	 *
+	 * @private
+	 */
+	_onTableScroll(e: Event) {
+		const scrollContainer = e.target as HTMLElement;
+		this.fireDecoratorEvent("suggestion-scroll", {
+			scrollTop: scrollContainer.scrollTop,
+			scrollContainer,
+		});
 	}
 
 	/**
@@ -848,4 +957,5 @@ export default InputTableSuggest;
 export type {
 	ITableSuggestionRow,
 	InputTableSuggestSelectionChangeEventDetail,
+	InputTableSuggestScrollEventDetail,
 };
