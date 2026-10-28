@@ -2,15 +2,13 @@
 	width: 20rem;
 }
 
-.ui5-time-picker-popover .ui5-responsive-popover-header .row {
-	justify-content: space-between;
+.ui5-tp-header-title {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader5Size);
 	color: var(--sapPageHeader_TextColor);
-}
-
-.ui5-tp-mode-toggle {
-	margin-inline-start: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .ui5-tp-mode-inputs {

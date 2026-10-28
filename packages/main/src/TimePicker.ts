@@ -59,7 +59,6 @@ import {
 	TIMEPICKER_PATTERN_MISSMATCH,
 	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
 	TIMEPICKER_OPEN_ICON_TITLE,
-	INPUT_SUGGESTIONS_TITLE,
 	TIMEPICKER_SWITCH_TO_KEYBOARD,
 	TIMEPICKER_SWITCH_TO_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
@@ -1039,7 +1038,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return this.ariaLabelText || TimePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.ariaLabelText;
 	}
 
 	get showHeader() {
@@ -1047,7 +1046,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _preventPickerInitialFocus() {
-		return isPhone();
+		return isPhone() && !this._useInputsMode;
+	}
+
+	get _initialFocusId() {
+		return this._useInputsMode ? `${this._id}-time-sel` : undefined;
 	}
 
 	/**

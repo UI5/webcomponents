@@ -2,6 +2,7 @@ import DatePickerInputTemplate from "./DatePickerInputTemplate.js";
 import DatePickerPopoverTemplate from "./DatePickerPopoverTemplate.js";
 
 import type DateTimePicker from "./DateTimePicker.js";
+import Bar from "./Bar.js";
 import Button from "./Button.js";
 import Calendar from "./Calendar.js";
 import CalendarDate from "./CalendarDate.js";
@@ -15,31 +16,34 @@ import timeEntryRequest from "@ui5/webcomponents-icons/dist/time-entry-request.j
 export default function DateTimePickerTemplate(this: DateTimePicker) {
 	return [
 		DatePickerInputTemplate.call(this),
-		DatePickerPopoverTemplate.call(this, { content, footer, initialFocus: this.initialFocusId }),
+		DatePickerPopoverTemplate.call(this, { header, content, footer, initialFocus: this.initialFocusId }),
 	];
+}
+
+function header(this: DateTimePicker) {
+	return (
+		<Bar slot="header" design="Header">
+			<span class="ui5-dt-header-title" slot="startContent">{this._headerTitleText}</span>
+			<SegmentedButton class="ui5-dt-picker-toggle-button" onSelectionChange={this._dateTimeSwitchChange}>
+				<SegmentedButtonItem data-ui5-key="Date" selected={this.showDateView}>{this.btnDateLabel}</SegmentedButtonItem>
+				<SegmentedButtonItem data-ui5-key="Time" selected={this.showTimeView}>{this.btnTimeLabel}</SegmentedButtonItem>
+			</SegmentedButton>
+			{ this.showTimeView &&
+				<Button
+					slot="endContent"
+					design="Transparent"
+					icon={this._useTimeInputsMode ? timeEntryRequest : keyboardAndMouse}
+					tooltip={this._dtpTimeToggleLabel}
+					onClick={this._toggleDtpTimeMode}
+				/>
+			}
+		</Bar>
+	);
 }
 
 function content(this: DateTimePicker) {
 	return (
 		<>
-			{ this._phoneView &&
-				<div class="ui5-dt-picker-header">
-					<SegmentedButton class="ui5-dt-picker-toggle-button" onSelectionChange={this._dateTimeSwitchChange}>
-						<SegmentedButtonItem data-ui5-key="Date" selected={this.showDateView}>{this.btnDateLabel}</SegmentedButtonItem>
-						<SegmentedButtonItem data-ui5-key="Time" selected={this.showTimeView}>{this.btnTimeLabel}</SegmentedButtonItem>
-					</SegmentedButton>
-					{ this.showTimeView &&
-						<Button
-							class="ui5-dt-time-mode-toggle"
-							design="Transparent"
-							icon={this._useTimeInputsMode ? timeEntryRequest : keyboardAndMouse}
-							tooltip={this._dtpTimeToggleLabel}
-							onClick={this._toggleDtpTimeMode}
-						/>
-					}
-				</div>
-			}
-
 			<div class={{
 				"ui5-dt-picker-content": true,
 				"ui5-dt-picker-content--phone": this._phoneView,

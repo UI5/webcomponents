@@ -42,6 +42,7 @@ export default function TimeSelectionInputsTemplate(this: TimeSelectionInputs) {
 							value={entity.stringValue}
 							accessibleName={entity.label}
 							_nativeInputAttributes={entity.attributes}
+							data-sap-focus-ref={index === 0}
 							onFocusIn={this._onfocusin}
 							onFocusOut={this._onfocusout}
 							onInput={this._oninput}

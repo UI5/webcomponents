@@ -38,17 +38,13 @@
 	display: none;
 }
 
-.ui5-dt-picker-header {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	margin-top: 1rem;
-	box-sizing: border-box;
-}
-
-.ui5-dt-time-mode-toggle {
-	margin-inline-start: 0.5rem;
+.ui5-dt-header-title {
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader5Size);
+	color: var(--sapPageHeader_TextColor);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .ui5-dt-mode-inputs {

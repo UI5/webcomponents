@@ -1,4 +1,5 @@
 import type TimePicker from "./TimePicker.js";
+import Bar from "./Bar.js";
 import Button from "./Button.js";
 import Icon from "./Icon.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -25,6 +26,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 			_hideHeader={this._shouldHideHeader}
 			hideArrow={true}
 			preventInitialFocus={this._preventPickerInitialFocus}
+			initialFocus={this._initialFocusId}
 			accessibleName={this.pickerAccessibleName}
 			onClose={this.onResponsivePopoverAfterClose}
 			onBeforeOpen={this.onResponsivePopoverBeforeOpen}
@@ -64,18 +66,16 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 
 function defaultHeader(this: TimePicker) {
 	return (
-		<div slot="header" class="ui5-responsive-popover-header">
-			<div class="row">
-				<span>{this._headerTitleText}</span>
-				<Button
-					class="ui5-tp-mode-toggle"
-					design="Transparent"
-					icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
-					tooltip={this._pickerModeToggleLabel}
-					onClick={this._togglePickerMode}
-				/>
-			</div>
-		</div>
+		<Bar slot="header" design="Header">
+			<span class="ui5-tp-header-title" slot="startContent">{this._headerTitleText}</span>
+			<Button
+				slot="endContent"
+				design="Transparent"
+				icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
+				tooltip={this._pickerModeToggleLabel}
+				onClick={this._togglePickerMode}
+			/>
+		</Bar>
 	);
 }
 

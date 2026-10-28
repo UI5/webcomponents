@@ -313,6 +313,20 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
+	get showHeader() {
+		return this._phoneView;
+	}
+
+	/**
+	 * @override
+	 */
+	get _headerTitleText() {
+		return this.ariaLabelText;
+	}
+
+	/**
+	 * @override
+	 */
 	get roleDescription() {
 		return DateTimePicker.i18nBundle.getText(DATETIME_DESCRIPTION);
 	}
