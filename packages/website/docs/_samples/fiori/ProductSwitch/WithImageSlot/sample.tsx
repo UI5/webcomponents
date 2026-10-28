@@ -15,7 +15,12 @@ function App() {
   return (
     <>
       <ProductSwitch>
-        <ProductSwitchItem titleText="SVG" subtitleText="SVG">
+        <ProductSwitchItem
+          titleText="SVG"
+          subtitleText="SVG"
+          targetSrc="about:blank"
+          target="_blank"
+        >
           <Avatar
             slot="image"
             shape="Square"
@@ -33,21 +38,29 @@ function App() {
           titleText="Home"
           subtitleText="Central Home"
           icon="home"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Analytics Cloud"
           subtitleText="Analytics Cloud"
           icon="business-objects-experience"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Catalog"
           subtitleText="Ariba"
           icon="contacts"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Travel &amp; Expense"
           subtitleText="Concur"
           icon="flight"
+          targetSrc="about:blank"
+          target="_blank"
         />
       </ProductSwitch>
     </>

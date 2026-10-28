@@ -1,29 +1,35 @@
 :host {
+	display: block;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
+}
+
+.ui5-product-switch-busy-indicator {
+	display: block;
+	width: 100%;
+	max-width: calc(4 * 11.75rem + 1.5rem + 1.25rem);
+	min-height: 10rem; /* keep a visible busy area while items are still loading (approx. one row + padding) */
 }
 
 .ui5-product-switch-root {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: inherit;
-	align-items: inherit;
-	width: 752px; /* 4 * item size */
+	box-sizing: border-box;
+	width: 100%;
+	/* up to 4 columns (item 11.25rem + .5rem margin) + .75rem padding each side + reserved scrollbar gutter */
+	max-width: calc(4 * 11.75rem + 1.5rem + 1.25rem);
 	padding: 1.25rem .75rem;
+	max-height: 32.5rem; /* border-box: 4 rows * (7rem item + 0.5rem margin) = 30rem content + 2 * 1.25rem padding */
+	overflow-y: auto;
+	scrollbar-gutter: stable; /* reserve the scrollbar space so it does not change the computed column count */
 }
 
 :host([desktop-columns="3"]) .ui5-product-switch-root {
-	width: 564px; /* 3 * item size */
+	max-width: calc(3 * 11.75rem + 1.5rem + 1.25rem); /* up to 3 columns */
 }
 
 :host([desktop-columns="2"]) .ui5-product-switch-root {
-	width: 376px; /* 2 * item size */
-}
-
-@media only screen and (max-width: 900px) {
-	.ui5-product-switch-root {
-		width: 564px; /* 3 * item size */
-	}
+	max-width: calc(2 * 11.75rem + 1.5rem + 1.25rem); /* up to 2 columns */
 }
 
 @media only screen and (max-width: 600px) {
@@ -33,5 +39,8 @@
 		flex-direction: column;
 		padding: 0;
 		width: 100%;
+		max-width: none;
+		max-height: none;
+		overflow-y: visible;
 	}
 }

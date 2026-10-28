@@ -1,16 +1,23 @@
+import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import type ProductSwitch from "./ProductSwitch.js";
 
 export default function ProductSwitchTemplate(this: ProductSwitch) {
 	return (
-		<div
-			role="list"
-			class="ui5-product-switch-root"
-			aria-label={this._ariaLabelText}
-			onFocusIn={this._onfocusin}
-			onKeyDown={this._onkeydown}
-			onClick={this.handleProductSwitchItemClick}
+		<BusyIndicator
+			active={this.loading}
+			delay={this.loadingDelay}
+			class="ui5-product-switch-busy-indicator"
 		>
-			<slot></slot>
-		</div>
+			<div
+				role="menu"
+				class="ui5-product-switch-root"
+				aria-label={this._ariaLabelText}
+				onFocusIn={this._onfocusin}
+				onKeyDown={this._onkeydown}
+				onClick={this.handleProductSwitchItemClick}
+			>
+				<slot></slot>
+			</div>
+		</BusyIndicator>
 	);
 }

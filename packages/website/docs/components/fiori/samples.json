@@ -171,6 +171,11 @@
 			{
 				"name": "WithImageSlot",
 				"title": "ProductSwitchItem with \"image\" slot"
+			},
+			{
+				"name": "Loading",
+				"title": "Loading state",
+				"description": "Set the loading property to display a busy indicator while items are retrieved. Use loadingDelay to control how long before the indicator appears."
 			}
 		]
 	},
