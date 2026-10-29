@@ -80,6 +80,18 @@ describe("ListItemGroup Accessibility", () => {
 				.should("have.attr", "role", "listitem");
 		});
 	});
+
+	it("does not add a 'sub groups' summary to the list aria-description", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then(ariaDesc => {
+				expect(ariaDesc ?? "").to.not.match(/sub\s?groups/i);
+			});
+	});
 });
 
 describe("ListItemGroup Tests", () => {
