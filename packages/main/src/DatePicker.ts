@@ -45,7 +45,6 @@ import {
 	DATEPICKER_OPEN_ICON_TITLE,
 	DATEPICKER_OPEN_ICON_TITLE_OPENED,
 	DATEPICKER_DATE_DESCRIPTION,
-	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	DATEPICKER_MOBILE_HEADER_TITLE,
 	DATEPICKER_POPOVER_ACCESSIBLE_NAME,
 	VALUE_STATE_ERROR,
@@ -279,7 +278,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	/**
 	 * Defines whether the component is required.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @default false
 	 * @public
 	 */
@@ -331,7 +330,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * the week numbers are not displayed regardless of what is set.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideWeekNumbers = false;
@@ -349,7 +348,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Defines the aria-label attribute for the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -358,7 +357,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -407,7 +406,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the component is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()
@@ -871,7 +870,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		}
 
 		// translatable placeholder – for example "e.g. 2025-12-31"
-		return `${DatePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDayOfTheYear}`;
+		// @ts-expect-error getPlaceholderText is a runtime API not exposed in type definitions
+		return (this.getFormat()?.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate())) as string;
 	}
 
 	get _headerTitleText() {

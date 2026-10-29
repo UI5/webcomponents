@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
@@ -36,6 +36,19 @@ export default function Root({children}) {
         }
         return initialValue || "LTR";
     });
+
+    useEffect(() => {
+        if (!ExecutionEnvironment.canUseDOM) {
+            return;
+        }
+        Promise.all([
+            import("@ui5/webcomponents/dist/Assets.js"),
+            import("@ui5/webcomponents-fiori/dist/Assets.js"),
+            import("@ui5/webcomponents-base/dist/config/Theme.js"),
+        ]).then(([, , { setTheme: ui5SetTheme }]) => {
+            ui5SetTheme(theme);
+        });
+    }, [theme]);
 
     const themeValue = { theme, setTheme };
     const contentDensityValue = { contentDensity, setContentDensity };

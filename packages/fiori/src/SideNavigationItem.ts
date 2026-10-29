@@ -19,6 +19,7 @@ import {
 	SIDE_NAVIGATION_ICON_EXPAND,
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
 	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
+	SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import "@ui5/webcomponents/dist/Tag.js";
@@ -46,7 +47,7 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
  * @extends SideNavigationSelectableItemBase
  * @abstract
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-side-navigation-item",
@@ -110,6 +111,8 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		this.items.forEach(item => {
 			item._parentDisabled = this.effectiveDisabled;
 		});
+
+		this._syncTagWrapping();
 	}
 
 	get overflowItems() : Array<SideNavigationItem> {
@@ -233,6 +236,14 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		return !!this.tag.length;
 	}
 
+	get _tagText() {
+		return this.tag[0]?.textContent?.trim() ?? "";
+	}
+
+	get _tagDescriptionText() {
+		return this.hasTag ? SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT, this._tagText) : undefined;
+	}
+
 	get _textId() {
 		return `${this._id}-text`;
 	}
@@ -291,7 +302,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.effectiveDisabled) {
+		if (this.effectiveDisabled || !this.sideNavigation) {
 			return;
 		}
 

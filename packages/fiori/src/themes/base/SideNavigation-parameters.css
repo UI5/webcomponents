@@ -24,7 +24,6 @@
 	--_ui5_side_navigation_item_border_width: 0;
 	--_ui5_side_navigation_item_height: 2.75rem;
 	--_ui5_side_navigation_item_margin: 0.875rem;
-	--_ui5_side_navigation_item_expand_arrow_padding: 0.6875rem;
 	--_ui5_side_navigation_item_border_radius: 0;
 	--_ui5_side_navigation_item_bottom_margin: 0;
 	--_ui5_side_navigation_item_padding_start_in_popup: var(--_ui5_side_navigation_group_icon_width);
@@ -66,10 +65,9 @@
 	--_ui5_side_navigation_active_text_color: var(--sapList_Active_TextColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_side_navigation_item_height: 2rem;
-		--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
 		--_ui5_side_navigation_item_margin: 0.5rem;
 	}
 }

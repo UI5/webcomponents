@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **ui5-search, ui5-shellbar, ui5-shellbar-search:** fix 'disable-search-collapse' behaviour ([4b9a290](https://github.com/UI5/webcomponents/commit/4b9a29093be2dc770291ff4e310a8087de38f404)), closes [#14150](https://github.com/UI5/webcomponents/issues/14150)
+* **ui5-search:** remove dead code ([#14145](https://github.com/UI5/webcomponents/issues/14145)) ([1b950e8](https://github.com/UI5/webcomponents/commit/1b950e8650b103d0f16438625187fb3cfe601051))
+* **ui5-shellbar:** legacy logo styles fixed ([#14119](https://github.com/UI5/webcomponents/issues/14119)) ([87cfe6f](https://github.com/UI5/webcomponents/commit/87cfe6f6e0983d092795de635775bef5fc77806e))
+* **ui5-shellbar:** prevent double announcement of notifications count ([#14134](https://github.com/UI5/webcomponents/issues/14134)) ([6d0fb3c](https://github.com/UI5/webcomponents/commit/6d0fb3cafdda208cd313e0bb3b85fe357bd0df2b)), closes [#11284](https://github.com/UI5/webcomponents/issues/11284) [#11396](https://github.com/UI5/webcomponents/issues/11396)
+* **ui5-shellbar:** prevent render loop when legacy search is full-width ([#14167](https://github.com/UI5/webcomponents/issues/14167)) ([04afa80](https://github.com/UI5/webcomponents/commit/04afa8060c6b983dff264a6033b7b7354809e5ea)), closes [#14149](https://github.com/UI5/webcomponents/issues/14149)
+
+
+
+
+
+# [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
+
+
+### Bug Fixes
+
+* **tests:** correct ui5DialogOpened command subject typings ([#14121](https://github.com/UI5/webcomponents/issues/14121)) ([6c3486b](https://github.com/UI5/webcomponents/commit/6c3486bcdb2340d48c1ec7113a5c292e96c39612))
+* **ui5-illustrated-message:** prevent media oscillation ([#14129](https://github.com/UI5/webcomponents/issues/14129)) ([15d9627](https://github.com/UI5/webcomponents/commit/15d9627b904dc1e9c69bdbd17bc805f3c9d88505)), closes [UI5#14125](https://github.com/UI5/issues/14125)
+* **ui5-user-menu:** add correct heading levels ([#14123](https://github.com/UI5/webcomponents/issues/14123)) ([2cf00a7](https://github.com/UI5/webcomponents/commit/2cf00a7c57b8b0878cc608bb27ad7f38a63b6afb))
+* **ui5-user-settings-dialog:** announce selection state to screen readers ([#13928](https://github.com/UI5/webcomponents/issues/13928)) ([c941b95](https://github.com/UI5/webcomponents/commit/c941b95326b2cbafdaf18a4e0e7bbeee0f48f981))
+* **ui5-user-settings-dialog:** don't expose item header as banner landmark ([#14104](https://github.com/UI5/webcomponents/issues/14104)) ([940cf82](https://github.com/UI5/webcomponents/commit/940cf82999adb45a525d4259be0fac7f4a680d31))
+
+
+### Features
+
+* **ui5-side-navigation:** implement search and filter feature ([#14063](https://github.com/UI5/webcomponents/issues/14063)) ([3c45594](https://github.com/UI5/webcomponents/commit/3c45594c1c54d442455a3152da6294745ddf070a))
+
+
+
+
+
 ## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

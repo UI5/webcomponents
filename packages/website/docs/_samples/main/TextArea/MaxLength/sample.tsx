@@ -19,7 +19,7 @@ function App() {
     <TextArea
       maxlength={10}
       placeholder="Enter more than 10 characters"
-      showExceededText={true}
+      counterMode="Auto"
       valueState={valueState as "None" | "Critical"}
       onInput={handleTextAreaInput}
     />

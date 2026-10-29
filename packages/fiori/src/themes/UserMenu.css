@@ -1,3 +1,5 @@
+@import "./InvisibleTextStyles.css";
+
 .ui5-user-menu-rp {
     width: 20rem;
 }

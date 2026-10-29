@@ -1309,7 +1309,7 @@ describe("Change event behavior when selecting the same suggestion item", () => 
 		cy.get("[ui5-dialog]")
 			.as("dialog");
 
-		cy.get<Dialog>("@dialog")
+		cy.get<JQuery<Dialog>>("@dialog")
 			.ui5DialogOpened();
 
 		cy.get("@input")
@@ -1326,7 +1326,7 @@ describe("Change event behavior when selecting the same suggestion item", () => 
 			.eq(0)
 			.realClick();
 
-		cy.get<Dialog>("@dialog")
+		cy.get<JQuery<Dialog>>("@dialog")
 			.ui5DialogOpened();
 	});
 });
@@ -3184,7 +3184,7 @@ describe("Input built-in filtering", () => {
 			.realClick()
 			.realPress("Backspace");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("@input")
@@ -3192,7 +3192,7 @@ describe("Input built-in filtering", () => {
 			.find("input")
 			.realType("G");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("@input")
@@ -3241,7 +3241,7 @@ describe("Input built-in filtering", () => {
 			.realClick()
 			.realPress("Backspace");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("@input")
@@ -3249,7 +3249,7 @@ describe("Input built-in filtering", () => {
 			.find("input")
 			.realType("l");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("@input")
@@ -3718,6 +3718,20 @@ describe("Input built-in filtering", () => {
 					// Readonly does not dim — opacity var should remain unset.
 					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.equal("");
 				});
+		});
+
+		it("should render the title tooltip from accessibleName when hideTooltip is not set", () => {
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.shadow()
+				.find(".ui5-input-icon-root")
+				.should("have.attr", "title", "Search");
 		});
 	});
 });

@@ -1,5 +1,7 @@
 import StepInput from "../../src/StepInput.js";
 import type NumericInput from "../../src/NumericInput.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import "../../src/Assets.js";
 
 const decreaseValue = true;
 
@@ -530,6 +532,18 @@ describe("StepInput events", () => {
 	});
 });
 
+describe("StepInput getFocusDomRefAsync", () => {
+	it("getFocusDomRefAsync resolves to the native input immediately after first render", () => {
+		cy.mount(<StepInput />);
+
+		cy.get("[ui5-step-input]").then(async ($el) => {
+			const focusRef = await ($el[0] as StepInput).getFocusDomRefAsync();
+			expect(focusRef).to.exist;
+			expect(focusRef!.tagName.toLowerCase()).to.equal("ui5-input");
+		});
+	});
+});
+
 describe("Validation inside form", () => {
 	it("has correct validity for patternMissmatch", () => {
 		cy.mount(
@@ -697,5 +711,60 @@ describe("Validation inside form", () => {
 
 		cy.get("#stepInput:invalid")
 			.should("not.exist", "StepInput with value lower than max should not have :invalid CSS class");
+	});
+});
+
+describe("StepInput mobile device behaviour", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
+
+	it("should use input type 'number' on mobile", () => {
+		cy.mount(
+			<StepInput></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should("have.prop", "type", "number");
+	});
+
+	it("should use '.' as decimal separator regardless of locale on mobile", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("de");
+			});
+
+		cy.mount(
+			<StepInput value={1.5} valuePrecision={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("1.5");
+			});
+	});
+
+	it("should not use group separator for large numbers on mobile", () => {
+		cy.mount(
+			<StepInput value={12345678}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("12345678");
+			});
 	});
 });

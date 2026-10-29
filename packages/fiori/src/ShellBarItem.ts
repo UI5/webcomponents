@@ -69,7 +69,7 @@ class ShellBarItem extends UI5Element {
 	/**
 	 * Defines the count displayed in badge.
 	 * @default undefined
-	 * @since 1.0.0-rc.6
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()

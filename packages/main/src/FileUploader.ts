@@ -94,7 +94,7 @@ type FileUploaderChangeEventDetail = {
  *
  * `import "@ui5/webcomponents/dist/FileUploader.js";`
  * @constructor
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @extends UI5Element
  * @public
  */
@@ -287,7 +287,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the component is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

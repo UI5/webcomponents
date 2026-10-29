@@ -18,6 +18,11 @@
     border-color: var(--_ui5_input_disabled_border_color);
 }
 
+:host([disabled]) .ui5-numeric-input-input {
+    /* The host already applies the disabled opacity to the entire control. */
+    opacity: 1;
+}
+
 :host {
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);

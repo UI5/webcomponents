@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import CheckBox from "../../src/CheckBox.js";
 import Switch from "../../src/Switch.js";
 import Link from "../../src/Link.js";

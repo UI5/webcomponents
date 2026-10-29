@@ -2,6 +2,7 @@ import SideNavigation from "../../src/SideNavigation.js";
 import SideNavigationItem from "../../src/SideNavigationItem.js";
 import SideNavigationGroup from "../../src/SideNavigationGroup.js";
 import SideNavigationSubItem from "../../src/SideNavigationSubItem.js";
+import SideNavigationSearchField from "../../src/SideNavigationSearchField.js";
 import group from "@ui5/webcomponents-icons/dist/group.js";
 import home from "@ui5/webcomponents-icons/dist/home.js";
 import employeeApprovals from "@ui5/webcomponents-icons/dist/employee-approvals.js";
@@ -2049,5 +2050,488 @@ describe("Focusable items", () => {
 			.find("[ui5-tag]")
 			.should("exist")
 			.should("have.text", "New");
+	});
+
+	it("shows the full tag in the collapsed popover (not clamped to 6rem)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Leads" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>
+						Beta Long Text Beta Long Text Beta Long Text
+					</Tag>
+					<SideNavigationSubItem text="All Leads" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-side-navigation-item] > [ui5-tag]")
+			.then($tag => {
+				// the popover tag is not truncated: it renders wider than the 6rem rail clamp
+				expect($tag[0].getBoundingClientRect().width).to.be.greaterThan(96);
+			});
+	});
+
+	it("renders the overflow menu item tag inline right after the text", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem text="dummy" />
+				<SideNavigationItem text="Contacts">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").invoke("attr", "style", "height: 90px");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Contacts']")
+			.as("menuItem");
+
+		// the tag renders inline right after the text (tag.left close to text.right)
+		cy.get("@menuItem").shadow().find(".ui5-navmenu-item-text").then($text => {
+			const textRight = $text[0].getBoundingClientRect().right;
+			cy.get("@menuItem").find("[ui5-tag]").should("have.text", "Beta").then($tag => {
+				const tagLeft = $tag[0].getBoundingClientRect().left;
+				expect(tagLeft - textRight).to.be.lessThan(16);
+			});
+		});
+	});
+
+	it("forces the rail item tag onto a single line when collapsed", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Favorites Long Text" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta Long Text Beta Long Text</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// collapsed: the tag is rendered non-wrapping so max-width truncates it
+		cy.get("#item1").find("[ui5-tag]").should("have.attr", "wrapping-type", "None");
+
+		// expanded: the author's wrapping is restored (no forced None)
+		cy.get("#sideNav").invoke("prop", "collapsed", false);
+		cy.get("#item1").find("[ui5-tag]").should("not.have.attr", "wrapping-type");
+	});
+});
+
+describe("Side Navigation no match", () => {
+	it("shows a '0 matches found' item in the tab chain when there are no items and a highlightedText is set", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("exist")
+			.should("have.attr", "text", "0 matches found")
+			.should("have.attr", "unselectable");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("does not show the no match item when there are items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem text="Item" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there are fixed items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem slot="fixedItems" text="Fixed" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there is no highlightedText", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("ignores key presses on the no match item (no selection-change fired)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc" />
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChange"));
+		});
+
+		// Focus the no match item and press the activation keys.
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.shadow()
+			.find(".ui5-sn-item")
+			.as("noMatchItem");
+
+		cy.get("@noMatchItem").focus();
+		cy.realPress("Enter");
+		cy.realPress("Space");
+
+		cy.get("@selectionChange").should("not.be.called");
+
+		// The no match item stays present and is never marked selected.
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("exist")
+			.should("not.have.attr", "selected");
+	});
+});
+
+describe("Side Navigation filterSection slot", () => {
+	it("renders the filter section slot when expanded", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filterSection" id="search" />
+				<SideNavigationItem text="Item 1" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section")
+			.should("exist");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section slot[name='filterSection']")
+			.should("exist");
+
+		// the slotted search field is assigned to the filterSection slot
+		cy.get("#search")
+			.should("have.attr", "slot", "filterSection");
+	});
+
+	it("does not render the filter section when collapsed", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed={true}>
+				<SideNavigationSearchField slot="filterSection" id="search" />
+				<SideNavigationItem text="Item 1" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section")
+			.should("not.exist");
+	});
+
+	it("does not render the filter section when the slot is empty", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem text="Item 1" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section")
+			.should("not.exist");
+	});
+
+	it("hides the filter section when the component is collapsed at runtime", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filterSection" id="search" />
+				<SideNavigationItem text="Item 1" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section")
+			.should("exist");
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].collapsed = true;
+		});
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-filter-section")
+			.should("not.exist");
+	});
+});
+
+describe("Side Navigation highlightedText", () => {
+	it("wraps the matching part of an item's text in a highlight span", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Doc");
+
+		// the whole visible text is preserved
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("highlights all non-overlapping matches in an item's text", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="a">
+				<SideNavigationItem id="item1" text="Banana" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 3)
+			.each($el => {
+				cy.wrap($el).should("have.text", "a");
+			});
+	});
+
+	it("matches case-insensitively and preserves the original casing", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="HOME">
+				<SideNavigationItem id="item1" text="Home page" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Home");
+	});
+
+	it("does not add any highlight span when the term does not match", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="xyz">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("does not add any highlight span when there is no highlightedText", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+	});
+
+	it("propagates highlightedText to sub items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="report">
+				<SideNavigationItem id="item1" text="Analytics" expanded>
+					<SideNavigationSubItem id="sub1" text="Reports" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sub1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Report");
+	});
+
+	it("propagates highlightedText to groups", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="group">
+				<SideNavigationGroup id="group1" text="Group One">
+					<SideNavigationItem text="Item" />
+				</SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Group");
+	});
+
+	it("re-renders the highlight when highlightedText changes", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.text", "Doc");
+
+		cy.get("#sideNav").invoke("attr", "highlighted-text", "ments");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "ments");
+	});
+
+	it("removes the highlight when highlightedText is cleared", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("exist");
+
+		cy.get("#sideNav").invoke("removeAttr", "highlighted-text");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("renders potentially unsafe text as inert markup (XSS safety)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="click">
+				<SideNavigationItem id="item1" text={`<img src=x onerror="window.__xss=true">click me`} />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "click");
+
+		// the injected markup must not have produced a real <img> element
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text img")
+			.should("not.exist");
+
+		cy.window().its("__xss").should("not.exist");
+	});
+
+	it("does not highlight the tag text when the term matches a tag", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="Beta">
+				<SideNavigationItem id="item1" text="Leads">
+					<Tag slot="tag" design="Set2" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// the item stays visible
+		cy.get("#item1").should("be.visible");
+
+		// no highlight span is rendered inside the item (text does not match)
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-highlight")
+			.should("not.exist");
+
+		// the slotted tag text is not wrapped in a highlight span
+		cy.get("#item1")
+			.find("[ui5-tag] .ui5-sn-item-highlight")
+			.should("not.exist");
+		cy.get("#item1")
+			.find("[ui5-tag]")
+			.should("have.text", "Beta");
+	});
+});
+
+describe("Side Navigation search match announcement", () => {
+	it("announceSearchMatchCount method", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filterSection" id="search" value="Item" />
+				<SideNavigationItem text="Item 1" />
+				<SideNavigationItem text="Item 2" />
+			</SideNavigation>
+		);
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(2);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "2 matches found");
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(1);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "1 match found");
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(0);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "0 matches found");
 	});
 });

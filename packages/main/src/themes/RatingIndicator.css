@@ -108,6 +108,7 @@
 	position: absolute;
 	width: var(--_ui5_rating_indicator_item_width);
 	height: var(--_ui5_rating_indicator_item_height);
+	font-size: inherit;
 }
 
 .ui5-rating-indicator-half-icon-left {

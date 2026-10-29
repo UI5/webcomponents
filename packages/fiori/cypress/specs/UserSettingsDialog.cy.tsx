@@ -213,6 +213,29 @@ describe("Initial rendering", () => {
 		cy.get("@title").should("have.attr", "size", "H5");
 	});
 
+	it("tests setting header is not exposed as a banner landmark (a11y)", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem headerText="User Account">
+				<UserSettingsView text="Setting1">
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+		cy.get("@settingItem").should("exist");
+
+		// The item header must not be a <header> element, which would map to the
+		// implicit "banner" landmark inside the shadow root and add an unwanted,
+		// non-top-level banner inside the dialog (WAI-ARIA landmark violation).
+		cy.get("@settingItem").shadow().find("header").should("not.exist");
+		cy.get("@settingItem").shadow().find("[role='banner']").should("not.exist");
+
+		// The header container is a plain <div> and still renders the title.
+		cy.get("@settingItem").shadow().find("div.ui5-user-settings-item-header-container").as("header");
+		cy.get("@header").should("exist");
+		cy.get("@header").find("[ui5-title]").contains("User Account");
+	});
+
 	it("tests setting tabs", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>

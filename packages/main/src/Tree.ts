@@ -100,7 +100,9 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
+ * @ui5subcomponent TreeItem
+ * @ui5subcomponent TreeItemCustom
  */
 @customElement({
 	tag: "ui5-tree",
@@ -124,7 +126,7 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
 /**
  * Fired when the mouse cursor enters the tree item borders.
  * @param {HTMLElement} item the hovered item.
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @event("item-mouseover", {
@@ -133,7 +135,7 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
 /**
  * Fired when the mouse cursor leaves the tree item borders.
  * @param {HTMLElement} item the hovered item.
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @event("item-mouseout", {
