@@ -2051,6 +2051,78 @@ describe("Focusable items", () => {
 			.should("exist")
 			.should("have.text", "New");
 	});
+
+	it("shows the full tag in the collapsed popover (not clamped to 6rem)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Leads" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>
+						Beta Long Text Beta Long Text Beta Long Text
+					</Tag>
+					<SideNavigationSubItem text="All Leads" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-side-navigation-item] > [ui5-tag]")
+			.then($tag => {
+				// the popover tag is not truncated: it renders wider than the 6rem rail clamp
+				expect($tag[0].getBoundingClientRect().width).to.be.greaterThan(96);
+			});
+	});
+
+	it("renders the overflow menu item tag inline right after the text", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem text="dummy" />
+				<SideNavigationItem text="Contacts">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").invoke("attr", "style", "height: 90px");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Contacts']")
+			.as("menuItem");
+
+		// the tag renders inline right after the text (tag.left close to text.right)
+		cy.get("@menuItem").shadow().find(".ui5-navmenu-item-text").then($text => {
+			const textRight = $text[0].getBoundingClientRect().right;
+			cy.get("@menuItem").find("[ui5-tag]").should("have.text", "Beta").then($tag => {
+				const tagLeft = $tag[0].getBoundingClientRect().left;
+				expect(tagLeft - textRight).to.be.lessThan(16);
+			});
+		});
+	});
+
+	it("forces the rail item tag onto a single line when collapsed", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Favorites Long Text" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta Long Text Beta Long Text</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// collapsed: the tag is rendered non-wrapping so max-width truncates it
+		cy.get("#item1").find("[ui5-tag]").should("have.attr", "wrapping-type", "None");
+
+		// expanded: the author's wrapping is restored (no forced None)
+		cy.get("#sideNav").invoke("prop", "collapsed", false);
+		cy.get("#item1").find("[ui5-tag]").should("not.have.attr", "wrapping-type");
+	});
 });
 
 describe("Side Navigation no match", () => {
@@ -2398,6 +2470,33 @@ describe("Side Navigation highlightedText", () => {
 			.should("not.exist");
 
 		cy.window().its("__xss").should("not.exist");
+	});
+
+	it("does not highlight the tag text when the term matches a tag", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="Beta">
+				<SideNavigationItem id="item1" text="Leads">
+					<Tag slot="tag" design="Set2" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// the item stays visible
+		cy.get("#item1").should("be.visible");
+
+		// no highlight span is rendered inside the item (text does not match)
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-highlight")
+			.should("not.exist");
+
+		// the slotted tag text is not wrapped in a highlight span
+		cy.get("#item1")
+			.find("[ui5-tag] .ui5-sn-item-highlight")
+			.should("not.exist");
+		cy.get("#item1")
+			.find("[ui5-tag]")
+			.should("have.text", "Beta");
 	});
 });
 

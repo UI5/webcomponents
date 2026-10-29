@@ -258,6 +258,32 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 		return `${this._id}-tag`;
 	}
 
+	/**
+	 * Forces the slotted tag onto a single line (truncated) in collapsed mode,
+	 * and restores the author's wrapping when expanded.
+	 */
+	_syncTagWrapping() {
+		const tag = this.querySelector(`[slot="tag"]`);
+		if (!tag) {
+			return;
+		}
+
+		if (this.sideNavCollapsed) {
+			if (!tag.hasAttribute("data-ui5-tag-wrapping-synced")) {
+				tag.setAttribute("data-ui5-tag-wrapping-synced", tag.getAttribute("wrapping-type") ?? "");
+			}
+			tag.setAttribute("wrapping-type", "None");
+		} else if (tag.hasAttribute("data-ui5-tag-wrapping-synced")) {
+			const original = tag.getAttribute("data-ui5-tag-wrapping-synced");
+			if (original) {
+				tag.setAttribute("wrapping-type", original);
+			} else {
+				tag.removeAttribute("wrapping-type");
+			}
+			tag.removeAttribute("data-ui5-tag-wrapping-synced");
+		}
+	}
+
 	_onkeydown(e: KeyboardEvent) {
 		const isRTL = this.effectiveDir === "rtl";
 
