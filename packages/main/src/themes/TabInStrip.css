@@ -106,7 +106,7 @@
 	z-index: 2;
 }
 
-.ui5-tab-strip-item:hover .ui5-tab-expand-button-separator {
+.ui5-tab-strip-item:has(.ui5-tab-expand-button:hover) .ui5-tab-expand-button-separator {
 	visibility: hidden;
 }
 
