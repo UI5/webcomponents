@@ -1462,3 +1462,136 @@ describe("Table - Slot forwarding", () => {
 		});
 	});
 });
+
+describe("Table - Interactive Header Cell", () => {
+	beforeEach(() => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="plainHeader" minWidth="200px">Column A</TableHeaderCell>
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell A</TableCell>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+	});
+
+	it("fires the press event on press (pointer, Enter, Space) only when interactive", () => {
+		cy.get("#plainHeader").invoke("on", "header-press", cy.stub().as("plainPress"));
+		cy.get("#interactiveHeader").invoke("on", "header-press", cy.stub().as("headerPress"));
+
+		// non-interactive header does not fire
+		cy.get("#plainHeader").realClick();
+		cy.get("@plainPress").should("not.have.been.called");
+
+		// pointer click
+		cy.get("#interactiveHeader").realClick();
+		cy.get("@headerPress").should("have.been.calledOnce");
+
+		// click on slotted content still presses the header
+		cy.get("#interactiveHeader").find("ui5-label").realClick();
+		cy.get("@headerPress").should("have.been.calledTwice");
+
+		// keyboard: Enter and Space
+		cy.get("#interactiveHeader").realPress("Enter");
+		cy.get("@headerPress").should("have.been.calledThrice");
+		cy.get("#interactiveHeader").realPress("Space");
+		cy.get("@headerPress").should("have.callCount", 4);
+	});
+
+	it("sets the _active attribute while pressed", () => {
+		cy.get("#interactiveHeader").realMouseDown();
+		cy.get("#interactiveHeader").should("have.attr", "_active");
+		cy.get("#interactiveHeader").realMouseUp();
+		cy.get("#interactiveHeader").should("not.have.attr", "_active");
+	});
+
+	it("keeps focus on the interactive header on Enter instead of moving it to a slotted action", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+						<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#interactiveHeader").invoke("on", "header-press", cy.stub().as("headerPress"));
+
+		// focus the header cell (pointer press also fires the event once)
+		cy.get("#interactiveHeader").realClick();
+		cy.focused().should("have.id", "interactiveHeader");
+		cy.get("@headerPress").should("have.been.calledOnce");
+
+		// Enter fires the event again, but focus must stay on the header cell
+		// and not move to the slotted action button
+		cy.get("#interactiveHeader").realPress("Enter");
+		cy.get("@headerPress").should("have.been.calledTwice");
+		cy.focused().should("have.id", "interactiveHeader");
+	});
+
+	it("does not activate the header when a slotted action is pressed", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+						<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
+
+		// pressing the action button must not set the _active state on the header cell
+		cy.get("@actionButton").realMouseDown();
+		cy.get("#interactiveHeader").should("not.have.attr", "_active");
+		cy.get("@actionButton").realMouseUp();
+
+		// pressing the header cell itself still sets the _active state
+		cy.get("#interactiveHeader").realMouseDown();
+		cy.get("#interactiveHeader").should("have.attr", "_active");
+		cy.get("#interactiveHeader").realMouseUp();
+	});
+
+	it("does not fire the header-press event when a slotted action is pressed", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+						<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#interactiveHeader").invoke("on", "header-press", cy.stub().as("headerPress"));
+		cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
+
+		// pressing the action button must not fire the header-press event
+		cy.get("@actionButton").realClick();
+		cy.get("@headerPress").should("not.have.been.called");
+
+		// pressing the header cell itself still fires the event
+		cy.get("#interactiveHeader").realClick();
+		cy.get("@headerPress").should("have.been.calledOnce");
+	});
+});

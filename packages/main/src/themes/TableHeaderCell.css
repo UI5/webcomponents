@@ -12,6 +12,20 @@
 	padding: 0;
 }
 
+:host([interactive]) {
+	cursor: pointer;
+}
+
+@media (hover: hover) {
+	:host([interactive]:hover) {
+		background: var(--sapList_Hover_Background);
+	}
+}
+
+:host([interactive][_active]) {
+	background: var(--sapList_Active_Background);
+}
+
 [ui5-icon] {
 	margin-inline-start: 0.375rem;
 	width: 1rem;
