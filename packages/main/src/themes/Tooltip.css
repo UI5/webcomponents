@@ -4,3 +4,49 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
+
+/*
+ * Overstyle the wrapped popover to the OpenUI5 tooltip look.
+ *
+ * What we can reach from here (the popover is a direct child of the tooltip's
+ * shadow root):
+ * - Host-level custom properties and direct properties on `.ui5-tooltip-popover`.
+ *   `--_ui5_popover_background` drives both the bubble background (the root
+ *   section uses `background: inherit`) AND the arrow fill (`.ui5-popover-arrow:after`),
+ *   so recoloring the bubble + arrow is done via this one property.
+ * - `::part(content)` for the inner content wrapper (padding).
+ * - `::part(header)` / `::part(footer)` are never rendered for a tooltip
+ *   (no header/footer text) but hidden defensively.
+ * - `.ui5-tooltip-text` lives in our own shadow root (sizing + wrapping).
+ *
+ * What we cannot reach: the popover's internal shadow nodes beyond exposed
+ * parts/vars. Not needed here — the bubble, arrow and text are all covered.
+ */
+.ui5-tooltip-popover {
+	--_ui5_popover_background: var(--sapIndicationColor_9_Background);
+	--_ui5_popover_box_shadow: var(--sapContent_Lite_Shadow);
+	min-width: unset;
+	min-height: 1.5rem;
+	border-radius: 0.25rem;
+	box-shadow: var(--sapContent_Lite_Shadow);
+	color: var(--sapContent_ContrastTextColor);
+	font-size: var(--sapFontSmallSize);
+}
+
+.ui5-tooltip-popover::part(content) {
+	padding: 5px 0.5rem;
+	color: var(--sapContent_ContrastTextColor);
+}
+
+.ui5-tooltip-popover::part(header),
+.ui5-tooltip-popover::part(footer) {
+	display: none;
+}
+
+.ui5-tooltip-text {
+	display: block;
+	max-width: 17rem;
+	color: var(--sapContent_ContrastTextColor);
+	font-size: var(--sapFontSmallSize);
+	overflow-wrap: break-word;
+}
