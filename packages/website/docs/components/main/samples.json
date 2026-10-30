@@ -1320,6 +1320,11 @@
 				"description": "Create an interactive table by marking `ui5-table-row` components as `interactive`. Pressing on an interactive row will fire the `row-click` event."
 			},
 			{
+				"name": "HeaderPress",
+				"title": "Interactive Column Headers",
+				"description": "Make a column header pressable by setting the `interactive` property of the `ui5-table-header-cell`. Pressing the header fires the `press` event, which can be used, for example, to open a column menu. Use the `accessibilityAttributes.hasPopup` property to announce the type of popup (`menu` or `dialog`) to assistive technologies."
+			},
+			{
 				"name": "DragAndDrop",
 				"title": "Drag and Drop",
 				"description": "Enable Drag and Drop by using the `move-over` and `move` events in combination with the `movable` property on the `ui5-table-row`."
