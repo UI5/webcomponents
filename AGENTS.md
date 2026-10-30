@@ -2,6 +2,22 @@
 
 This file provides guidance for AI coding assistants (Claude, Copilot, Cursor, etc.) when working with this repository.
 
+## Knowledge Base — read this first
+
+Detailed conventions, guardrails, and good/bad examples live in the **AI Knowledge Base** at
+`ai-knowledge-base/`. It is the authority on how to write code here. Load it **on demand**,
+not up front: it has a routing table that points you to the one reference file your task needs.
+
+**Read `ai-knowledge-base/INDEX.md` before you edit code whenever any of these is true:**
+
+- You add, change, review, or test a `.ts`, `.tsx`, or `.css` file under `packages/`.
+- You write or debug a Cypress spec.
+- The task names a `ui5-*` component, a property, slot, event, design token, or ARIA attribute.
+
+Then open **only** the reference file its routing table names for your task — do not read every file.
+If your work is purely conversational, a docs-only edit, or a question that touches no component code,
+you do not need it.
+
 ## Project Overview
 
 UI5 Web Components is an enterprise-grade, framework-agnostic web components library implementing SAP Fiori design. It's a Yarn-based monorepo using Lerna and Yarn Workspaces.
@@ -28,6 +44,7 @@ packages/
 ### Root Level (Always run from repo root)
 ```bash
 yarn start       # Start dev server with watch mode (recommended for development)
+yarn ts          # TypeScript type-check (use this to verify compilation)
 yarn build       # Full production build
 yarn lint        # Lint all packages
 ```
@@ -71,19 +88,9 @@ Remove `.only` before committing and run the full test file for final verificati
 
 ## Component Development
 
-For detailed component architecture, development rules, and testing patterns, see [`packages/base/AGENTS.md`](./packages/base/AGENTS.md).
-
-### Quick Reference
-
-| Rule | Bad | Good |
-|------|-----|------|
-| Enum imports | `import Enum from "..."` | `import type Enum from "..."` |
-| Enum types | `prop: Enum` | `prop: \`${Enum}\`` |
-| Enum values | `Enum.Value` | `"Value"` |
-| DOM queries | `querySelector("ui5-tag")` | `querySelector("[ui5-tag]")` |
-| CSS selectors | `ui5-tag { }` | `[ui5-tag] { }` |
-| Type checks | `instanceof Component` | `isInstanceOfComponent(el)` |
-| DOM mutation | `this._ref.value = x` | Template: `<Comp value={x} />` |
+For component architecture, coding rules, testing patterns, and the full bad/good examples, read the
+AI Knowledge Base and follow its routing table (see "Knowledge Base" above). Package-specific
+base-class detail lives in [`packages/base/AGENTS.md`](./packages/base/AGENTS.md).
 
 ## Commit Message Format
 
