@@ -94,4 +94,44 @@ describe("Tooltip", () => {
 			.find("[ui5-popover]")
 			.should("have.attr", "placement", "Bottom");
 	});
+
+	it("opens on hover after delay and closes on mouseleave", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Hover me</Button>
+				<Tooltip id="tt" opener="opener" text="Hover info" delay={0}></Tooltip>
+			</>
+		);
+
+		cy.get("#opener").realHover();
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(true);
+		});
+
+		cy.get("body").realHover({ position: "topLeft" });
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
+		});
+	});
+
+	it("opens on keyboard focus and closes on Escape", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Focus me</Button>
+				<Tooltip id="tt" opener="opener" text="Focus info" delay={0}></Tooltip>
+			</>
+		);
+
+		cy.get("#opener").should("exist");
+		cy.realPress("Tab");
+		cy.get("#opener").should("have.focus");
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(true);
+		});
+
+		cy.get("#opener").realPress("Escape");
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
+		});
+	});
 });

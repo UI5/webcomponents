@@ -4,6 +4,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import type PopoverPlacement from "./types/PopoverPlacement.js";
+import TooltipGestures from "./TooltipGestures.js";
 
 // Template
 import TooltipTemplate from "./TooltipTemplate.js";
@@ -67,6 +68,15 @@ class Tooltip extends UI5Element {
 	placement: `${PopoverPlacement}` = "Top";
 
 	/**
+	 * Delay in milliseconds before the tooltip opens or closes on hover and
+	 * keyboard focus. Touch and Escape act immediately.
+	 * @default 500
+	 * @public
+	 */
+	@property({ type: Number })
+	delay = 500;
+
+	/**
 	 * Id for the in-shadow `role="tooltip"` ARIA anchor. The owning element
 	 * sets this to a known value and references the same id via
 	 * `aria-describedby`. Both must live in the same shadow root.
@@ -82,6 +92,8 @@ class Tooltip extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	_open = false;
+
+	_gestures?: TooltipGestures;
 
 	/**
 	 * Opens the tooltip against its opener.
@@ -119,6 +131,46 @@ class Tooltip extends UI5Element {
 	_onPopoverClose = (): void => {
 		this._open = false;
 	};
+
+	onAfterRendering(): void {
+		this._syncGestures();
+	}
+
+	onExitDOM(): void {
+		this._gestures?.destroy();
+		this._gestures = undefined;
+	}
+
+	_getOpenerElement(): HTMLElement | null {
+		if (this.opener instanceof HTMLElement) {
+			return this.opener;
+		}
+		if (typeof this.opener === "string") {
+			const root = this.getRootNode() as Document | ShadowRoot;
+			return root.getElementById?.(this.opener) ?? null;
+		}
+		return null;
+	}
+
+	_syncGestures(): void {
+		const opener = this._getOpenerElement();
+		if (!opener) {
+			this._gestures?.destroy();
+			this._gestures = undefined;
+			return;
+		}
+		if (this._gestures && this._gestures._config.opener === opener) {
+			return;
+		}
+		this._gestures?.destroy();
+		this._gestures = new TooltipGestures({
+			opener,
+			onOpen: () => this.openTooltip(),
+			onClose: () => this.closeTooltip(),
+			isPendingOrOpen: () => this._open,
+			getDelay: () => this.delay,
+		});
+	}
 }
 
 Tooltip.define();
