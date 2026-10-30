@@ -132,11 +132,23 @@ implementation.
   `aria-describedby` on the button to the tooltip's ARIA span id. The existing
   `tooltip` public property remains the data source (`buttonTitle` already
   derives from it).
-- **Title** (`Title.ts` / template): add equivalent wiring. Title currently has
-  no `tooltip` property path identical to Button's; add the minimal source
-  needed and point the embedded tooltip at Title's focus ref.
+- **Title** (`Title.ts` / template): Title has **no `tooltip` property** and
+  should not gain one. The tooltip text is the title's **own text content**, and
+  the tooltip is shown **only when the title is truncated** (its text overflows
+  the box and is cut with an ellipsis):
+  - Detect truncation by comparing `scrollWidth > clientWidth` on
+    `.ui5-title-root`. Re-evaluate on render and on resize (a `ResizeObserver`
+    on the title root), storing the result in a private reactive field.
+  - When truncated, the embedded `<ui5-tooltip>` gets `text` = the title's text
+    content; when not truncated, `text` is empty so the tooltip never opens.
+  - Point the embedded tooltip's `opener` at the title root element.
+  - Truncation only occurs in the single-line case (`wrapping-type="None"`,
+    `white-space: nowrap`); wrapping titles don't truncate and so never show the
+    tooltip. This matches the ellipsis behavior already in `Title.css`.
 
-Both are the first two "upgrade" samples required by the spec.
+Both are the first two "upgrade" samples required by the spec. Note the
+asymmetry: Button's tooltip is driven by its explicit `tooltip` property, while
+Title's is derived from truncation of its own content.
 
 ## Accessibility
 
@@ -156,6 +168,10 @@ Both are the first two "upgrade" samples required by the spec.
   - respects `placement`;
   - wires `aria-describedby` to a `role="tooltip"` element with the text.
 - Button and Title specs: assert the embedded tooltip appears and is wired.
+  - Button: tooltip reflects the `tooltip` property.
+  - Title: tooltip appears **only when truncated** — a narrow, single-line
+    (`wrapping-type="None"`) title with overflowing text shows it; a short or
+    wrapping title does not.
 - Tests exercise **public API and observable DOM/ARIA only** — no private
   methods or fields.
 - A dev-server test/demo page for manual, iterative browser verification at
