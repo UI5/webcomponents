@@ -694,7 +694,13 @@ class Button extends UI5Element implements IButton {
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
 		// Use either the effective aria label text (if accessibleName is provided) or the button's text content
-		const mainLabelText = effectiveAriaLabelText || textContent;
+		let mainLabelText = effectiveAriaLabelText || textContent;
+
+		// Icon-only: fall back to tooltip as accessible name (visual-only tooltip).
+		if (!mainLabelText && this.iconOnly) {
+			mainLabelText = this.buttonTitle || "";
+		}
+
 		const labelParts = [mainLabelText, internalLabelText].filter(part => part);
 		return labelParts.join(" ");
 	}
