@@ -2,12 +2,19 @@ import type ShellBarItem from "../ShellBarItem.js";
 import { ShellBarActions, ShellBarActionsSelectors } from "../ShellBar.js";
 import type { ShellBarActionId, ShellBarActionItem } from "../ShellBar.js";
 
+// Visibility handling for a hidable item:
+// - "normal":     hidden in the DOM when overflowing, shown otherwise
+// - "keepHidden":  kept hidden to prevent flickering when the search field expands/collapses (sorted first)
+// - "neverHide":   never actually removed from the DOM, but still reported in hiddenItemsIds so events fire
+type ShellBarVisibilityPolicy = "normal" | "keepHidden" | "neverHide";
+
 interface ShellBarHidableItem {
 	id: string;
 	selector: string; 			// CSS selector to find the element
 	hideOrder: number;			// Priority for hiding - later adjusted based on search field state
-	keepHidden: boolean; 		// Keep item hidden to prevent flickering when searchfield expands/collapses
+	visibilityPolicy: ShellBarVisibilityPolicy;
 	showInOverflow?: boolean; 	// If true, hiding this item triggers overflow button
+	canShrink?: boolean;		// If true, the loop tries to shrink (wrap) the item before hiding it
 }
 
 interface ShellBarOverflowParams {
@@ -18,7 +25,11 @@ interface ShellBarOverflowParams {
 	overflowInner: HTMLElement;
 	hiddenItemsIds: readonly string[];
 	showSearchField: boolean;
+	hasBranding: boolean;
 	setVisible: (selector: string, visible: boolean) => void;
+	// Attempt to shrink (wrap) an item in place instead of hiding it. Returns true if shrinking
+	// cleared the overflow so the item can stay; false if it must still be hidden.
+	tryShrink?: (selector: string) => boolean;
 }
 
 interface ShellBarOverflowResult {
@@ -36,26 +47,46 @@ type ShellBarOverflowItem = {
 	id: string;
 	data: ShellBarItem;
 	order: number;
+} | {
+	type: "branding";
+	id: string;
+	order: number;
+	logoHidden: boolean;
+	identifierHidden: boolean;
 }
+
+const BrandingIds = {
+	Identifier: "branding-identifier",
+	Logo: "branding-logo",
+} as const;
+
+const BrandingSelectors = {
+	Identifier: "[data-ui5-stable='branding-identifier']",
+	Logo: "[data-ui5-stable='branding-logo']",
+} as const;
 
 class ShellBarOverflow {
 	private readonly CLOSED_SEARCH_STRATEGY = {
 		ACTIONS: 0,			// All actions hide first
-		CONTENT: 1000,		// Then content (except last)
+		CONTENT: 1000,		// Then content (all but the last-surviving item)
 		SEARCH: 2000,		// Then search button
-		LAST_CONTENT: 3000,	// Last content item hides last
+		LAST_CONTENT: 3000,	// The last-surviving content item outlives the search button
+		BRANDING_IDENTIFIER: 4000, // Branding identifier hides after all actions
+		BRANDING_LOGO: 5000, // Logo hides last
 	};
 
 	private readonly OPEN_SEARCH_STRATEGY = {
-		CONTENT: 0, 		// All content hide first
-		ACTIONS: 1000,		// All actions next
+		ACTIONS: 0, 		// Actions hide first (same as closed — spec says actions before content)
+		CONTENT: 1000,		// Then content
 		SEARCH: 2000,		// Then search button
-		LAST_CONTENT: 0,	// Last content same as other content
+		LAST_CONTENT: 1000,	// When search is expanded it collapses first, so no last-item protection
+		BRANDING_IDENTIFIER: 4000,
+		BRANDING_LOGO: 5000,
 	};
 
 	updateOverflow(params: ShellBarOverflowParams): ShellBarOverflowResult {
 		const {
-			overflowOuter, overflowInner, setVisible,
+			overflowOuter, overflowInner, setVisible, tryShrink,
 		} = params;
 
 		if (!overflowOuter || !overflowInner) {
@@ -72,7 +103,7 @@ class ShellBarOverflow {
 		});
 
 		let nextItemToHide = null;
-		let showOverflowButton = false;
+		let overflowItemCount = 0;
 		const hiddenItemsIds: string[] = [];
 
 		// Iteratively hide items until no overflow
@@ -83,15 +114,28 @@ class ShellBarOverflow {
 				break; // No more overflow, stop hiding
 			}
 
-			setVisible(nextItemToHide.selector, false);
+			// Before hiding a shrinkable item (the branding title), try wrapping it in place.
+			// If wrapping clears the overflow, the item stays visible and the loop stops.
+			if (nextItemToHide.canShrink && tryShrink && tryShrink(nextItemToHide.selector)) {
+				if (!this.isOverflowing(overflowOuter, overflowInner)) {
+					break;
+				}
+			}
+
+			if (nextItemToHide.visibilityPolicy !== "neverHide") {
+				setVisible(nextItemToHide.selector, false);
+			}
 			hiddenItemsIds.push(nextItemToHide.id);
 
 			if (nextItemToHide.showInOverflow) {
-				// show overflow button to account in isOverflowing calculation
+				overflowItemCount++;
+				// Show the overflow button in the DOM so its width is accounted for during measurement.
 				setVisible(ShellBarActionsSelectors.Overflow, true);
-				showOverflowButton = true;
 			}
 		}
+
+		// The overflow button is shown whenever at least one item was moved to the overflow.
+		const showOverflowButton = overflowItemCount > 0;
 
 		return {
 			hiddenItemsIds,
@@ -111,18 +155,48 @@ class ShellBarOverflow {
 		const items: ShellBarHidableItem[] = [
 			...this.buildContent(params),
 			...this.buildActions(params),
+			...this.buildBranding(params),
 		];
 
-		// sort by hideOrder first then by keepHidden keepHidden items are at the start
+		// sort by hideOrder first; keepHidden items are moved to the start
 		return items.sort((a, b) => {
-			if (a.keepHidden && !b.keepHidden) {
+			const aKeepHidden = a.visibilityPolicy === "keepHidden";
+			const bKeepHidden = b.visibilityPolicy === "keepHidden";
+			if (aKeepHidden && !bKeepHidden) {
 				return -1;
 			}
-			if (!a.keepHidden && b.keepHidden) {
+			if (!aKeepHidden && bKeepHidden) {
 				return 1;
 			}
 			return a.hideOrder - b.hideOrder;
 		});
+	}
+
+	private buildBranding(params: ShellBarOverflowParams): readonly ShellBarHidableItem[] {
+		if (!params.hasBranding) {
+			return [];
+		}
+
+		const strategy = this.getOverflowStrategy(params.showSearchField);
+		const { hiddenItemsIds } = params;
+
+		return [
+			{
+				id: BrandingIds.Identifier,
+				selector: BrandingSelectors.Identifier,
+				hideOrder: strategy.BRANDING_IDENTIFIER,
+				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Identifier) ? "keepHidden" : "normal",
+				showInOverflow: true,
+				canShrink: true,
+			},
+			{
+				id: BrandingIds.Logo,
+				selector: BrandingSelectors.Logo,
+				hideOrder: strategy.BRANDING_LOGO,
+				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Logo) ? "keepHidden" : "normal",
+				showInOverflow: true,
+			},
+		];
 	}
 
 	private buildContent(params: ShellBarOverflowParams): readonly ShellBarHidableItem[] {
@@ -133,19 +207,24 @@ class ShellBarOverflow {
 		const items: ShellBarHidableItem[] = [];
 		const overflowStrategy = this.getOverflowStrategy(showSearchField);
 
-		// Build content items
+		// Build content items.
+		// `content` is already ordered hide-first -> hide-last by ShellBar.sortContent
+		// (reversed DOM order, then stable-sorted by data-hide-order). Preserve that order via
+		// the array index so position 0 hides first: default (no data-hide-order) items thus hide
+		// "last added, first hidden", and explicit data-hide-order is honored (lowest hides first).
+		// The last-surviving item (last in the sorted array) gets LAST_CONTENT so it outlives the
+		// search button, per the established content-vs-search priority.
 		content.forEach((item, index) => {
 			const slotName = (item as any)._individualSlot as string;
-			const dataHideOrder = parseInt(item.getAttribute("data-hide-order") || String(index));
+			const isNeverHide = item.hasAttribute("data-never-hide");
 			const isLast = index === content.length - 1;
-
 			const priority = isLast ? overflowStrategy.LAST_CONTENT : overflowStrategy.CONTENT;
 
 			items.push({
 				id: slotName,
 				selector: `#${slotName}`,
-				hideOrder: priority + dataHideOrder,
-				keepHidden: false, // Content items don't cause flickering
+				hideOrder: priority + (index + 1),
+				visibilityPolicy: isNeverHide ? "neverHide" : "normal",
 				showInOverflow: false,
 			});
 		});
@@ -167,7 +246,7 @@ class ShellBarOverflow {
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-				keepHidden: hiddenItemsIds.includes(item._id),
+				visibilityPolicy: hiddenItemsIds.includes(item._id) ? "keepHidden" : "normal",
 				showInOverflow: true,
 			});
 		});
@@ -180,7 +259,7 @@ class ShellBarOverflow {
 					id: config.id,
 					selector: config.selector,
 					hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-					keepHidden: hiddenItemsIds.includes(config.id),
+					visibilityPolicy: hiddenItemsIds.includes(config.id) ? "keepHidden" : "normal",
 					showInOverflow: true,
 				});
 			});
@@ -191,7 +270,7 @@ class ShellBarOverflow {
 				id: ShellBarActions.Search,
 				selector: ShellBarActionsSelectors.Search,
 				hideOrder: overflowStrategy.SEARCH + actionIndex++,
-				keepHidden: false, // Search button can be shown/hidden freely
+				visibilityPolicy: "normal", // Search button can be shown/hidden freely
 				showInOverflow: true,
 			});
 		}
@@ -202,9 +281,23 @@ class ShellBarOverflow {
 		actions: readonly ShellBarActionItem[];
 		customItems: readonly ShellBarItem[];
 		hiddenItemsIds: readonly string[];
+		hasBranding: boolean;
 	}): ReadonlyArray<ShellBarOverflowItem> {
-		const { actions, customItems, hiddenItemsIds } = params;
+		const {
+			actions, customItems, hiddenItemsIds, hasBranding,
+		} = params;
 		const result: ShellBarOverflowItem[] = [];
+
+		// Branding goes first when identifier or logo is hidden
+		if (hasBranding && (hiddenItemsIds.includes(BrandingIds.Identifier) || hiddenItemsIds.includes(BrandingIds.Logo))) {
+			result.push({
+				type: "branding",
+				id: "branding",
+				order: -1,
+				logoHidden: hiddenItemsIds.includes(BrandingIds.Logo),
+				identifierHidden: hiddenItemsIds.includes(BrandingIds.Identifier),
+			});
+		}
 
 		// Add hidden custom items
 		const hiddenCustomItems = customItems.filter((item: ShellBarItem) => hiddenItemsIds.includes(item._id));
@@ -216,8 +309,8 @@ class ShellBarOverflow {
 
 		const actionOrder: Record<string, number> = {
 			[ShellBarActions.Search]: 0,
-			[ShellBarActions.Notifications]: 1,
-			[ShellBarActions.Assistant]: 2,
+			[ShellBarActions.Assistant]: 1,
+			[ShellBarActions.Notifications]: 2,
 		};
 
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));

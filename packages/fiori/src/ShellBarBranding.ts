@@ -89,14 +89,6 @@ class ShellBarBranding extends UI5Element {
 	accessibleName?: string;
 
 	/**
-     * Defines if the title of the branding is shown on an S breakpoint.
-     * @default false
-     * @private
-     */
-	@property({ type: Boolean })
-	_isSBreakPoint = false;
-
-	/**
 	 * Defines the title for the ui5-shellbar-branding component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -121,15 +113,23 @@ class ShellBarBranding extends UI5Element {
 		return this.href && this.href.length > 0 ? "link" : "button";
 	}
 
+	/**
+	 * Returns the trimmed text of the default (title) slot only — ignores the logo slot.
+	 * @private
+	 */
+	get titleText() {
+		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])") as HTMLSlotElement;
+		return defaultSlot?.assignedNodes({ flatten: true })
+			.find(n => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
+			?.textContent!.trim();
+	}
+
 	get accessibleNameText() {
 		if (this.accessibleName) {
 			return this.accessibleName;
 		}
 
-		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])") as HTMLSlotElement;
-		return defaultSlot?.assignedNodes({ flatten: true })
-			.find(n => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
-			?.textContent!.trim();
+		return this.titleText;
 	}
 
 	_fireClick() {
