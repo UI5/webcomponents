@@ -91,7 +91,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 						<input
 							class="ui5-search-field-inner-input"
 							role="searchbox"
-							aria-description={this.accessibleDescription}
+							aria-description={this._effectiveAccessibleDescription}
 							aria-label={this.accessibleName || this._translations.searchFieldAriaLabel}
 							aria-autocomplete="both"
 							aria-controls="ui5-search-list"
