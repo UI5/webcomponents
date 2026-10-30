@@ -49,8 +49,9 @@ New files:
 - `packages/main/src/Tooltip.ts` — the component.
 - `packages/main/src/TooltipTemplate.tsx` — the template.
 - `packages/main/src/themes/Tooltip.css` — visual overrides.
-- `packages/main/src/types/TooltipPlacement.ts` — placement enum (or reuse
-  `PopoverPlacement` if the value set matches; decide during implementation).
+
+`placement` reuses the existing `PopoverPlacement` enum (no dedicated
+`TooltipPlacement` type).
 
 ### Public API
 
@@ -58,7 +59,7 @@ New files:
 |--------|------|-------|
 | `text` | `string` | Tooltip text, rendered directly in the template. |
 | `opener` | `HTMLElement \| string` | The element the tooltip reacts to and docks against. Uses the same `DOMReferenceConverter` pattern as `Popover.opener`. Can be a host focus ref or a sub-element. |
-| `placement` | `` `${TooltipPlacement}` `` | Default `Top` (OpenUI5 default). |
+| `placement` | `` `${PopoverPlacement}` `` | Default `Top` (OpenUI5 default). |
 | `openTooltip()` | method | Opens immediately (no gesture delay). Named to avoid clashing with Popover's `open` boolean. |
 | `closeTooltip()` | method | Closes. |
 | `isOpen()` | method → `boolean` | Whether currently open. |
