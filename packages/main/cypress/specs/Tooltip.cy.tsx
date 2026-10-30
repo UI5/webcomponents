@@ -76,4 +76,22 @@ describe("Tooltip", () => {
 
 		cy.get("#tt").shadow().find("[role='tooltip']").should("not.exist");
 	});
+
+	it("forwards placement to the popover", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Open</Button>
+				<Tooltip id="tt" opener="opener" text="Info" placement="Bottom"></Tooltip>
+			</>
+		);
+
+		cy.get("#tt").then($el => {
+			($el[0] as Tooltip).openTooltip();
+		});
+
+		cy.get("#tt")
+			.shadow()
+			.find("[ui5-popover]")
+			.should("have.attr", "placement", "Bottom");
+	});
 });
