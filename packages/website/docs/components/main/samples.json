@@ -747,6 +747,33 @@
 			}
 		]
 	},
+	"InputTableSuggest": {
+		"samples": [
+			{
+				"name": "Basic"
+			},
+			{
+				"name": "CustomFiltering",
+				"title": "Custom Filtering",
+				"description": "This sample demonstrates how to implement custom filtering logic for tabular suggestions. The application filters employees by name, department, or location as the user types. With more columns than the fixed-width input can fit, the lower-importance columns move into the popin area."
+			},
+			{
+				"name": "RichCells",
+				"title": "Rich Cells",
+				"description": "This sample shows suggestion rows built from rich UI5 components (avatar, title, text, label, tag) while keeping the first column as plain text. The application highlights the matched substring in the plain-text column and filters rows by name as the user types."
+			},
+			{
+				"name": "Highlighting",
+				"title": "Highlighting",
+				"description": "This sample demonstrates app-side highlighting of the matched term across all columns using the `generateHighlightedMarkupFirstMatch` utility, re-highlighting the cells on every keystroke."
+			},
+			{
+				"name": "ValueState",
+				"title": "Value State",
+				"description": "The component supports different value states to indicate validation status."
+			}
+		]
+	},
 	"Label": {
 		"samples": [
 			{

@@ -1,7 +1,5 @@
-@import "./FormComponents.css";
+@import "./InputField.css";
 @import "./Input.css";
-@import "./InputIcon.css";
-@import "./InvisibleTextStyles.css";
 
 :host {
 	min-width: calc(var(--_ui5_input_min_width) + (var(--_ui5-input-icons-count)*var(--_ui5_input_icon_width)));
