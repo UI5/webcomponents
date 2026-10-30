@@ -2,6 +2,98 @@ import List from "../../src/List.js";
 import ListItemStandard from "../../src/ListItemStandard.js";
 import ListItemGroup from "../../src/ListItemGroup.js";
 
+describe("ListItemGroup Accessibility", () => {
+	const mountSingleGroup = () => cy.mount(
+		<List accessibleName="View settings" selectionMode="SingleStart">
+			<ListItemGroup headerText="Sort Order">
+				<ListItemStandard>Ascending</ListItemStandard>
+				<ListItemStandard selected>Descending</ListItemStandard>
+			</ListItemGroup>
+		</List>
+	);
+
+	it("wraps the group in a labelled role=group", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist")
+			.and("have.attr", "aria-label", "Sort Order");
+	});
+
+	it("nests the real items in a labelled role=list so they get positions", () => {
+		mountSingleGroup();
+
+		// The items live in an inner role="list" (labelled by the header) so each
+		// item gets a correct position within the group. The group header must not
+		// own the items via aria-owns.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("exist")
+			.and("have.attr", "aria-label", "Sort Order");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[aria-owns]")
+			.should("not.exist");
+	});
+
+	it("exposes the group header as a heading, not a counted list item", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "heading")
+			.and("have.attr", "aria-level")
+			.and("not.be.empty");
+
+		// The header carries the group-header roledescription but no item position
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "aria-roledescription")
+			.and("not.be.empty");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-posinset");
+	});
+
+	it("keeps the real items as listitems counted by the outer list", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "listitem");
+		});
+	});
+
+	it("does not add a 'sub groups' summary to the list aria-description", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then(ariaDesc => {
+				expect(ariaDesc ?? "").to.not.match(/sub\s?groups/i);
+			});
+	});
+});
+
 describe("ListItemGroup Tests", () => {
 	it("ListGroup is rendered", () => {
 		cy.mount(<ListItemGroup headerText="New Items" />);
