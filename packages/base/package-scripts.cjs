@@ -20,7 +20,8 @@ const scripts = {
 		UI5_CEM_MODE: "dev",
 	},
 	clean: {
-		default: "ui5nps clean.generated clean.dist",
+		// ui5nps-p runs clean.generated and clean.dist in parallel to halve clean time
+		default: "ui5nps-p clean.generated clean.dist",
 		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},

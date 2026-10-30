@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ui5nps execution log</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 0.8rem; color: #64748b; margin-bottom: 24px; }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  input[type="file"] { display: none; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn:hover { background: #273448; }
+  .btn.primary { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+  .btn.primary:hover { background: #2563eb; }
+
+  select, input[type="text"] {
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 0.8rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stat-card .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-card .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; color: #f8fafc; }
+
+  .section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin-bottom: 10px;
+  }
+
+  .timeline-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #334155;
+  }
+  .timeline-tab {
+    padding: 7px 16px;
+    font-size: 0.78rem;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  .timeline-tab:hover { color: #e2e8f0; }
+  .timeline-tab.active { color: #e2e8f0; border-bottom-color: #3b82f6; }
+
+  .timeline-wrap {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    border-top-left-radius: 0;
+  }
+  .timeline-wrap canvas { display: block; }
+
+  .timeline-panel { display: none; }
+  .timeline-panel.active { display: block; }
+
+  #legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .table-wrap {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  thead th {
+    background: #0f172a;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: #e2e8f0; }
+  thead th.asc::after  { content: " ▲"; opacity: 0.6; }
+  thead th.desc::after { content: " ▼"; opacity: 0.6; }
+
+  tbody tr { border-top: 1px solid #1a2535; transition: background 0.1s; }
+  tbody tr:hover { background: #263349; }
+  tbody tr.child-row { background: #161f2e; }
+  tbody tr.child-row:hover { background: #1e2e45; }
+  tbody tr.grandchild-row { background: #111827; }
+  tbody tr.grandchild-row:hover { background: #1a2535; }
+  td { padding: 9px 14px; white-space: nowrap; max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
+
+  /* tree table */
+  tr.pkg-header { background: #0f172a; cursor: pointer; user-select: none; }
+  tr.pkg-header:hover { background: #1a2535; }
+  tr.pkg-header td { font-weight: 600; color: #94a3b8; font-size: 0.78rem; padding: 8px 14px; }
+  .tree-toggle { display: inline-block; width: 14px; color: #475569; font-size: 0.7rem; }
+  .tree-indent-1 { padding-left: 28px !important; }
+  .tree-indent-2 { padding-left: 48px !important; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .badge.child {
+    font-size: 0.65rem;
+    opacity: 0.85;
+  }
+
+  .cmd-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .indent {
+    display: inline-block;
+    width: 16px;
+    flex-shrink: 0;
+    color: #334155;
+  }
+
+  .dur-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dur-bar .bar {
+    height: 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  #drop-zone {
+    border: 2px dashed #334155;
+    border-radius: 10px;
+    padding: 48px;
+    text-align: center;
+    color: #475569;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    margin-bottom: 24px;
+  }
+  #drop-zone.over { border-color: #3b82f6; color: #93c5fd; }
+  #drop-zone .big { font-size: 2.5rem; margin-bottom: 8px; }
+  #drop-zone code { font-size: 0.85em; background: #1e293b; padding: 1px 5px; border-radius: 4px; }
+
+  #main { display: none; }
+  .pkg { color: #94a3b8; font-size: 0.72rem; }
+</style>
+</head>
+<body>
+
+<h1>ui5nps execution log</h1>
+<p class="subtitle">Visualize <code>~/.ui5nps.log</code> — drop the file below, click to browse, or paste raw text anywhere on the page</p>
+
+<div id="drop-zone" onclick="document.getElementById('file-input').click()">
+  <div class="big">📂</div>
+  Drop <code>.log</code> file here or click to browse
+</div>
+<input type="file" id="file-input" accept=".log,.json,.txt">
+
+<div id="main">
+  <div class="controls">
+    <label class="btn primary" for="file-input">Load another file</label>
+    <input type="text" id="search" placeholder="Filter by command or package…" style="flex:1;min-width:180px">
+    <select id="pkg-filter"><option value="">All packages</option></select>
+    <select id="cmd-filter"><option value="">All commands</option></select>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <p class="section-title">Execution timeline</p>
+  <div id="legend"></div>
+  <div class="timeline-tabs">
+    <div class="timeline-tab active" data-tab="cmd">By root command</div>
+    <div class="timeline-tab" data-tab="pkg">By package</div>
+  </div>
+  <div class="timeline-panel active" id="panel-cmd">
+    <div class="timeline-wrap"><canvas id="timeline-canvas"></canvas></div>
+  </div>
+  <div class="timeline-panel" id="panel-pkg">
+    <div class="timeline-wrap"><canvas id="timeline-canvas-pkg"></canvas></div>
+  </div>
+
+  <p class="section-title">All runs</p>
+  <div id="pkg-chart-wrap" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin-bottom:24px;overflow-x:auto;">
+    <canvas id="pkg-chart"></canvas>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Command / Package</th>
+          <th data-col="startedAt">Started</th>
+          <th data-col="durationMs">Duration</th>
+          <th>Children</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const PALETTE = [
+  "#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6",
+  "#06b6d4","#ec4899","#84cc16","#f97316","#6366f1",
+  "#14b8a6","#a855f7","#fb923c","#22d3ee","#4ade80",
+];
+const _cmdColorMap = {};
+let _cmdColorIdx = 0;
+function cmdColor(cmd) {
+  if (!_cmdColorMap[cmd]) _cmdColorMap[cmd] = PALETTE[_cmdColorIdx++ % PALETTE.length];
+  return _cmdColorMap[cmd];
+}
+
+let allRows = [];
+let sortKey = "startedAt";
+let sortDir = 1;
+
+// ── parse ────────────────────────────────────────────────────────────────────
+function parseLog(text) {
+  const rows = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim().replace(/,$/, "");
+    if (!trimmed || trimmed === "[" || trimmed === "]") continue;
+    try { rows.push(JSON.parse(trimmed)); } catch { /* skip malformed */ }
+  }
+  return rows;
+}
+
+function load(text) {
+  Object.keys(_cmdColorMap).forEach(k => delete _cmdColorMap[k]);
+  _cmdColorIdx = 0;
+  allRows = parseLog(text);
+  if (!allRows.length) { alert("No valid entries found."); return; }
+  populateFilters();
+  render();
+  document.getElementById("main").style.display = "block";
+  document.getElementById("drop-zone").style.display = "none";
+}
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+function pkgOf(cwd) {
+  const m = (cwd || "").match(/packages\/([^/]+)/);
+  return m ? m[1] : (cwd || "").split("/").pop();
+}
+
+function fmtMs(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  if (ms < 60000) return `${(ms / 1000).toFixed(2)}s`;
+  return `${Math.floor(ms / 60000)}m ${Math.round((ms % 60000) / 1000)}s`;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// ── filters ──────────────────────────────────────────────────────────────────
+function populateFilters() {
+  const pkgs = [...new Set(allRows.map(r => pkgOf(r.cwd)))].sort();
+  const cmds = [...new Set(allRows.map(r => r.command))].sort();
+  document.getElementById("pkg-filter").innerHTML =
+    '<option value="">All packages</option>' + pkgs.map(p => `<option>${p}</option>`).join("");
+  document.getElementById("cmd-filter").innerHTML =
+    '<option value="">All commands</option>' + cmds.map(c => `<option>${c}</option>`).join("");
+}
+
+function filtered() {
+  const q   = document.getElementById("search").value.toLowerCase();
+  const pkg = document.getElementById("pkg-filter").value;
+  const cmd = document.getElementById("cmd-filter").value;
+  return allRows.filter(r => {
+    if (pkg && pkgOf(r.cwd) !== pkg) return false;
+    if (cmd && r.command !== cmd) return false;
+    if (q && !r.command.toLowerCase().includes(q) && !r.cwd.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+// ── stats — only count top-level (non-child) rows to avoid double-counting ──
+function renderStats(rows) {
+  const topRows  = rows.filter(r => !r.parentCommand);
+  const total    = topRows.length;
+  const totalMs  = topRows.reduce((s, r) => s + r.durationMs, 0);
+  const maxMs    = total ? Math.max(...topRows.map(r => r.durationMs)) : 0;
+  const avgMs    = total ? Math.round(totalMs / total) : 0;
+  const uniqCmds = new Set(topRows.map(r => r.command)).size;
+
+  const allTs  = rows.map(r => +new Date(r.startedAt));
+  const allTe  = rows.map(r => +new Date(r.endedAt));
+  const wallMs = rows.length ? Math.max(...allTe) - Math.min(...allTs) : 0;
+
+  document.getElementById("stats").innerHTML = [
+    ["Top-level runs",   total],
+    ["Unique commands",  uniqCmds],
+    ["Wall-clock time",  fmtMs(wallMs)],
+    ["Total time",       fmtMs(totalMs)],
+    ["Avg duration",     fmtMs(avgMs)],
+    ["Slowest run",      fmtMs(maxMs)],
+  ].map(([l, v]) =>
+    `<div class="stat-card"><div class="label">${l}</div><div class="value">${v}</div></div>`
+  ).join("");
+}
+
+// ── timeline ─────────────────────────────────────────────────────────────────
+// Three-level layout: rootCmd section → package row → child bars.
+// buildTimelineGroups returns an array of rootCmd sections, each containing
+// an array of package rows, each containing parent + children.
+function buildTimelineGroups(rows) {
+  // rootCmd → Map(pkg → { parent, children[] })
+  const rootMap = new Map();
+
+  for (const r of rows) {
+    const pkg    = pkgOf(r.cwd);
+    const topCmd = r.parentCommand || r.command;
+
+    if (!rootMap.has(topCmd)) rootMap.set(topCmd, new Map());
+    const pkgMap = rootMap.get(topCmd);
+
+    if (!pkgMap.has(pkg)) pkgMap.set(pkg, { pkg, parent: null, children: [] });
+    const g = pkgMap.get(pkg);
+
+    if (r.parentCommand) {
+      g.children.push(r);
+    } else {
+      if (!g.parent || r.durationMs > g.parent.durationMs) g.parent = r;
+    }
+  }
+
+  // Convert to sorted sections
+  const sections = [];
+  for (const [rootCmd, pkgMap] of rootMap) {
+    const pkgRows = [...pkgMap.values()].sort((a, b) => {
+      const aT = Math.min(...[a.parent, ...a.children].filter(Boolean).map(r => +new Date(r.startedAt)));
+      const bT = Math.min(...[b.parent, ...b.children].filter(Boolean).map(r => +new Date(r.startedAt)));
+      return aT - bT;
+    });
+    // Section start = earliest timestamp across all rows in this section
+    const allTs = pkgRows.flatMap(g => [g.parent, ...g.children].filter(Boolean).map(r => +new Date(r.startedAt)));
+    sections.push({ rootCmd, pkgRows, startTs: Math.min(...allTs) });
+  }
+
+  sections.sort((a, b) => a.startTs - b.startTs);
+  return sections;
+}
+
+// Build a compressed time→pixel mapper.
+// Idle gaps larger than GAP_THRESH ms are rendered as GAP_PX pixels.
+function buildTimeMapper(rows, TW) {
+  const GAP_THRESH = 2000; // gaps > 2s get compressed
+  const GAP_PX     = 24;   // compressed gap renders as 24px
+
+  // Collect all event timestamps
+  const events = rows.flatMap(r => [+new Date(r.startedAt), +new Date(r.endedAt)]);
+  events.sort((a, b) => a - b);
+
+  const t0 = events[0];
+  const t1 = events[events.length - 1];
+
+  // Build segments: each segment is { tStart, tEnd, compressed }
+  // Between consecutive events, if gap > GAP_THRESH → compressed segment
+  const segments = [];
+  let prev = t0;
+  for (let i = 1; i < events.length; i++) {
+    const t = events[i];
+    if (t === prev) continue;
+    segments.push({ tStart: prev, tEnd: t, compressed: (t - prev) > GAP_THRESH });
+    prev = t;
+  }
+
+  // Calculate total "logical width" (sum of real-time durations for active segs,
+  // plus GAP_PX for each compressed segment)
+  let totalActive = 0;
+  let compressedCount = 0;
+  for (const s of segments) {
+    if (s.compressed) compressedCount++;
+    else totalActive += s.tEnd - s.tStart;
+  }
+
+  const compressedTotalPx = compressedCount * GAP_PX;
+  const activePx = Math.max(1, TW - compressedTotalPx);
+  const msPerPx = totalActive / activePx;
+
+  // For each segment, assign its pixel start
+  let curPx = 0;
+  for (const s of segments) {
+    s.pxStart = curPx;
+    if (s.compressed) {
+      s.pxWidth = GAP_PX;
+    } else {
+      s.pxWidth = (s.tEnd - s.tStart) / msPerPx;
+    }
+    curPx += s.pxWidth;
+  }
+
+  // Map a timestamp to a pixel offset (0 = left of track)
+  function toPx(ts) {
+    const t = +new Date(ts);
+    if (t <= t0) return 0;
+    if (t >= t1) return curPx;
+    // Find which segment this falls in
+    for (const s of segments) {
+      if (t >= s.tStart && t <= s.tEnd) {
+        if (s.compressed) {
+          // Place proportionally within the compressed gap
+          const frac = (t - s.tStart) / (s.tEnd - s.tStart);
+          return s.pxStart + frac * s.pxWidth;
+        } else {
+          return s.pxStart + ((t - s.tStart) / msPerPx);
+        }
+      }
+    }
+    return curPx;
+  }
+
+  // Map a duration starting at ts to pixel width
+  function msToPx(ts, ms) {
+    const x0 = toPx(ts);
+    const x1 = toPx(+new Date(ts) + ms);
+    return Math.max(2, x1 - x0);
+  }
+
+  return { toPx, msToPx, t0, t1, segments, msPerPx, GAP_PX, totalPx: curPx };
+}
+
+function renderTimeline(rows) {
+  const canvas = document.getElementById("timeline-canvas");
+  const wrap   = document.getElementById("panel-cmd").querySelector(".timeline-wrap");
+
+  if (!rows.length) { canvas.width = 0; canvas.height = 0; return; }
+
+  const W = wrap.getBoundingClientRect().width - 32;
+  if (W <= 0) return;
+
+  const sections = buildTimelineGroups(rows);
+
+  const LABEL_W    = 160;
+  const SECTION_H  = 20;  // root-cmd section header row
+  const PARENT_H   = 20;  // per-package parent bar row
+  const CHILD_H    = 13;  // child command bar height
+  const GROUP_PAD  = 4;   // gap between parent bar and first child
+  const PKG_GAP    = 4;   // gap between package rows
+  const SECTION_GAP = 10; // gap between sections
+  const AXIS_H     = 28;
+  const TW         = W - LABEL_W - 8;
+
+  const tm = buildTimeMapper(rows, TW);
+  const toX  = ts => LABEL_W + tm.toPx(ts);
+  const toW  = (ts, ms) => tm.msToPx(ts, ms);
+
+  // Pre-compute y positions for sections and their pkg rows
+  let totalH = AXIS_H;
+  const layouts = sections.map(sec => {
+    const secY = totalH;
+    totalH += SECTION_H;
+
+    const pkgLayouts = sec.pkgRows.map(g => {
+      const y = totalH;
+      const h = PARENT_H + (g.children.length > 0 ? GROUP_PAD + g.children.length * (CHILD_H + 2) : 0);
+      totalH += h + PKG_GAP;
+      return { g, y, h };
+    });
+
+    totalH += SECTION_GAP - PKG_GAP; // replace last pkg gap with section gap
+    return { sec, secY, pkgLayouts };
+  });
+
+  canvas.width  = W;
+  canvas.height = totalH;
+  canvas.style.width  = W + "px";
+  canvas.style.height = totalH + "px";
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, W, totalH);
+
+  // Compressed-gap shading
+  for (const s of tm.segments) {
+    if (s.compressed) {
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(LABEL_W + s.pxStart, AXIS_H, s.pxWidth, totalH - AXIS_H);
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.lineWidth = 1;
+      for (let d = 0; d < s.pxWidth + totalH; d += 8) {
+        ctx.beginPath();
+        ctx.moveTo(LABEL_W + s.pxStart + d, AXIS_H);
+        ctx.lineTo(LABEL_W + s.pxStart + d - totalH, totalH);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Axis line
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(LABEL_W, 0);
+  ctx.lineTo(LABEL_W, totalH);
+  ctx.stroke();
+
+  // Time labels
+  ctx.fillStyle = "#475569";
+  ctx.font = "10px monospace";
+  const fmt = t => new Date(t).toLocaleTimeString();
+  const placedLabels = [];
+  function canPlace(x, w) {
+    for (const p of placedLabels) {
+      if (x < p.x + p.w + 6 && x + w > p.x - 6) return false;
+    }
+    return true;
+  }
+  function drawTimeLabel(t, align = "left") {
+    const lbl = fmt(t);
+    const x   = toX(t);
+    const lw  = ctx.measureText(lbl).width;
+    const tx  = align === "right" ? x - lw : align === "center" ? x - lw / 2 : x + 2;
+    if (tx < LABEL_W || tx + lw > W - 2) return;
+    if (!canPlace(tx, lw)) return;
+    placedLabels.push({ x: tx, w: lw });
+    ctx.fillText(lbl, tx, AXIS_H - 8);
+  }
+
+  drawTimeLabel(tm.t0, "left");
+  drawTimeLabel(tm.t1, "right");
+  for (const s of tm.segments) {
+    if (s.compressed) {
+      drawTimeLabel(s.tStart, "right");
+      drawTimeLabel(s.tEnd, "left");
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1;
+      const bx = LABEL_W + s.pxStart + s.pxWidth / 2;
+      ctx.beginPath();
+      ctx.moveTo(bx - 4, AXIS_H); ctx.lineTo(bx + 4, AXIS_H + 6);
+      ctx.lineTo(bx - 4, AXIS_H + 12); ctx.lineTo(bx + 4, totalH);
+      ctx.stroke();
+    }
+  }
+
+  // Draw sections
+  for (const { sec, secY, pkgLayouts } of layouts) {
+    // Section header — full-width label + faint background band
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillRect(0, secY, W, SECTION_H);
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "bold 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    ctx.fillText(sec.rootCmd, 4, secY + SECTION_H - 5);
+
+    // Span bar across the full time range of this section (ghost outline)
+    const allTs  = sec.pkgRows.flatMap(g => [g.parent, ...g.children].filter(Boolean));
+    const secX0  = Math.min(...allTs.map(r => toX(r.startedAt)));
+    const secX1  = Math.max(...allTs.map(r => toX(r.startedAt) + toW(r.startedAt, r.durationMs)));
+    if (secX1 > secX0) {
+      ctx.strokeStyle = "#334155";
+      ctx.lineWidth = 1;
+      roundRect(ctx, secX0, secY + 2, secX1 - secX0, SECTION_H - 4, 3);
+      ctx.stroke();
+    }
+
+    // Package rows
+    for (const { g, y } of pkgLayouts) {
+      // Package label
+      ctx.fillStyle = "#64748b";
+      ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.fillText(g.pkg, 10, y + PARENT_H - 5);
+
+      if (g.parent) {
+        const color = cmdColor(g.parent.command);
+        const x = toX(g.parent.startedAt);
+        const w = toW(g.parent.startedAt, g.parent.durationMs);
+        ctx.fillStyle = color;
+        roundRect(ctx, x, y, w, PARENT_H, 3);
+        ctx.fill();
+        if (w > 20) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x + 1, y, w - 2, PARENT_H);
+          ctx.clip();
+          ctx.fillStyle = "rgba(255,255,255,0.9)";
+          ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+          ctx.fillText(g.parent.command, x + 5, y + PARENT_H - 5);
+          ctx.restore();
+        }
+      } else if (g.children.length) {
+        const xs   = g.children.map(c => toX(c.startedAt));
+        const xe   = g.children.map(c => toX(c.startedAt) + toW(c.startedAt, c.durationMs));
+        const x    = Math.min(...xs), xEnd = Math.max(...xe);
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 1;
+        roundRect(ctx, x, y, xEnd - x, PARENT_H, 3);
+        ctx.stroke();
+        ctx.fillStyle = "#475569";
+        ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        if (xEnd - x > 50) ctx.fillText(sec.rootCmd, x + 5, y + PARENT_H - 5);
+      }
+
+      g.children.forEach((c, ci) => {
+        const cy    = y + PARENT_H + GROUP_PAD + ci * (CHILD_H + 2);
+        const color = cmdColor(c.command);
+        const cx    = toX(c.startedAt);
+        const cw    = toW(c.startedAt, c.durationMs);
+        ctx.fillStyle = color + "bb";
+        roundRect(ctx, cx, cy, cw, CHILD_H, 2);
+        ctx.fill();
+        if (cw > 20) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(cx + 1, cy, cw - 2, CHILD_H);
+          ctx.clip();
+          ctx.fillStyle = "rgba(255,255,255,0.82)";
+          ctx.font = "10px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+          ctx.fillText(c.command, cx + 4, cy + CHILD_H - 2);
+          ctx.restore();
+        }
+      });
+    }
+  }
+
+  // Legend
+  const cmds = [...new Set(rows.map(r => r.command))].sort();
+  document.getElementById("legend").innerHTML = cmds.map(c =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${cmdColor(c)}"></div>${c}</div>`
+  ).join("");
+}
+
+// ── package timeline ─────────────────────────────────────────────────────────
+// One section per package. Within each package, commands are placed into
+// non-overlapping lanes (greedy interval scheduling). Each lane is a sub-row.
+// Color = command name. Label inside bar if wide enough.
+function renderTimelinePkg(rows) {
+  const canvas = document.getElementById("timeline-canvas-pkg");
+  const wrap   = document.getElementById("panel-pkg").querySelector(".timeline-wrap");
+
+  if (!rows.length) { canvas.width = 0; canvas.height = 0; return; }
+
+  const W = wrap.getBoundingClientRect().width - 32;
+  if (W <= 0) return;
+
+  // Deduplicate rows by (pkg, command, startedAt)
+  const seen = new Set();
+  const dedupedRows = [];
+  for (const r of rows) {
+    const key = pkgOf(r.cwd) + "\x00" + r.command + "\x00" + r.startedAt;
+    if (!seen.has(key)) { seen.add(key); dedupedRows.push(r); }
+  }
+
+  // Build pkg → sorted-by-start rows
+  const pkgMap = new Map();
+  for (const r of dedupedRows) {
+    const pkg = pkgOf(r.cwd);
+    if (!pkgMap.has(pkg)) pkgMap.set(pkg, []);
+    pkgMap.get(pkg).push(r);
+  }
+
+  // Sort packages by earliest start
+  const pkgs = [...pkgMap.entries()].sort((a, b) =>
+    Math.min(...a[1].map(r => +new Date(r.startedAt))) -
+    Math.min(...b[1].map(r => +new Date(r.startedAt)))
+  );
+
+  // Greedy lane assignment: assign each command to the first lane whose last
+  // bar ends before this one starts (with 1px breathing room in time).
+  function assignLanes(cmds) {
+    const sorted = [...cmds].sort((a, b) => +new Date(a.startedAt) - +new Date(b.startedAt));
+    const laneEnds = []; // end time of last bar in each lane
+    const assigned = sorted.map(r => {
+      const start = +new Date(r.startedAt);
+      let lane = laneEnds.findIndex(e => e <= start);
+      if (lane === -1) lane = laneEnds.length;
+      laneEnds[lane] = +new Date(r.endedAt);
+      return { r, lane };
+    });
+    return { assigned, numLanes: laneEnds.length };
+  }
+
+  const LABEL_W   = 160;
+  const LANE_H    = 20;
+  const LANE_PAD  = 2;
+  const PKG_SEP   = 8;   // vertical gap between packages
+  const AXIS_H    = 28;
+  const TW        = W - LABEL_W - 8;
+
+  const tm  = buildTimeMapper(dedupedRows, TW);
+  const toX = ts => LABEL_W + tm.toPx(ts);
+  const toW = (ts, ms) => tm.msToPx(ts, ms);
+
+  // Pre-compute layout
+  const pkgLayouts = pkgs.map(([pkg, cmds]) => {
+    const { assigned, numLanes } = assignLanes(cmds);
+    return { pkg, assigned, numLanes };
+  });
+
+  let totalH = AXIS_H;
+  const pkgY = pkgLayouts.map(({ numLanes }) => {
+    const y = totalH;
+    totalH += numLanes * (LANE_H + LANE_PAD) + PKG_SEP;
+    return y;
+  });
+
+  canvas.width  = W;
+  canvas.height = totalH;
+  canvas.style.width  = W + "px";
+  canvas.style.height = totalH + "px";
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, W, totalH);
+
+  // Alternating package band backgrounds
+  pkgLayouts.forEach(({ numLanes }, i) => {
+    const y = pkgY[i];
+    const h = numLanes * (LANE_H + LANE_PAD) + PKG_SEP;
+    if (i % 2 === 1) {
+      ctx.fillStyle = "rgba(255,255,255,0.02)";
+      ctx.fillRect(0, y, W, h);
+    }
+  });
+
+  // Compressed-gap shading
+  for (const s of tm.segments) {
+    if (s.compressed) {
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(LABEL_W + s.pxStart, AXIS_H, s.pxWidth, totalH - AXIS_H);
+      ctx.strokeStyle = "rgba(255,255,255,0.05)";
+      ctx.lineWidth = 1;
+      for (let d = 0; d < s.pxWidth + totalH; d += 8) {
+        ctx.beginPath();
+        ctx.moveTo(LABEL_W + s.pxStart + d, AXIS_H);
+        ctx.lineTo(LABEL_W + s.pxStart + d - totalH, totalH);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Axis line
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(LABEL_W, 0); ctx.lineTo(LABEL_W, totalH); ctx.stroke();
+
+  // Time labels
+  ctx.fillStyle = "#475569";
+  ctx.font = "10px monospace";
+  const fmt = t => new Date(t).toLocaleTimeString();
+  const placedLabels = [];
+  function canPlace(x, w) {
+    for (const p of placedLabels) if (x < p.x + p.w + 6 && x + w > p.x - 6) return false;
+    return true;
+  }
+  function drawTimeLabel(t, align = "left") {
+    const lbl = fmt(t), x = toX(t), lw = ctx.measureText(lbl).width;
+    const tx = align === "right" ? x - lw : x + 2;
+    if (tx < LABEL_W || tx + lw > W - 2 || !canPlace(tx, lw)) return;
+    placedLabels.push({ x: tx, w: lw });
+    ctx.fillText(lbl, tx, AXIS_H - 8);
+  }
+  drawTimeLabel(tm.t0, "left");
+  drawTimeLabel(tm.t1, "right");
+  for (const s of tm.segments) {
+    if (s.compressed) {
+      drawTimeLabel(s.tStart, "right");
+      drawTimeLabel(s.tEnd, "left");
+      ctx.strokeStyle = "#475569"; ctx.lineWidth = 1;
+      const bx = LABEL_W + s.pxStart + s.pxWidth / 2;
+      ctx.beginPath();
+      ctx.moveTo(bx - 4, AXIS_H); ctx.lineTo(bx + 4, AXIS_H + 6);
+      ctx.lineTo(bx - 4, AXIS_H + 12); ctx.lineTo(bx + 4, totalH);
+      ctx.stroke();
+    }
+  }
+
+  // Package separator lines + labels + command bars
+  pkgLayouts.forEach(({ pkg, assigned, numLanes }, i) => {
+    const y = pkgY[i];
+
+    // Package label — vertically centered over its lanes
+    const pkgBlockH = numLanes * (LANE_H + LANE_PAD);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "bold 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    ctx.save();
+    ctx.beginPath(); ctx.rect(4, y, LABEL_W - 10, pkgBlockH); ctx.clip();
+    ctx.fillText(pkg, 4, y + pkgBlockH / 2 + 4);
+    ctx.restore();
+
+    // Separator line above each package (except first)
+    if (i > 0) {
+      ctx.strokeStyle = "#1e2d40";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, y - PKG_SEP / 2); ctx.lineTo(W, y - PKG_SEP / 2); ctx.stroke();
+    }
+
+    // Command bars
+    for (const { r, lane } of assigned) {
+      const bx = toX(r.startedAt);
+      const bw = toW(r.startedAt, r.durationMs);
+      const by = y + lane * (LANE_H + LANE_PAD) + 1;
+      const bh = LANE_H - 2;
+      const color = cmdColor(r.command);
+      // Parent commands slightly more opaque than children
+      ctx.fillStyle = r.parentCommand ? color + "cc" : color;
+      roundRect(ctx, bx, by, bw, bh, 3);
+      ctx.fill();
+
+      if (bw > 16) {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(bx + 2, by, bw - 4, bh); ctx.clip();
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        ctx.font = "10px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        ctx.fillText(r.command, bx + 4, by + bh - 4);
+        ctx.restore();
+      }
+    }
+  });
+}
+
+// ── tab switching ─────────────────────────────────────────────────────────────
+document.querySelectorAll(".timeline-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".timeline-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".timeline-panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+    if (allRows.length) {
+      const rows = filtered();
+      requestAnimationFrame(() => {
+        if (tab.dataset.tab === "pkg") renderTimelinePkg(rows);
+        else renderTimeline(rows);
+      });
+    }
+  });
+});
+
+// ── tree table ────────────────────────────────────────────────────────────────
+// Tree: package header → top-level command row → child command rows.
+// Package rows are collapsible (click to expand/collapse).
+const collapsedPkgs = new Set();
+
+function renderTable(rows) {
+  const maxMs = Math.max(...rows.map(r => r.durationMs), 1);
+
+  // Build tree: pkg → [ { parent, children[] } ]
+  const pkgTree = new Map(); // pkg → Map(cmdKey → { parent, children[] })
+
+  for (const r of rows) {
+    const pkg = pkgOf(r.cwd);
+    if (!pkgTree.has(pkg)) pkgTree.set(pkg, new Map());
+    const cmdMap = pkgTree.get(pkg);
+
+    if (!r.parentCommand) {
+      const key = r.command + "\x00" + r.startedAt;
+      if (!cmdMap.has(key)) cmdMap.set(key, { parent: r, children: [] });
+    } else {
+      // attach child to its parent
+      let attached = false;
+      for (const [, node] of cmdMap) {
+        if (node.parent && node.parent.command === r.parentCommand) {
+          node.children.push(r);
+          attached = true;
+          break;
+        }
+      }
+      if (!attached) {
+        // orphan child — create a placeholder parent key
+        const key = r.parentCommand + "\x00orphan";
+        if (!cmdMap.has(key)) cmdMap.set(key, { parent: null, children: [] });
+        cmdMap.get(key).children.push(r);
+      }
+    }
+  }
+
+  // Sort packages by earliest start
+  const sortedPkgs = [...pkgTree.entries()].sort((a, b) => {
+    const flat = nodes => [...nodes.values()].flatMap(n => [n.parent, ...n.children]).filter(Boolean);
+    const tA = Math.min(...flat(a[1]).map(r => +new Date(r.startedAt)));
+    const tB = Math.min(...flat(b[1]).map(r => +new Date(r.startedAt)));
+    return tA - tB;
+  });
+
+  function durBar(r, dimmed) {
+    const color = cmdColor(r.command);
+    const barW  = Math.round((r.durationMs / maxMs) * 80);
+    return `<div class="dur-bar"><div class="bar" style="width:${barW}px;background:${color}${dimmed ? "77" : ""}"></div>${fmtMs(r.durationMs)}</div>`;
+  }
+
+  function badge(r, dimmed) {
+    const color = cmdColor(r.command);
+    return `<span class="badge${dimmed ? " child" : ""}" style="background:${color}22;color:${color}">${r.command}</span>`;
+  }
+
+  let html = "";
+
+  for (const [pkg, cmdMap] of sortedPkgs) {
+    const isCollapsed = collapsedPkgs.has(pkg);
+    const nodes = [...cmdMap.values()];
+    const pkgSpan = (() => {
+      const allR = nodes.flatMap(n => [n.parent, ...n.children]).filter(Boolean);
+      if (!allR.length) return 0;
+      return Math.max(...allR.map(r => +new Date(r.endedAt))) -
+             Math.min(...allR.map(r => +new Date(r.startedAt)));
+    })();
+    const toggle = isCollapsed ? "▶" : "▼";
+    const childCount = nodes.reduce((s, n) => s + n.children.length, 0);
+    const cmdCount   = nodes.filter(n => n.parent).length;
+
+    html += `<tr class="pkg-header" data-pkg="${pkg}">
+      <td colspan="4"><span class="tree-toggle">${toggle}</span> ${pkg} <span style="color:#475569;font-weight:400;font-size:0.72rem;margin-left:6px">${cmdCount} command${cmdCount !== 1 ? "s" : ""} · ${childCount} child${childCount !== 1 ? "ren" : ""} · ${fmtMs(pkgSpan)}</span></td>
+    </tr>`;
+
+    if (!isCollapsed) {
+      // Sort nodes by start time
+      const sortedNodes = [...nodes].sort((a, b) => {
+        const aT = a.parent ? +new Date(a.parent.startedAt) : +new Date(a.children[0]?.startedAt || 0);
+        const bT = b.parent ? +new Date(b.parent.startedAt) : +new Date(b.children[0]?.startedAt || 0);
+        return aT - bT;
+      });
+
+      for (const { parent, children } of sortedNodes) {
+        if (parent) {
+          const sortedChildren = [...children].sort((a, b) => +new Date(a.startedAt) - +new Date(b.startedAt));
+          const hasChildren = sortedChildren.length > 0;
+          html += `<tr class="child-row">
+            <td class="tree-indent-1">${badge(parent, false)}</td>
+            <td>${new Date(parent.startedAt).toLocaleTimeString()}</td>
+            <td>${durBar(parent, false)}</td>
+            <td style="color:#475569;font-size:0.72rem">${hasChildren ? sortedChildren.length + " child" + (sortedChildren.length !== 1 ? "ren" : "") : "—"}</td>
+          </tr>`;
+          for (const c of sortedChildren) {
+            html += `<tr class="grandchild-row">
+              <td class="tree-indent-2">${badge(c, true)}</td>
+              <td style="color:#64748b;font-size:0.78rem">${new Date(c.startedAt).toLocaleTimeString()}</td>
+              <td>${durBar(c, true)}</td>
+              <td>—</td>
+            </tr>`;
+          }
+        } else {
+          // orphan children
+          for (const c of children) {
+            html += `<tr class="child-row">
+              <td class="tree-indent-1">${badge(c, true)}</td>
+              <td>${new Date(c.startedAt).toLocaleTimeString()}</td>
+              <td>${durBar(c, true)}</td>
+              <td>—</td>
+            </tr>`;
+          }
+        }
+      }
+    }
+  }
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = html;
+
+  // Collapse/expand on pkg header click
+  tbody.querySelectorAll("tr.pkg-header").forEach(tr => {
+    tr.addEventListener("click", () => {
+      const pkg = tr.dataset.pkg;
+      if (collapsedPkgs.has(pkg)) collapsedPkgs.delete(pkg);
+      else collapsedPkgs.add(pkg);
+      renderTable(filtered());
+    });
+  });
+}
+
+// ── sort headers ─────────────────────────────────────────────────────────────
+document.querySelectorAll("thead th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    sortDir = sortKey === col ? -sortDir : 1;
+    sortKey = col;
+    document.querySelectorAll("thead th").forEach(t => t.classList.remove("asc", "desc"));
+    th.classList.add(sortDir === 1 ? "asc" : "desc");
+    render();
+  });
+});
+
+// ── render ───────────────────────────────────────────────────────────────────
+// ── per-package bar chart ─────────────────────────────────────────────────────
+// Horizontal stacked bar chart: one bar per package, segments = top-level
+// commands (color-coded). Shows wall-clock span of each package's work.
+function renderPkgChart(rows) {
+  const canvas = document.getElementById("pkg-chart");
+  const wrap   = document.getElementById("pkg-chart-wrap");
+
+  if (!rows.length) { canvas.width = 0; canvas.height = 0; return; }
+
+  const W = wrap.getBoundingClientRect().width - 32;
+  if (W <= 0) return;
+
+  // Build per-package data: all top-level commands (no parentCommand)
+  // Use wall-clock span = max(endedAt) - min(startedAt) across all rows per pkg
+  const pkgMap = new Map(); // pkg → { span, cmds: [{cmd, durationMs}] }
+
+  for (const r of rows) {
+    const pkg = pkgOf(r.cwd);
+    if (!pkgMap.has(pkg)) pkgMap.set(pkg, { minT: Infinity, maxT: -Infinity, cmds: [] });
+    const p = pkgMap.get(pkg);
+    const s = +new Date(r.startedAt), e = +new Date(r.endedAt);
+    if (s < p.minT) p.minT = s;
+    if (e > p.maxT) p.maxT = e;
+    // collect top-level commands for the stacked breakdown
+    if (!r.parentCommand) p.cmds.push(r);
+  }
+
+  // Sort packages by wall-clock span descending (slowest first)
+  const pkgs = [...pkgMap.entries()]
+    .map(([pkg, d]) => ({ pkg, span: d.maxT - d.minT, cmds: d.cmds }))
+    .sort((a, b) => b.span - a.span);
+
+  const maxSpan = pkgs[0]?.span || 1;
+
+  const LABEL_W = 160;
+  const BAR_H   = 22;
+  const ROW_GAP = 8;
+  const HEADER_H = 24;
+  const BAR_W   = W - LABEL_W - 80; // leave 80px for the duration label on the right
+
+  const totalH = HEADER_H + pkgs.length * (BAR_H + ROW_GAP);
+  canvas.width  = W;
+  canvas.height = totalH;
+  canvas.style.width  = W + "px";
+  canvas.style.height = totalH + "px";
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, W, totalH);
+
+  // Column header
+  ctx.fillStyle = "#475569";
+  ctx.font = "10px monospace";
+  ctx.fillText("Package", 4, HEADER_H - 6);
+  ctx.fillText("Wall-clock span  (top-level commands stacked)", LABEL_W, HEADER_H - 6);
+
+  pkgs.forEach(({ pkg, span, cmds }, i) => {
+    const y = HEADER_H + i * (BAR_H + ROW_GAP);
+
+    // Alternating background
+    if (i % 2 === 1) {
+      ctx.fillStyle = "rgba(255,255,255,0.02)";
+      ctx.fillRect(0, y, W, BAR_H + ROW_GAP);
+    }
+
+    // Package label
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "bold 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    ctx.save();
+    ctx.beginPath(); ctx.rect(4, y, LABEL_W - 10, BAR_H); ctx.clip();
+    ctx.fillText(pkg, 4, y + BAR_H - 6);
+    ctx.restore();
+
+    // Full bar background (track)
+    const trackW = BAR_W * (span / maxSpan);
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    roundRect(ctx, LABEL_W, y + 2, Math.max(trackW, 4), BAR_H - 4, 3);
+    ctx.fill();
+
+    // Stacked command segments — proportional to their durationMs within the span
+    const totalCmdMs = cmds.reduce((s, r) => s + r.durationMs, 0) || span;
+    let bx = LABEL_W;
+    for (const r of [...cmds].sort((a, b) => +new Date(a.startedAt) - +new Date(b.startedAt))) {
+      const segW = Math.max(2, trackW * (r.durationMs / totalCmdMs));
+      ctx.fillStyle = cmdColor(r.command);
+      roundRect(ctx, bx, y + 2, segW, BAR_H - 4, 2);
+      ctx.fill();
+
+      // Label inside segment if wide enough
+      if (segW > 40) {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(bx + 2, y + 2, segW - 4, BAR_H - 4); ctx.clip();
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.font = "10px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        ctx.fillText(r.command, bx + 4, y + BAR_H - 7);
+        ctx.restore();
+      }
+      bx += segW;
+    }
+
+    // Duration label to the right
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px monospace";
+    ctx.fillText(fmtMs(span), LABEL_W + trackW + 6, y + BAR_H - 6);
+  });
+}
+
+function render() {
+  const rows = filtered();
+  renderStats(rows);
+  requestAnimationFrame(() => {
+    renderTimeline(rows);
+    renderTimelinePkg(rows);
+    renderPkgChart(rows);
+  });
+  renderTable(rows);
+}
+
+// ── file input ────────────────────────────────────────────────────────────────
+document.getElementById("file-input").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => load(ev.target.result);
+  reader.readAsText(f);
+  e.target.value = "";
+});
+
+// ── drag & drop ───────────────────────────────────────────────────────────────
+const dz = document.getElementById("drop-zone");
+dz.addEventListener("dragover",  e => { e.preventDefault(); dz.classList.add("over"); });
+dz.addEventListener("dragleave", ()  => dz.classList.remove("over"));
+dz.addEventListener("drop", e => {
+  e.preventDefault(); dz.classList.remove("over");
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => load(ev.target.result);
+  reader.readAsText(f);
+});
+
+// ── paste anywhere ────────────────────────────────────────────────────────────
+document.addEventListener("paste", e => {
+  const text = e.clipboardData.getData("text");
+  if (text && text.includes("startedAt")) load(text);
+});
+
+// ── live filters ──────────────────────────────────────────────────────────────
+["search", "pkg-filter", "cmd-filter"].forEach(id =>
+  document.getElementById(id).addEventListener("input", render)
+);
+
+// ── resize: redraw timeline ───────────────────────────────────────────────────
+window.addEventListener("resize", () => {
+  if (allRows.length) {
+    const rows = filtered();
+    renderTimeline(rows);
+    renderTimelinePkg(rows);
+    renderPkgChart(rows);
+  }
+});
+</script>
+</body>
+</html>
