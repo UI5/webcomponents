@@ -152,7 +152,8 @@
 }
 
 .ui5-li-multisel-cb,
-.ui5-li-singlesel-radiobtn {
+.ui5-li-singlesel-radiobtn,
+.ui5-li-navigation-arrow {
 	flex-shrink: 0;
 }
 
