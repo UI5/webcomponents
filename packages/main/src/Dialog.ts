@@ -473,6 +473,22 @@ class Dialog extends Popup {
 	_show() {
 		super._show();
 		this._center();
+		this._setInert();
+	}
+
+	/**
+	 * Mirrors the native `<dialog>.showModal()` behavior by marking everything
+	 * outside the dialog's branch as `inert`, so background content becomes
+	 * non-focusable, non-clickable and hidden from assistive technology.
+	 *
+	 * Elements inerted by the dialog are tagged so they can be reverted on close
+	 * (see `Popup#_revertInert`), while elements that were already `inert` are left untouched.
+	 * @private
+	 */
+	_setInert() {
+		this._getInertPath().forEach(element => {
+			this._inertSiblings(element);
+		});
 	}
 
 	onBeforeRendering() {
