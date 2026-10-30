@@ -284,35 +284,20 @@ git commit -m "feat(ui5-tooltip): scaffold tooltip component wrapping popover"
 
 ---
 
-## Task 2: `openTooltip`/`closeTooltip`/`isOpen` behavior and placement
+## Task 2: placement forwarding
 
 **Files:**
 - Test: `packages/main/cypress/specs/Tooltip.cy.tsx`
-- Modify: `packages/main/src/Tooltip.ts` (already has the methods; this task locks behavior with tests)
 
-- [ ] **Step 1: Write the failing tests**
+> Note: `openTooltip`/`closeTooltip`/`isOpen` behavior and the `role="tooltip"`
+> aria-anchor contract were already covered in Task 1 (expanded during code
+> review). This task only adds the remaining placement-forwarding test.
+
+- [ ] **Step 1: Write the failing test**
 
 Append to `packages/main/cypress/specs/Tooltip.cy.tsx` inside `describe("Tooltip", ...)`:
 
 ```tsx
-it("isOpen reflects open/close", () => {
-	cy.mount(
-		<>
-			<Button id="opener">Open</Button>
-			<Tooltip id="tt" opener="opener" text="Info"></Tooltip>
-		</>
-	);
-
-	cy.get("#tt").then($el => {
-		const tt = $el[0] as Tooltip;
-		expect(tt.isOpen()).to.equal(false);
-		tt.openTooltip();
-		expect(tt.isOpen()).to.equal(true);
-		tt.closeTooltip();
-		expect(tt.isOpen()).to.equal(false);
-	});
-});
-
 it("forwards placement to the popover", () => {
 	cy.mount(
 		<>
@@ -335,7 +320,7 @@ it("forwards placement to the popover", () => {
 - [ ] **Step 2: Run tests to verify status**
 
 Run: `cd packages/main && yarn test:cypress:single cypress/specs/Tooltip.cy.tsx`
-Expected: The `isOpen` test PASSES (methods already exist); the placement test PASSES if `placement` is reflected. If placement does not appear as an attribute, continue to Step 3.
+Expected: the placement test PASSES if `placement` is reflected. If it does not appear as an attribute, continue to Step 3.
 
 - [ ] **Step 3: Ensure placement is reflected**
 
@@ -344,13 +329,13 @@ Expected: The `isOpen` test PASSES (methods already exist); the placement test P
 - [ ] **Step 4: Run tests to verify they pass**
 
 Run: `cd packages/main && yarn test:cypress:single cypress/specs/Tooltip.cy.tsx`
-Expected: PASS (all three tests).
+Expected: PASS (all tests in the spec).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add packages/main/cypress/specs/Tooltip.cy.tsx
-git commit -m "test(ui5-tooltip): cover open/close/isOpen and placement"
+git commit -m "test(ui5-tooltip): cover placement forwarding"
 ```
 
 ---

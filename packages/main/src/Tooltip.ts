@@ -32,7 +32,7 @@ import TooltipCss from "./generated/themes/Tooltip.css.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.x
+ * @since 2.29.0
  */
 @customElement({
 	tag: "ui5-tooltip",
@@ -88,6 +88,10 @@ class Tooltip extends UI5Element {
 	 * @public
 	 */
 	openTooltip(): void {
+		// Nothing to show without text.
+		if (!this.text) {
+			return;
+		}
 		this._open = true;
 	}
 
