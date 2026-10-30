@@ -791,15 +791,6 @@ class ShellBar extends UI5Element {
 		return style.display !== "none" && style.visibility !== "hidden" && element.offsetWidth > 0 && element.offsetHeight > 0;
 	}
 
-	_getRightChildItems() {
-		return [
-			...this.searchField,
-			...this.shadowRoot!.querySelectorAll(".ui5-shellbar-search-item-for-arrow-nav"),
-			...this.assistant,
-			...this.shadowRoot!.querySelectorAll(".ui5-shellbar-items-for-arrow-nav"),
-		] as HTMLElement[];
-	}
-
 	_menuItemPress(e: CustomEvent<ListItemClickEventDetail>) {
 		const shouldContinue = this.fireDecoratorEvent("menu-item-click", {
 			item: e.detail.item,
@@ -1616,19 +1607,6 @@ class ShellBar extends UI5Element {
 			return [];
 		}
 		return this.content.slice(spacerIndex + 1);
-	}
-
-	get _rightChildRole() {
-		const items = this._getRightChildItems();
-		const visibleItems = items.filter(item => {
-			return this._isVisible(item);
-		});
-
-		if (visibleItems.length === 1) {
-			return;
-		}
-
-		return "toolbar";
 	}
 
 	get _searchFieldText() {
