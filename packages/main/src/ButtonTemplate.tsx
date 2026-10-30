@@ -2,6 +2,7 @@ import type Button from "./Button.js";
 import Icon from "./Icon.js";
 import BusyIndicator from "./BusyIndicator.js";
 import BusyIndicatorSize from "./types/BusyIndicatorSize.js";
+import Tooltip from "./Tooltip.js";
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,
@@ -41,7 +42,6 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			aria-keyshortcuts={this._computedAccessibilityAttributes?.ariaKeyShortcuts}
 			aria-description={this.ariaDescriptionText}
 			aria-busy={this.loading ? "true" : undefined}
-			title={this.buttonTitle}
 			part="button"
 			role={this.effectiveAccRole}
 		>
@@ -73,6 +73,12 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 				<slot name="badge"/>
 			}
 		</button>
+		{this.buttonTitle &&
+			<Tooltip
+				text={this.buttonTitle}
+				opener={this.getFocusDomRef()}
+			/>
+		}
 		{this.loading &&
 			<BusyIndicator
 				id={`${this._id}-button-busy-indicator`}

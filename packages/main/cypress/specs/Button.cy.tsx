@@ -307,16 +307,13 @@ describe("Button general interaction", () => {
 });
 
 describe("Accessibility", () => {
-	it("setting tooltip on the host is reflected on the button tag", () => {
+	it("setting tooltip on the host is reflected on the enhanced tooltip", () => {
 		cy.mount(<Button icon="message-information" tooltip="Go home"></Button>);
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("button")
-			.as("button");
-
-		cy.get("@button")
-			.should("have.attr", "title", "Go home");
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "Go home");
 	});
 
 	it("tooltip from inner icon is propagated", () => {
@@ -324,18 +321,17 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("button")
-			.as("button");
-
-		cy.get("@button")
-			.should("have.attr", "title", "Download");
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "Download");
 	});
 
 	it("tooltip not displayed when there is a text", () => {
 		cy.mount(<Button icon="home">Action</Button>);
 
 		cy.get("[ui5-button]")
-			.should("not.have.attr", "title");
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("not.exist");
 	});
 
 	it("aria-label is properly applied on the button tag", () => {
@@ -761,5 +757,27 @@ describe("Button form attribute", () => {
 
 		cy.get("@submitSpy")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("Button enhanced tooltip", () => {
+	it("renders an enhanced (visual) tooltip reflecting the tooltip property", () => {
+		cy.mount(<Button id="b" tooltip="Save the document">Save</Button>);
+
+		cy.get("#b")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("exist")
+			.and("have.attr", "text", "Save the document");
+	});
+
+	it("does not set the native title attribute", () => {
+		cy.mount(<Button id="b2" tooltip="No native title">Save</Button>);
+		cy.get("#b2").shadow().find("button").should("not.have.attr", "title");
+	});
+
+	it("renders no enhanced tooltip when there is no tooltip text", () => {
+		cy.mount(<Button id="b3">Save</Button>);
+		cy.get("#b3").shadow().find("[ui5-tooltip]").should("not.exist");
 	});
 });
