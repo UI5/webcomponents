@@ -127,6 +127,7 @@ import TimePickerClock from "./TimePickerClock.js";
 import TimeSelectionClocks from "./TimeSelectionClocks.js";
 import Title from "./Title.js";
 import Toast from "./Toast.js";
+import Tooltip from "./Tooltip.js";
 import ToggleButton from "./ToggleButton.js";
 import Toolbar from "./Toolbar.js";
 import ToolbarItem from "./ToolbarItem.js";

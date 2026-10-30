@@ -59,15 +59,23 @@ describe("Tooltip", () => {
 			($el[0] as Tooltip).openTooltip();
 		});
 
+		// The text is slotted into the popover but lives in the tooltip's shadow root.
+		cy.get("#tt")
+			.shadow()
+			.find(".ui5-tooltip-text")
+			.should("contain.text", "Hello world");
+
 		cy.get("#tt")
 			.shadow()
 			.find("[ui5-popover]")
-			.shadow()
-			.contains("Hello world")
-			.should("be.visible");
+			.should("have.attr", "open");
 	});
 });
 ```
+
+> Note: the tooltip text is slotted into the popover's default slot, so it renders
+> visually inside the popover but lives in the **tooltip's** shadow root — assert
+> on `.ui5-tooltip-text` in the tooltip's shadow, not inside the popover's shadow.
 
 - [ ] **Step 2: Run test to verify it fails**
 
