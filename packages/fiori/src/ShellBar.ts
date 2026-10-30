@@ -132,7 +132,8 @@ type ShellBarMenuItemClickEventDetail = {
 };
 
 type ShellBarContentItemVisibilityChangeEventDetail = {
-	items: Array<HTMLElement>
+	items: Array<HTMLElement>,
+	revealedItems: Array<HTMLElement>,
 };
 
 type ShellBarSearchButtonEventDetail = {
@@ -302,7 +303,8 @@ type ShellBarSearchFieldClearEventDetail = {
  * Fired, when an item from the content slot is hidden or shown.
  * **Note:** The `content-item-visibility-change` event is in an experimental state and is a subject to change.
  *
- * @param {Array<HTMLElement>} array of all the items that are hidden
+ * @param {Array<HTMLElement>} items array of all the items that are currently hidden
+ * @param {Array<HTMLElement>} revealedItems array of items that just became visible (were hidden in the previous state)
  * @public
  * @since 2.7.0
  */
@@ -810,8 +812,11 @@ class ShellBar extends UI5Element {
 		const newHiddenContentIds = filterContentIds(newHiddenItemsIds);
 
 		if (!arraysAreEqual(oldHiddenContentIds, newHiddenContentIds)) {
+			const toElement = (id: string) => this.content.find(item => (item as any)._individualSlot as string === id)!;
+			const revealedContentIds = oldHiddenContentIds.filter(id => !newHiddenContentIds.includes(id));
 			this.fireDecoratorEvent("content-item-visibility-change", {
-				items: newHiddenContentIds.map(id => this.content.find(item => (item as any)._individualSlot as string === id)!),
+				items: newHiddenContentIds.map(toElement),
+				revealedItems: revealedContentIds.map(toElement),
 			});
 		}
 	}
