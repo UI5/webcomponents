@@ -52,29 +52,26 @@ describe("Tooltip", () => {
 		cy.get("#tt").shadow().find("[ui5-popover]").should("not.have.attr", "open");
 	});
 
-	it("renders a role=tooltip anchor with the default id, overridable via ariaAnchorId", () => {
-		cy.mount(<Tooltip id="tt" text="Anchor text"></Tooltip>);
-
-		cy.get("#tt")
-			.shadow()
-			.find("[role='tooltip']")
-			.should("contain.text", "Anchor text")
-			.and($anchor => {
-				expect($anchor.attr("id")).to.match(/-aria$/);
-			});
-
-		cy.mount(<Tooltip id="tt2" text="Anchor text" ariaAnchorId="my-anchor"></Tooltip>);
-
-		cy.get("#tt2")
-			.shadow()
-			.find("[role='tooltip']")
-			.should("have.attr", "id", "my-anchor");
-	});
-
-	it("renders no aria anchor when there is no text", () => {
-		cy.mount(<Tooltip id="tt" opener="opener"></Tooltip>);
+	it("exposes no role=tooltip ARIA anchor (visual-only; host owns ARIA)", () => {
+		cy.mount(<Tooltip id="tt" text="Some text"></Tooltip>);
 
 		cy.get("#tt").shadow().find("[role='tooltip']").should("not.exist");
+	});
+
+	it("stays closed when there is no text", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Open</Button>
+				<Tooltip id="tt" opener="opener"></Tooltip>
+			</>
+		);
+
+		cy.get("#tt").then($el => {
+			($el[0] as Tooltip).openTooltip();
+			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
+		});
+
+		cy.get("#tt").shadow().find("[ui5-popover]").should("not.have.attr", "open");
 	});
 
 	it("forwards placement to the popover", () => {

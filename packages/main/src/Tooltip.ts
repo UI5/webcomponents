@@ -77,16 +77,6 @@ class Tooltip extends UI5Element {
 	delay = 500;
 
 	/**
-	 * Id for the in-shadow `role="tooltip"` ARIA anchor. The owning element
-	 * sets this to a known value and references the same id via
-	 * `aria-describedby`. Both must live in the same shadow root.
-	 * @default ""
-	 * @public
-	 */
-	@property()
-	ariaAnchorId = "";
-
-	/**
 	 * Controls popover visibility.
 	 * @private
 	 */
@@ -121,11 +111,6 @@ class Tooltip extends UI5Element {
 	 */
 	isOpen(): boolean {
 		return this._open;
-	}
-
-	// Falls back to an auto id when the owner did not provide one.
-	get _anchorId(): string {
-		return this.ariaAnchorId || `${this._id}-aria`;
 	}
 
 	_onPopoverClose = (): void => {

@@ -19,9 +19,12 @@ This is a reimplementation, not a port: the OpenUI5 interaction and visuals are
 the reference, but the API and internals are designed for web components. In
 particular:
 
-- The tooltip DOM is rendered in place (not lazily built on open), so the host
-  can reference it directly with `aria-describedby` and `role="tooltip"`,
-  replacing OpenUI5's invisible ARIA anchor.
+- The tooltip is a **visual + gesture layer only** — it carries no ARIA anchor
+  of its own. Accessibility text rides on each host control's existing native
+  mechanism (see "Accessibility" below). The OpenUI5 invisible-anchor approach
+  (and `aria-describedby`/`role="tooltip"` pointing at the tooltip) does NOT
+  work for web components: the tooltip renders its content inside its own shadow
+  root, and ARIA IDREFs do not cross shadow boundaries.
 - No `TooltipEnablement` equivalent — the web component lifecycle handles setup
   and teardown.
 - Positioning/flipping/arrow come from `<ui5-popover>`; the tooltip carries no
@@ -78,16 +81,12 @@ small usage sample.
 >
   <span class="ui5-tooltip-text">{this.text}</span>
 </ui5-popover>
-<span
-  role="tooltip"
-  id={`${this._id}-aria`}
-  class="ui5-tooltip-aria-text"
->{this.text}</span>
 ```
 
-The `role="tooltip"` span lives in the **same shadow root** as the host element
-that references it via `aria-describedby`, so the ID reference resolves (ARIA ID
-references do not cross shadow boundaries; same-root does).
+The tooltip renders **only** the visual popover. It carries no `role="tooltip"`
+anchor and no `ariaAnchorId` — accessibility text is owned by the host control
+(see "Accessibility"). This avoids the shadow-boundary problem entirely: there
+is no ARIA IDREF to resolve.
 
 ## Gesture engine
 
@@ -128,11 +127,14 @@ implementation.
 
 ## Button & Title integration
 
-- **Button** (`ButtonTemplate.tsx`): replace `title={this.buttonTitle}` with an
-  embedded `<ui5-tooltip text={this.buttonTitle} opener={focusRef}>` and set
-  `aria-describedby` on the button to the tooltip's ARIA span id. The existing
-  `tooltip` public property remains the data source (`buttonTitle` already
-  derives from it).
+- **Button** (`ButtonTemplate.tsx`): remove the native `title={this.buttonTitle}`
+  and embed `<ui5-tooltip text={this.buttonTitle} opener={focusRef}>` for the
+  visual tooltip. Do **not** add `aria-describedby` for the tooltip — Button
+  already exposes its text to screen readers via its existing `aria-label`
+  (icon-only buttons) and `aria-description` (`ariaDescriptionText`), both
+  rendered in Button's own shadow root. The `tooltip` public property remains
+  the data source (`buttonTitle` derives from it). Removing the native `title`
+  must not regress Button's existing accessible name/description.
 - **Title** (`Title.ts` / template): Title has **no `tooltip` property** and
   should not gain one. The tooltip text is the title's **own text content**, and
   the tooltip is shown **only when the title is truncated** (its text overflows
@@ -153,12 +155,20 @@ Title's is derived from truncation of its own content.
 
 ## Accessibility
 
-- Host references the in-template `role="tooltip"` span via `aria-describedby`.
-- The visible popover content is supplementary; the ARIA span carries the text
-  for screen readers.
-- Validate live in the browser (spec's explicit "test if this works" item):
-  confirm the same-shadow-root `aria-describedby` reference resolves and is
-  announced.
+- The `<ui5-tooltip>` is **visual only** — it exposes no ARIA to screen readers
+  and is not referenced by the host via ARIA.
+- Each host control keeps exposing the tooltip text through its own existing,
+  same-shadow-root mechanism:
+  - **Button** — icon-only buttons already surface `buttonTitle` as the
+    accessible name (`aria-label`); `aria-description` carries supplementary
+    text. Removing the native `title` must not regress these.
+  - **Title** — the full (truncated) text is the element's own text content,
+    already in the accessible tree.
+- Rationale: ARIA IDREFs (`aria-describedby`) cannot cross shadow boundaries, and
+  the tooltip's content lives inside its own shadow root, so an IDREF to it would
+  not resolve. Keeping ARIA on the host (where the text already is) is the robust
+  web-component approach — this is UI5's own pattern (`AccessibilityTextsHelper`
+  re-exposes referenced text rather than relying on cross-shadow IDREFs).
 
 ## Testing
 
@@ -166,10 +176,10 @@ Title's is derived from truncation of its own content.
   - opens on hover and on keyboard focus;
   - closes on Escape, on activation, on mouseleave/focusout;
   - renders `text`;
-  - respects `placement`;
-  - wires `aria-describedby` to a `role="tooltip"` element with the text.
+  - respects `placement`.
 - Button and Title specs: assert the embedded tooltip appears and is wired.
-  - Button: tooltip reflects the `tooltip` property.
+  - Button: embedded `[ui5-tooltip]` reflects the `tooltip` property; native
+    `title` is gone; Button's accessible name/description unaffected.
   - Title: tooltip appears **only when truncated** — a narrow, single-line
     (`wrapping-type="None"`) title with overflowing text shows it; a short or
     wrapping title does not.
@@ -180,8 +190,9 @@ Title's is derived from truncation of its own content.
 
 ## Risks / things to validate early
 
-- **Cross-shadow `aria-describedby`** — mitigated by rendering the tooltip in the
-  host's own shadow root; verify live.
+- **Cross-shadow ARIA** — RESOLVED by design: the tooltip is visual-only and
+  carries no ARIA; hosts keep their own accessible name/description. No IDREF
+  crosses a shadow boundary.
 - **Popover arrow restyle fidelity** — Popover's arrow differs from OpenUI5's
   rotated-square; confirm the override reaches OpenUI5 parity, and fall back to
   a tooltip-specific arrow element only if the popover arrow can't be styled to
@@ -194,5 +205,5 @@ Title's is derived from truncation of its own content.
 - Enhanced-mode global opt-in flag.
 - Focus guard after activation.
 - Migrating controls beyond Button and Title.
-- `ariaText` / `suppressAriaAnchor` refinements from OpenUI5 (single `text`
-  drives both visible and ARIA content for now).
+- Any ARIA anchor owned by the tooltip (`role="tooltip"` span, `ariaAnchorId`,
+  `aria-describedby` wiring) — accessibility stays on the host control.
