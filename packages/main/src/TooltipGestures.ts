@@ -1,3 +1,5 @@
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+
 type TooltipGesturesConfig = {
 	opener: HTMLElement;
 	onOpen: () => void;
@@ -60,17 +62,25 @@ class TooltipGestures {
 		clearTimeout(this._longPressTimer);
 	}
 
-	// Deepest active element inside the opener, piercing shadow roots.
+	// Deepest active element, but only when it lies within the opener
+	// (crossing shadow boundaries, which Node.contains does not).
 	_deepActiveElement(): Element | null {
+		const active = getActiveElement();
+		return active && this._isWithinOpener(active) ? active : null;
+	}
+
+	// Whether the node is the opener or sits inside its (possibly nested) shadow tree.
+	_isWithinOpener(node: Node): boolean {
 		const opener = this._config.opener;
-		let active = opener.ownerDocument.activeElement;
-		if (!active || (active !== opener && !opener.contains(active))) {
-			return null;
+		let current: Node | null = node;
+		while (current) {
+			if (current === opener) {
+				return true;
+			}
+			const parent: Node | null = current.parentNode;
+			current = parent instanceof ShadowRoot ? parent.host : parent;
 		}
-		while (active?.shadowRoot?.activeElement) {
-			active = active.shadowRoot.activeElement;
-		}
-		return active;
+		return false;
 	}
 
 	_scheduleOpen() {
@@ -117,8 +127,9 @@ class TooltipGestures {
 
 	_onKeyDown = (e: KeyboardEvent) => {
 		if (e.key === "Escape") {
+			// Always cancel a pending open/close; close if already open.
+			this._clearTimers();
 			if (this._config.isPendingOrOpen()) {
-				this._clearTimers();
 				this._config.onClose();
 			}
 			return;
@@ -134,7 +145,7 @@ class TooltipGestures {
 
 	_onTouchStart = () => {
 		clearTimeout(this._longPressTimer);
-		// Suppress long-press text selection / iOS callout while pending/open.
+		// Suppress text selection / iOS callout during the long-press window.
 		this._config.opener.classList.add("ui5-tooltip-suppress-selection");
 		this._longPressTimer = setTimeout(() => this._config.onOpen(), LONG_PRESS_MS);
 	};

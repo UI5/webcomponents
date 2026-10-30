@@ -418,6 +418,8 @@ In `packages/main/src/Tooltip.ts`, add after `placement`:
 Create `packages/main/src/TooltipGestures.ts`:
 
 ```ts
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+
 type TooltipGesturesConfig = {
 	opener: HTMLElement;
 	onOpen: () => void;
@@ -480,6 +482,27 @@ class TooltipGestures {
 		clearTimeout(this._longPressTimer);
 	}
 
+	// Deepest active element, but only when it lies within the opener
+	// (crossing shadow boundaries, which Node.contains does not).
+	_deepActiveElement(): Element | null {
+		const active = getActiveElement();
+		return active && this._isWithinOpener(active) ? active : null;
+	}
+
+	// Whether the node is the opener or sits inside its (possibly nested) shadow tree.
+	_isWithinOpener(node: Node): boolean {
+		const opener = this._config.opener;
+		let current: Node | null = node;
+		while (current) {
+			if (current === opener) {
+				return true;
+			}
+			const parent: Node | null = current.parentNode;
+			current = parent instanceof ShadowRoot ? parent.host : parent;
+		}
+		return false;
+	}
+
 	_scheduleOpen() {
 		clearTimeout(this._closeTimer);
 		clearTimeout(this._openTimer);
@@ -510,8 +533,11 @@ class TooltipGestures {
 	};
 
 	_onFocusIn = () => {
-		const el = this._config.opener;
-		if (el.matches && el.matches(":focus-visible")) {
+		// Openers often delegate focus into their shadow root (delegatesFocus),
+		// so the host never matches :focus-visible. Gate on the deepest active
+		// element instead.
+		const active = this._deepActiveElement();
+		if (active && active.matches(":focus-visible")) {
 			this._scheduleOpen();
 		}
 	};
@@ -522,8 +548,9 @@ class TooltipGestures {
 
 	_onKeyDown = (e: KeyboardEvent) => {
 		if (e.key === "Escape") {
+			// Always cancel a pending open/close; close if already open.
+			this._clearTimers();
 			if (this._config.isPendingOrOpen()) {
-				this._clearTimers();
 				this._config.onClose();
 			}
 			return;

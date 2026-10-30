@@ -134,4 +134,26 @@ describe("Tooltip", () => {
 			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
 		});
 	});
+
+	it("Escape during the open delay cancels the pending open", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Focus me</Button>
+				<Tooltip id="tt" opener="opener" text="Focus info" delay={400}></Tooltip>
+			</>
+		);
+
+		cy.get("#opener").should("exist");
+		cy.realPress("Tab");
+		cy.get("#opener").should("have.focus");
+
+		// Press Escape before the open delay elapses.
+		cy.get("#opener").realPress("Escape");
+
+		// Wait past the original delay and confirm it never opened.
+		cy.wait(600);
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
+		});
+	});
 });
