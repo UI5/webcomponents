@@ -2610,6 +2610,64 @@ describe("XSS tests for suggestions", () => {
 			cy.wrap($item[0].shadowRoot.querySelector(".ui5-li-title")).should("have.prop", "innerText", expected[index]);
 		});
 	});
+
+	it("does not execute payload set via markupText JS property", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item" text="Safe Item" />
+			</Input>
+		);
+
+		cy.get("#suggestion-item").then(($item) => {
+			($item[0] as SuggestionItem).markupText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via markup-text HTML attribute", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem text="Safe Item" markup-text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#xss-input").find("ui5-suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property when no highlight is active", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item-text" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("<");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item-text").shadow().find(".ui5-li-title")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
 });
 
 describe("Lazy loading", () => {

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>SuggestionItem Validation Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: sans-serif; padding: 2rem; background: var(--sapBackgroundColor, #f5f5f5); }
+		h2 { margin-top: 2rem; }
+		.scenario { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem; }
+		.scenario h3 { margin-top: 0; }
+		.scenario p { margin: 0 0 1rem; font-size: 0.9rem; color: #555; }
+		#result { margin-top: 2rem; padding: 1rem; border-radius: 6px; font-weight: bold; font-size: 1.1rem; }
+		#result.pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+		#result.fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+	</style>
+</head>
+<body>
+
+<h1>SuggestionItem Validation Test</h1>
+<p>
+	Open the browser console. Any <code>console.error("FAIL")</code> means a payload executed.
+	No errors + all items render normally = PASS.
+</p>
+
+<div id="result">Waiting…</div>
+
+<!-- ─── Scenario 1a: markup-text HTML attribute ─── -->
+<h2>Scenario 1a — <code>markup-text</code> HTML attribute on ui5-suggestion-item</h2>
+<div class="scenario">
+	<p>Suggestion item has <code>markup-text</code> set in markup. Click the input — should render safely.</p>
+	<ui5-input id="input-attr" show-suggestions>
+		<ui5-suggestion-item text="Safe Suggestion" markup-text="&lt;img src=x onerror=fail(&quot;1a&quot;)&gt;"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Another Suggestion"></ui5-suggestion-item>
+	</ui5-input>
+</div>
+
+<!-- ─── Scenario 1b: markupText JS property ─── -->
+<h2>Scenario 1b — <code>markupText</code> JS property on ui5-suggestion-item</h2>
+<div class="scenario">
+	<p>JS assigns <code>item.markupText</code> after render. Click the input — should render safely.</p>
+	<ui5-input id="input-prop" show-suggestions>
+		<ui5-suggestion-item id="suggestion-item-prop" text="Safe Suggestion"></ui5-suggestion-item>
+	</ui5-input>
+</div>
+
+<!-- ─── Scenario 2: text with payload, no highlight active ─── -->
+<h2>Scenario 2 — <code>text</code> with HTML payload, no highlight active</h2>
+<div class="scenario">
+	<p>Suggestion item <code>text</code> contains an HTML payload and no filter is active. Type <code>&lt;</code> to open the dropdown — literal text must appear, nothing must execute.</p>
+	<ui5-input id="input-text" show-suggestions>
+		<ui5-suggestion-item id="suggestion-item-text" text="&lt;img src=x onerror=fail(&quot;2&quot;)&gt;"></ui5-suggestion-item>
+	</ui5-input>
+</div>
+
+<!-- ─── Scenario 3: normal highlight regression ─── -->
+<h2>Scenario 3 — Normal highlight (regression check)</h2>
+<div class="scenario">
+	<p>Type <strong>app</strong> — "Apple" and "Apricot" should appear with the match bolded. No errors.</p>
+	<ui5-input id="input-normal" show-suggestions>
+		<ui5-suggestion-item text="Apple"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Apricot"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Banana"></ui5-suggestion-item>
+	</ui5-input>
+</div>
+
+<script>
+	let failed = false;
+
+	window.fail = function(label) {
+		failed = true;
+		const result = document.getElementById("result");
+		result.textContent = "FAIL — payload executed: scenario " + label;
+		result.className = "fail";
+		console.error("FAIL: payload executed: scenario", label);
+	};
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const suggItemProp = document.getElementById("suggestion-item-prop");
+		if (suggItemProp) {
+			suggItemProp.markupText = "<img src=x onerror=fail(\"1b\")>";
+		}
+
+		setTimeout(() => {
+			if (!failed) {
+				const result = document.getElementById("result");
+				result.textContent = "PASS on load — click each input to test the render paths.";
+				result.className = "pass";
+			}
+		}, 500);
+	});
+</script>
+
+</body>
+</html>
