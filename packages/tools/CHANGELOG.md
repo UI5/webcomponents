@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Reverts
+
+* Revert "chore(tools): remove postcss workaround for CSS container style queries" (#14203) ([aeaa29a](https://github.com/UI5/webcomponents/commit/aeaa29a82718aaad1fd7d6493f0b0e2fdc4ff670)), closes [#14203](https://github.com/UI5/webcomponents/issues/14203)
+
+
+
+
+
 ## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools
