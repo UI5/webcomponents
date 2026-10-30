@@ -696,8 +696,7 @@ class Button extends UI5Element implements IButton {
 		// Use either the effective aria label text (if accessibleName is provided) or the button's text content
 		let mainLabelText = effectiveAriaLabelText || textContent;
 
-		// Icon-only buttons have no text, so fall back to the tooltip as the
-		// accessible name (the enhanced tooltip is visual-only).
+		// Icon-only: fall back to tooltip as accessible name (visual-only tooltip).
 		if (!mainLabelText && this.iconOnly) {
 			mainLabelText = this.buttonTitle || "";
 		}
