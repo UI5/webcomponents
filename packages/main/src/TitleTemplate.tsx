@@ -1,10 +1,17 @@
 import type Title from "./Title.js";
+import Tooltip from "./Tooltip.js";
 
 export default function TitleTemplate(this: Title) {
 	return (
 		<>
 			{
 				title.call(this, this.level)
+			}
+			{this._truncatedText &&
+				<Tooltip
+					text={this._truncatedText}
+					opener={this.getDomRef()}
+				/>
 			}
 		</>
 	);
