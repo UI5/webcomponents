@@ -139,7 +139,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 							</div>
 						)}
 						{!this.hasContentItems && <div class="ui5-shellbar-spacer"></div>}
-						<div class="ui5-shellbar-overflow-container-right-child" role={this._rightChildRole}>
+						<div class="ui5-shellbar-overflow-container-right-child">
 							{this.hasSearchField && (
 								<>
 									{this.showFullWidthSearch && (
