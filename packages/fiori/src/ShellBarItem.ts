@@ -67,6 +67,17 @@ class ShellBarItem extends UI5Element {
 	text?: string;
 
 	/**
+	 * Defines the tooltip of the item.
+	 *
+	 * **Note:** The tooltip is shown when the user hovers over the item in the main shell bar area.
+	 * @default undefined
+	 * @public
+	 * @since 2.29.0
+	 */
+	@property()
+	tooltip?: string;
+
+	/**
 	 * Defines the count displayed in badge.
 	 * @default undefined
 	 * @since 1.0.0

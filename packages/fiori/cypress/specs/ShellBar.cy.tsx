@@ -2145,6 +2145,21 @@ describe("Component Behavior", () => {
 				expect($items[2].getAttribute("data-ui5-stable")).to.equal("item-alert");
 			});
 		});
+
+		it("should set correct tooltip on the action button", () => {
+			cy.mount(
+				<ShellBar>
+					<ShellBarItem id="item-with-tooltip" icon="accept" text="Accept" tooltip="Custom Tooltip" />
+				</ShellBar>
+			);
+
+			cy.get("#item-with-tooltip")
+				.shadow()
+				.find("[ui5-button]")
+				.shadow()
+				.find("button")
+				.should("have.attr", "title", "Custom Tooltip");
+		});
 	});
 
 	it("Test disabled slotted button does not show hover styles", () => {
