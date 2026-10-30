@@ -4,6 +4,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import type PopoverPlacement from "./types/PopoverPlacement.js";
+import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import TooltipGestures from "./TooltipGestures.js";
 
 // Template
@@ -66,6 +67,14 @@ class Tooltip extends UI5Element {
 	 */
 	@property()
 	placement: `${PopoverPlacement}` = "Top";
+
+	/**
+	 * Defines the horizontal alignment of the tooltip relative to its opener.
+	 * @default "Center"
+	 * @public
+	 */
+	@property()
+	horizontalAlign: `${PopoverHorizontalAlign}` = "Center";
 
 	/**
 	 * Delay in milliseconds before the tooltip opens or closes on hover and

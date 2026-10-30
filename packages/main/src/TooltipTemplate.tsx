@@ -7,6 +7,7 @@ export default function TooltipTemplate(this: Tooltip) {
 			class="ui5-tooltip-popover"
 			opener={this.opener}
 			placement={this.placement}
+			horizontalAlign={this.horizontalAlign}
 			open={this._open}
 			onClose={this._onPopoverClose}
 		>

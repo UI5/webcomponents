@@ -10,6 +10,7 @@ export default function TitleTemplate(this: Title) {
 			{this._truncatedText &&
 				<Tooltip
 					text={this._truncatedText}
+					horizontalAlign="Start"
 					opener={this.getDomRef()}
 				/>
 			}
