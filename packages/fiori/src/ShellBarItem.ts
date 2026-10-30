@@ -72,7 +72,7 @@ class ShellBarItem extends UI5Element {
 	 * **Note:** The tooltip is shown when the user hovers over the item in the main shell bar area.
 	 * @default undefined
 	 * @public
-	 * @since 2.10.0
+	 * @since 2.29.0
 	 */
 	@property()
 	tooltip?: string;
