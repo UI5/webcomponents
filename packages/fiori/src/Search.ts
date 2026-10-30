@@ -298,9 +298,11 @@ class Search extends SearchField {
 		if (!appControlledOpen) {
 			this.open = this.open || (this._popoupHasAnyContent() && this._isTyping && innerInput!.value.length > 0);
 		} else if (!this.open) {
-			// The application force-closed the picker; reset the typing state so the
-			// internal auto-open logic does not immediately reopen it on next render.
-			this._isTyping = false;
+			if (!this._popoupHasAnyContent() || innerInput!.value.length === 0) {
+				// The application force-closed the picker; reset the typing state so the
+				// internal auto-open logic does not immediately reopen it on next render.
+				this._isTyping = false;
+			}
 		}
 
 		// If there is already a selection the autocomplete has already been performed
