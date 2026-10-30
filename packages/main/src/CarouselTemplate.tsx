@@ -17,6 +17,7 @@ export default function CarouselTemplate(this: Carousel) {
 			onMouseOut={this._onmouseout}
 			onMouseOver={this._onmouseover}
 			onTouchStart={this._ontouchstart}
+			onTouchEnd={this._ontouchend}
 			onMouseDown={this._onmousedown}
 		>
 			<div class={this.classes.viewport} part="content">
@@ -64,7 +65,6 @@ export default function CarouselTemplate(this: Carousel) {
 
 function arrowBack(this: Carousel) {
 	return <Icon name={slimArrowLeft}
-		tabindex={-1}
 		data-ui5-arrow-back
 		title={this.previousPageText}
 		mode="Decorative"
@@ -72,13 +72,12 @@ function arrowBack(this: Carousel) {
 			"ui5-carousel-navigation-button": true,
 			"ui5-carousel-navigation-button--hidden": !this.hasPrev
 		}}
-		onClick={this._navButtonClick}
+		onClick={this._onNavButtonClick}
 	/>;
 }
 
 function arrowForward(this: Carousel) {
 	return <Icon name={slimArrowRight}
-		tabindex={-1}
 		data-ui5-arrow-forward
 		title={this.nextPageText}
 		mode="Decorative"
@@ -86,7 +85,7 @@ function arrowForward(this: Carousel) {
 			"ui5-carousel-navigation-button": true,
 			"ui5-carousel-navigation-button--hidden": !this.hasNext
 		}}
-		onClick={this._navButtonClick}
+		onClick={this._onNavButtonClick}
 	/>;
 }
 
