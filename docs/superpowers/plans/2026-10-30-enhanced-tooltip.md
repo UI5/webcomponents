@@ -4,7 +4,7 @@
 
 **Goal:** Build a public, reusable `<ui5-tooltip>` web component that renders the OpenUI5 tooltip visual design via a wrapped `<ui5-popover>`, opening on hover/focus/long-press, and wire it into `<ui5-button>` and `<ui5-title>` as a direct replacement for the native `title` tooltip.
 
-**Architecture:** `<ui5-tooltip>` wraps `<ui5-popover>` (shown with arrow, no header/footer, overstyled to the OpenUI5 look) and renders its `text` directly plus a same-shadow-root `role="tooltip"` span for `aria-describedby`. A plain-class gesture helper attaches hover/focus/touch/Escape listeners to the resolved `opener` element and toggles the tooltip's reactive `_open`. Button embeds it driven by its `tooltip` property; Title embeds it conditionally on text truncation.
+**Architecture:** `<ui5-tooltip>` wraps `<ui5-popover>` (shown with arrow, no header/footer, overstyled to the OpenUI5 look) and renders its `text` directly. It is **visual + gesture only** and carries no ARIA — accessibility text stays on the host control (ARIA IDREFs can't cross shadow boundaries). A plain-class gesture helper attaches hover/focus/touch/Escape listeners to the resolved `opener` element and toggles the tooltip's reactive `_open`. Button embeds it driven by its `tooltip` property; Title embeds it conditionally on text truncation.
 
 **Tech Stack:** TypeScript, UI5 Web Components base (`UI5Element`, decorators, JSX renderer), `ui5-popover`, Cypress component tests.
 
@@ -15,12 +15,12 @@
 ## File Structure
 
 - Create `packages/main/src/Tooltip.ts` — the component: `text`, `opener`, `placement` props, `openTooltip()`/`closeTooltip()`/`isOpen()`, owns the gesture helper lifecycle and the reactive `_open`.
-- Create `packages/main/src/TooltipTemplate.tsx` — renders the wrapped `<Popover>` + the `role="tooltip"` ARIA span.
+- Create `packages/main/src/TooltipTemplate.tsx` — renders the wrapped `<Popover>` (visual only; no ARIA anchor).
 - Create `packages/main/src/TooltipGestures.ts` — plain class translating DOM gestures on the opener into open/close calls.
 - Create `packages/main/src/themes/Tooltip.css` — visual overrides (background, text, arrow, sizing).
 - Modify `packages/main/src/bundle.esm.ts` — register the new component.
-- Modify `packages/main/src/Button.ts` + `ButtonTemplate.tsx` — embed tooltip, wire `aria-describedby`, drop native `title`.
-- Modify `packages/main/src/Title.ts` + `TitleTemplate.tsx` — truncation detection + conditional tooltip, wire `aria-describedby`.
+- Modify `packages/main/src/Button.ts` + `ButtonTemplate.tsx` — embed visual tooltip, drop native `title` (ARIA stays on Button's existing name/description).
+- Modify `packages/main/src/Title.ts` + `TitleTemplate.tsx` — truncation detection + conditional visual tooltip (no ARIA wiring; the full text is already the element's content).
 - Create `packages/main/cypress/specs/Tooltip.cy.tsx` — component tests.
 - Modify `packages/main/cypress/specs/Button.cy.tsx` and `Title.cy.tsx` — integration tests (or add if cleaner).
 - Create `packages/main/test/pages/Tooltip.html` — manual demo page for browser iteration.
@@ -648,7 +648,7 @@ git commit -m "feat(ui5-tooltip): hover/focus/escape/activation gestures"
 
 ---
 
-## Task 4: ARIA anchor + same-shadow `aria-describedby` wiring (verified on Button)
+## Task 4: Button integration (visual tooltip, drop native `title`)
 
 **Files:**
 - Modify: `packages/main/src/Button.ts`
@@ -661,29 +661,24 @@ Append to `packages/main/cypress/specs/Button.cy.tsx` (inside the top-level `des
 
 ```tsx
 describe("Button enhanced tooltip", () => {
-	it("renders an enhanced tooltip and wires aria-describedby to a role=tooltip element", () => {
+	it("renders an enhanced (visual) tooltip reflecting the tooltip property", () => {
 		cy.mount(<Button id="b" tooltip="Save the document">Save</Button>);
 
-		cy.get("#b").shadow().find("[ui5-tooltip]").should("exist");
-
-		cy.get("#b").shadow().find("button").then($btn => {
-			const describedby = $btn.attr("aria-describedby");
-			expect(describedby, "aria-describedby present").to.be.a("string").and.not.be.empty;
-
-			// The referenced element is in the SAME shadow root and has role=tooltip.
-			const root = $btn[0].getRootNode() as ShadowRoot;
-			const ids = describedby!.split(/\s+/);
-			const anchor = ids
-				.map(id => root.getElementById(id))
-				.find(el => el && el.getAttribute("role") === "tooltip");
-			expect(anchor, "role=tooltip anchor resolvable in same root").to.exist;
-			expect(anchor!.textContent).to.contain("Save the document");
-		});
+		cy.get("#b")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("exist")
+			.and("have.attr", "text", "Save the document");
 	});
 
 	it("does not set the native title attribute", () => {
 		cy.mount(<Button id="b2" tooltip="No native title">Save</Button>);
 		cy.get("#b2").shadow().find("button").should("not.have.attr", "title");
+	});
+
+	it("renders no enhanced tooltip when there is no tooltip text", () => {
+		cy.mount(<Button id="b3">Save</Button>);
+		cy.get("#b3").shadow().find("[ui5-tooltip]").should("not.exist");
 	});
 });
 ```
@@ -693,32 +688,12 @@ describe("Button enhanced tooltip", () => {
 Run: `cd packages/main && yarn test:cypress:single cypress/specs/Button.cy.tsx`
 Expected: FAIL — no `[ui5-tooltip]` in Button shadow, native `title` still present.
 
-- [ ] **Step 3: Add a fixed anchor id + computed describedby to `Button.ts`**
+- [ ] **Step 3: Embed the tooltip in `ButtonTemplate.tsx` (visual only — no ARIA wiring)**
 
-In `packages/main/src/Button.ts`, add a getter for the ARIA anchor id and one
-for the `aria-describedby` value (place near the other getters, after the
-`buttonTitle` logic). The anchor id is a fixed, button-id-scoped string so the
-host and the tooltip agree on it without cross-component querying:
-
-```ts
-	// Fixed id for the enhanced tooltip's ARIA anchor, scoped to this button.
-	get _tooltipAnchorId(): string {
-		return `${this._id}-tooltip-aria`;
-	}
-
-	get _ariaDescribedByTooltip(): string | undefined {
-		// The enhanced tooltip renders its role="tooltip" anchor with this id
-		// inside the SAME shadow root, so a same-root id reference resolves.
-		return this.buttonTitle ? this._tooltipAnchorId : undefined;
-	}
-```
-
-> `_id` is an auto-generated `ui5wc_N` value on `UI5Element`; it does NOT follow
-> a template-assigned `id` attribute. So the host must NOT try to derive the
-> anchor id from the tooltip's own `_id`. Instead it passes the id down via the
-> tooltip's public `ariaAnchorId` property (Step 4), keeping both sides in sync.
-
-- [ ] **Step 4: Embed the tooltip in `ButtonTemplate.tsx` and wire aria-describedby**
+The `<ui5-tooltip>` is visual + gesture only; it carries no ARIA. Button already
+exposes its text to screen readers via its existing `aria-label` (icon-only) and
+`aria-description` (`ariaDescriptionText`), both rendered in Button's own shadow
+root — do NOT add `aria-describedby` and do NOT change those.
 
 In `packages/main/src/ButtonTemplate.tsx`:
 
@@ -728,44 +703,46 @@ In `packages/main/src/ButtonTemplate.tsx`:
 import Tooltip from "./Tooltip.js";
 ```
 
-2. Replace `title={this.buttonTitle}` on the `<button>` with an `aria-describedby`:
+2. REMOVE the `title={this.buttonTitle}` line from the inner `<button>`. Do not
+   replace it with anything — Button's existing `aria-label`/`aria-description`
+   stay as they are.
 
-```tsx
-			aria-describedby={this._ariaDescribedByTooltip}
-```
-
-(Remove the `title={this.buttonTitle}` line.)
-
-3. After the closing `</button>` (and before `{this.loading && ...}` or at the end of the fragment), add the embedded tooltip, rendered only when there is tooltip text. Pass the anchor id down so the tooltip renders its `role="tooltip"` span with exactly that id:
+3. After the closing `</button>` (and before `{this.loading && ...}` or at the
+   end of the fragment), embed the tooltip, rendered only when there is text:
 
 ```tsx
 		{this.buttonTitle &&
 			<Tooltip
 				text={this.buttonTitle}
-				ariaAnchorId={this._tooltipAnchorId}
 				opener={this.getFocusDomRef()}
 			/>
 		}
 ```
 
 > `getFocusDomRef()` returns the inner `<button>`. The tooltip's gesture helper
-> and popover both dock to it. Because the tooltip is in Button's shadow root,
-> its anchor span (id = `_tooltipAnchorId`) is reachable by the button's
-> `aria-describedby` in the same root.
+> and popover both dock to it. No `Button.ts` change is required for ARIA.
 
-- [ ] **Step 5: Run test to verify it passes**
+- [ ] **Step 4: Run test to verify it passes**
 
 Run: `cd packages/main && yarn test:cypress:single cypress/specs/Button.cy.tsx`
-Expected: PASS for the two new tests. Run the full Button spec to catch regressions:
-`cd packages/main && yarn test:cypress:single cypress/specs/Button.cy.tsx`
+Expected: PASS for the three new tests. Run the full Button spec to catch regressions.
 
-> If pre-existing Button tests assert on `title=` attribute, update them to the new tooltip wiring as part of this task (search the spec for `"title"`).
+> If pre-existing Button tests assert on the `title` attribute (search the spec
+> for `attr("title")` / `"title"`), update them: the native `title` is gone.
+> Assert instead on the embedded `[ui5-tooltip]` `text` attribute, or on Button's
+> accessible name/description, whichever matches the test's original intent. If a
+> test's intent is unclear, STOP and report rather than guessing.
+
+- [ ] **Step 5: Typecheck + Tooltip regression**
+
+Run `yarn ts` from the repo root (expect clean). Then re-run the Tooltip spec:
+`cd packages/main && yarn test:cypress:single cypress/specs/Tooltip.cy.tsx` (expect 8 passing).
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add packages/main/src/Button.ts packages/main/src/ButtonTemplate.tsx packages/main/cypress/specs/Button.cy.tsx
-git commit -m "feat(ui5-button): use enhanced tooltip with aria-describedby anchor"
+git add packages/main/src/ButtonTemplate.tsx packages/main/cypress/specs/Button.cy.tsx
+git commit -m "feat(ui5-button): use enhanced visual tooltip, drop native title"
 ```
 
 ---
@@ -778,20 +755,9 @@ git commit -m "feat(ui5-button): use enhanced tooltip with aria-describedby anch
 
 - [ ] **Step 1: Write the full styling**
 
-Replace `packages/main/src/themes/Tooltip.css` with the OpenUI5-matched overrides. These target the wrapped popover via `::part` and the slotted content. Keep the ARIA-hidden span rule.
+Replace `packages/main/src/themes/Tooltip.css` with the OpenUI5-matched overrides. These target the wrapped popover via `::part` and the slotted content. Keep the `.ui5-tooltip-suppress-selection` rule.
 
 ```css
-/* ARIA anchor: visually hidden, screen-reader only. */
-.ui5-tooltip-aria-text {
-	position: absolute;
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
 /* Suppress long-press text selection / iOS callout on the opener during touch. */
 .ui5-tooltip-suppress-selection {
 	-webkit-touch-callout: none;
@@ -861,7 +827,7 @@ With the dev server running (`yarn start` from repo root), open `http://localhos
 - dark bubble (`--sapIndicationColor_9_Background`), white text, small font, ~0.25rem radius;
 - arrow matches the bubble color and points at the opener;
 - opens on hover after delay, on keyboard focus (Tab to the button), closes on Escape/mouseleave;
-- `aria-describedby` resolves (DevTools: inspect the button, follow the id to the `role="tooltip"` span in the same shadow root).
+- the tooltip is visual-only — confirm (DevTools) there is NO `role="tooltip"` element and the button exposes its text via its own `aria-label`/`aria-description`.
 
 Fix CSS until it matches. This step is iterative and has no pass/fail command — it is visual.
 
@@ -896,11 +862,6 @@ describe("Title enhanced tooltip (truncation)", () => {
 
 		cy.get("#t").shadow().find("[ui5-tooltip]").should($tt => {
 			expect($tt.attr("text")).to.contain("A very long title");
-		});
-
-		cy.get("#t").shadow().find("button, .ui5-title-root").then($root => {
-			const describedby = $root.attr("aria-describedby");
-			expect(describedby, "aria-describedby present when truncated").to.be.a("string").and.not.be.empty;
 		});
 	});
 
@@ -973,17 +934,10 @@ import Tooltip from "./Tooltip.js";
 		const truncated = root.scrollWidth > root.clientWidth;
 		this._truncatedText = truncated ? (this.textContent || "").trim() : "";
 	}
-
-	get _tooltipAnchorId(): string {
-		return `${this._id}-tooltip-aria`;
-	}
-
-	get _ariaDescribedByTooltip(): string | undefined {
-		return this._truncatedText ? this._tooltipAnchorId : undefined;
-	}
 ```
 
 > `getDomRef()` returns the component root; `.ui5-title-root` is the `<h{n}>` element. Confirm `getDomRef` exists on `UI5Element` (it does — used across the codebase).
+> No ARIA wiring is needed: the full title text is already the element's own text content and in the accessible tree. The tooltip is visual-only.
 
 - [ ] **Step 4: Embed the tooltip in `TitleTemplate.tsx`**
 
@@ -995,18 +949,7 @@ In `packages/main/src/TitleTemplate.tsx`:
 import Tooltip from "./Tooltip.js";
 ```
 
-2. Add `aria-describedby` to each `<h{n} class="ui5-title-root">` opening tag. Since there are six, add it to the shared attribute set. Modify the `title` function so every heading gets `aria-describedby={this._ariaDescribedByTooltip}`. Example for H1 (apply to all six and the default):
-
-```tsx
-		case "H1":
-			return (
-				<h1 class="ui5-title-root" aria-describedby={this._ariaDescribedByTooltip}>
-					{ titleInner.call(this) }
-				</h1>
-			);
-```
-
-3. In the outer fragment returned by `TitleTemplate`, add the embedded tooltip after the title, rendered only when truncated:
+2. In the outer fragment returned by `TitleTemplate`, add the embedded tooltip after the title, rendered only when truncated. No `aria-describedby` on the headings:
 
 ```tsx
 export default function TitleTemplate(this: Title) {
@@ -1016,7 +959,6 @@ export default function TitleTemplate(this: Title) {
 			{this._truncatedText &&
 				<Tooltip
 					text={this._truncatedText}
-					ariaAnchorId={this._tooltipAnchorId}
 					opener={this.getDomRef()?.querySelector(".ui5-title-root") as HTMLElement}
 				/>
 			}
@@ -1121,7 +1063,7 @@ git commit -m "docs(ui5-tooltip): add basic website sample"
 
 ## Self-Review Notes
 
-- **Spec coverage:** component + API (Tasks 1–3), popover wrap (Task 1), ARIA anchor / same-shadow `aria-describedby` (Task 4), gestures incl. text-selection suppression (Task 3/5 CSS), focus-guard noted as TODO (Task 3), visual design (Task 5), Button integration dropping native `title` (Task 4), Title truncation-only tooltip (Task 6), tests + demo page + sample (Tasks 2–7). All spec sections map to a task.
+- **Spec coverage:** component + API (Tasks 1–3), popover wrap (Task 1), visual-only tooltip / host owns ARIA (Task 1 refactor + Task 4), gestures incl. text-selection suppression (Task 3/5 CSS), focus-guard noted as TODO (Task 3), visual design (Task 5), Button integration dropping native `title` (Task 4), Title truncation-only tooltip (Task 6), tests + demo page + sample (Tasks 2–7). All spec sections map to a task.
 - **Open verification items flagged in spec** (cross-shadow ARIA, popover arrow restyle, popover min-size) are exercised in Task 4 test and Task 5 browser step; if the popover arrow can't be recolored via parts, the Task 5 note authorizes a tooltip-specific arrow fallback.
-- **Type consistency:** `_tooltipAnchorId`, `_ariaDescribedByTooltip`, `ariaAnchorId` (public Tooltip prop), `_truncatedText`, `openTooltip`/`closeTooltip`/`isOpen` are used consistently across Tasks 1–6.
-- **Risk — id determinism (RESOLVED):** `_id` is an auto-generated `ui5wc_N` on `UI5Element` and does NOT follow a template-assigned `id`. So the host does not derive the anchor id from the tooltip; instead `<ui5-tooltip>` exposes a public `ariaAnchorId` input, and both Button and Title pass their own `_tooltipAnchorId` (= `${_id}-tooltip-aria`) down to it AND reference the same id via `aria-describedby`. Tooltip's `_anchorId` getter uses `ariaAnchorId` when set, falling back to `${_id}-aria`.
+- **Type consistency:** `_truncatedText`, `openTooltip`/`closeTooltip`/`isOpen`, `text`/`opener`/`placement`/`delay` are used consistently across Tasks 1–6.
+- **ARIA approach (REVISED):** The tooltip is visual-only — no `role="tooltip"` anchor, no `ariaAnchorId`, no `aria-describedby`. ARIA IDREFs do not cross shadow boundaries, so an anchor inside the tooltip's own shadow root is unreachable from a host. Hosts keep exposing the text via their existing accessible name/description (Button: `aria-label`/`aria-description`; Title: own text content).
