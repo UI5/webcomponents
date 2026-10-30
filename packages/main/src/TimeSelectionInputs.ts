@@ -15,6 +15,9 @@ import {
 	TIMEPICKER_INPUTS_ENTER_HOURS,
 	TIMEPICKER_INPUTS_ENTER_MINUTES,
 	TIMEPICKER_INPUTS_ENTER_SECONDS,
+	TIMEPICKER_HOURS_LABEL_SHORT,
+	TIMEPICKER_MINUTES_LABEL_SHORT,
+	TIMEPICKER_SECONDS_LABEL_SHORT,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -59,6 +62,10 @@ class TimeSelectionInputs extends TimePickerInternals {
 	@property()
 	_editedInputValue?: string;
 
+	/** When true, shows visible labels above each input (used in keyboard/input mode on mobile) */
+	@property({ type: Boolean, noAttribute: true })
+	_showLabels = false;
+
 	get enterHoursLabel() {
 		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_INPUTS_ENTER_HOURS);
 	}
@@ -69,6 +76,18 @@ class TimeSelectionInputs extends TimePickerInternals {
 
 	get enterSecondsLabel() {
 		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_INPUTS_ENTER_SECONDS);
+	}
+
+	get hoursShortLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_HOURS_LABEL_SHORT);
+	}
+
+	get minutesShortLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_MINUTES_LABEL_SHORT);
+	}
+
+	get secondsShortLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_SECONDS_LABEL_SHORT);
 	}
 
 	get _numberType() {
