@@ -780,4 +780,14 @@ describe("Button enhanced tooltip", () => {
 		cy.mount(<Button id="b3">Save</Button>);
 		cy.get("#b3").shadow().find("[ui5-tooltip]").should("not.exist");
 	});
+
+	it("icon-only button exposes the tooltip as its accessible name", () => {
+		cy.mount(<Button id="b4" icon="home" tooltip="Go home"></Button>);
+
+		// With the native title gone, aria-label must carry the accessible name.
+		cy.get("#b4")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Go home");
+	});
 });
