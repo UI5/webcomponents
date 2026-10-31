@@ -34,6 +34,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	_renderNavigated = false;
 
 	@property({ type: Boolean, noAttribute: true })
+	_renderHighlight = false;
+
+	@property({ type: Boolean, noAttribute: true })
 	_alternate = false;
 
 	@property({ type: Boolean })
@@ -47,6 +50,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	@query("#navigated-cell")
 	_navigatedCell?: HTMLElement;
+
+	@query("#highlight-cell")
+	_highlightCell?: HTMLElement;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -153,7 +159,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _stickyCells() {
-		return [this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
+		return [this._highlightCell, this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
 	}
 }
 
