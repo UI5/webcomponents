@@ -1562,7 +1562,7 @@ describe("Appearance view", () => {
 });
 
 describe("Selection accessibility", () => {
-    it("exposes selected state via aria-selected and hidden describedby text on dialog items", () => {
+    it("exposes selected state via hidden describedby text on dialog items", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance" selected>
                 <UserSettingsView text="Setting1"></UserSettingsView>
@@ -1574,9 +1574,9 @@ describe("Selection accessibility", () => {
         cy.get("[ui5-user-settings-dialog]").as("settings");
         cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").as("items");
 
-        cy.get("@items").first().shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@items").first().shadow().find("li").should("not.have.attr", "aria-selected");
         cy.get("@items").first().shadow().find(".ui5-hidden-text").should("contain.text", "Selected");
-        cy.get("@items").last().shadow().find("li").should("have.attr", "aria-selected", "false");
+        cy.get("@items").last().shadow().find("li").should("not.have.attr", "aria-selected");
         cy.get("@items").last().shadow().find(".ui5-hidden-text").should("contain.text", "Not Selected");
     });
 
@@ -1638,7 +1638,7 @@ describe("Selection accessibility", () => {
         // Move focus to the non-selected item and select it with the keyboard.
         cy.get("@secondItem").focus();
         cy.realPress("Enter");
-        cy.get("@secondItem").shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@secondItem").shadow().find("li").should("not.have.attr", "aria-selected");
         cy.get("@liveRegion").should("contain.text", "Selected");
     });
 
@@ -1660,8 +1660,8 @@ describe("Selection accessibility", () => {
 
         // Focus moved to the second item, but selection stays on the first (Single, not SingleAuto).
         cy.get("@secondItem").should("be.focused");
-        cy.get("@firstItem").shadow().find("li").should("have.attr", "aria-selected", "true");
-        cy.get("@secondItem").shadow().find("li").should("have.attr", "aria-selected", "false");
+        cy.get("@firstItem").shadow().find("li").should("not.have.attr", "aria-selected");
+        cy.get("@secondItem").shadow().find("li").should("not.have.attr", "aria-selected");
     });
 
     it("does not announce when selection-change on the dialog is prevented", () => {
@@ -1700,7 +1700,7 @@ describe("Selection accessibility", () => {
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("items");
 
         // Selected theme exposes "Selected"; the grouped one exposes "Not Selected".
-        cy.get("@items").first().shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@items").first().shadow().find("li").should("not.have.attr", "aria-selected");
         cy.get("@items").first().shadow().find(".ui5-hidden-text").should("contain.text", "Selected");
         cy.get("@items").eq(1).shadow().find(".ui5-hidden-text").should("contain.text", "Not Selected");
 

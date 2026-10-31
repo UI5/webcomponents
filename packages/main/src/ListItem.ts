@@ -523,13 +523,16 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get _accInfo(): AccInfo {
+		const role = this.listItemAccessibleRole;
+		const supportsAriaSelected = role === "option" || role === "treeitem";
+
 		return {
-			role: this.listItemAccessibleRole,
+			role,
 			ariaExpanded: undefined,
 			ariaLevel: undefined,
 			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
 			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON),
-			ariaSelected: this._ariaSelected,
+			ariaSelected: supportsAriaSelected ? this._ariaSelected : undefined,
 			ariaSelectedText: this.ariaSelectedText,
 			ariaHaspopup: this.accessibilityAttributes.hasPopup,
 			setsize: this.accessibilityAttributes.ariaSetsize,
