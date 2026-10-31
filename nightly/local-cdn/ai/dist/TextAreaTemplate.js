@@ -1,0 +1,13 @@
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "@ui5/webcomponents-base/jsx-runtime";
+import WritingAssistant from "./WritingAssistant.js";
+import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
+import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
+export default function TextAreaTemplate() {
+    return (_jsxs("div", { class: "ui5-ai-textarea-root", children: [_jsxs("div", { class: this.classes.root, onFocusIn: this._onfocusin, onFocusOut: this._onfocusout, children: [_jsxs("div", { class: "ui5-textarea-wrapper", children: [this.growing &&
+                                _jsx("div", { id: `${this._id}-mirror`, class: "ui5-textarea-mirror", "aria-hidden": "true", children: this._mirrorText.map(mirrorText => {
+                                        return (_jsxs(_Fragment, { children: [mirrorText.text, _jsx("br", {})] }));
+                                    }) }), _jsx(BusyIndicator, { id: `${this._id}-busyIndicator`, active: this.loading, class: "ui5-textarea-busy-indicator", children: _jsx("textarea", { id: `${this._id}-inner`, class: "ui5-textarea-inner", part: "textarea", placeholder: this.placeholder, disabled: this.disabled, readonly: this.readonly, "aria-label": this._ariaLabel, "aria-describedby": this.ariaDescribedBy, "aria-invalid": this._ariaInvalid, "aria-required": this.required, maxlength: this._exceededTextProps.calcedMaxLength, value: this.value, "data-sap-focus-ref": true, onInput: this._oninput, onChange: this._onchange, onKeyUp: this._onkeyup, onKeyDown: this._onkeydown, onSelect: this._onselect, onScroll: this._onscroll }) }), _jsx("div", { part: "footer", children: _jsx("slot", { name: "footer", children: _jsx(WritingAssistant, { loading: this.loading, currentVersion: this.currentVersion, totalVersions: this.totalVersions, promptDescription: this.promptDescription, focused: this.focused, onButtonClick: this._handleAIButtonClick, onStopGeneration: this.handleStopGeneration, onVersionChange: this._handleVersionChange }) }) })] }), this.showExceededText &&
+                        _jsx("span", { class: "ui5-textarea-exceeded-text", children: this._exceededTextProps.exceededText }), this.hasValueState &&
+                        _jsx("span", { id: `${this._id}-valueStateDesc`, class: "ui5-hidden-text", children: this.ariaValueStateHiddenText })] }), TextAreaPopoverTemplate.call(this), _jsx("div", { "aria-live": "polite", "aria-atomic": "true", class: "ui5-hidden-text", children: this.loading ? this.promptDescription : "" }), _jsx("div", { id: "ai-menu-wrapper", children: _jsx("slot", { name: "menu" }) })] }));
+}
+//# sourceMappingURL=TextAreaTemplate.js.map

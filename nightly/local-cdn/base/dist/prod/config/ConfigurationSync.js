@@ -1,0 +1,2 @@
+"use strict";import o from"../getSharedResource.js";import s from"../EventProvider.js";const g=()=>o("ConfigChange.eventProvider",new s),r=()=>o("ConfigChange.values",{}),a="configChange",t=new Set,d=(n,e)=>{r()[n]=e,t.add(n);try{g().fireEvent(a,{name:n,value:e})}finally{t.delete(n)}},C=(n,e)=>{g().attachEvent(a,i=>{i.name===n&&!t.has(n)&&e(i.value)})},f=n=>r()[n];export{d as fireConfigChange,C as attachConfigChange,f as getSharedValue};
+//# sourceMappingURL=ConfigurationSync.js.map

@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_ui5_webcomponents_website=globalThis.webpackChunk_ui5_webcomponents_website||[]).push([[81903],{1912(e){e.exports=JSON.parse('{"blogBasePath":"/webcomponents/nightly/blog","blogTitle":"Blog","authorsListPath":"/webcomponents/nightly/blog/authors"}')}}]);
