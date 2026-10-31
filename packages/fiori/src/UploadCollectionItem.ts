@@ -480,6 +480,18 @@ class UploadCollectionItem extends ListItem {
 	get showEditButton() {
 		return this.type === ListItemType.Detail;
 	}
+
+	/**
+	 * Override to avoid rendering invalid ARIA attribute on role="listitem".
+	 * According to WAI-ARIA, aria-selected is only valid on roles:
+	 * gridcell, option, row, tab, columnheader, rowheader, treeitem.
+	 */
+	get _accInfo() {
+		return {
+			...super._accInfo,
+			ariaSelected: undefined,
+		};
+	}
 }
 
 UploadCollectionItem.define();
