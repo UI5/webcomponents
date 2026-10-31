@@ -287,7 +287,7 @@ class Table extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 		invalidateOnChildChange: {
-			properties: ["navigated", "position"],
+			properties: ["navigated", "position", "highlight"],
 			slots: false,
 		},
 	})
@@ -421,6 +421,9 @@ class Table extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_renderNavigated = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_renderHighlight = false;
+
 	@query("[ui5-drop-indicator]")
 	dropIndicatorDOM!: DropIndicator;
 
@@ -478,17 +481,20 @@ class Table extends UI5Element {
 		let alternateIndex = 0;
 		const hasFlexibleColumns = this._hasFlexibleColumns;
 		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
+		this._renderHighlight = this.rows.some(row => !row.isGroupRow() && row._hasHighlight);
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
 				row._rowActionCount = rowActionCount;
 				row._renderDummyCell = !hasFlexibleColumns;
 				row._renderNavigated = this._renderNavigated;
+				row._renderHighlight = this._renderHighlight;
 				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
 			} else {
 				row._rowActionCount = 0;
 				row._renderDummyCell = !hasFlexibleColumns && !this._hasPopin;
 				row._renderNavigated = false;
+				row._renderHighlight = false;
 				row._alternate = false;
 				alternateIndex = 1;
 			}
@@ -682,6 +688,11 @@ class Table extends UI5Element {
 
 		const widths = [];
 		const visibleHeaderCells = this.headerRow[0]._visibleCells;
+
+		// Highlight Cell Width
+		if (this._renderHighlight) {
+			widths.push(`var(--_ui5_table_highlight_cell_width)`);
+		}
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {
