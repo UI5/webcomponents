@@ -1242,3 +1242,24 @@ describe("FormUtils", () => {
 		cy.get("#gr3").should("have.prop", "colsXl", 2);
 	});
 });
+
+describe("FormItem item spacing", () => {
+	it("applies 3px vertical padding to compact Large items", () => {
+		cy.mount(
+			<div style="--ui5_content_density: compact">
+				<Form item-spacing="Large">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Input value="Red Point Stores" />
+					</FormItem>
+				</Form>
+			</div>
+		);
+
+		cy.get("[ui5-form-item]")
+			.shadow()
+			.find(".ui5-form-item-layout")
+			.should("have.css", "padding-top", "3px")
+			.and("have.css", "padding-bottom", "3px");
+	});
+});
