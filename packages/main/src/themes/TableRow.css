@@ -25,6 +25,7 @@
 
 	#actions-cell,
 	#navigated-cell,
+	#highlight-cell,
 	#selection-cell {
 		clip-path: inset(0px 0px 1px 0px); /* selection bottom border should not overlap with sticky cells */
 	}
@@ -64,45 +65,82 @@
 	background: var(--sapList_Active_Background);
 }
 
+#actions-cell {
+	gap: var(--_ui5_table_row_actions_gap);
+}
+
 #popin-cell {
 	padding-inline-start: var(--_ui5_first_table_cell_horizontal_padding);
 	align-content: initial;
 	flex-direction: column;
 	grid-column: 1 / -1;
+	grid-row: 2;
 	border-top: none;
 }
 
-#navigated-cell {
-	overflow: visible;
-	grid-row: span 2;
+:host([_has-popin]) {
+	#highlight-cell,
+	#navigated-cell {
+		grid-row: span 2;
+	}
 }
 
-:host([navigated]) #navigated {
+#highlight {
+	position: absolute;
+	inset: 0;
+	width: calc(var(--_ui5_table_highlight_cell_width) - 1px);
+}
+
+#navigated {
 	position: absolute;
 	inset: 0px 0px 0px 1px;
+	width: calc(var(--_ui5_table_navigated_cell_width) - 1px);
 	background: var(--sapList_SelectionBorderColor);
 }
 
-:host([navigated][tabindex]:focus) {
-	#navigated {
-		transform: translateX(calc(var(--_ui5_table_navigated_cell_width) * -1));
+:host([tabindex]:focus) {
+	#navigated,
+	#highlight {
 		bottom: 3px;
 		top: 2px;
 	}
-	#navigated:dir(rtl) {
-		transform: translateX(var(--_ui5_table_navigated_cell_width));
+	#navigated {
+		inset-inline-start: -3px;
+	}
+	#highlight {
+		inset-inline-start: 4px;
 	}
 }
 
-:host([navigated]) #popin-cell {
-	grid-column: 1 / -2;
+#navigated-cell ~ #popin-cell {
+	grid-column-end: -2;
+}
+
+#highlight-cell ~ #popin-cell,
+#selection-cell ~ #popin-cell {
+	grid-column-start: 2;
+}
+
+#highlight-cell ~ #selection-cell ~ #popin-cell {
+	grid-column-start: 3;
 }
 
 #selection-cell ~ #popin-cell {
-	grid-column-start: 2;
 	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
 }
 
-#actions-cell {
-	gap: var(--_ui5_table_row_actions_gap);
-}
+:host([highlight="Negative"]) #highlight { background: var(--sapErrorBorderColor); }
+:host([highlight="Critical"]) #highlight { background: var(--sapWarningBorderColor); }
+:host([highlight="Positive"]) #highlight { background: var(--sapSuccessBorderColor); }
+:host([highlight="Information"]) #highlight { background: var(--sapInformationBorderColor); }
+
+:host([highlight="Indication01"]) #highlight { background: var(--sapIndicationColor_1); }
+:host([highlight="Indication02"]) #highlight { background: var(--sapIndicationColor_2); }
+:host([highlight="Indication03"]) #highlight { background: var(--sapIndicationColor_3); }
+:host([highlight="Indication04"]) #highlight { background: var(--sapIndicationColor_4); }
+:host([highlight="Indication05"]) #highlight { background: var(--sapIndicationColor_5); }
+:host([highlight="Indication06"]) #highlight { background: var(--sapIndicationColor_6); }
+:host([highlight="Indication07"]) #highlight { background: var(--sapIndicationColor_7); }
+:host([highlight="Indication08"]) #highlight { background: var(--sapIndicationColor_8); }
+:host([highlight="Indication09"]) #highlight { background: var(--sapIndicationColor_9); }
+:host([highlight="Indication10"]) #highlight { background: var(--sapIndicationColor_10); }
