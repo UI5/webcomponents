@@ -7,3 +7,5 @@ test/
 main.*js
 config/
 cypress/
+# Include generated consumer guidance in the npm package.
+!llms.txt
