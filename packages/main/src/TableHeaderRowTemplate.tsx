@@ -4,6 +4,15 @@ import type TableHeaderRow from "./TableHeaderRow.js";
 export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColIndex: number = 1) {
 	return (
 		<>
+			{ this._renderHighlight &&
+				<TableHeaderCell id="highlight-cell"
+					data-excluded-from-navigation
+					aria-hidden={true}
+					role="none"
+				>
+				</TableHeaderCell>
+			}
+
 			{ this._hasSelector &&
 				<TableHeaderCell id="selection-cell"
 					aria-selected={this._isSelected}
@@ -47,7 +56,6 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 					aria-hidden={true}
 					role="none"
 				>
-					<div id="navigated"></div>
 				</TableHeaderCell>
 			}
 

@@ -5,6 +5,16 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 	const OverflowButton = this._overflowButtonComponent;
 	return (
 		<>
+			{ this._renderHighlight &&
+				<TableCell id="highlight-cell"
+					data-excluded-from-navigation
+					aria-hidden={true}
+					role="none"
+				>
+					{ this._hasHighlight && <div id="highlight"></div> }
+				</TableCell>
+			}
+
 			{ this._hasSelector &&
 				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}
@@ -65,7 +75,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					aria-hidden={true}
 					role="none"
 				>
-					<div id="navigated"></div>
+					{ this.navigated && <div id="navigated"></div> }
 				</TableCell>
 			}
 

@@ -8,6 +8,7 @@
 	break-inside: avoid;
 }
 
+#highlight-cell,
 #selection-cell,
 #actions-cell,
 #navigated-cell {
@@ -16,11 +17,24 @@
 	z-index: 1;
 }
 
-#selection-cell {
-	padding: 0;
-	inset-inline-start: 0;
+#highlight-cell,
+#selection-cell,
+#navigated-cell {
 	min-width: auto;
+	padding: 0;
+}
+
+#highlight-cell,
+#selection-cell {
+	inset-inline-start: 0;
+}
+
+#selection-cell {
 	justify-content: center;
+}
+
+#highlight-cell + #selection-cell {
+	inset-inline-start: var(--_ui5_table_highlight_cell_width);
 }
 
 ::slotted([ui5-table-cell-base]:first-of-type) {
@@ -31,18 +45,13 @@
 	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
 }
 
-#actions-cell {
+#actions-cell,
+#navigated-cell {
 	inset-inline-end: 0;
 }
 
 #actions-cell:has(+ #navigated-cell) {
 	inset-inline-end: var(--_ui5_table_navigated_cell_width);
-}
-
-#navigated-cell {
-	inset-inline-end: 0;
-	min-width: 0;
-	padding: 0;
 }
 
 #dummy-cell {
@@ -64,14 +73,23 @@
 
 	#selection-cell,
 	#actions-cell{
-		clip-path: inset(var(--sapContent_FocusWidth)); /* focus outline should not overlap sticky cells */
+		clip-path: inset(3px); /* focus outline should not overlap sticky cells */
 	}
 
 	#navigated-cell {
+		overflow: visible;
 		clip-path: inset(3px 4px 3px -4px);
 	}
 	#navigated-cell:dir(rtl) {
 		clip-path: inset(3px -4px 3px 4px);
+	}
+
+	#highlight-cell {
+		overflow: visible;
+		clip-path: inset(3px -2px 2px 2px);
+	}
+	#highlight-cell:dir(rtl) {
+		clip-path: inset(3px 2px 2px -2px);
 	}
 }
 
@@ -102,12 +120,14 @@
 		box-shadow: none;
 	}
 
+	#highlight-cell,
 	#selection-cell,
 	#actions-cell,
 	#navigated-cell {
 		clip-path: none;
 	}
 
+	#highlight,
 	#navigated {
 		top: 3px;
 	}

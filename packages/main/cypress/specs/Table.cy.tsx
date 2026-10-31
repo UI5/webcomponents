@@ -404,6 +404,39 @@ describe("Table - Horizontal Scrolling", () => {
 	});
 });
 
+describe("Table Row - Highlight", () => {
+	it("renders the indicator only for highlighted rows and reacts to changes", () => {
+		cy.mount(
+			<Table id="table1">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1" highlight="Negative">
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+				<TableRow id="row2">
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#row1").shadow().find("#highlight").should($highlight => {
+			expect(getComputedStyle($highlight[0]).backgroundColor).to.not.equal(TRANSPARENT);
+		});
+		cy.get("#row2").shadow().find("#highlight").should("not.exist");
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_width)");
+		});
+
+		cy.get("#row1").invoke("attr", "highlight", "None");
+		cy.get("#row1").shadow().find("#highlight").should("not.exist");
+		cy.get("#row1").shadow().find("#highlight-cell").should("not.exist");
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.not.include("table_highlight_cell_width)");
+		});
+	});
+});
+
 describe("Table - Slot forwarding", () => {
 	beforeEach(() => {
 		cy.on("uncaught:exception", () => false);
