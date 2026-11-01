@@ -329,7 +329,8 @@ slot[name="profile"] {
 
 /* Responsive padding per breakpoint */
 :host([breakpoint-size="S"]) {
-	padding: 0 1rem;
+	padding: 0 0.875rem;
+	--ui5_shellbar_gap: 0.25rem;
 }
 
 :host([breakpoint-size="M"]) {
