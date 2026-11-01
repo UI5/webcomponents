@@ -343,6 +343,11 @@ class PopoverResize {
 		const isResizingFromTop = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
 			|| resizeHandlePlacement === ResizeHandlePlacement.TopRight;
 
+		const opener = popover.getOpenerHTMLElement(popover.opener);
+		const openerRect = opener?.getBoundingClientRect();
+		const actualPlacement = openerRect ? popover.getActualPlacement(openerRect) : popover.actualPlacement;
+		const isVerticalPlacement = actualPlacement === PopoverActualPlacement.Top || actualPlacement === PopoverActualPlacement.Bottom;
+
 		// Calculate width changes
 		if (isResizingFromLeft) {
 			// Resizing from left edge - width increases when moving left (negative delta)
@@ -382,7 +387,11 @@ class PopoverResize {
 				maxWidthFromRight,
 			);
 
-			this._currentDeltaX = (initialBoundingRect.width - newWidth) / 2;
+			if (isVerticalPlacement) {
+				this._currentDeltaX = 0;
+			} else {
+				this._currentDeltaX = (initialBoundingRect.width - newWidth) / 2;
+			}
 		}
 
 		// Calculate height changes
@@ -424,7 +433,13 @@ class PopoverResize {
 				maxHeightFromBottom,
 			);
 
-			this._currentDeltaY = (initialBoundingRect.height - newHeight) / 2;
+			const isHorizontalPlacement = actualPlacement === PopoverActualPlacement.Left || actualPlacement === PopoverActualPlacement.Right;
+
+			if (isHorizontalPlacement) {
+				this._currentDeltaY = 0;
+			} else {
+				this._currentDeltaY = (initialBoundingRect.height - newHeight) / 2;
+			}
 		}
 
 		this._currentDeltaX += this._totalDeltaX || 0;
