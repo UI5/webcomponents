@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>data-ui5-tooltip sample</title>
+	<script type="module" src="../../src/Button.ts"></script>
+	<script type="module" src="../../src/Title.ts"></script>
+	<script type="module" src="../../src/Tooltip.ts"></script>
+	<script type="module">
+		import { startDataTooltips } from "../../src/samples/DataTooltip.ts";
+		startDataTooltips();
+	</script>
+	<style>
+		body { padding: 4rem; font-family: sans-serif; display: flex; flex-direction: column; gap: 2rem; align-items: flex-start; }
+	</style>
+</head>
+<body>
+	<!-- SAMPLE: no <ui5-tooltip>, no opener wiring. Just the magic attribute. -->
+
+	<ui5-title data-ui5-tooltip="Overview of all reports">Reports</ui5-title>
+
+	<ui5-button data-ui5-tooltip="Save the current document">Save</ui5-button>
+
+	<ui5-button icon="edit" data-ui5-tooltip="Edit"></ui5-button>
+
+	<!-- Works on a plain element / sub-element too -->
+	<span data-ui5-tooltip="Drag to reorder" style="cursor: grab; font-size: 1.5rem;">⠿</span>
+</body>
+</html>
