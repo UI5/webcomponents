@@ -29,18 +29,23 @@ export default function SideNavigationSubItemTemplate(this: SideNavigationSubIte
 				{this.icon &&
 					<Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text" id={this._textId} dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
-				{this.hasTag &&
-					<div id={this._tagId} class="ui5-sn-item-tag-slot">
-						<slot name="tag"></slot>
-					</div>
-				}
+				<div class="ui5-sn-item-text-tag-container">
+					<div class="ui5-sn-item-text" id={this._textId} dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
+					{this.hasTag &&
+						<div class="ui5-sn-item-tag-slot" aria-hidden="true">
+							<slot name="tag"></slot>
+						</div>
+					}
+				</div>
 				{this.isExternalLink &&
 					<Icon class="ui5-sn-item-external-link-icon"
 						  name={arrowRight}
 					/>
 				}
 			</EffectiveTag>
+			{this.hasTag &&
+				<span id={this._tagId} class="ui5-hidden-text">{this._tagDescriptionText}</span>
+			}
 		</li>
 	);
 }

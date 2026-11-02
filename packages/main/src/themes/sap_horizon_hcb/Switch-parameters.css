@@ -127,7 +127,7 @@
 	--_ui5_switch_readonly_handle_border_style: solid;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_switch_width: 2.75rem;
 		--_ui5_switch_min_width: none;

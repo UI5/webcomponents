@@ -24,6 +24,7 @@ import {
 	SEARCH_FIELD_SEARCH_ICON,
 	SEARCH_FIELD_LABEL,
 	SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE,
+	SHELLBAR_SEARCHFIELD_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 const SCREEN_WIDTH_BREAKPOINT = 450;
@@ -389,6 +390,10 @@ class SearchField extends UI5Element {
 			}
 		}
 		return this.placeholder;
+	}
+
+	get _effectiveAccessibleDescription(): string {
+		return this.accessibleDescription || SearchField.i18nBundle.getText(SHELLBAR_SEARCHFIELD_DESCRIPTION);
 	}
 
 	get _scopeIconAccessibleName(): string {

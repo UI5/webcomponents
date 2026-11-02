@@ -20,7 +20,7 @@
 	--_ui5-input_error_placeholder_color: var(--sapField_TextColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_information_icon_padding: .25rem .4375rem;
 		--_ui5_input_information_custom_icon_padding: .25rem .5rem;

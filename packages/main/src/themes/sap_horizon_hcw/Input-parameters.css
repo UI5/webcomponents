@@ -23,7 +23,7 @@
 	--_ui5_input_icon_wrapper_height: 100%;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_custom_icon_padding: .1875rem .5rem;
 	}

@@ -23,7 +23,7 @@
 	--_ui5-notification_item-growing-btn-background-color-active: var(--sapList_Active_Background);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5-notification_item-description-margin-top: 0.5rem;
 		--_ui5-notification_item-footer-margin-top: 0.5rem;

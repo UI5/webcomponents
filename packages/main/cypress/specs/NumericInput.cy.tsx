@@ -855,6 +855,55 @@ describe("Validation inside form", () => {
 	});
 });
 
+describe("NumericInput mobile device behaviour", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
+
+	it("should use input type 'number' on mobile", () => {
+		cy.mount(
+			<NumericInput></NumericInput>
+		);
+
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should("have.prop", "type", "number");
+	});
+
+	it("should use '.' as decimal separator regardless of locale on mobile", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("de");
+			});
+
+		cy.mount(
+			<NumericInput value={1.5} valuePrecision={1}></NumericInput>
+		);
+
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("1.5");
+			});
+	});
+
+	it("should not use group separator for large numbers on mobile", () => {
+		cy.mount(
+			<NumericInput value={12345678}></NumericInput>
+		);
+
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("12345678");
+			});
+	});
+});
+
 describe("Accessibility", () => {
 	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
 		const labelText = "Quantity";

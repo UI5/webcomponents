@@ -25,19 +25,11 @@
 
 <body class="viewsettingsdialog1auto">
 
-	<ui5-button id="btnOpenGroup">Show VSD with group option</ui5-button>
-	<ui5-view-settings-dialog id="vsdGroup">
-		<ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
-		<ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
-		<ui5-group-item slot="groupItems" text="Title"></ui5-group-item>
-		<ui5-group-item slot="groupItems" text="Author"></ui5-group-item>
-		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
-	</ui5-view-settings-dialog>
-
 	<h3> ViewSettingsDialog</h3>
 	<ui5-button id="btnOpenDialog">Show ViewSettingsDialog</ui5-button>
 	<ui5-button id="btnOpenDialogSort">Show Sort Only ViewSettingsDialog</ui5-button>
 	<ui5-button id="btnOpenDialogFilter">Show Filter Only ViewSettingsDialog</ui5-button>
+	<ui5-button id="btnOpenDialogGroup">Show Group Only ViewSettingsDialog</ui5-button>
 	<ui5-button id="btnChangeSettings">Set Settings to the first VSD</ui5-button>
 	<ui5-textarea id="vsdSettings" placeholder="Basic text area" value='{"sortOrder":"Ascending","sortBy":"Name","filters":[{"Filter 3":["Some filter 7"]}, {"Filter 1":["Some filter 1", "Some filter 2"]}]}'>
 	</ui5-textarea>
@@ -49,6 +41,12 @@
 		<ui5-sort-item slot="sortItems" text="Position"></ui5-sort-item>
 		<ui5-sort-item slot="sortItems" text="Company"></ui5-sort-item>
 		<ui5-sort-item slot="sortItems" text="Department"></ui5-sort-item>
+
+		<ui5-group-item slot="groupItems" text="Name"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Position"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Company"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Department"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
 
 		<ui5-filter-item slot="filterItems" text="Filter 1">
 			<ui5-filter-item-option slot="values" text="Some filter 1"></ui5-filter-item-option>
@@ -101,6 +99,14 @@
 			<ui5-filter-item-option slot="values" text="Some filter 11"></ui5-filter-item-option>
 			<ui5-filter-item-option slot="values" text="Some filter 12"></ui5-filter-item-option>
 		</ui5-filter-item>
+	</ui5-view-settings-dialog>
+
+	<ui5-view-settings-dialog id="vsdGroup">
+		<ui5-group-item slot="groupItems" text="Name"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Position"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Company"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Department"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
 	</ui5-view-settings-dialog>
 
 	<br>
@@ -227,27 +233,7 @@
 		</ui5-view-settings-dialog-custom-tab>
 	</ui5-view-settings-dialog>
 
-
-
-
 	<script>
-		btnOpenGroup.addEventListener("click", function () {
-			vsdGroup.open = true;
-		});
-
-		vsdGroup.addEventListener("ui5-confirm", function (e) {
-			const groupByItem = e.detail.groupByItem;
-			const groupOrder = e.detail.groupDescending ? "Descending" : "Ascending";
-
-			const sortByItem = e.detail.sortByItem;
-			const sortOrder = e.detail.sortDescending ? "Descending" : "Ascending";
-
-			console.log("Group By Item: ", groupByItem);
-			console.log("Group Order: ", groupOrder);
-			console.log("Sort By Item: ", sortByItem);
-			console.log("Sort Order: ", sortOrder);
-		});
-
 		btnOpenDialogWithDataSet.addEventListener("click", function () {
 			vsdWithDataSet.open = true;
 		});
@@ -287,6 +273,12 @@
 			vsdFilter.open = true;
 		});
 		vsdFilter.addEventListener("ui5-confirm", function(evt) {
+			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
+		});
+		btnOpenDialogGroup.addEventListener("click", function () {
+			vsdGroup.open = true;
+		});
+		vsdGroup.addEventListener("ui5-confirm", function(evt) {
 			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
 		});
 

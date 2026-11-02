@@ -508,7 +508,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 			it("Moving sub items with arrow keys", () => {
 				cy.get("@tabContainerShadow")
 					.shadow()
-					.find(".ui5-tab-strip-item:nth-child(3) [ui5-button]")
+					.find(".ui5-tab-strip-item:nth-child(3) .ui5-tab-expand-button")
 					.realClick();
 
 				cy.get("@tabContainerShadow")

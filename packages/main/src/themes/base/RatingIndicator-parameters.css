@@ -12,7 +12,7 @@
 	--_ui5_rating_indicator_item_size_l: 2rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_rating_indicator_item_height: 0.67em;
 		--_ui5_rating_indicator_item_width: 0.67em;
