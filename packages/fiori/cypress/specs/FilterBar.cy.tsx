@@ -1,7 +1,6 @@
 import FilterBar from "../../src/FilterBar.js";
 import FilterBarItem from "../../src/FilterBarItem.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
 import Select from "@ui5/webcomponents/dist/Select.js";
 import Option from "@ui5/webcomponents/dist/Option.js";
 
@@ -19,12 +18,10 @@ describe("FilterBar - Rendering", () => {
 	it("should render filter items correctly", () => {
 		cy.mount(
 			<FilterBar>
-				<FilterBarItem>
-					<Label slot="label">Name</Label>
+				<FilterBarItem label="Name" filterKey="name">
 					<Input></Input>
 				</FilterBarItem>
-				<FilterBarItem>
-					<Label slot="label">Age</Label>
+				<FilterBarItem label="Age" filterKey="age">
 					<Input></Input>
 				</FilterBarItem>
 			</FilterBar>
@@ -34,6 +31,27 @@ describe("FilterBar - Rendering", () => {
 			.shadow()
 			.find(".ui5-filterbar-item")
 			.should("have.length", 2);
+	});
+
+	it("should not render items that are hidden or hiddenInFilterBar", () => {
+		cy.mount(
+			<FilterBar>
+				<FilterBarItem label="Name" filterKey="name">
+					<Input></Input>
+				</FilterBarItem>
+				<FilterBarItem label="Age" filterKey="age" hiddenInFilterBar={true}>
+					<Input></Input>
+				</FilterBarItem>
+				<FilterBarItem label="City" filterKey="city" hidden={true}>
+					<Input></Input>
+				</FilterBarItem>
+			</FilterBar>
+		);
+
+		cy.get("[ui5-filterbar]")
+			.shadow()
+			.find(".ui5-filterbar-item")
+			.should("have.length", 1);
 	});
 
 	it("should render basic search field when showBasicSearch is true", () => {
@@ -55,6 +73,15 @@ describe("FilterBar - Rendering", () => {
 			.find(".ui5-filterbar-basic-search")
 			.should("not.exist");
 	});
+
+	it("should apply filterContainerWidth as a CSS variable", () => {
+		cy.mount(<FilterBar filterContainerWidth="20rem"></FilterBar>);
+
+		cy.get("[ui5-filterbar]")
+			.shadow()
+			.find(".ui5-filterbar-root")
+			.should("have.css", "--_ui5-filterbar-item-width", "20rem");
+	});
 });
 
 describe("FilterBar - Button Visibility", () => {
@@ -67,8 +94,8 @@ describe("FilterBar - Button Visibility", () => {
 			.should("exist");
 	});
 
-	it("should hide Go button when hideGoOnFB is true", () => {
-		cy.mount(<FilterBar hideGoOnFB={true}></FilterBar>);
+	it("should hide Go button when showGoOnFB is false", () => {
+		cy.mount(<FilterBar showGoOnFB={false}></FilterBar>);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
@@ -76,7 +103,7 @@ describe("FilterBar - Button Visibility", () => {
 			.should("not.exist");
 	});
 
-	it("should show Filters button by default", () => {
+	it("should show the filter-configuration button by default", () => {
 		cy.mount(<FilterBar></FilterBar>);
 
 		cy.get("[ui5-filterbar]")
@@ -85,8 +112,8 @@ describe("FilterBar - Button Visibility", () => {
 			.should("exist");
 	});
 
-	it("should hide Filters button when hideFiltersOnFB is true", () => {
-		cy.mount(<FilterBar hideFiltersOnFB={true} hideGoOnFB={true}></FilterBar>);
+	it("should hide the filter-configuration button when hideFilterConfiguration is true", () => {
+		cy.mount(<FilterBar hideFilterConfiguration={true} showGoOnFB={false}></FilterBar>);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
@@ -103,27 +130,61 @@ describe("FilterBar - Button Visibility", () => {
 			.should("have.length", 3); // Go, Restore, Filters
 	});
 
-	it("should show Clear button when showClearOnFB is true", () => {
-		cy.mount(<FilterBar showClearOnFB={true}></FilterBar>);
+	it("should show Reset button when showResetButton is true", () => {
+		cy.mount(<FilterBar showResetButton={true}></FilterBar>);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
 			.find(".ui5-filterbar-buttons [ui5-button]")
-			.should("have.length", 3); // Go, Clear, Filters
+			.should("have.length", 3); // Go, Reset, Filters
 	});
 
-	it("should show all buttons when all are enabled", () => {
+	it("should hide the whole toolbar when hideToolbar is true", () => {
+		cy.mount(<FilterBar hideToolbar={true}></FilterBar>);
+
+		cy.get("[ui5-filterbar]")
+			.shadow()
+			.find(".ui5-filterbar-buttons")
+			.should("not.exist");
+	});
+});
+
+describe("FilterBar - Active filters count", () => {
+	it("should show the derived count of visible items in the Filters button", () => {
 		cy.mount(
-			<FilterBar
-				showClearOnFB={true}
-				showRestoreOnFB={true}
-			></FilterBar>
+			<FilterBar>
+				<FilterBarItem label="Name" filterKey="name">
+					<Input></Input>
+				</FilterBarItem>
+				<FilterBarItem label="Age" filterKey="age">
+					<Input></Input>
+				</FilterBarItem>
+				<FilterBarItem label="City" filterKey="city" hiddenInFilterBar={true}>
+					<Input></Input>
+				</FilterBarItem>
+			</FilterBar>
+		);
+
+		// 2 of 3 items are shown in the bar
+		cy.get("[ui5-filterbar]")
+			.shadow()
+			.find(".ui5-filterbar-buttons [ui5-button][design='Transparent']")
+			.should("contain.text", "(2)");
+	});
+
+	it("should use the activeFiltersCount override when set", () => {
+		cy.mount(
+			<FilterBar activeFiltersCount={7}>
+				<FilterBarItem label="Name" filterKey="name">
+					<Input></Input>
+				</FilterBarItem>
+			</FilterBar>
 		);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
-			.find(".ui5-filterbar-buttons [ui5-button]")
-			.should("have.length", 4); // Go, Clear, Restore, Filters
+			.find(".ui5-filterbar-buttons [ui5-button][design='Transparent']")
+			.should("contain.text", "(7)");
 	});
 });
 
@@ -139,15 +200,15 @@ describe("FilterBar - Events", () => {
 		cy.get("@goEvent").should("be.called");
 	});
 
-	it("should fire 'filters-press' event when Filters button is clicked", () => {
-		cy.mount(<FilterBar onFiltersPress={cy.stub().as("filtersEvent")}></FilterBar>);
+	it("should fire 'toggle-filters' event when the Filters button is clicked", () => {
+		cy.mount(<FilterBar onToggleFilters={cy.stub().as("toggleEvent")}></FilterBar>);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
 			.find(".ui5-filterbar-buttons [ui5-button][design='Transparent']")
 			.realClick();
 
-		cy.get("@filtersEvent").should("be.called");
+		cy.get("@toggleEvent").should("be.called");
 	});
 
 	it("should fire 'restore' event when Restore button is clicked", () => {
@@ -183,6 +244,23 @@ describe("FilterBar - Events", () => {
 
 		cy.get("@clearEvent").should("be.called");
 	});
+
+	it("should fire 'reset' event when Reset button is clicked", () => {
+		cy.mount(
+			<FilterBar
+				showResetButton={true}
+				onReset={cy.stub().as("resetEvent")}
+			></FilterBar>
+		);
+
+		cy.get("[ui5-filterbar]")
+			.shadow()
+			.find(".ui5-filterbar-buttons [ui5-button][design='Transparent']")
+			.first()
+			.realClick();
+
+		cy.get("@resetEvent").should("be.called");
+	});
 });
 
 describe("FilterBar - Properties", () => {
@@ -192,10 +270,12 @@ describe("FilterBar - Properties", () => {
 		cy.get("[ui5-filterbar]")
 			.as("filterbar")
 			.should("have.prop", "showBasicSearch", false)
-			.and("have.prop", "hideGoOnFB", false)
-			.and("have.prop", "hideFiltersOnFB", false)
+			.and("have.prop", "showGoOnFB", true)
+			.and("have.prop", "hideFilterConfiguration", false)
 			.and("have.prop", "showRestoreOnFB", false)
-			.and("have.prop", "showClearOnFB", false);
+			.and("have.prop", "showClearOnFB", false)
+			.and("have.prop", "showResetButton", false)
+			.and("have.prop", "filterContainerWidth", "13.125rem");
 	});
 
 	it("should update properties dynamically", () => {
@@ -211,7 +291,7 @@ describe("FilterBar - Properties", () => {
 			.should("exist");
 
 		cy.get("@filterbar")
-			.invoke("prop", "hideGoOnFB", true);
+			.invoke("prop", "showGoOnFB", false);
 
 		cy.get("@filterbar")
 			.shadow()
@@ -220,50 +300,17 @@ describe("FilterBar - Properties", () => {
 	});
 });
 
-describe("FilterBar - Filter Items Slot", () => {
-	it("should render FilterBarItem with label and control", () => {
+describe("FilterBar - Search slot", () => {
+	it("should render a projected search control instead of the internal input", () => {
 		cy.mount(
-			<FilterBar>
-				<FilterBarItem>
-					<Label slot="label">Country</Label>
-					<Select>
-						<Option>USA</Option>
-						<Option>Germany</Option>
-					</Select>
-				</FilterBarItem>
+			<FilterBar showBasicSearch={true}>
+				<Input slot="search" placeholder="custom search"></Input>
 			</FilterBar>
 		);
 
 		cy.get("[ui5-filterbar]")
 			.shadow()
-			.find(".ui5-filterbar-item")
-			.should("have.length", 1);
-
-		cy.get("[ui5-filterbar-item]")
+			.find(".ui5-filterbar-basic-search slot[name='search']")
 			.should("exist");
-	});
-
-	it("should render multiple filter items in order", () => {
-		cy.mount(
-			<FilterBar>
-				<FilterBarItem key="name">
-					<Label slot="label">Name</Label>
-					<Input></Input>
-				</FilterBarItem>
-				<FilterBarItem key="age">
-					<Label slot="label">Age</Label>
-					<Input></Input>
-				</FilterBarItem>
-				<FilterBarItem key="city">
-					<Label slot="label">City</Label>
-					<Input></Input>
-				</FilterBarItem>
-			</FilterBar>
-		);
-
-		cy.get("[ui5-filterbar]")
-			.shadow()
-			.find(".ui5-filterbar-item")
-			.should("have.length", 3);
 	});
 });

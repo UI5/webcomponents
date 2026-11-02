@@ -12,90 +12,235 @@
 	</script>
 
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<script src="../../../main/src/bundle.esm.ts" type="module"></script>
+	<script type="module">
+		import "../../../main/src/ComboBox.ts";
+		import "../../../main/src/MultiComboBox.ts";
+		import "../../../main/src/ComboBoxItem.ts";
+		import "../../../main/src/MultiComboBoxItem.ts";
+		import "../../../main/src/StepInput.ts";
+		import "../../../main/src/RatingIndicator.ts";
+		import "../../../main/src/Switch.ts";
+		import "../../../main/src/MultiInput.ts";
+		import "../../../main/src/Token.ts";
+		import "../../../main/src/DateRangePicker.ts";
+	</script>
 
 	<style>
-		
+		body {
+			padding: 2rem;
+			font-family: "72", Arial, Helvetica, sans-serif;
+			background: var(--sapBackgroundColor);
+		}
 	</style>
 </head>
 
 <body>
-	<div class="section">
-		<h3>FilterBar with all buttons visible (default)</h3>
-		<ui5-filterbar id="filterbar1" show-basic-search>
-			<ui5-filterbar-item>
-				<ui5-label slot="label" for="product">Product</ui5-label>
-				<ui5-input placeholder="Enter product name" id="product"></ui5-input>
-			</ui5-filterbar-item>
-			<ui5-filterbar-item>
-				<ui5-label slot="label" for="status">Status</ui5-label>
-				<ui5-select id="status">
-					<ui5-option>Active</ui5-option>
-					<ui5-option>Inactive</ui5-option>
-					<ui5-option>Pending</ui5-option>
-				</ui5-select>
-			</ui5-filterbar-item>
-			<ui5-filterbar-item>
-				<ui5-label slot="label" for="dateRange">Date Range</ui5-label>
-				<ui5-date-picker placeholder="Select date" id="dateRange"></ui5-date-picker>
-			</ui5-filterbar-item>
-		</ui5-filterbar>
-	</div>
+	<ui5-filterbar id="filterbar1" show-basic-search show-restore-on-f-b show-reset-button>
+		<ui5-filterbar-item filter-key="stepInput" label="StepInput" required>
+			<ui5-step-input id="stepInput" value="0"></ui5-step-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="ratingIndicator" label="RatingIndicator">
+			<ui5-rating-indicator id="ratingIndicator"></ui5-rating-indicator>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="multiInput" label="MultiInput">
+			<ui5-multi-input id="multiInput">
+				<ui5-token slot="tokens" text="Argentina"></ui5-token>
+				<ui5-token slot="tokens" text="Bulgaria"></ui5-token>
+				<ui5-token slot="tokens" text="England"></ui5-token>
+				<ui5-token slot="tokens" text="Finland"></ui5-token>
+			</ui5-multi-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="input" label="Input">
+			<ui5-input id="input" placeholder="Placeholder"></ui5-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="switch" label="Switch">
+			<ui5-switch id="switch"></ui5-switch>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="select" label="SELECT w/o initial selected">
+			<ui5-select id="select">
+				<ui5-option></ui5-option>
+				<ui5-option additional-text="AT">Test 1</ui5-option>
+				<ui5-option additional-text="BE">Test 2</ui5-option>
+				<ui5-option additional-text="DE">Test 3</ui5-option>
+			</ui5-select>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="multiComboBox" label="MultiBox w/ initial selected">
+			<ui5-multi-combobox id="multiComboBox">
+				<ui5-mcb-item text="Item 1" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Item 2" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="comboBox" label="ComboBox w/o initial selected">
+			<ui5-combobox id="comboBox">
+				<ui5-cb-item text="Item 1"></ui5-cb-item>
+				<ui5-cb-item text="Item 2"></ui5-cb-item>
+				<ui5-cb-item text="Item 3"></ui5-cb-item>
+			</ui5-combobox>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="datePicker" label="Date Picker">
+			<ui5-daterange-picker id="datePicker" placeholder="e.g. Dec 24, 2026 - Dec 30, 2026"></ui5-daterange-picker>
+		</ui5-filterbar-item>
+	</ui5-filterbar>
 
-	<!-- <div class="section">
-		<h3>FilterBar with custom button visibility</h3>
-		<ui5-filterbar id="filterbar2" show-restore-on-f-b show-clear-on-f-b>
-			<ui5-filterbar-item>
-				<ui5-label slot="label" for="name">Name</ui5-label>
-				<ui5-input placeholder="Enter name" id="name"></ui5-input>
-			</ui5-filterbar-item>
-		</ui5-filterbar>
-	</div>
+	<ui5-adapt-filters-dialog id="adptfilters" filter-bar="filterbar1">
+		<ui5-filterbar-item filter-key="stepInput" label="StepInput" group-name="Basic" group-order="0" required>
+			<ui5-step-input value="0"></ui5-step-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="ratingIndicator" label="RatingIndicator" group-name="Basic" group-order="0">
+			<ui5-rating-indicator></ui5-rating-indicator>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="multiInput" label="MultiInput" group-name="Basic" group-order="0">
+			<ui5-multi-input>
+				<ui5-token slot="tokens" text="Argentina"></ui5-token>
+				<ui5-token slot="tokens" text="Bulgaria"></ui5-token>
+				<ui5-token slot="tokens" text="England"></ui5-token>
+				<ui5-token slot="tokens" text="Finland"></ui5-token>
+			</ui5-multi-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="input" label="Input" group-name="Basic" group-order="0">
+			<ui5-input placeholder="Placeholder"></ui5-input>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="switch" label="Switch" group-name="Advanced" group-order="1">
+			<ui5-switch></ui5-switch>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="select" label="SELECT w/o initial selected" group-name="Advanced" group-order="1">
+			<ui5-select>
+				<ui5-option></ui5-option>
+				<ui5-option additional-text="AT">Test 1</ui5-option>
+				<ui5-option additional-text="BE">Test 2</ui5-option>
+				<ui5-option additional-text="DE">Test 3</ui5-option>
+			</ui5-select>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="multiComboBox" label="MultiBox w/ initial selected" group-name="Advanced" group-order="1">
+			<ui5-multi-combobox>
+				<ui5-mcb-item text="Item 1" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Item 2" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="comboBox" label="ComboBox w/o initial selected" group-name="Date Filters" group-order="2">
+			<ui5-combobox>
+				<ui5-cb-item text="Item 1"></ui5-cb-item>
+				<ui5-cb-item text="Item 2"></ui5-cb-item>
+				<ui5-cb-item text="Item 3"></ui5-cb-item>
+			</ui5-combobox>
+		</ui5-filterbar-item>
+		<ui5-filterbar-item filter-key="datePicker" label="Date Picker" group-name="Date Filters" group-order="2">
+			<ui5-daterange-picker placeholder="e.g. Dec 24, 2026 - Dec 30, 2026"></ui5-daterange-picker>
+		</ui5-filterbar-item>
+	</ui5-adapt-filters-dialog>
 
-	<div class="section">
-		<h3>FilterBar with hidden buttons</h3>
-		<ui5-filterbar id="filterbar3" hide-go-on-f-b hide-filters-on-f-b show-restore-on-f-b show-clear-on-f-b>
-			<ui5-filterbar-item>
-				<ui5-label slot="label" for="category">Category</ui5-label>
-				<ui5-input placeholder="Enter category" id="category"></ui5-input>
-			</ui5-filterbar-item>
-		</ui5-filterbar>
-	</div> -->
-
-	<div class="section">
+	<div style="padding: 1rem">
 		<h3>Event Log:</h3>
-		<div id="eventLog" style="border: 1px solid #ccc; padding: 10px; min-height: 100px; font-family: monospace;"></div>
+		<div id="eventLog" style="border: 1px solid #ccc; padding: 10px; min-height: 60px; font-family: monospace; font-size: 0.8rem; white-space: pre;"></div>
 	</div>
 
 	<script>
-		const filterbar1 = document.getElementById("filterbar1");
-		const filterbar2 = document.getElementById("filterbar2");
-		const filterbar3 = document.getElementById("filterbar3");
+		const filterbar = document.getElementById("filterbar1");
+		const dialog = document.getElementById("adptfilters");
 		const eventLog = document.getElementById("eventLog");
 
-		function logEvent(filterbarId, eventName) {
-			const timestamp = new Date().toLocaleTimeString();
-			const message = `[${timestamp}] ${filterbarId}: ${eventName} event fired\n`;
-			eventLog.textContent += message;
-			console.log(message);
+		// Pending reorder from dialog — only applied on confirm/filter, discarded on cancel
+		let pendingKeyOrder = null;
+
+		function log(msg) {
+			const ts = new Date().toLocaleTimeString();
+			eventLog.textContent += `[${ts}] ${msg}\n`;
 		}
 
-		// Add event listeners for filterbar1
-		filterbar1.addEventListener("go", () => logEvent("filterbar1", "go"));
-		filterbar1.addEventListener("filters-press", () => logEvent("filterbar1", "filters-press"));
-		filterbar1.addEventListener("restore", () => logEvent("filterbar1", "restore"));
-		filterbar1.addEventListener("clear", () => logEvent("filterbar1", "clear"));
+		function applyKeyOrderToFilterbar(keys) {
+			keys.forEach(key => {
+				const fbItem = filterbar.querySelector(`ui5-filterbar-item[filter-key="${key}"]`);
+				if (fbItem) filterbar.appendChild(fbItem);
+				const dlgItem = dialog.querySelector(`ui5-filterbar-item[filter-key="${key}"]`);
+				if (dlgItem) dialog.appendChild(dlgItem);
+			});
+		}
 
-		// // Add event listeners for filterbar2
-		// filterbar2.addEventListener("go", () => logEvent("filterbar2", "go"));
-		// filterbar2.addEventListener("filters-press", () => logEvent("filterbar2", "filters-press"));
-		// filterbar2.addEventListener("restore", () => logEvent("filterbar2", "restore"));
-		// filterbar2.addEventListener("clear", () => logEvent("filterbar2", "clear"));
+		function applyVisibilityAndSync(visibilityMap) {
+			filterbar.querySelectorAll("ui5-filterbar-item").forEach(fbItem => {
+				const key = fbItem.getAttribute("filter-key");
+				if (!key) return;
+				if (key in visibilityMap) fbItem.hidden = !visibilityMap[key];
+			});
+		}
 
-		// // Add event listeners for filterbar3
-		// filterbar3.addEventListener("go", () => logEvent("filterbar3", "go"));
-		// filterbar3.addEventListener("filters-press", () => logEvent("filterbar3", "filters-press"));
-		// filterbar3.addEventListener("restore", () => logEvent("filterbar3", "restore"));
-		// filterbar3.addEventListener("clear", () => logEvent("filterbar3", "clear"));
+		filterbar.addEventListener("toggle-filters", () => {
+			pendingKeyOrder = null;
+			const keyOrder = [...filterbar.querySelectorAll("ui5-filterbar-item")]
+				.map(item => item.getAttribute("filter-key")).filter(Boolean);
+			dialog.show(keyOrder);
+			log("toggle-filters → dialog opened");
+		});
+
+		filterbar.addEventListener("go", () => log("go fired"));
+		filterbar.addEventListener("restore", () => log("restore fired"));
+		filterbar.addEventListener("reset", () => log("reset fired (filterbar)"));
+
+		dialog.addEventListener("filters-dialog-save", (e) => {
+			const { visibilityMap } = e.detail;
+			if (pendingKeyOrder) {
+				applyKeyOrderToFilterbar(pendingKeyOrder);
+				pendingKeyOrder = null;
+			}
+			applyVisibilityAndSync(visibilityMap);
+			const visible = Object.entries(visibilityMap).filter(([, v]) => v).map(([k]) => k).join(", ");
+			log(`filters-dialog-save → visible: ${visible}`);
+		});
+
+		dialog.addEventListener("filters-dialog-cancel", (e) => {
+			pendingKeyOrder = null;
+			log(`dialog cancelled (escPressed: ${e.detail.escPressed})`);
+		});
+
+		dialog.addEventListener("filters-dialog-open", () => log("filters-dialog-open"));
+		dialog.addEventListener("after-filters-dialog-open", () => log("after-filters-dialog-open"));
+		dialog.addEventListener("filters-dialog-close", (e) => log(`filters-dialog-close → ${e.detail.closeTrigger}`));
+		dialog.addEventListener("filters-dialog-search", (e) => log(`filters-dialog-search → ${e.detail.value}`));
+
+		dialog.addEventListener("filters-dialog-selection-change", (e) => {
+			log(`selection-change → ${e.detail.filter.getAttribute("filter-key")}: ${e.detail.visible}`);
+		});
+
+		dialog.addEventListener("filter-remove", (e) => {
+			const key = e.detail.filter.getAttribute("filter-key");
+			// The dialog moves the removed item into its availableFilters pool itself.
+			// The app only needs to hide the matching filterbar item.
+			const fbItem = filterbar.querySelector(`ui5-filterbar-item[filter-key="${key}"]`);
+			if (fbItem) fbItem.hidden = true;
+			log(`filter-remove → ${key}`);
+		});
+
+		dialog.addEventListener("filter", (e) => {
+			const { visibilityMap } = e.detail;
+			if (pendingKeyOrder) {
+				applyKeyOrderToFilterbar(pendingKeyOrder);
+				pendingKeyOrder = null;
+			}
+			applyVisibilityAndSync(visibilityMap);
+			filterbar.go();
+			log(`filter → applied and go triggered`);
+		});
+
+		dialog.addEventListener("reorder", (e) => {
+			pendingKeyOrder = e.detail.keys;
+			log(`reorder (pending) → ${e.detail.keys.join(", ")}`);
+		});
+
+		dialog.addEventListener("reset", () => {
+			log("reset");
+		});
+
+		dialog.addEventListener("filter-add", (e) => {
+			const key = e.detail.filterKey;
+			// The dialog moves the item back into its active list itself.
+			// The app only needs to un-hide the matching filterbar item.
+			const fbItem = filterbar.querySelector(`ui5-filterbar-item[filter-key="${key}"]`);
+			if (fbItem) fbItem.hidden = false;
+			log(`filter-add → ${key}`);
+		});
 	</script>
 </body>
 </html>

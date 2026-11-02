@@ -10,10 +10,10 @@ import {
 	FILTERBAR_FILTERS_BUTTON,
 	FILTERBAR_RESTORE_BUTTON,
 	FILTERBAR_CLEAR_BUTTON,
+	FILTERBAR_RESET_BUTTON,
+	FILTERBAR_SEARCH_PLACEHOLDER,
 } from "./generated/i18n/i18n-defaults.js";
 
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type FilterBarItem from "./FilterBarItem.js";
 
 // Template
@@ -58,11 +58,12 @@ import FilterBarCss from "./generated/themes/FilterBar.css.js";
 @event("go")
 
 /**
- * Fired when the "Filters" button is pressed.
+ * Fired when the filter-configuration ("Filters") button is pressed, to toggle the
+ * AdaptFiltersDialog or the filter area.
  *
  * @public
  */
-@event("filters-press")
+@event("toggle-filters")
 
 /**
  * Fired when the "Restore" button is pressed.
@@ -78,12 +79,29 @@ import FilterBarCss from "./generated/themes/FilterBar.css.js";
  */
 @event("clear")
 
+/**
+ * Fired when the "Reset" button is pressed.
+ *
+ * @public
+ */
+@event("reset")
+
+/**
+ * Fired when the basic search input value changes.
+ *
+ * @param {string} value - The current search input value
+ * @public
+ */
+@event("search")
+
 class FilterBar extends UI5Element {
 	eventDetails!: {
 		"go": void;
-		"filters-press": void;
+		"toggle-filters": void;
 		"restore": void;
 		"clear": void;
+		"reset": void;
+		"search": { value: string };
 	};
 
 	/**
@@ -96,22 +114,22 @@ class FilterBar extends UI5Element {
 	showBasicSearch = false;
 
 	/**
-	 * Defines whether the "Go" button is hidden.
+	 * Defines whether the "Go" button is shown.
 	 *
-	 * @default false
+	 * @default true
 	 * @public
 	 */
 	@property({ type: Boolean })
-	hideGoOnFB = false;
+	showGoOnFB = true;
 
 	/**
-	 * Defines whether the "Filters" button is hidden.
+	 * Defines whether the filter-configuration ("Filters") button is hidden.
 	 *
 	 * @default false
 	 * @public
 	 */
 	@property({ type: Boolean })
-	hideFiltersOnFB = false;
+	hideFilterConfiguration = false;
 
 	/**
 	 * Defines whether the "Restore" button is shown.
@@ -132,21 +150,119 @@ class FilterBar extends UI5Element {
 	showClearOnFB = false;
 
 	/**
+	 * Defines whether the "Reset" button is shown.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showResetButton = false;
+
+	/**
+	 * Defines whether the toolbar (action buttons) is hidden. When hidden, filters are always visible.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideToolbar = false;
+
+	/**
+	 * Defines whether the toggle-filters button is hidden.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideToggleFiltersButton = false;
+
+	/**
+	 * Defines whether the filter area is collapsed.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	filterBarCollapsed = false;
+
+	/**
+	 * Defines whether reordering of filters is enabled.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	enableReordering = false;
+
+	/**
+	 * Defines the width of each filter item container.
+	 *
+	 * @default "13.125rem"
+	 * @public
+	 */
+	@property()
+	filterContainerWidth = "13.125rem";
+
+	/**
+	 * Overrides the active-filters count shown in the Filters button badge.
+	 * A negative value (the default) means the count is derived from the items
+	 * visible in the FilterBar; any value `>= 0` is used verbatim.
+	 *
+	 * @default -1
+	 * @public
+	 */
+	@property({ type: Number })
+	activeFiltersCount = -1;
+
+	/**
+	 * Defines the header content shown above the filter items.
+	 *
+	 * @public
+	 */
+	@slot()
+	header!: Array<HTMLElement>;
+
+	/**
+	 * Defines the search field rendered as the first item.
+	 * When populated, it is rendered instead of the internal basic search input.
+	 *
+	 * @public
+	 */
+	@slot()
+	search!: Array<HTMLElement>;
+
+	/**
 	 * Defines the filter items displayed in the filter bar.
 	 *
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true, individualSlots: true })
+	@slot({
+		type: HTMLElement, "default": true, individualSlots: true, invalidateOnChildChange: true,
+	})
 	items!: Array<FilterBarItem>;
-
-	_handleResizeBound: ResizeObserverCallback;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
-	constructor() {
-		super();
-		this._handleResizeBound = this._handleResize.bind(this);
+	onEnterDOM() {
+		this.addEventListener("token-delete", this._handleTokenDelete as EventListener);
+	}
+
+	onExitDOM() {
+		this.removeEventListener("token-delete", this._handleTokenDelete as EventListener);
+	}
+
+	_handleTokenDelete = (e: CustomEvent) => {
+		const tokens: Array<Element> = e.detail?.tokens || [];
+		tokens.forEach(token => token.parentNode?.removeChild(token));
+	};
+
+	/**
+	 * Programmatically fires the "go" event (same as pressing the Go button).
+	 * @public
+	 */
+	go() {
+		this.fireDecoratorEvent("go");
 	}
 
 	/**
@@ -158,11 +274,27 @@ class FilterBar extends UI5Element {
 	}
 
 	/**
-	 * Handles the "Filters" button press.
+	 * Handles the basic search input event and fires the "search" event.
 	 * @private
 	 */
-	_handleFiltersPress() {
-		this.fireDecoratorEvent("filters-press");
+	_handleSearch(e: CustomEvent) {
+		const input = e.target as any;
+		this.fireDecoratorEvent("search", { value: input.value || "" });
+	}
+
+	get _activeFilterCount(): number {
+		if (this.activeFiltersCount >= 0) {
+			return this.activeFiltersCount;
+		}
+		return this.items.filter(item => !item.hidden && !item.hiddenInFilterBar).length;
+	}
+
+	/**
+	 * Handles the filter-configuration ("Filters") button press.
+	 * @private
+	 */
+	_handleToggleFilters() {
+		this.fireDecoratorEvent("toggle-filters");
 	}
 
 	/**
@@ -181,50 +313,12 @@ class FilterBar extends UI5Element {
 		this.fireDecoratorEvent("clear");
 	}
 
-	onEnterDOM() {
-		ResizeHandler.register(this.getDomRef()!, this._handleResizeBound);
-	}
-
-	onExitDOM() {
-		ResizeHandler.deregister(this.getDomRef()!, this._handleResizeBound);
-	}
-
-	_handleResize() {
-		const itemsGap = 16,
-			filterbar = this.getDomRef()!,
-			buttonsContainer = filterbar.querySelector(".ui5-filterbar-buttons") as HTMLElement,
-			basicSearch = filterbar.querySelector(".ui5-filterbar-basic-search"),
-			filterItems = filterbar.querySelectorAll(".ui5-filterbar-item"),
-			firstItem = filterItems.length > 0 ? filterItems[0] : basicSearch,
-			lastItem = filterItems.length > 0
-				? filterItems[filterItems.length - 1]
-				: basicSearch;
-
-		if (!firstItem || !lastItem || !buttonsContainer || filterbar?.offsetHeight === 0) {
-			return;
-		}
-
-		const filterbarDim = filterbar.getBoundingClientRect(),
-			buttonsContainerDim = buttonsContainer.getBoundingClientRect(),
-			firstItemDim = firstItem.getBoundingClientRect(),
-			lastItemDim = lastItem.getBoundingClientRect();
-		let sButtonStyle = "";
-		if (buttonsContainerDim.x - itemsGap >= lastItemDim.x + lastItemDim.width) {
-			sButtonStyle = `margin-top: -${lastItemDim.height}px`;
-		}
-		const iLeftPadding = parseInt(getComputedStyle(filterbar).paddingLeft);
-		const iRightPadding = parseInt(getComputedStyle(filterbar).paddingRight);
-
-		if (filterbarDim.left + iLeftPadding === firstItemDim.left && filterbarDim.right - iRightPadding === firstItemDim.right) {
-			sButtonStyle = "";
-		}
-		buttonsContainer.setAttribute("style", sButtonStyle);
-
-		if (firstItemDim.y === lastItemDim.y) {
-			filterbar.classList.add("ui5-filterbar-layout-one-line");
-		} else {
-			filterbar.classList.remove("ui5-filterbar-layout-one-line");
-		}
+	/**
+	 * Handles the "Reset" button press.
+	 * @private
+	 */
+	_handleResetPress() {
+		this.fireDecoratorEvent("reset");
 	}
 
 	get _goButtonText() {
@@ -241,6 +335,14 @@ class FilterBar extends UI5Element {
 
 	get _clearButtonText() {
 		return FilterBar.i18nBundle.getText(FILTERBAR_CLEAR_BUTTON);
+	}
+
+	get _resetButtonText() {
+		return FilterBar.i18nBundle.getText(FILTERBAR_RESET_BUTTON);
+	}
+
+	get _searchPlaceholder() {
+		return FilterBar.i18nBundle.getText(FILTERBAR_SEARCH_PLACEHOLDER);
 	}
 }
 

@@ -1,5 +1,6 @@
 :host(:not([hidden])) {
 	display: block;
+	overflow: visible;
 }
 
 .ui5-filterbar-item-root {
@@ -13,23 +14,43 @@
 
 .ui5-filterbar-item-control {
 	width: 100%;
+	display: flex;
 }
 
-:host([_adapt_filters_item]) .ui5-filterbar-item-root {
+/* Adapt Filters Dialog mode — horizontal label + control row */
+:host([_adapt-filters-item]) {
+	display: flex;
+	width: 100%;
+}
+
+/* A hidden item must still render inside the AdaptFiltersDialog list so it can be re-enabled */
+:host([hidden][_adapt-filters-item]) {
+	display: flex;
+}
+
+:host([_adapt-filters-item]) .ui5-filterbar-item-root {
 	flex-direction: row;
 	align-items: center;
 	gap: 0.5rem;
+	width: 100%;
 }
 
-:host([_adapt_filters_item]) .ui5-filterbar-item-label {
+:host([_adapt-filters-item]) .ui5-filterbar-item-label {
 	margin-bottom: 0;
 	flex-shrink: 0;
+	width: var(--_ui5_filterbar_item_label_width, 12rem);
+	min-width: var(--_ui5_filterbar_item_label_width, 12rem);
+	text-align: end;
 }
 
-:host([_adapt_filters_item]) .ui5-filterbar-item-control {
+:host([_adapt-filters-item]) .ui5-filterbar-item-control {
 	flex: 1;
+	min-width: 0;
 }
 
 ::slotted(*) {
 	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
 }

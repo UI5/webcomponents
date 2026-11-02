@@ -20,10 +20,9 @@ import "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents/dist/TabContainer.js";
 import "@ui5/webcomponents/dist/Tab.js";
 import "@ui5/webcomponents/dist/Toolbar.js";
-import "@ui5/webcomponents/dist/ToolbarButton.js";
+import "@ui5/webcomponents/dist/ComboBox.js";
+import "@ui5/webcomponents/dist/ComboBoxItem.js";
 import "@ui5/webcomponents/dist/ToolbarSpacer.js";
-import "@ui5/webcomponents/dist/SegmentedButton.js";
-import "@ui5/webcomponents/dist/SegmentedButtonItem.js";
 import "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents/dist/Bar.js";
 import "@ui5/webcomponents/dist/List.js";
@@ -33,7 +32,8 @@ import "@ui5/webcomponents-icons/dist/hide.js";
 import "@ui5/webcomponents-icons/dist/show.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
-import "@ui5/webcomponents-icons/dist/overflow.js";
+import "@ui5/webcomponents-icons/dist/sort.js";
+import "@ui5/webcomponents-icons/dist/grid.js";
 
 import type FilterBarItem from "./FilterBarItem.js";
 
@@ -46,6 +46,7 @@ import {
 	ADAPT_FILTERS_DIALOG_EDIT_BUTTON,
 	ADAPT_FILTERS_DIALOG_SORT_BUTTON,
 	ADAPT_FILTERS_DIALOG_ADD_FILTER,
+	ADAPT_FILTERS_DIALOG_ADD_FILTER_PLACEHOLDER,
 	ADAPT_FILTERS_DIALOG_OK_BUTTON,
 	ADAPT_FILTERS_DIALOG_FILTER_BUTTON,
 	ADAPT_FILTERS_DIALOG_CANCEL_BUTTON,
@@ -61,13 +62,14 @@ import AdaptFiltersDialogTemplate from "./AdaptFiltersDialogTemplate.js";
 // Styles
 import AdaptFiltersDialogCss from "./generated/themes/AdaptFiltersDialog.css.js";
 
-type AdaptFiltersDialogConfirmEventDetail = {
+type AdaptFiltersDialogSaveEventDetail = {
 	selectedFilters: Array<FilterBarItem>;
 	visibilityMap: Record<string, boolean>;
 }
 
 type AdaptFiltersDialogCancelEventDetail = {
 	selectedFilters: Array<FilterBarItem>;
+	escPressed: boolean;
 }
 
 type AdaptFiltersDialogFilterEventDetail = {
@@ -75,7 +77,7 @@ type AdaptFiltersDialogFilterEventDetail = {
 	visibilityMap: Record<string, boolean>;
 }
 
-type AdaptFiltersDialogFilterVisibilityChangeEventDetail = {
+type AdaptFiltersDialogSelectionChangeEventDetail = {
 	filter: FilterBarItem;
 	visible: boolean;
 }
@@ -88,8 +90,39 @@ type AdaptFiltersDialogFilterAddEventDetail = {
 	filterKey: string;
 }
 
+type AdaptFiltersDialogReorderEventDetail = {
+	keys: Array<string>;
+}
+
+type AdaptFiltersDialogCloseEventDetail = {
+	closeTrigger: "okButtonPressed" | "filterButtonPressed" | "cancelButtonPressed" | "escPressed";
+}
+
+type AdaptFiltersDialogSearchEventDetail = {
+	value: string;
+}
+
+// Minimal structural shapes of the filter controls the dialog introspects.
+// Controls are matched by capability (duck-typed) rather than tag name so the
+// logic works regardless of which concrete web component is slotted.
+type ControlWithValue = { value: string };
+type ControlWithChecked = { checked: boolean };
+type ControlWithTokens = { tokens: Array<{ text: string }> };
+type ControlWithSelectedOption = { selectedOption?: { textContent: string | null, effectiveDisplayText?: string } };
+
+const hasValue = (control: HTMLElement): control is HTMLElement & ControlWithValue => "value" in control;
+const hasChecked = (control: HTMLElement): control is HTMLElement & ControlWithChecked => "checked" in control;
+const hasTokens = (control: HTMLElement): control is HTMLElement & ControlWithTokens => Array.isArray((control as Partial<ControlWithTokens>).tokens);
+const hasSelectedOption = (control: HTMLElement): control is HTMLElement & ControlWithSelectedOption => "selectedOption" in control;
+
+// Captured state of a filter control at dialog-open time, used to roll back on Cancel/Reset.
+type ControlSnapshot = {
+	children: Array<Node>;
+	value?: string;
+	checked?: boolean;
+};
+
 /**
- * @class
  *
  * ### Overview
  *
@@ -114,7 +147,7 @@ type AdaptFiltersDialogFilterAddEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.6.0
+ * @since 2.17.0
  */
 @customElement({
 	tag: "ui5-adapt-filters-dialog",
@@ -130,15 +163,16 @@ type AdaptFiltersDialogFilterAddEventDetail = {
  * @param {Record<string, boolean>} visibilityMap - Filter visibility states by key
  * @public
  */
-@event("confirm")
+@event("filters-dialog-save")
 
 /**
  * Fired when the user cancels the dialog.
  *
  * @param {Array<FilterBarItem>} selectedFilters - Current filter items
+ * @param {boolean} escPressed - Whether the dialog was cancelled via the Escape key
  * @public
  */
-@event("cancel")
+@event("filters-dialog-cancel")
 
 /**
  * Fired when the user clicks the "Filter" button (apply without closing).
@@ -156,7 +190,7 @@ type AdaptFiltersDialogFilterAddEventDetail = {
  * @param {boolean} visible - New visibility state
  * @public
  */
-@event("filter-visibility-change")
+@event("filters-dialog-selection-change")
 
 /**
  * Fired when a filter is removed.
@@ -174,15 +208,77 @@ type AdaptFiltersDialogFilterAddEventDetail = {
  */
 @event("filter-add")
 
+/**
+ * Fired when filters are reordered via drag and drop.
+ *
+ * @param {Array<string>} keys - The new order of filter keys
+ * @public
+ */
+@event("reorder")
+
+/**
+ * Fired when the dialog is about to open.
+ *
+ * @public
+ */
+@event("filters-dialog-open")
+
+/**
+ * Fired after the dialog is fully open.
+ *
+ * @public
+ */
+@event("after-filters-dialog-open")
+
+/**
+ * Fired when the dialog is closed.
+ *
+ * @param {string} closeTrigger - What triggered the close
+ * @public
+ */
+@event("filters-dialog-close")
+
+/**
+ * Fired when the user types in the dialog's search field.
+ *
+ * @param {string} value - The current search value
+ * @public
+ */
+@event("filters-dialog-search")
+
+/**
+ * Fired when the user clicks the "Reset" button.
+ *
+ * @public
+ */
+@event("reset")
+
 class AdaptFiltersDialog extends UI5Element {
 	eventDetails!: {
-		"confirm": AdaptFiltersDialogConfirmEventDetail;
-		"cancel": AdaptFiltersDialogCancelEventDetail;
+		"filters-dialog-save": AdaptFiltersDialogSaveEventDetail;
+		"filters-dialog-cancel": AdaptFiltersDialogCancelEventDetail;
 		"filter": AdaptFiltersDialogFilterEventDetail;
-		"filter-visibility-change": AdaptFiltersDialogFilterVisibilityChangeEventDetail;
+		"filters-dialog-selection-change": AdaptFiltersDialogSelectionChangeEventDetail;
 		"filter-remove": AdaptFiltersDialogFilterRemoveEventDetail;
 		"filter-add": AdaptFiltersDialogFilterAddEventDetail;
+		"reorder": AdaptFiltersDialogReorderEventDetail;
+		"filters-dialog-open": void;
+		"after-filters-dialog-open": void;
+		"filters-dialog-close": AdaptFiltersDialogCloseEventDetail;
+		"filters-dialog-search": AdaptFiltersDialogSearchEventDetail;
+		"reset": void;
 	};
+
+	/**
+	 * Associates this dialog with a FilterBar by its DOM id.
+	 *
+	 * When set, the dialog syncs control values and visibility with the FilterBar's items
+	 * (matched by `filter-key`) on open and on OK/Filter. The dialog still requires its own
+	 * copy of the filter items in its default slot — the link does not source them.
+	 * @public
+	 */
+	@property()
+	filterBar = "";
 
 	/**
 	 * Defines if the dialog is opened.
@@ -204,7 +300,9 @@ class AdaptFiltersDialog extends UI5Element {
 	 * Defines the filter items that can be adapted.
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true, individualSlots: true })
+	@slot({
+		type: HTMLElement, "default": true, invalidateOnChildChange: true, individualSlots: true,
+	})
 	items!: Array<FilterBarItem>;
 
 	/**
@@ -236,6 +334,45 @@ class AdaptFiltersDialog extends UI5Element {
 	@property({ noAttribute: true })
 	_expandedGroups: Record<string, boolean> = {};
 
+	@property({ noAttribute: true })
+	_sortMode = false;
+
+	@property({ noAttribute: true })
+	_editMode = false;
+
+	@property({ noAttribute: true })
+	_removedItems: Array<FilterBarItem> = [];
+
+	/**
+	 * Keys of filters that have been removed and committed (via OK/Filter).
+	 * Persists across open/close so removed filters stay out of the standard list
+	 * and remain offered in the Add Filter list until re-added.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_removedKeys: Array<string> = [];
+
+	/**
+	 * Snapshot of `_removedKeys` captured when the dialog opens, used to roll back
+	 * on Cancel/Reset.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_openRemovedKeysSnapshot: Array<string> = [];
+
+	@property({ noAttribute: true })
+	_openVisibilitySnapshot: Record<string, boolean> = {};
+
+	@property({ noAttribute: true })
+	_itemOrder: Array<string> = [];
+
+	@property({ noAttribute: true })
+	_openItemOrderSnapshot: Array<string> = [];
+
+	_openControlSnapshot: Map<string, ControlSnapshot> = new Map();
+
+	_warnedLinkMissingKey = false;
+
 	/**
 	 * Reference to the internal dialog
 	 * @private
@@ -246,29 +383,48 @@ class AdaptFiltersDialog extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	public static readonly i18nBundle: I18nBundle;
 
-	// ===== LIFECYCLE =====
+	onEnterDOM() {
+		this.addEventListener("token-delete", this._handleTokenDelete as EventListener);
+	}
+
+	onExitDOM() {
+		this.removeEventListener("token-delete", this._handleTokenDelete as EventListener);
+	}
+
+	_handleTokenDelete = (e: CustomEvent) => {
+		const tokens: Array<Element> = e.detail?.tokens || [];
+		tokens.forEach(token => token.parentNode?.removeChild(token));
+	};
 
 	onBeforeRendering() {
-		// Mark items as used in AdaptFiltersDialog and initialize visibility map
-		this.items.forEach(item => {
-			item._adapt_filters_item = true;
+		this._effectiveItems.forEach(item => {
+			item._adaptFiltersItem = true;
 			const key = this._getFilterKey(item);
-			this._visibility[key] ??= item.visible ?? true;
+			this._visibility[key] ??= !item.hidden;
+			// Disable pointer events on items in sort mode so drag works
+			item.style.pointerEvents = this._sortMode ? "none" : "";
 		});
 
-		// Mark available filters as used in AdaptFiltersDialog
 		this.availableFilters?.forEach(item => {
-			item._adapt_filters_item = true;
+			item._adaptFiltersItem = true;
 		});
 
-		// Initialize all groups as expanded by default
 		const groups = this._getGroupNames();
 		groups.forEach(group => {
 			this._expandedGroups[group] ??= true;
 		});
 	}
 
-	// ===== GETTERS =====
+	/**
+	 * Returns the items the dialog operates on — the dialog's own default-slot items.
+	 *
+	 * **Note:** The `filterBar` property links the dialog to a FilterBar for control-value
+	 * and visibility sync (see `show()` / `_syncControlsToFilterBar()`); it does NOT source
+	 * the item set. Items must be provided in this dialog's own default slot.
+	 */
+	get _effectiveItems(): Array<FilterBarItem> {
+		return this.items;
+	}
 
 	/**
 	 * Get filter key (with fallback)
@@ -309,65 +465,25 @@ class AdaptFiltersDialog extends UI5Element {
 	}
 
 	/**
-	 * Get filter value display
-	 */
-	_getFilterValueDisplay(item: FilterBarItem): string {
-		// If additionalText is set, use it
-		if (item.additionalText) {
-			return item.additionalText;
-		}
-
-		// Otherwise, extract from control
-		const control = item.control?.[0];
-		return this._extractValuesFromControl(control);
-	}
-
-	/**
-	 * Extract values from various control types
-	 * Uses duck-typing for scoping-safety instead of hard-coded tag name checks
+	 * Whether the item's control currently holds a value. Matches controls by
+	 * capability (tokens, selected option, or a value) rather than tag name.
 	 * @private
 	 */
-	_extractValuesFromControl(control?: HTMLElement): string {
+	_controlHasValue(item: FilterBarItem): boolean {
+		const control = item.control?.[0];
 		if (!control) {
-			return "";
+			return false;
 		}
-
-		const controlAny = control as any;
-
-		// MultiInput/MultiComboBox - check for tokens array
-		if ('tokens' in controlAny && Array.isArray(controlAny.tokens)) {
-			const tokens = controlAny.tokens;
-			if (tokens.length === 0) {
-				return "";
-			}
-			return tokens.map((t: any) => `=${String(t.text)} ×`).join(" ");
+		if (hasTokens(control)) {
+			return control.tokens.length > 0;
 		}
-
-		// Select - check for selectedOption
-		if ('selectedOption' in controlAny && controlAny.selectedOption) {
-			const selected = controlAny.selectedOption;
-			// Use textContent or effectiveDisplayText since 'text' is a slot that returns Node array
-			const selectedText = selected?.textContent || selected?.effectiveDisplayText || "";
-			return selectedText ? `=${selectedText} ×` : "";
+		if (hasSelectedOption(control)) {
+			return !!control.selectedOption?.textContent || !!control.selectedOption?.effectiveDisplayText;
 		}
-
-		// Input, DatePicker, DateRangePicker - check for value property
-		if ('value' in controlAny) {
-			const value = controlAny.value;
-			if (!value) {
-				return "";
-			}
-
-			// DateRangePicker typically has range format (no prefix/suffix)
-			if ('dateValue' in controlAny || 'startDateValue' in controlAny) {
-				return String(value);
-			}
-
-			// Regular input/date picker - add prefix and suffix
-			return `=${value} ×`;
+		if (hasValue(control)) {
+			return !!control.value;
 		}
-
-		return "";
+		return false;
 	}
 
 	/**
@@ -375,7 +491,7 @@ class AdaptFiltersDialog extends UI5Element {
 	 */
 	_isVisible(item: FilterBarItem): boolean {
 		const key = this._getFilterKey(item);
-		return this._visibility[key] ?? item.visible ?? true;
+		return this._visibility[key] ?? !item.hidden;
 	}
 
 	/**
@@ -386,12 +502,11 @@ class AdaptFiltersDialog extends UI5Element {
 	}
 
 	/**
-	 * Check if filter has any values
+	 * Check if a filter is "active" (explicitly marked active or holds a value).
 	 * @private
 	 */
-	_hasFilterValues(item: FilterBarItem): boolean {
-		const valueDisplay = this._getFilterValueDisplay(item);
-		return valueDisplay.trim().length > 0;
+	_isActive(item: FilterBarItem): boolean {
+		return item.active || this._controlHasValue(item);
 	}
 
 	/**
@@ -400,122 +515,126 @@ class AdaptFiltersDialog extends UI5Element {
 	 * @private
 	 */
 	_isVisibilityToggleDisabled(item: FilterBarItem): boolean {
-		return this._isRequired(item) && !this._hasFilterValues(item);
+		return this._isRequired(item) && !this._controlHasValue(item);
 	}
 
 	/**
-	 * Get filtered items based on search
+	 * Active (non-removed) items, filtered by the search term and sorted by the
+	 * current key order (items not in the order go to the end).
 	 */
 	get _filteredItems(): Array<FilterBarItem> {
-		if (!this._searchValue) {
-			return this.items;
-		}
-
-		const searchLower = this._searchValue.toLowerCase();
-		return this.items.filter(item => {
+		const search = this._searchValue.toLowerCase();
+		const matchesSearch = (item: FilterBarItem) => {
+			if (!search) {
+				return true;
+			}
 			const text = this._getFilterText(item).toLowerCase();
 			const groupName = (item.groupName || "").toLowerCase();
-			return text.includes(searchLower) || groupName.includes(searchLower);
-		});
+			return text.includes(search) || groupName.includes(search);
+		};
+
+		const orderIndex = (item: FilterBarItem) => {
+			const index = this._itemOrder.indexOf(this._getFilterKey(item));
+			return index === -1 ? Infinity : index;
+		};
+
+		return this._effectiveItems
+			.filter(item => !this._isRemoved(item) && matchesSearch(item))
+			.sort((a, b) => orderIndex(a) - orderIndex(b));
 	}
 
 	/**
-	 * Get unique group names from items, ordered by groupOrder and "Basic" first
+	 * Whether the item belongs to no explicit group (shown under the "ungrouped" bucket).
+	 * @private
 	 */
-	_getGroupNames(): string[] {
-		const groupMap = new Map<string, number>();
+	_isUngrouped(item: FilterBarItem): boolean {
+		return !item.groupName || item.groupName === "default";
+	}
 
-		this.items.forEach(item => {
-			if (item.groupName && !groupMap.has(item.groupName)) {
-				groupMap.set(item.groupName, item.groupOrder ?? 999);
+	/**
+	 * Unique explicit group names, ordered: "Basic" first, then by `groupOrder`, then by name.
+	 * @private
+	 */
+	_getGroupNames(): Array<string> {
+		const orderByGroup = new Map<string, number>();
+		this._effectiveItems.forEach(item => {
+			if (!this._isUngrouped(item) && !orderByGroup.has(item.groupName)) {
+				orderByGroup.set(item.groupName, item.groupOrder ?? 999);
 			}
 		});
 
-		// Sort by: 1) "Basic" first, 2) groupOrder, 3) name
-		return Array.from(groupMap.entries())
-			.sort((a, b) => {
-				// "Basic" always first (case-insensitive)
-				const aIsBasic = a[0].toLowerCase() === 'basic';
-				const bIsBasic = b[0].toLowerCase() === 'basic';
+		const isBasic = (name: string) => name.toLowerCase() === "basic";
 
-				if (aIsBasic && !bIsBasic) return -1;
-				if (!aIsBasic && bIsBasic) return 1;
-
-				// Then by groupOrder
-				if (a[1] !== b[1]) return a[1] - b[1];
-
-				// Finally by name
-				return a[0].localeCompare(b[0]);
-			})
-			.map(entry => entry[0]);
+		return [...orderByGroup.keys()].sort((a, b) => {
+			if (isBasic(a) !== isBasic(b)) {
+				return isBasic(a) ? -1 : 1;
+			}
+			const orderDiff = orderByGroup.get(a)! - orderByGroup.get(b)!;
+			return orderDiff !== 0 ? orderDiff : a.localeCompare(b);
+		});
 	}
 
 	/**
-	 * Get grouped filters for Groups view
+	 * Filtered items arranged into groups for the Groups view, each group sorted
+	 * alphabetically, in group order, with ungrouped items appended last.
+	 * @private
 	 */
 	get _groupedFilters(): Map<string, Array<FilterBarItem>> {
-		const grouped = new Map<string, Array<FilterBarItem>>();
+		const byText = (a: FilterBarItem, b: FilterBarItem) => this._getFilterText(a).localeCompare(this._getFilterText(b));
+
+		const itemsByGroup = new Map<string, Array<FilterBarItem>>();
 		const ungrouped: Array<FilterBarItem> = [];
-
 		this._filteredItems.forEach(item => {
-			const groupName = item.groupName;
-			if (groupName) {
-				if (!grouped.has(groupName)) {
-					grouped.set(groupName, []);
-				}
-				grouped.get(groupName)!.push(item);
-			} else {
+			if (this._isUngrouped(item)) {
 				ungrouped.push(item);
+				return;
+			}
+			const group = itemsByGroup.get(item.groupName) ?? [];
+			group.push(item);
+			itemsByGroup.set(item.groupName, group);
+		});
+
+		const result = new Map<string, Array<FilterBarItem>>();
+		this._getGroupNames().forEach(name => {
+			const group = itemsByGroup.get(name);
+			if (group) {
+				result.set(name, group.sort(byText));
 			}
 		});
-
-		// Sort filters within each group alphabetically
-		grouped.forEach((items, groupName) => {
-			items.sort((a, b) =>
-				this._getFilterText(a).localeCompare(this._getFilterText(b))
-			);
-		});
-
-		// Sort ungrouped filters alphabetically
-		ungrouped.sort((a, b) =>
-			this._getFilterText(a).localeCompare(this._getFilterText(b))
-		);
-
-		// Rebuild map in correct group order
-		const orderedMap = new Map<string, Array<FilterBarItem>>();
-		const groupNames = this._getGroupNames();
-
-		groupNames.forEach(name => {
-			if (grouped.has(name)) {
-				orderedMap.set(name, grouped.get(name)!);
-			}
-		});
-
-		// Add ungrouped items at the end if any
 		if (ungrouped.length > 0) {
-			orderedMap.set(this._ungroupedText, ungrouped);
+			result.set(this._ungroupedText, ungrouped.sort(byText));
 		}
-
-		return orderedMap;
+		return result;
 	}
 
 	/**
-	 * Get available filters (not already added)
+	 * Filters offered in the Add Filter combobox: removed items (staged or committed)
+	 * plus the app-provided `availableFilters` pool, excluding anything active in the
+	 * list, de-duplicated by key and sorted by label.
+	 * @private
 	 */
 	get _availableFiltersToAdd(): Array<FilterBarItem> {
-		if (!this.availableFilters || this.availableFilters.length === 0) {
-			return [];
-		}
+		const activeKeys = new Set(
+			this._effectiveItems
+				.filter(item => !this._isRemoved(item))
+				.map(item => this._getFilterKey(item)),
+		);
 
-		const addedKeys = new Set(this.items.map(item => this._getFilterKey(item)));
-		return this.availableFilters
-			.filter(filter => {
-				const key = this._getFilterKey(filter);
-				return !addedKeys.has(key);
-			})
-			.sort((a, b) =>
-				this._getFilterText(a).localeCompare(this._getFilterText(b))
-			);
+		const removed = this._effectiveItems.filter(item => this._isRemoved(item));
+		const pooled = this.availableFilters || [];
+
+		const addable = [...removed, ...pooled].filter(item => !activeKeys.has(this._getFilterKey(item)));
+
+		const byKey = new Map(addable.map(item => [this._getFilterKey(item), item]));
+		return [...byKey.values()].sort((a, b) => this._getFilterText(a).localeCompare(this._getFilterText(b)));
+	}
+
+	/**
+	 * Whether an item is staged for or committed to removal.
+	 * @private
+	 */
+	_isRemoved(item: FilterBarItem): boolean {
+		return this._isRemovedKey(this._getFilterKey(item));
 	}
 
 	/**
@@ -525,21 +644,12 @@ class AdaptFiltersDialog extends UI5Element {
 		return this._expandedGroups[groupName] ?? true;
 	}
 
-	// ===== EVENT HANDLERS =====
-
 	/**
 	 * Handle tab selection change from TabContainer
 	 */
 	_handleTabSelect(e: CustomEvent) {
-		const tab = e.detail.tab;
-		const tabText = tab.text;
-
-		// Determine which view mode based on tab text
-		if (tabText === this._listTabText) {
-			this.viewMode = "list";
-		} else if (tabText === this._groupsTabText) {
-			this.viewMode = "groups";
-		}
+		this.viewMode = e.detail.tabIndex === 0 ? "list" : "groups";
+		this._sortMode = false;
 	}
 
 	/**
@@ -548,13 +658,13 @@ class AdaptFiltersDialog extends UI5Element {
 	_handleSearch(e: CustomEvent) {
 		const input = e.target as any;
 		this._searchValue = input.value || "";
+		this.fireDecoratorEvent("filters-dialog-search", { value: this._searchValue });
 	}
 
 	/**
 	 * Handle visibility toggle
 	 */
 	_handleVisibilityToggle(item: FilterBarItem) {
-		// Don't allow toggling if disabled (required filter without values)
 		if (this._isVisibilityToggleDisabled(item)) {
 			return;
 		}
@@ -563,53 +673,52 @@ class AdaptFiltersDialog extends UI5Element {
 		const newVisibility = !this._visibility[key];
 		this._visibility = { ...this._visibility, [key]: newVisibility };
 
-		this.fireDecoratorEvent("filter-visibility-change", {
+		this.fireDecoratorEvent("filters-dialog-selection-change", {
 			filter: item,
 			visible: newVisibility,
 		});
 	}
 
 	/**
-	 * Handle copy filter
-	 */
-	_handleCopy(item: FilterBarItem) {
-		// Copy filter configuration to clipboard
-		const config = {
-			text: this._getFilterText(item),
-			groupName: item.groupName,
-			visible: this._isVisible(item),
-			required: item.required,
-			values: this._getFilterValueDisplay(item),
-		};
-
-		try {
-			navigator.clipboard.writeText(JSON.stringify(config, null, 2));
-		} catch {
-			// Silently fail if clipboard is not available or permission denied
-		}
-	}
-
-	/**
-	 * Handle remove filter
+	 * Handle remove filter — deferred until OK/Filter confirm
 	 */
 	_handleRemove(item: FilterBarItem) {
 		if (this._isRequired(item)) {
 			return;
 		}
-
-		this.fireDecoratorEvent("filter-remove", { filter: item });
+		// Track as pending removal; committed on OK/Filter
+		this._removedItems = [...this._removedItems, item];
 	}
 
 	/**
-	 * Handle add filter
+	 * Handle add filter from ComboBox selectionChange
 	 */
 	_handleAddFilter(e: CustomEvent) {
-		const select = e.target as any;
-		const filterKey = select.value;
+		const selectedItem = e.detail?.item as HTMLElement | undefined;
+		const filterKey = selectedItem?.getAttribute("data-key");
+		if (!filterKey) { return; }
 
-		if (filterKey) {
-			this.fireDecoratorEvent("filter-add", { filterKey });
-			select.value = ""; // Reset
+		this._restoreFilter(filterKey);
+		this.fireDecoratorEvent("filter-add", { filterKey });
+
+		const comboBox = e.target as HTMLInputElement;
+		comboBox.value = "";
+	}
+
+	/**
+	 * Brings a filter back into the active list: undoes any staged/committed removal,
+	 * moves it out of the availableFilters pool, and gives it a spot in the order.
+	 * @private
+	 */
+	_restoreFilter(filterKey: string) {
+		this._removedItems = this._removedItems.filter(item => this._getFilterKey(item) !== filterKey);
+		this._removedKeys = this._removedKeys.filter(key => key !== filterKey);
+
+		const pooled = this.availableFilters?.find(item => this._getFilterKey(item) === filterKey);
+		pooled?.removeAttribute("slot");
+
+		if (!this._itemOrder.includes(filterKey)) {
+			this._itemOrder = [...this._itemOrder, filterKey];
 		}
 	}
 
@@ -635,75 +744,343 @@ class AdaptFiltersDialog extends UI5Element {
 		}
 	}
 
+	_handleDialogBeforeClose(e: CustomEvent) {
+		// Intercept Escape/external close — treat as cancel to restore snapshot
+		const escapeKey = (e.detail)?.escPressed;
+		if (escapeKey) {
+			e.preventDefault();
+			this._handleCancel(true);
+		}
+	}
+
+	_handleDialogOpen() {
+		this.fireDecoratorEvent("after-filters-dialog-open");
+	}
+
 	/**
-	 * Handle OK button
+	 * Finds a linked FilterBar item by key, comparing properties instead of a CSS
+	 * selector so keys with special characters match safely.
+	 * @private
 	 */
+	_findFilterBarItemByKey(fb: HTMLElement, key: string): FilterBarItem | undefined {
+		const items = [...fb.querySelectorAll<FilterBarItem>(":scope > ui5-filterbar-item")];
+		return items.find(item => this._getFilterKey(item) === key);
+	}
+
+	/**
+	 * Copies the live state (value, checked, and slotted children such as tokens)
+	 * from one control to another, replacing the target's slotted children.
+	 * @private
+	 */
+	_copyControlState(source: HTMLElement, target: HTMLElement) {
+		if (hasValue(source) && hasValue(target)) {
+			target.value = source.value;
+		}
+		if (hasChecked(source) && hasChecked(target)) {
+			target.checked = source.checked;
+		}
+
+		const slottedChildren = (control: HTMLElement) => [...control.children].filter(child => child.hasAttribute("slot"));
+		slottedChildren(target).forEach(child => child.remove());
+		slottedChildren(source).forEach(child => this._appendWithBaseSlot(target, child.cloneNode(true) as Element));
+	}
+
+	_syncControlsToFilterBar() {
+		const filterBar = this.filterBar ? document.getElementById(this.filterBar) : null;
+		if (!filterBar) {
+			return;
+		}
+		this.items.forEach(item => {
+			const dialogItem = this._findFilterBarItemByKey(filterBar, this._getFilterKey(item));
+			const dialogControl = item.control?.[0];
+			const filterBarControl = dialogItem?.control?.[0];
+			if (dialogControl && filterBarControl) {
+				this._copyControlState(dialogControl, filterBarControl);
+			}
+		});
+	}
+
+	/**
+	 * Builds the save/filter payload. Removed filters are excluded from `selectedFilters`
+	 * and forced to `false` in `visibilityMap` so applying the map can't resurrect them.
+	 * @private
+	 */
+	_buildResultPayload(): { selectedFilters: Array<FilterBarItem>, visibilityMap: Record<string, boolean> } {
+		const selectedFilters = this._effectiveItems.filter(item => this._isVisible(item) && !this._isRemoved(item));
+
+		const visibilityMap = { ...this._visibility };
+		this._removedItems.forEach(item => {
+			visibilityMap[this._getFilterKey(item)] = false;
+		});
+		this._removedKeys.forEach(key => {
+			visibilityMap[key] = false;
+		});
+
+		return { selectedFilters, visibilityMap };
+	}
+
 	_handleOK() {
-		const selectedFilters = this.items.filter(item => this._isVisible(item));
-		this.fireDecoratorEvent("confirm", {
-			selectedFilters,
-			visibilityMap: { ...this._visibility },
+		this._syncControlsToFilterBar();
+		this._removedItems.forEach(item => {
+			this.fireDecoratorEvent("filter-remove", { filter: item });
 		});
-		this.close();
+		this.fireDecoratorEvent("filters-dialog-save", this._buildResultPayload());
+		this._commitRemovedKeys();
+		this._close("okButtonPressed");
 	}
 
-	/**
-	 * Handle Filter button (apply without closing)
-	 */
 	_handleFilter() {
-		const selectedFilters = this.items.filter(item => this._isVisible(item));
-		this.fireDecoratorEvent("filter", {
-			selectedFilters,
-			visibilityMap: { ...this._visibility },
+		this._syncControlsToFilterBar();
+		this._removedItems.forEach(item => {
+			this.fireDecoratorEvent("filter-remove", { filter: item });
+		});
+		this.fireDecoratorEvent("filter", this._buildResultPayload());
+		this._commitRemovedKeys();
+		this._close("filterButtonPressed");
+	}
+
+	/**
+	 * Commits staged removals into `_removedKeys` so they persist across open/close
+	 * (kept in the list exclusion and the Add Filter pool).
+	 * @private
+	 */
+	_commitRemovedKeys() {
+		const keys = this._removedItems.map(item => this._getFilterKey(item));
+		const merged = [...this._removedKeys];
+		keys.forEach(key => {
+			if (!merged.includes(key)) {
+				merged.push(key);
+			}
+		});
+		this._removedKeys = merged;
+	}
+
+	_handleCancel(escPressed = false) {
+		this._visibility = { ...this._openVisibilitySnapshot };
+		this._itemOrder = [...this._openItemOrderSnapshot];
+		this._removedKeys = [...this._openRemovedKeysSnapshot];
+		this._removedItems = [];
+		this._sortMode = false;
+		this._restoreControlsFromSnapshot();
+		const selectedFilters = this._effectiveItems.filter(item => this._isVisible(item));
+		this.fireDecoratorEvent("filters-dialog-cancel", { selectedFilters, escPressed });
+		this._close(escPressed ? "escPressed" : "cancelButtonPressed");
+	}
+
+	_restoreControlsFromSnapshot() {
+		this.items.forEach(item => {
+			const snapshot = this._openControlSnapshot.get(this._getFilterKey(item));
+			const control = item.control?.[0];
+			if (!snapshot || !control) {
+				return;
+			}
+			// Replace every child (slotted and slotless, e.g. ui5-select options) to
+			// avoid leaving or duplicating the slotless ones.
+			[...control.children].forEach(child => child.remove());
+			snapshot.children.forEach(child => this._appendWithBaseSlot(control, child.cloneNode(true) as Element));
+
+			if (snapshot.value !== undefined && hasValue(control)) {
+				control.value = snapshot.value;
+			}
+			if (snapshot.checked !== undefined && hasChecked(control)) {
+				control.checked = snapshot.checked;
+			}
 		});
 	}
 
 	/**
-	 * Handle Cancel button
+	 * Appends a child to a control, normalizing any individual-slot name
+	 * (e.g. `tokens-1`) back to its base (`tokens`) so the framework reassigns indices.
+	 * @private
 	 */
-	_handleCancel() {
-		const selectedFilters = this.items.filter(item => this._isVisible(item));
-		this.fireDecoratorEvent("cancel", { selectedFilters });
-		this.close();
+	_appendWithBaseSlot(target: HTMLElement, child: Element) {
+		const slotAttr = child.getAttribute("slot");
+		if (slotAttr) {
+			child.setAttribute("slot", slotAttr.replace(/-\d+$/, ""));
+		}
+		target.appendChild(child);
 	}
 
 	/**
 	 * Handle Reset button
 	 */
 	_handleReset() {
-		// Reset all filters to visible
-		const newVisibility: Record<string, boolean> = {};
-		this.items.forEach(item => {
-			const key = this._getFilterKey(item);
-			newVisibility[key] = true;
-		});
-		this._visibility = newVisibility;
+		this._visibility = { ...this._openVisibilitySnapshot };
+		this._itemOrder = [...this._openItemOrderSnapshot];
+		this._removedKeys = [...this._openRemovedKeysSnapshot];
+		this._removedItems = [];
+		// Restore the open-time interaction state: edit on, sort off
+		this._sortMode = false;
+		this._editMode = true;
+		this._restoreControlsFromSnapshot();
+		this.fireDecoratorEvent("reset");
 	}
 
-	/**
-	 * Handle Edit button (List view)
-	 */
 	_handleEdit() {
-		// Future: Open edit mode for bulk editing
-		// Not yet implemented
+		this._editMode = !this._editMode;
+		if (this._editMode) { this._sortMode = false; }
+	}
+
+	_handleSort() {
+		this._sortMode = !this._sortMode;
+		if (this._sortMode) { this._editMode = false; }
 	}
 
 	/**
-	 * Handle Sort button (List view)
+	 * Handle list item move (drag and drop reorder)
 	 */
-	_handleSort() {
-		// Future: Open sort dialog
-		// Not yet implemented
+	_handleMoveOver(e: CustomEvent) {
+		const { destination } = e.detail;
+		if (!destination) { return; }
+		if (destination.placement === "Before" || destination.placement === "After") {
+			e.preventDefault();
+		}
 	}
 
-	// ===== PUBLIC API =====
+	_handleMove(e: CustomEvent) {
+		const { source, destination } = e.detail;
+		if (!destination) { return; }
+
+		const sourceKey = source.element.getAttribute("data-key") as string;
+		const destinationKey = destination.element.getAttribute("data-key") as string;
+		const placeAfter = destination.placement === "After";
+
+		this._itemOrder = this._moveKey(this._itemOrder, sourceKey, destinationKey, placeAfter);
+
+		const keys = this._itemOrder.filter(key => !this._isRemovedKey(key));
+		this.fireDecoratorEvent("reorder", { keys });
+	}
+
+	/**
+	 * Returns `order` with `sourceKey` moved next to `destinationKey` (after it when
+	 * `placeAfter`, otherwise before it). If the destination is not in the order,
+	 * the source is moved to the end.
+	 * @private
+	 */
+	_moveKey(order: Array<string>, sourceKey: string, destinationKey: string, placeAfter: boolean): Array<string> {
+		const result = [...order];
+		const sourceIndex = result.indexOf(sourceKey);
+		if (sourceIndex === -1) {
+			return result;
+		}
+		result.splice(sourceIndex, 1);
+
+		const destinationIndex = result.indexOf(destinationKey);
+		if (destinationIndex === -1) {
+			result.push(sourceKey);
+		} else {
+			result.splice(placeAfter ? destinationIndex + 1 : destinationIndex, 0, sourceKey);
+		}
+		return result;
+	}
+
+	/**
+	 * Whether a key is staged for or committed to removal.
+	 * @private
+	 */
+	_isRemovedKey(key: string): boolean {
+		return this._removedKeys.includes(key)
+			|| this._removedItems.some(item => this._getFilterKey(item) === key);
+	}
 
 	/**
 	 * Opens the dialog.
 	 * @public
 	 */
-	show() {
+	show(keyOrder?: Array<string>) {
+		this.fireDecoratorEvent("filters-dialog-open");
+
+		this._sortMode = false;
+		this._editMode = true;
+		this._searchValue = "";
+		this._removedItems = [];
+
+		const filterBar = this.filterBar ? document.getElementById(this.filterBar) : null;
+		this._warnIfLinkedWithoutKeys(filterBar);
+
+		this._itemOrder = keyOrder?.length ? [...keyOrder] : this.items.map(item => this._getFilterKey(item));
+		this._visibility = this._collectVisibility(filterBar);
+		this._syncControlsFromFilterBar(filterBar);
+		this._openControlSnapshot = this._snapshotControls();
+
+		this._openItemOrderSnapshot = [...this._itemOrder];
+		this._openVisibilitySnapshot = { ...this._visibility };
+		this._openRemovedKeysSnapshot = [...this._removedKeys];
+
 		this.open = true;
+	}
+
+	/**
+	 * Warns once when linked to a FilterBar but some items lack a `filterKey`,
+	 * since those items cannot be matched for value/visibility sync.
+	 * @private
+	 */
+	_warnIfLinkedWithoutKeys(filterBar: HTMLElement | null) {
+		if (filterBar && !this._warnedLinkMissingKey && this.items.some(item => !item.filterKey)) {
+			this._warnedLinkMissingKey = true;
+			console.warn(`AdaptFiltersDialog :: linked to a FilterBar via "filter-bar", but one or more items have no "filter-key". Sync is skipped for those items.`); // eslint-disable-line
+		}
+	}
+
+	/**
+	 * Visibility per item key, scoped to the current items so stale keys don't
+	 * accumulate. When linked, the FilterBar's state wins.
+	 * @private
+	 */
+	_collectVisibility(filterBar: HTMLElement | null): Record<string, boolean> {
+		const visibility: Record<string, boolean> = {};
+		this.items.forEach(item => {
+			visibility[this._getFilterKey(item)] = !item.hidden;
+		});
+		filterBar?.querySelectorAll<FilterBarItem>(":scope > ui5-filterbar-item").forEach(filterBarItem => {
+			const key = this._getFilterKey(filterBarItem);
+			if (key in visibility) {
+				visibility[key] = !filterBarItem.hidden;
+			}
+		});
+		return visibility;
+	}
+
+	/**
+	 * Copies control values from the linked FilterBar into the matching dialog items.
+	 * @private
+	 */
+	_syncControlsFromFilterBar(filterBar: HTMLElement | null) {
+		if (!filterBar) {
+			return;
+		}
+		this.items.forEach(item => {
+			const dialogControl = item.control?.[0];
+			const filterBarControl = this._findFilterBarItemByKey(filterBar, this._getFilterKey(item))?.control?.[0];
+			if (dialogControl && filterBarControl) {
+				this._copyControlState(filterBarControl, dialogControl);
+			}
+		});
+	}
+
+	/**
+	 * Captures each dialog control's current state so Cancel/Reset can restore it.
+	 * @private
+	 */
+	_snapshotControls(): Map<string, ControlSnapshot> {
+		const snapshots = new Map<string, ControlSnapshot>();
+		this.items.forEach(item => {
+			const control = item.control?.[0];
+			if (!control) {
+				return;
+			}
+			const snapshot: ControlSnapshot = {
+				children: [...control.children].map(child => child.cloneNode(true)),
+			};
+			if (hasValue(control)) {
+				snapshot.value = control.value;
+			}
+			if (hasChecked(control)) {
+				snapshot.checked = control.checked;
+			}
+			snapshots.set(this._getFilterKey(item), snapshot);
+		});
+		return snapshots;
 	}
 
 	/**
@@ -711,10 +1088,18 @@ class AdaptFiltersDialog extends UI5Element {
 	 * @public
 	 */
 	close() {
-		this.open = false;
+		this._close("cancelButtonPressed");
 	}
 
-	// ===== i18n TEXTS =====
+	/**
+	 * Internal close that also fires the close event with the trigger reason.
+	 * @private
+	 */
+	_close(closeTrigger: "okButtonPressed" | "filterButtonPressed" | "cancelButtonPressed" | "escPressed") {
+		this.open = false;
+		this._removedItems = [];
+		this.fireDecoratorEvent("filters-dialog-close", { closeTrigger });
+	}
 
 	get _dialogTitle() {
 		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_TITLE);
@@ -746,6 +1131,10 @@ class AdaptFiltersDialog extends UI5Element {
 
 	get _addFilterText() {
 		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_ADD_FILTER);
+	}
+
+	get _addFilterPlaceholder() {
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_ADD_FILTER_PLACEHOLDER);
 	}
 
 	get _okButtonText() {
@@ -781,10 +1170,13 @@ AdaptFiltersDialog.define();
 
 export default AdaptFiltersDialog;
 export type {
-	AdaptFiltersDialogConfirmEventDetail,
+	AdaptFiltersDialogSaveEventDetail,
 	AdaptFiltersDialogCancelEventDetail,
 	AdaptFiltersDialogFilterEventDetail,
-	AdaptFiltersDialogFilterVisibilityChangeEventDetail,
+	AdaptFiltersDialogSelectionChangeEventDetail,
 	AdaptFiltersDialogFilterRemoveEventDetail,
 	AdaptFiltersDialogFilterAddEventDetail,
+	AdaptFiltersDialogReorderEventDetail,
+	AdaptFiltersDialogCloseEventDetail,
+	AdaptFiltersDialogSearchEventDetail,
 };

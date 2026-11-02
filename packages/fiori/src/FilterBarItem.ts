@@ -3,7 +3,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type Label from "@ui5/webcomponents/dist/Label.js";
 
 // Template
 import FilterBarItemTemplate from "./FilterBarItemTemplate.js";
@@ -24,7 +23,7 @@ import FilterBarItemCss from "./generated/themes/FilterBarItem.css.js";
  * The `ui5-filterbar-item` is used as a child element of `ui5-filterbar` to provide filtering options.
  * Each filter bar item represents a specific filter criterion.
  *
- * **Note:** Properties `text`, `groupName`, `visible`, `required`, `key`, and `additionalText`
+ * **Note:** Properties `groupName`, `hidden`, `hiddenInFilterBar`, `required`, and `filterKey`
  * are primarily used by `ui5-adapt-filters-dialog` for filter management functionality.
  *
  * ### ES6 Module Import
@@ -45,10 +44,22 @@ class FilterBarItem extends UI5Element {
 	/**
 	 * Defines the label of the filter item.
 	 *
+	 * @default undefined
 	 * @public
 	 */
-	@slot()
-	label!: Array<Label>;
+	@property()
+	label?: string;
+
+	/**
+	 * Defines the tooltip of the filter item's label.
+	 * If not set, the `label` is used as a fallback.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property()
+	labelTooltip?: string;
 
 	/**
 	 * Defines the control element for the filter item.
@@ -59,54 +70,55 @@ class FilterBarItem extends UI5Element {
 	control!: Array<HTMLElement>;
 
 	/**
-	 * Defines the text label for the filter.
-	 * Alternative to label slot. If not provided, text will be extracted from label slot.
-	 *
-	 * **Note:** Used by AdaptFiltersDialog for displaying filter names.
-	 *
-	 * @default undefined
-	 * @public
-	 * @since 2.6.0
-	 */
-	@property()
-	text?: string;
-
-	/**
 	 * Defines the group name for organizing filters.
 	 *
 	 * **Note:** Used by AdaptFiltersDialog to organize filters in the Groups view.
+	 * The value `"default"` is treated as "ungrouped".
 	 *
-	 * @default undefined
+	 * @default "default"
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	@property()
-	groupName?: string;
+	groupName = "default";
 
 	/**
 	 * Defines the order index for the group in Groups view.
 	 * Lower numbers appear first. "Basic" group typically uses 0.
 	 *
-	 * **Note:** Used by AdaptFiltersDialog to order groups.
+	 * **Note:** Used by AdaptFiltersDialog to order groups. This property is specific to the
+	 * web component and has no equivalent in the React `FilterGroupItem`.
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	@property({ type: Number })
 	groupOrder?: number;
 
 	/**
-	 * Defines the visibility state of the filter in the FilterBar.
+	 * Defines whether the filter item is hidden everywhere - both in the FilterBar and in the
+	 * AdaptFiltersDialog list.
 	 *
-	 * **Note:** Managed by AdaptFiltersDialog to control filter visibility.
-	 *
-	 * @default true
+	 * @default false
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	@property({ type: Boolean })
-	visible = true;
+	hidden = false;
+
+	/**
+	 * Defines whether the filter item is hidden in the FilterBar but still shown in the
+	 * AdaptFiltersDialog list (so it can be made visible again).
+	 *
+	 * **Note:** An item renders in the FilterBar only when it is neither `hidden` nor `hiddenInFilterBar`.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property({ type: Boolean })
+	hiddenInFilterBar = false;
 
 	/**
 	 * Defines whether the filter is required.
@@ -116,36 +128,36 @@ class FilterBarItem extends UI5Element {
 	 *
 	 * @default false
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	@property({ type: Boolean })
 	required = false;
 
 	/**
-	 * Defines a unique key for the filter item.
-	 * If not provided, a key will be auto-generated.
+	 * Defines whether the filter currently holds a value (is "active").
+	 * Used by AdaptFiltersDialog to show a value-active indicator.
 	 *
-	 * **Note:** Used by AdaptFiltersDialog for stable identification across interactions.
-	 *
-	 * @default undefined
+	 * @default false
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
-	@property()
-	key?: string;
+	@property({ type: Boolean })
+	active = false;
 
 	/**
-	 * Defines additional text to display (e.g., current filter values).
-	 * If not provided, values will be auto-extracted from the control element.
+	 * Defines a unique key for the filter item.
 	 *
-	 * **Note:** Used by AdaptFiltersDialog to show filter value summaries like "=1984 × =1995 ×".
+	 * **Note:** Used by AdaptFiltersDialog for stable identification across interactions and to
+	 * link the FilterBar item with its AdaptFiltersDialog counterpart. Should be unique and must
+	 * not contain whitespace. Setting it is strongly recommended - the fallback to the internal
+	 * element id is unstable across element instances.
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	@property()
-	additionalText?: string;
+	filterKey?: string;
 
 	/**
 	 * Internal flag set by AdaptFiltersDialog to mark filter items used within the dialog.
@@ -153,55 +165,52 @@ class FilterBarItem extends UI5Element {
 	 * @default false
 	 */
 	@property({ type: Boolean })
-	_adapt_filters_item = false;
+	_adaptFiltersItem = false;
+
+	_warnedMissingKey = false;
+
+	onBeforeRendering() {
+		if (!this.filterKey && !this._warnedMissingKey) {
+			this._warnedMissingKey = true;
+			console.warn(`FilterBarItem :: missing "filterKey" - falling back to an unstable internal id. Set a unique "filterKey" to ensure correct FilterBar / AdaptFiltersDialog linking.`); // eslint-disable-line
+		}
+	}
 
 	/**
-	 * Gets the effective text for this filter item.
-	 * Returns the text property if set, otherwise extracts from label slot.
+	 * Gets the effective text for this filter item, derived from the `label` property.
 	 *
 	 * **Note:** Used internally by AdaptFiltersDialog.
 	 *
 	 * @readonly
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	get effectiveText(): string {
-		if (this.text) {
-			return this.text;
-		}
+		return this.label || "";
+	}
 
-		const labelElement = this.label?.[0];
-		return labelElement?.textContent?.trim() || "";
+	/**
+	 * Gets the effective tooltip for this filter item's label.
+	 * Falls back to the `label` when `labelTooltip` is not set.
+	 *
+	 * @private
+	 */
+	get _effectiveLabelTooltip(): string {
+		return this.labelTooltip || this.label || "";
 	}
 
 	/**
 	 * Gets the effective key for this filter item.
-	 * Returns the key property if set, otherwise generates a stable key.
+	 * Returns the `filterKey` property if set, otherwise falls back to the internal UI5Element ID.
 	 *
 	 * **Note:** Used internally by AdaptFiltersDialog.
 	 *
 	 * @readonly
 	 * @public
-	 * @since 2.6.0
+	 * @since 2.17.0
 	 */
 	get effectiveKey(): string {
-		if (this.key) {
-			return this.key;
-		}
-
-		// Use internal ID if available
-		if ((this as any)._id) {
-			return String((this as any)._id);
-		}
-
-		// Generate from text
-		const text = this.effectiveText;
-		if (text) {
-			return text.toLowerCase().replace(/\s+/g, "-");
-		}
-
-		// Last resort: generate unique ID
-		return `filter-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+		return this.filterKey || this._id;
 	}
 }
 

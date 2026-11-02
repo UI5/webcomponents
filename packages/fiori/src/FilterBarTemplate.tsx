@@ -5,28 +5,38 @@ import "@ui5/webcomponents-icons/dist/search.js";
 import type FilterBar from "./FilterBar.js";
 
 export default function FilterBarTemplate(this: FilterBar) {
-	const spacerCount = Math.max(4, this.items.length - 1);
-
 	return (
-		<div class="ui5-filterbar-root">
+		<div
+			class="ui5-filterbar-root"
+			role="search"
+			aria-label={this._filtersButtonText}
+			style={{ "--_ui5-filterbar-item-width": this.filterContainerWidth }}
+		>
+			{this.header.length > 0 && <div class="ui5-filterbar-header">
+				<slot name="header"></slot>
+			</div>}
 			<div class="ui5-filterbar-items">
 				{
-					this.showBasicSearch && <div class="ui5-filterbar-basic-search">
-						<Input>
-							<Icon name="search" slot="icon" />
-						</Input>
-					</div>
+					this.search.length > 0
+						? <div class="ui5-filterbar-basic-search">
+							<slot name="search"></slot>
+						</div>
+						: this.showBasicSearch && <div class="ui5-filterbar-basic-search">
+							<Input placeholder={this._searchPlaceholder} onInput={this._handleSearch}>
+								<Icon name="search" slot="icon" />
+							</Input>
+						</div>
 				}
-				{ this.items.map(item => <div class="ui5-filterbar-item">
+				{ this.items.filter(item => !item.hidden && !item.hiddenInFilterBar).map(item => <div class="ui5-filterbar-item">
 					<slot name={item._individualSlot}></slot>
 				</div>)}
-				{ Array.from({ length: spacerCount }).map(() => <div class="ui5-filterbar-spacer"></div>) }
-				<div class="ui5-filterbar-buttons">
-					{!this.hideGoOnFB && <Button design="Emphasized" onClick={this._handleGoPress}>{this._goButtonText}</Button>}
+				{!this.hideToolbar && <div class="ui5-filterbar-buttons">
+					{this.showGoOnFB && <Button design="Emphasized" onClick={this._handleGoPress}>{this._goButtonText}</Button>}
 					{this.showClearOnFB && <Button design="Transparent" onClick={this._handleClearPress}>{this._clearButtonText}</Button>}
 					{this.showRestoreOnFB && <Button design="Transparent" onClick={this._handleRestorePress}>{this._restoreButtonText}</Button>}
-					{!this.hideFiltersOnFB && <Button design="Transparent" onClick={this._handleFiltersPress}>{this._filtersButtonText}</Button>}
-				</div>
+					{this.showResetButton && <Button design="Transparent" onClick={this._handleResetPress}>{this._resetButtonText}</Button>}
+					{!this.hideFilterConfiguration && !this.hideToggleFiltersButton && <Button design="Transparent" onClick={this._handleToggleFilters}>{this._filtersButtonText}{this._activeFilterCount > 0 ? ` (${this._activeFilterCount})` : ""}</Button>}
+				</div>}
 			</div>
 		</div>
 	);

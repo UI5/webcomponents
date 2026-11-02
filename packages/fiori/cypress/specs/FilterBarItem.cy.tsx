@@ -1,6 +1,5 @@
 import FilterBarItem from "../../src/FilterBarItem.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
 import Select from "@ui5/webcomponents/dist/Select.js";
 import Option from "@ui5/webcomponents/dist/Option.js";
 import DatePicker from "@ui5/webcomponents/dist/DatePicker.js";
@@ -8,8 +7,7 @@ import DatePicker from "@ui5/webcomponents/dist/DatePicker.js";
 describe("FilterBarItem - Rendering", () => {
 	it("should render the FilterBarItem component", () => {
 		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Name</Label>
+			<FilterBarItem label="Name">
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -18,22 +16,22 @@ describe("FilterBarItem - Rendering", () => {
 			.should("exist");
 	});
 
-	it("should render label slot content", () => {
+	it("should render the label string", () => {
 		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Test Label</Label>
+			<FilterBarItem label="Test Label">
 				<Input></Input>
 			</FilterBarItem>
 		);
 
-		cy.get("[ui5-filterbar-item] [ui5-label]")
+		cy.get("[ui5-filterbar-item]")
+			.shadow()
+			.find(".ui5-filterbar-item-label")
 			.should("contain.text", "Test Label");
 	});
 
 	it("should render control slot content", () => {
 		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Name</Label>
+			<FilterBarItem label="Name">
 				<Input placeholder="Enter name"></Input>
 			</FilterBarItem>
 		);
@@ -45,8 +43,7 @@ describe("FilterBarItem - Rendering", () => {
 
 	it("should render with Select control", () => {
 		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Country</Label>
+			<FilterBarItem label="Country">
 				<Select>
 					<Option>USA</Option>
 					<Option>Germany</Option>
@@ -60,8 +57,7 @@ describe("FilterBarItem - Rendering", () => {
 
 	it("should render with DatePicker control", () => {
 		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Date</Label>
+			<FilterBarItem label="Date">
 				<DatePicker></DatePicker>
 			</FilterBarItem>
 		);
@@ -72,20 +68,35 @@ describe("FilterBarItem - Rendering", () => {
 });
 
 describe("FilterBarItem - Properties", () => {
-	it("should have text property", () => {
+	it("should have label property", () => {
 		cy.mount(
-			<FilterBarItem text="Filter Name">
+			<FilterBarItem label="Filter Name">
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "text", "Filter Name");
+			.should("have.prop", "label", "Filter Name");
+	});
+
+	it("should have default property values", () => {
+		cy.mount(
+			<FilterBarItem label="Name">
+				<Input></Input>
+			</FilterBarItem>
+		);
+
+		cy.get("[ui5-filterbar-item]")
+			.should("have.prop", "hidden", false)
+			.and("have.prop", "hiddenInFilterBar", false)
+			.and("have.prop", "required", false)
+			.and("have.prop", "active", false)
+			.and("have.prop", "groupName", "default");
 	});
 
 	it("should have groupName property", () => {
 		cy.mount(
-			<FilterBarItem groupName="Basic">
+			<FilterBarItem label="Name" groupName="Basic">
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -96,7 +107,7 @@ describe("FilterBarItem - Properties", () => {
 
 	it("should have groupOrder property", () => {
 		cy.mount(
-			<FilterBarItem groupOrder={5}>
+			<FilterBarItem label="Name" groupOrder={5}>
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -105,42 +116,31 @@ describe("FilterBarItem - Properties", () => {
 			.should("have.prop", "groupOrder", 5);
 	});
 
-	it("should have visible property defaulting to true", () => {
+	it("should have hidden property set to true", () => {
 		cy.mount(
-			<FilterBarItem>
+			<FilterBarItem label="Name" hidden={true}>
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "visible", true);
+			.should("have.prop", "hidden", true);
 	});
 
-	it("should have visible property set to false", () => {
+	it("should have hiddenInFilterBar property set to true", () => {
 		cy.mount(
-			<FilterBarItem visible={false}>
+			<FilterBarItem label="Name" hiddenInFilterBar={true}>
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "visible", false);
-	});
-
-	it("should have required property defaulting to false", () => {
-		cy.mount(
-			<FilterBarItem>
-				<Input></Input>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "required", false);
+			.should("have.prop", "hiddenInFilterBar", true);
 	});
 
 	it("should have required property set to true", () => {
 		cy.mount(
-			<FilterBarItem required={true}>
+			<FilterBarItem label="Name" required={true}>
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -149,34 +149,22 @@ describe("FilterBarItem - Properties", () => {
 			.should("have.prop", "required", true);
 	});
 
-	it("should have key property", () => {
+	it("should reflect filterKey to the filter-key attribute", () => {
 		cy.mount(
-			<FilterBarItem key="filter-name">
+			<FilterBarItem label="Name" filterKey="filter-name">
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
-			.should("have.attr", "key", "filter-name");
-	});
-
-	it("should have additionalText property", () => {
-		cy.mount(
-			<FilterBarItem additionalText="=value1 × =value2 ×">
-				<Input></Input>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "additionalText", "=value1 × =value2 ×");
+			.should("have.attr", "filter-key", "filter-name");
 	});
 });
 
 describe("FilterBarItem - effectiveText getter", () => {
-	it("should return text property when set", () => {
+	it("should return the label property", () => {
 		cy.mount(
-			<FilterBarItem text="My Filter">
-				<Label slot="label">Label Text</Label>
+			<FilterBarItem label="My Filter">
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -185,19 +173,7 @@ describe("FilterBarItem - effectiveText getter", () => {
 			.should("have.prop", "effectiveText", "My Filter");
 	});
 
-	it("should return label text when text property is not set", () => {
-		cy.mount(
-			<FilterBarItem>
-				<Label slot="label">Label Text</Label>
-				<Input></Input>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item]")
-			.should("have.prop", "effectiveText", "Label Text");
-	});
-
-	it("should return empty string when neither text nor label is set", () => {
+	it("should return empty string when label is not set", () => {
 		cy.mount(
 			<FilterBarItem>
 				<Input></Input>
@@ -209,10 +185,38 @@ describe("FilterBarItem - effectiveText getter", () => {
 	});
 });
 
-describe("FilterBarItem - effectiveKey getter", () => {
-	it("should return key property when set", () => {
+describe("FilterBarItem - labelTooltip", () => {
+	it("should expose labelTooltip as the label's title", () => {
 		cy.mount(
-			<FilterBarItem key="my-key" text="My Filter">
+			<FilterBarItem label="Name" labelTooltip="The person's name">
+				<Input></Input>
+			</FilterBarItem>
+		);
+
+		cy.get("[ui5-filterbar-item]")
+			.shadow()
+			.find(".ui5-filterbar-item-label")
+			.should("have.attr", "title", "The person's name");
+	});
+
+	it("should fall back to label when labelTooltip is not set", () => {
+		cy.mount(
+			<FilterBarItem label="Name">
+				<Input></Input>
+			</FilterBarItem>
+		);
+
+		cy.get("[ui5-filterbar-item]")
+			.shadow()
+			.find(".ui5-filterbar-item-label")
+			.should("have.attr", "title", "Name");
+	});
+});
+
+describe("FilterBarItem - effectiveKey getter", () => {
+	it("should return filterKey property when set", () => {
+		cy.mount(
+			<FilterBarItem filterKey="my-key" label="My Filter">
 				<Input></Input>
 			</FilterBarItem>
 		);
@@ -222,97 +226,62 @@ describe("FilterBarItem - effectiveKey getter", () => {
 			.should("equal", "my-key");
 	});
 
-	it("should generate key from text when key property is not set", () => {
+	it("should fall back to the internal id when filterKey is not set", () => {
 		cy.mount(
-			<FilterBarItem text="My Filter Name">
+			<FilterBarItem label="My Filter">
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
 			.invoke("prop", "effectiveKey")
-			.should("equal", "my-filter-name");
-	});
-});
-
-describe("FilterBarItem - Multiple Controls", () => {
-	it("should handle Input control", () => {
-		cy.mount(
-			<FilterBarItem text="Name">
-				<Input value="Test Value"></Input>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item] [ui5-input]")
-			.should("have.prop", "value", "Test Value");
-	});
-
-	it("should handle Select control", () => {
-		cy.mount(
-			<FilterBarItem text="Country">
-				<Select>
-					<Option value="us">USA</Option>
-					<Option value="de" selected>Germany</Option>
-				</Select>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item] [ui5-select]")
-			.should("exist");
-	});
-
-	it("should handle DatePicker control", () => {
-		cy.mount(
-			<FilterBarItem text="Date">
-				<DatePicker value="2024-01-15"></DatePicker>
-			</FilterBarItem>
-		);
-
-		cy.get("[ui5-filterbar-item] [ui5-date-picker]")
-			.should("have.prop", "value", "2024-01-15");
+			.should("be.a", "string")
+			.and("have.length.greaterThan", 0);
 	});
 });
 
 describe("FilterBarItem - Dynamic Property Updates", () => {
-	it("should update visible property dynamically", () => {
+	it("should update hidden property dynamically", () => {
 		cy.mount(
-			<FilterBarItem visible={true}>
+			<FilterBarItem label="Name" hidden={false}>
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
 			.as("item")
-			.should("have.prop", "visible", true);
+			.should("have.prop", "hidden", false);
 
 		cy.get("@item")
-			.invoke("prop", "visible", false);
+			.invoke("prop", "hidden", true);
 
 		cy.get("@item")
-			.should("have.prop", "visible", false);
+			.should("have.prop", "hidden", true);
 	});
 
-	it("should update text property dynamically", () => {
+	it("should update label property dynamically", () => {
 		cy.mount(
-			<FilterBarItem text="Initial Text">
+			<FilterBarItem label="Initial Text">
 				<Input></Input>
 			</FilterBarItem>
 		);
 
 		cy.get("[ui5-filterbar-item]")
 			.as("item")
-			.should("have.prop", "text", "Initial Text");
+			.should("have.prop", "label", "Initial Text");
 
 		cy.get("@item")
-			.invoke("prop", "text", "Updated Text");
+			.invoke("prop", "label", "Updated Text");
 
 		cy.get("@item")
-			.should("have.prop", "text", "Updated Text");
+			.shadow()
+			.find(".ui5-filterbar-item-label")
+			.should("contain.text", "Updated Text");
 	});
 
 	it("should update groupName property dynamically", () => {
 		cy.mount(
-			<FilterBarItem groupName="Basic">
+			<FilterBarItem label="Name" groupName="Basic">
 				<Input></Input>
 			</FilterBarItem>
 		);

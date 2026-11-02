@@ -3,8 +3,9 @@
 /* Dialog overrides */
 .ui5-adapt-filters-dialog {
 	--_ui5_input_margin_top_bottom: 0;
-	max-width: 640px;
-	width: 640px;
+	width: 45rem;
+	max-width: 45rem;
+	height: 55rem;
 }
 
 /* Responsive: Size S (max 600px) */
@@ -12,6 +13,7 @@
 	.ui5-adapt-filters-dialog {
 		width: 100%;
 		max-width: 100%;
+		height: 100%;
 	}
 }
 
@@ -22,11 +24,27 @@
 
 .ui5-adapt-filters-dialog::part(content) {
 	padding: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.ui5-adapt-filters-dialog::part(footer) {
+	padding: 0;
 }
 
 /* Header */
 .ui5-adapt-filters-header {
-	padding: 0.5rem 1rem;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* TabContainer fills remaining dialog height */
+.ui5-adapt-filters-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 /* TabContainer CSS parts */
@@ -35,32 +53,80 @@
 }
 .ui5-adapt-filters-content::part(content) {
 	padding: 0;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
 
-/* List */
+/* Tab body: list scrolls, Add Filter stays pinned at bottom */
+.ui5-adapt-filters-tab-body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* List — scrollable, takes remaining space */
 .ui5-adapt-filters-list {
 	padding: 0;
+	flex: 1;
+	overflow-y: auto;
+	/* Label column width consumed by ui5-filterbar-item in adapt-filters mode */
+	--_ui5_filterbar_item_label_width: 12rem;
 }
 
-/* Filter item content */
+/* Filter item row — reference: margin: 0.5rem 0 on .grid */
+.ui5-adapt-filter-item::part(content) {
+	align-items: center;
+	gap: 0;
+	padding-inline: 0;
+	min-height: 3rem;
+}
+
+/* Filter Bar Item slot wrapper — takes remaining space; reference: margin: 0 0.5rem on grid cells */
 .ui5-adapt-filter-item-content {
 	flex: 1;
+	min-width: 0;
+	margin: 0.5rem 0.5rem;
 }
 
-.ui5-adapt-filter-item::part(content) {
-	align-items: flex-end;
-	gap: 0.5rem;
+/* Grouped items indentation — shift the label column, keep controls aligned */
+.ui5-adapt-filter-item-grouped::part(content) {
+	padding-inline-start: 2.5rem;
 }
 
-/* Grouped items indentation */
-.ui5-adapt-filter-item-grouped {
-	padding-left: 1.5rem;
+/* Toolbar/list separator */
+.ui5-adapt-filters-list-toolbar {
+	border-bottom: 1px solid var(--sapList_BorderColor);
+	padding: 0.25rem 1rem;
 }
 
 /* Filter Actions */
 .ui5-adapt-filter-actions {
 	display: flex;
+	align-items: center;
 	gap: 0.125rem;
+	flex-shrink: 0;
+	margin-inline-end: 0.5rem;
+}
+
+/* In sort mode, disable pointer events on all content so the li handles drag everywhere */
+.ui5-adapt-filters-list[data-sorting] .ui5-adapt-filter-item-content,
+.ui5-adapt-filters-list[data-sorting] .ui5-adapt-filter-actions {
+	pointer-events: none;
+	user-select: none;
+}
+
+/* Drag handle button */
+.ui5-adapt-filter-drag-handle {
+	cursor: grab;
+}
+
+/* Placeholder keeps action column width stable when decline button is hidden */
+.ui5-adapt-filter-action-placeholder {
+	width: 2.25rem;
+	height: 2.25rem;
 	flex-shrink: 0;
 }
 
@@ -87,34 +153,45 @@
 
 /* Search input */
 .ui5-adapt-filters-search-input {
-	width: 12rem;
+	width: 10rem;
+	min-width: 6rem;
 }
 
 .ui5-adapt-filters-search-input-fullwidth {
 	width: 100%;
 }
 
-/* Add filter section */
-.ui5-adapt-filters-add-section {
+/* Add Filter row — pinned below scrollable list, only in edit mode */
+.ui5-adapt-filters-add-row {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	padding: 0.5rem 1rem;
-	border-top: 1px solid var(--sapGroup_ContentBorderColor);
+	padding: 0.375rem 1rem;
+	border-top: 1px solid var(--sapList_BorderColor);
+	flex-shrink: 0;
+	background: var(--sapList_Background);
+	min-height: 2.75rem;
 }
 
 .ui5-adapt-filters-add-label {
 	white-space: nowrap;
+	flex-shrink: 0;
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSize);
 }
 
-.ui5-adapt-filters-add-select {
+.ui5-adapt-filters-add-combobox {
 	flex: 1;
 }
 
-/* Footer */
+/* Footer — plain div in footer slot, no Bar border */
 .ui5-adapt-filters-footer {
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 	gap: 0.5rem;
-	padding: 0.5rem 1rem;
+	width: 100%;
+	height: 2.75rem;
+	padding: 0 1rem;
+	box-sizing: border-box;
 }
