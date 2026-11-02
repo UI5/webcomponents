@@ -1,5 +1,5 @@
 import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
-import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEnter, isEnterAlt } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import { toggleAttribute } from "./TableUtils.js";
@@ -148,6 +148,14 @@ class TableRow extends TableRowBase<TableCell> {
 			this._setActive("keyup");
 			this._onclick();
 		}
+
+		if ((eventOrigin === this || eventOrigin.hasAttribute("ui5-table-cell-base")) && isEnterAlt(e)) {
+			const navigationAction = this._navigationAction;
+			if (navigationAction) {
+				navigationAction._fireClickEvent();
+				e.preventDefault();
+			}
+		}
 	}
 
 	_onclick() {
@@ -177,6 +185,12 @@ class TableRow extends TableRowBase<TableCell> {
 		return this._fixedActions.find(action => {
 			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
 		}) !== undefined;
+	}
+
+	get _navigationAction() {
+		return this.actions.find(action => {
+			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible;
+		});
 	}
 
 	get _rowIndex() {
