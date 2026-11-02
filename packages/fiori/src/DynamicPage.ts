@@ -12,6 +12,8 @@ import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMe
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { AriaLandmarkRole } from "@ui5/webcomponents-base";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 
@@ -70,6 +72,7 @@ const SCROLL_THRESHOLD = 10; // px
  * - `DynamicPageTitle` - a component, holding the title of the page, the navigation actions and the content. The displayed content changes based on the current mode of the `DynamicPageHeader`.
  * - `DynamicPageHeader` - a generic container, which can contain a single layout component and any other HTML elements. The header works in two modes - expanded and snapped and its behavior can be adjusted with the help of different properties.
  * - `Content area` - a generic container, which can have a single UI5 layout.
+ * - `Sticky subheader area` - an optional region that stays pinned directly below the visible header at all times, even as the header collapses or snaps. Commonly used to host a `ui5-tabcontainer` for in-page navigation.
  * - `Footer` - positioned at the bottom with a small offset and used for additional actions, the footer floats above the content.
  *
  * ### Usage
@@ -211,6 +214,25 @@ class DynamicPage extends UI5Element {
 	footerArea!: Slot<HTMLElement>;
 
 	/**
+	 * Defines the sticky subheader area HTML Element.
+	 *
+	 * Content placed in this slot is pinned directly below the visible header and
+	 * remains anchored as the header collapses or snaps — it never scrolls away with
+	 * the page content. The sticky subheader persists in both the expanded and snapped
+	 * header states and is supported in the mobile layout as well.
+	 *
+	 * Any HTML element is accepted. A `ui5-tabcontainer` is a common choice for
+	 * providing in-page tab navigation that stays constantly visible.
+	 *
+	 * When the slot is empty, it contributes zero height so that layout is not affected.
+	 *
+	 * @public
+	 * @since 2.29.0
+	 */
+	@slot({ type: HTMLElement })
+	stickySubheaderArea!: Slot<HTMLElement>;
+
+	/**
 	* Defines additional accessibility attributes on different areas of the component.
 	*
 	* The accessibilityAttributes object has the following fields,
@@ -256,8 +278,70 @@ class DynamicPage extends UI5Element {
 	@query("[ui5-dynamic-page-header-actions]")
 	headerActions?: DynamicPageHeaderActions;
 
+	@query(".ui5-dynamic-page-sticky-subheader")
+	stickySubheader?: HTMLElement;
+
+	_handleResize: ResizeObserverCallback;
+	_observedResizeTargets = new Set<HTMLElement>();
+	_cachedTitleHeight = 0;
+	_cachedHeaderHeight = 0;
+
 	constructor() {
 		super();
+		this._handleResize = this._refreshStickySubheader.bind(this);
+	}
+
+	onEnterDOM() {
+		ResizeHandler.register(this, this._handleResize);
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(this, this._handleResize);
+		this._observedResizeTargets.forEach(target => ResizeHandler.deregister(target, this._handleResize));
+		this._observedResizeTargets.clear();
+	}
+
+	onAfterRendering() {
+		// The sticky subheader offset depends on the title and header heights, which can change
+		// without a scroll (async content load, responsive layout). Keep the resize observers and
+		// offset in sync; both calls are cheap no-ops when the sticky-subheader slot is unused.
+		this._syncResizeObservers();
+		this._refreshStickySubheader();
+	}
+
+	// Re-measure the title/header heights (only change on resize or re-render) and push the
+	// updated offset to the sticky subheader. The scroll handler reuses the cached heights.
+	_refreshStickySubheader() {
+		if (!this.hasStickySubheader) {
+			return;
+		}
+		this._measureRegionHeights();
+		this.updateStickySubheaderTop();
+	}
+
+	_syncResizeObservers() {
+		// Resolve each region to its actual observed DOM node. ResizeHandler keys observers by the
+		// node resolved at register time, so we store and later deregister that exact node — passing
+		// the UI5Element wrapper instead would re-resolve getDomRef() and could leak if its shadow
+		// root changed in between.
+		const targets = this.hasStickySubheader
+			? [this.dynamicPageTitle?.getDomRef(), this.dynamicPageHeader?.getDomRef(), this.stickySubheader]
+				.filter((el): el is HTMLElement => !!el)
+			: [];
+
+		this._observedResizeTargets.forEach(target => {
+			if (!targets.includes(target)) {
+				ResizeHandler.deregister(target, this._handleResize);
+				this._observedResizeTargets.delete(target);
+			}
+		});
+
+		targets.forEach(target => {
+			if (!this._observedResizeTargets.has(target)) {
+				ResizeHandler.register(target, this._handleResize);
+				this._observedResizeTargets.add(target);
+			}
+		});
 	}
 
 	onBeforeRendering() {
@@ -277,17 +361,11 @@ class DynamicPage extends UI5Element {
 	}
 
 	get scrollPaddingTop() {
-		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
-		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-
-		if (this._headerSnapped) {
-			return titleHeight;
-		}
-
-		const fullHeight = headerHeight + titleHeight;
-		const scrollTop = this.scrollContainer?.scrollTop || 0;
-
-		return Math.max(titleHeight, fullHeight - scrollTop);
+		// The sticky bands obscure the top of the scroll area down to the bottom edge of the
+		// lowest one (the sticky subheader, or the title/header extent when no subheader exists).
+		// Consumed only on focus (not a hot path), so it reads live geometry rather than the
+		// scroll-path cache to stay correct even if the layout changed since the last render.
+		return this._computeStickySubheaderTop(this._liveTitleHeight, this._liveHeaderHeight) + this.stickySubheaderHeight;
 	}
 
 	get dynamicPageTitle(): DynamicPageTitle | null {
@@ -312,6 +390,45 @@ class DynamicPage extends UI5Element {
 
 	get headerInContent(): boolean {
 		return !this.showHeaderInStickArea && !this.headerInTitle && !this.hasSnappedTitleOnMobile;
+	}
+
+	get hasStickySubheader(): boolean {
+		return this.stickySubheaderArea.length > 0;
+	}
+
+	get stickySubheaderHeight(): number {
+		return this.hasStickySubheader ? (this.stickySubheader?.getBoundingClientRect().height || 0) : 0;
+	}
+
+	get stickySubheaderTop(): number {
+		// Consumed on every scroll frame, so it uses the cached title/header heights (which only
+		// change on resize/re-render, not on scroll) plus the cheap scrollTop, avoiding a
+		// getBoundingClientRect() per scroll frame.
+		return this._computeStickySubheaderTop(this._cachedTitleHeight, this._cachedHeaderHeight);
+	}
+
+	_computeStickySubheaderTop(titleHeight: number, headerHeight: number): number {
+		if (this._headerSnapped) {
+			return titleHeight;
+		}
+		if (this.headerInTitle) {
+			return titleHeight + headerHeight;
+		}
+		const scrollTop = this.scrollContainer?.scrollTop || 0;
+		return Math.max(titleHeight, titleHeight + headerHeight - scrollTop);
+	}
+
+	get _liveTitleHeight(): number {
+		return this.dynamicPageTitle?.getBoundingClientRect().height || 0;
+	}
+
+	get _liveHeaderHeight(): number {
+		return this.dynamicPageHeader?.getBoundingClientRect().height || 0;
+	}
+
+	_measureRegionHeights() {
+		this._cachedTitleHeight = this._liveTitleHeight;
+		this._cachedHeaderHeight = this._liveHeaderHeight;
 	}
 
 	get _headerLabel() {
@@ -388,7 +505,15 @@ class DynamicPage extends UI5Element {
 	}
 
 	snapOnScroll() {
+		this.updateStickySubheaderTop();
 		debounce(() => this.snapTitleByScroll(), SCROLL_DEBOUNCE_RATE);
+	}
+
+	updateStickySubheaderTop() {
+		if (!this.hasStickySubheader || !this.stickySubheader) {
+			return;
+		}
+		this.stickySubheader.style.setProperty("--_ui5_dp_sticky_subheader_top", `${this.stickySubheaderTop}px`);
 	}
 
 	snapTitleByScroll() {
