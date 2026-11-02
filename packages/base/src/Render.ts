@@ -34,6 +34,15 @@ const renderDeferred = async (webComponent: UI5Element) => {
 };
 
 /**
+ * Returns true if the web component is currently in the invalidation queue, i.e. it is awaiting a (re-)render.
+ *
+ * @param webComponent
+ */
+const isRenderScheduled = (webComponent: UI5Element) => {
+	return invalidatedWebComponents.isAdded(webComponent);
+};
+
+/**
  * Register all web components attached to the DOM
  */
 const registerElement = (webComponent: UI5Element) => {
@@ -187,6 +196,7 @@ export {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	isRenderScheduled,
 	registerElement,
 	unregisterElement,
 	renderFinished,

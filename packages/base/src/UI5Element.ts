@@ -18,6 +18,7 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	isRenderScheduled,
 	unregisterElement,
 	registerElement,
 } from "./Render.js";
@@ -1043,8 +1044,24 @@ abstract class UI5Element extends HTMLElement {
 	 * @public
 	 */
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await this._waitForDomRef();
+		// Focus synchronously when the shadow DOM is already rendered so that focus
+		// ordering matches native elements (await always defers to a microtask, even
+		// for an already-resolved promise, which lets a later sync focus() be stolen back).
+		// If the element is still queued for a (re-)render, its focus DOM ref may be
+		// stale or missing, so wait for the pending render before focusing.
+		if (this._rendered && !isRenderScheduled(this)) {
+			this._focusDomRef(focusOptions);
+			return;
+		}
 
+		await this._waitForDomRef();
+		this._focusDomRef(focusOptions);
+	}
+
+	/**
+	 * @private
+	 */
+	_focusDomRef(focusOptions?: FocusOptions): void {
 		const focusDomRef = this.getFocusDomRef();
 		if (focusDomRef === this || !this.isConnected) {
 			HTMLElement.prototype.focus.call(this, focusOptions);
