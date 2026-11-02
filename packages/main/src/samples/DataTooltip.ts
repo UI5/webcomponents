@@ -44,6 +44,7 @@ import "../Tooltip.js"; // ensure the <ui5-tooltip> custom element is defined
  */
 
 const ATTRIBUTE = "data-ui5-tooltip";
+const ALIGN_ATTRIBUTE = "data-ui5-tooltip-align";
 
 let sharedTooltip: Tooltip | undefined;
 let started = false;
@@ -51,8 +52,9 @@ let started = false;
 // One shared <ui5-tooltip> instance, created on first use and re-docked per target.
 function getSharedTooltip(): Tooltip {
 	if (!sharedTooltip) {
-		sharedTooltip = document.createElement("ui5-tooltip") as unknown as Tooltip;
-		document.body.appendChild(sharedTooltip);
+		const el = document.createElement("ui5-tooltip");
+		document.body.appendChild(el);
+		sharedTooltip = el as unknown as Tooltip;
 	}
 	return sharedTooltip;
 }
@@ -78,6 +80,9 @@ function dockAndOpen(target: HTMLElement): void {
 	}
 	const tooltip = getSharedTooltip();
 	tooltip.text = text;
+	// Optional per-target alignment; reset to the default when absent so a prior
+	// target's value does not leak into the next (the tooltip is shared).
+	tooltip.horizontalAlign = (target.getAttribute(ALIGN_ATTRIBUTE) as Tooltip["horizontalAlign"]) || "Center";
 	tooltip.opener = target;
 	tooltip.openTooltip();
 }
