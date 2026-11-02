@@ -538,7 +538,6 @@ describe("Carousel general interaction", () => {
 		cy.get("#carouselF7").shadow().find(".ui5-carousel-content").find(":first-child").should("be.focused");
 	});
 
-
 	it("'Home' and 'End' button press", () => {
 		cy.mount(
 			<Carousel id="testHomeAndEnd" arrowsPlacement="Navigation" hidePageIndicator>
@@ -610,6 +609,26 @@ describe("Carousel general interaction", () => {
 		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 0);
 		cy.realPress("PageDown");
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
+	});
+
+	it("keeps focus on the active item while a navigation arrow is pressed and not yet released", () => {
+		cy.mount(
+			<Carousel id="carouselFocus">
+				<Button id="focusItem">Button 1</Button>
+				<Button>Button 2</Button>
+			</Carousel>);
+
+		cy.get("#focusItem").realClick();
+		cy.document().its("activeElement.id").should("equal", "focusItem");
+
+		cy.get("#carouselFocus")
+			.trigger("mouseover")
+			.shadow()
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
+			.realMouseDown();
+
+		cy.get("#carouselFocus").should("have.prop", "visibleItemsIndices").and("deep.equal", [0]);
+		cy.document().its("activeElement.id").should("equal", "focusItem");
 	});
 
 	it("Items per page", () => {

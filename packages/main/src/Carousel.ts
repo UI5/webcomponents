@@ -521,6 +521,10 @@ class Carousel extends UI5Element {
 		}
 	}
 
+	_ontouchend(e: TouchEvent) {
+		this._handleArrowNavigation(e);
+	}
+
 	_onmousedown(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		if (target.hasAttribute("data-ui5-arrow-forward") || target.hasAttribute("data-ui5-arrow-back")) {
@@ -662,12 +666,16 @@ class Carousel extends UI5Element {
 		this.carouselItemDomRef(this._focusedItemIndex)[0].focus({ preventScroll: true });
 	}
 
-	_navButtonClick(e: UI5CustomEvent<Icon, "click">) {
-		const target = e.target as Icon;
+	_onNavButtonClick(e: UI5CustomEvent<Icon, "click">) {
+		this._handleArrowNavigation(e);
+	}
+
+	_handleArrowNavigation(e: MouseEvent | TouchEvent | UI5CustomEvent<Icon, "click">) {
+		const target = e.target as HTMLElement;
 
 		if (target.hasAttribute("data-ui5-arrow-forward")) {
 			this.navigateArrowRight();
-		} else {
+		} else if (target.hasAttribute("data-ui5-arrow-back")) {
 			this.navigateArrowLeft();
 		}
 	}
