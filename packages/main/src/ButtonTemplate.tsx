@@ -2,7 +2,6 @@ import type Button from "./Button.js";
 import Icon from "./Icon.js";
 import BusyIndicator from "./BusyIndicator.js";
 import BusyIndicatorSize from "./types/BusyIndicatorSize.js";
-import Tooltip from "./Tooltip.js";
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,
@@ -22,6 +21,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			}}
 			disabled={this.disabled}
 			data-sap-focus-ref
+			data-ui5-tooltip={this.buttonTitle || undefined}
 			aria-pressed={injectedProps?.ariaPressed}
 			aria-valuemin={injectedProps?.ariaValueMin}
 			aria-valuemax={injectedProps?.ariaValueMax}
@@ -73,12 +73,6 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 				<slot name="badge"/>
 			}
 		</button>
-		{this.buttonTitle &&
-			<Tooltip
-				text={this.buttonTitle}
-				opener={this.getFocusDomRef()}
-			/>
-		}
 		{this.loading &&
 			<BusyIndicator
 				id={`${this._id}-button-busy-indicator`}

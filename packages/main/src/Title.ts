@@ -8,7 +8,6 @@ import type WrappingType from "./types/WrappingType.js";
 
 // Template
 import TitleTemplate from "./TitleTemplate.js";
-import Tooltip from "./Tooltip.js";
 
 // Styles
 import titleCss from "./generated/themes/Title.css.js";

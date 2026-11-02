@@ -5,7 +5,6 @@
 	<title>data-ui5-tooltip sample</title>
 	<script type="module" src="../../src/Button.ts"></script>
 	<script type="module" src="../../src/Title.ts"></script>
-	<script type="module" src="../../src/Tooltip.ts"></script>
 	<script type="module">
 		import { startDataTooltips } from "../../src/samples/DataTooltip.ts";
 		startDataTooltips();
@@ -15,15 +14,18 @@
 	</style>
 </head>
 <body>
-	<!-- SAMPLE: no <ui5-tooltip>, no opener wiring. Just the magic attribute. -->
+	<!--
+		SAMPLE: no <ui5-tooltip> and no opener in the markup.
+		Button sets data-ui5-tooltip on its internal root (from its `tooltip` prop).
+		Title sets it on its root heading, but only while the text is truncated.
+	-->
 
-	<ui5-title data-ui5-tooltip="Overview of all reports">Reports</ui5-title>
+	<!-- Author sets the public `tooltip` property, as today -->
+	<ui5-button tooltip="Save the current document">Save</ui5-button>
+	<ui5-button icon="edit" tooltip="Edit"></ui5-button>
 
-	<ui5-button data-ui5-tooltip="Save the current document">Save</ui5-button>
-
-	<ui5-button icon="edit" data-ui5-tooltip="Edit"></ui5-button>
-
-	<!-- Works on a plain element / sub-element too -->
-	<span data-ui5-tooltip="Drag to reorder" style="cursor: grab; font-size: 1.5rem;">⠿</span>
+	<!-- Truncated title: hover shows the full text; a short title shows nothing -->
+	<ui5-title style="width: 160px;">A long report title that will be truncated</ui5-title>
+	<ui5-title style="width: 160px;">Short</ui5-title>
 </body>
 </html>

@@ -1,12 +1,23 @@
 import type Tooltip from "../Tooltip.js";
+import "../Tooltip.js"; // ensure the <ui5-tooltip> custom element is defined
 
 /**
  * SAMPLE / PROOF-OF-CONCEPT — not production framework infrastructure.
  *
  * Demonstrates how a magic `data-ui5-tooltip` attribute could drive the
- * enhanced tooltip without the author instantiating `<ui5-tooltip>` or wiring
- * an `opener`. It is a thin layer *on top of* the `<ui5-tooltip>` component:
- * on hover/focus/long-press of a `[data-ui5-tooltip]` element, a single shared
+ * enhanced tooltip from *inside* a component's shadow DOM — on the internal
+ * element that used to carry the native `title` — without the component
+ * instantiating `<ui5-tooltip>` or wiring an `opener` for it.
+ *
+ * This is NOT meant for the host element: public components already expose a
+ * `tooltip` property (e.g. `ui5-button`), and that property is what the author
+ * sets. The magic attribute is the component-internal mechanism: the component
+ * puts `data-ui5-tooltip={this.tooltip}` on the same inner element where it
+ * previously rendered `title={...}`, and this hook upgrades it to the enhanced
+ * tooltip.
+ *
+ * It is a thin layer *on top of* the `<ui5-tooltip>` component: on
+ * hover/focus/long-press of a `[data-ui5-tooltip]` element, a single shared
  * `<ui5-tooltip>` is docked to that element (its `opener` + `text` are set) and
  * opened. All gesture, delay, placement and a11y behavior stays in the
  * component — this file only decides *which* element the shared tooltip points at.
@@ -18,15 +29,18 @@ import type Tooltip from "../Tooltip.js";
  * startDataTooltips();
  * ```
  *
- * ```html
- * <ui5-button data-ui5-tooltip="Save the document">Save</ui5-button>
- * <ui5-title data-ui5-tooltip="Section heading">Reports</ui5-title>
+ * ```tsx
+ * // Inside a component template, on the internal element that had `title` before:
+ * <button class="ui5-button-root" data-ui5-tooltip={this.tooltip}>
+ *   ...
+ * </button>
  * ```
  *
  * The honest cost flagged in tooltip-api-research.md lives here: detecting
- * matches needs DOM observation. This sample uses one document-level
- * MutationObserver plus capture-phase listeners — enough to demonstrate the
- * ergonomics, deliberately simpler than a real cross-shadow-root implementation.
+ * matches needs DOM observation. This sample uses capture-phase document
+ * listeners so events bubbling out of shadow roots are seen — enough to
+ * demonstrate the ergonomics, deliberately simpler than a real cross-shadow-root
+ * implementation.
  */
 
 const ATTRIBUTE = "data-ui5-tooltip";
@@ -43,15 +57,15 @@ function getSharedTooltip(): Tooltip {
 	return sharedTooltip;
 }
 
-// Nearest ancestor (across shadow boundaries) carrying the magic attribute.
-function closestWithAttribute(start: EventTarget | null): HTMLElement | null {
-	let node = start as Node | null;
-	while (node) {
+// First element in the event's composed path that carries the magic attribute.
+// composedPath() crosses shadow boundaries and is not retargeted, so it sees the
+// real inner element (e.g. the <button> inside ui5-button's shadow root), which a
+// retargeted e.target would hide.
+function matchInPath(e: Event): HTMLElement | null {
+	for (const node of e.composedPath()) {
 		if (node instanceof HTMLElement && node.hasAttribute(ATTRIBUTE)) {
 			return node;
 		}
-		const parent: Node | null = node.parentNode;
-		node = parent instanceof ShadowRoot ? parent.host : parent;
 	}
 	return null;
 }
@@ -69,14 +83,14 @@ function dockAndOpen(target: HTMLElement): void {
 }
 
 function onPointerOver(e: Event): void {
-	const target = closestWithAttribute(e.target);
+	const target = matchInPath(e);
 	if (target) {
 		dockAndOpen(target);
 	}
 }
 
 function onFocusIn(e: Event): void {
-	const target = closestWithAttribute(e.target);
+	const target = matchInPath(e);
 	if (target) {
 		dockAndOpen(target);
 	}
