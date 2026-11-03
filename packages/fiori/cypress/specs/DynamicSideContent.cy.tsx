@@ -107,14 +107,22 @@ describe("Accessibility", () => {
 		cy.get("@dsc")
 			.shadow()
 			.find(".ui5-dsc-main")
-			.should("not.have.attr", "role")
-			.and("not.have.attr", "aria-label");
+			.should("not.have.attr", "role");
+		
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("not.have.attr", "aria-label");
 
 		cy.get("@dsc")
 			.shadow()
 			.find(".ui5-dsc-side")
-			.should("not.have.attr", "role")
-			.and("not.have.attr", "aria-label");
+			.should("not.have.attr", "role");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("not.have.attr", "aria-label");
 	});
 
 	it("tests no aria-label when role is 'none' or 'presentation' to comply with WAI-ARIA presentational roles", () => {
