@@ -98,14 +98,18 @@ type SearchEventDetails = {
  *
  * @public
  */
-@event("open")
+@event("open", {
+	cancelable: true,
+})
 
 /**
  * Fired when the popup is closed.
  *
  * @public
  */
-@event("close")
+@event("close", {
+	cancelable: true,
+})
 
 class Search extends SearchField {
 	eventDetails!: SearchField["eventDetails"] & {
