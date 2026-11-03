@@ -24,7 +24,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 			accessibleNameRef="suggestions-speech-output message-area-text message-area-description"
 			placement={PopoverPlacement.Bottom}
 			horizontalAlign={PopoverHorizontalAlign.Start}
-			open={this.open}
+			open={this._internalOpen}
 			opener={this}
 			onOpen={this._handleOpen}
 			onClose={this._handleClose}

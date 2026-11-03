@@ -193,6 +193,14 @@ class Search extends SearchField {
 	_performItemSelectionOnMobile?: boolean;
 
 	/**
+	 * Drives the open state of the popup, derived each render from `open`,
+	 * typing state, and whether the popup has any content.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_internalOpen = false;
+
+	/**
 	 * Based on the key pressed, determines if the autocomplete should be performed.
 	 * @private
 	 */
@@ -278,7 +286,7 @@ class Search extends SearchField {
 		super.onBeforeRendering();
 
 		if (this.collapsed && !isPhone()) {
-			this.open = false;
+			this._internalOpen = false;
 			this._lastOpenState = false;
 			this._openChangedInternally = false;
 			return;
@@ -287,21 +295,8 @@ class Search extends SearchField {
 		const innerInput = this.nativeInput;
 		const autoCompletedChars = innerInput && (innerInput.selectionEnd! - innerInput.selectionStart!);
 
-		// The public `open` property is application-controlled and takes higher
-		// precedence. Internal writes go through `_setInternalOpen`, which raises
-		// `_openChangedInternally`. A change is treated as application-driven only
-		// when that flag is not set AND `open` differs from the last committed
-		// state; that distinguishes an app write from a plain re-render (e.g. when
-		// lazy-loaded items arrive) where the internal auto-open logic must still run.
-		const appControlledOpen = !this._openChangedInternally && this.open !== this._lastOpenState;
-
-		if (!appControlledOpen) {
-			this.open = this.open || (this._popoupHasAnyContent() && this._isTyping && innerInput!.value.length > 0);
-		} else if (!this.open) {
-			// The application force-closed the picker; reset the typing state so the
-			// internal auto-open logic does not immediately reopen it on next render.
-			this._isTyping = false;
-		}
+		const hasContent = this._popoupHasAnyContent();
+		this._internalOpen = hasContent && (this.open || (!!this.value && this.focusedInnerInput && this._isTyping));
 
 		// If there is already a selection the autocomplete has already been performed
 		if (this._shouldAutocomplete && !autoCompletedChars) {
@@ -316,7 +311,7 @@ class Search extends SearchField {
 			}
 		}
 
-		if (isPhone() && this.open) {
+		if (isPhone() && this._internalOpen) {
 			const item = this._getFirstMatchingItem(this.value);
 			this._proposedItem = item;
 
@@ -420,7 +415,7 @@ class Search extends SearchField {
 	}
 
 	_handleDown(e: KeyboardEvent) {
-		if (this.open) {
+		if (this._internalOpen) {
 			e.preventDefault();
 			this._handleArrowDown();
 		}
@@ -455,16 +450,24 @@ class Search extends SearchField {
 	 * @private
 	 */
 	_setInternalOpen(value: boolean) {
-		// Only flag the change when `open` actually changes. A no-op assignment
-		// does not invalidate the component (see UI5Element property setter), so
-		// no reconciliation would run to clear the flag - leaving it stale and
-		// causing a later application-driven change to be misread as internal.
+		const oldState = this.open;
+
 		if (value === this.open) {
 			return;
 		}
+		if (value === true) {
+			this.open = true;
+			if (!this.fireDecoratorEvent("open")) {
+				this.open = oldState;
+			}
+		} else {
+			this.open = false;
+			if (!this.fireDecoratorEvent("close")) {
+				this.open = oldState;
+			}
+		}
 
-		this._openChangedInternally = true;
-		this.open = value;
+		this._internalOpen = this.open;
 	}
 
 	_handleInnerClick() {
@@ -679,7 +682,7 @@ class Search extends SearchField {
 		}
 	}
 
-	_onFocusOutSearch(e:FocusEvent) {
+	_onFocusOutSearch(e: FocusEvent) {
 		const target = e.relatedTarget as HTMLElement;
 
 		if (this._getPicker().contains(target) || this.contains(target)) {
@@ -706,7 +709,6 @@ class Search extends SearchField {
 		this._setInternalOpen(false);
 		this._isTyping = false;
 		this._valueBeforeArrowNav = undefined;
-		this.fireDecoratorEvent("close");
 	}
 
 	_handleBeforeOpen() {

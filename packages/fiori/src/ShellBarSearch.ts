@@ -39,7 +39,7 @@ class ShellBarSearch extends Search {
 	autoOpen = false;
 
 	_handleSearchIconPress() {
-		if (isPhone() && this.open) {
+		if (isPhone() && this._internalOpen) {
 			this._handleSearchEvent();
 			this._closePopupAndResetState();
 			return;
@@ -112,7 +112,6 @@ class ShellBarSearch extends Search {
 
 		if (this.autoOpen) {
 			this._setInternalOpen(true);
-			this.fireDecoratorEvent("open");
 		}
 	}
 
