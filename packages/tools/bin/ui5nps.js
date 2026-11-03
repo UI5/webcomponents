@@ -4,8 +4,30 @@
 
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const { exec } = require("child_process");
 var { parseArgsStringToArgv } = require('string-argv');
+
+// Execution log consumed by ui5nps-log-viewer.html for timeline visualization
+const LOG_FILE = path.join(os.homedir(), ".ui5nps.log");
+
+// Appends a NDJSON entry per command execution so the log viewer can reconstruct
+// a full timeline with parent/child relationships and per-package durations.
+function logExecution(commandName, cwd, startTime, endTime, parentCommand) {
+	const entry = JSON.stringify({
+		command: commandName,
+		...(parentCommand && parentCommand !== commandName ? { parentCommand } : {}),
+		cwd,
+		startedAt: startTime.toISOString(),
+		endedAt: endTime.toISOString(),
+		durationMs: endTime - startTime,
+	});
+	try {
+		fs.appendFileSync(LOG_FILE, entry + "\n");
+	} catch {
+		// Non-fatal — don't break the build if logging fails
+	}
+}
 
 const SCRIPT_NAMES = [
 	"package-scripts.js",
@@ -178,9 +200,18 @@ class Parser {
 	 * @param {string|Object} command - Command string or command object with commands array
 	 * @returns {Promise} Promise that resolves when command(s) complete
 	 */
-	async executeCommand(command, commandName = "unknown") {
+	async executeCommand(command, commandName = "unknown", parentCommand = undefined) {
 		if (typeof command === "string" && command) {
 			return new Promise(async (resolve, reject) => {
+				const startTime = new Date();
+				const cwd = process.cwd();
+
+				// Single callback so every exit path (success, error, non-zero) logs timing
+				const done = (ok) => {
+					logExecution(commandName, cwd, startTime, new Date(), parentCommand);
+					ok ? resolve() : reject(new Error(`Exit non-zero`));
+				};
+
 				if (command.trim().startsWith("ui5nps-script")) {
 					const argv = parseArgsStringToArgv(command);
 					if (!path.isAbsolute(argv[1])) {
@@ -205,9 +236,13 @@ class Parser {
 					const result = _ui5mainFn(argv);
 
 					if (result instanceof Promise) {
-						return result.then(resolve).catch(reject);
+						// Log the error before rejecting so silent failures are visible in the terminal
+						return result.then(() => done(true)).catch((err) => {
+							if (err) console.error(err);
+							done(false);
+						});
 					} else {
-						return resolve();
+						return done(true);
 					}
 				}
 
@@ -228,18 +263,17 @@ class Parser {
 				});
 
 				child.on("close", (code) => {
-					code === 0 ? resolve() : reject(new Error(`Exit ${code}`));
+					code === 0 ? done(true) : done(false);
 				});
 			});
 		} else if (typeof command === "object" && command.commands) {
+			const parent = parentCommand ?? commandName;
 			if (command.parallel) {
-				// Execute commands in parallel
-				const promises = command.commands.filter(Boolean).map(cmd => this.executeCommand(cmd, cmd.commandName || commandName));
+				const promises = command.commands.filter(Boolean).map(cmd => this.executeCommand(cmd, cmd.commandName || commandName, parent));
 				await Promise.all(promises);
 			} else {
-				// Execute commands sequentially
 				for (const cmd of command.commands) {
-					await this.executeCommand(cmd, cmd.commandName || commandName);
+					await this.executeCommand(cmd, cmd.commandName || commandName, parent);
 				}
 			}
 		}
@@ -293,7 +327,17 @@ if (commands.includes("--help") || commands.includes("-h")) {
 	process.env = { ...process.env, ...parser.envs };
 
 	for (const commandName of commands) {
+		const resolved = parser.resolvedScripts.get(commandName);
+		// Composite = a command whose children are themselves command objects (not plain strings).
+		// Leaf commands log themselves via done(); composites need an extra top-level entry
+		// so the log viewer can show total wall-clock time for the whole group.
+		const isComposite = resolved && Array.isArray(resolved.commands) && resolved.commands.some(c => typeof c === "object");
+		const startTime = isComposite ? new Date() : null;
+		const cwd = process.cwd();
 		await parser.execute(commandName);
+		if (isComposite) {
+			logExecution(commandName, cwd, startTime, new Date());
+		}
 	}
 })().catch(error => {
 	console.error("Error executing commands:", error);

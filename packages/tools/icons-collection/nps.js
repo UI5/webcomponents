@@ -7,10 +7,14 @@ const createIconImportsCommand = (options) => {
 		return `ui5nps-script "${LIB}/create-icons/index.js" "${options.collectionName}"`;
 	}
 
-	const command = { default: "ui5nps" };
-	options.versions.forEach((v) => {
+	// ui5nps-p runs all version sub-commands in parallel. To avoid a write race on the
+	// shared top-level wrapper files (dist/accept.js etc.), all but the last version
+	// pass --skip-wrappers; only the last version run actually writes them.
+	const command = { default: "ui5nps-p" };
+	options.versions.forEach((v, i) => {
+		const isLast = i === options.versions.length - 1;
 		command.default += ` build.icons.create${v}`;
-		command[`create${v}`] = `ui5nps-script "${LIB}/create-icons/index.js" "${options.collectionName}" "${v}"`;
+		command[`create${v}`] = `ui5nps-script "${LIB}/create-icons/index.js" "${options.collectionName}" "${v}"${isLast ? "" : " --skip-wrappers"}`;
 	});
 
 	return command;
@@ -51,7 +55,8 @@ const getScripts = (options) => {
 			UI5_TS: `${tsOption}`,
 		},
 		clean: {
-			default: "ui5nps clean.generated clean.dist",
+			// ui5nps-p runs clean.generated and clean.dist in parallel to halve clean time
+			default: "ui5nps-p clean.generated clean.dist",
 			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 		},

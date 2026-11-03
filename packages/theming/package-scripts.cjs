@@ -14,7 +14,8 @@ module.exports = {
 			UI5_TS: "true",
 		},
 		clean: {
-			"default": "ui5nps clean.generated clean.dist",
+			// ui5nps-p runs clean.generated and clean.dist in parallel to halve clean time
+			"default": "ui5nps-p clean.generated clean.dist",
 			"generated": `ui5nps-script "${TOOLS_LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${TOOLS_LIB}/rimraf/rimraf.js dist`,
 		},
