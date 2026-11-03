@@ -151,6 +151,42 @@ describe("Accessibility", () => {
 			.find(".ui5-dsc-side")
 			.should("have.attr", "role", customSideRole);
 	});
+
+	it("omits default aria-label when role is set to none or presentation", () => {
+		cy.mount(
+			<DynamicSideContent>
+				<div>
+					<h1>Main Content</h1>
+				</div>
+				<div slot="sideContent">
+					<h1>Side Content</h1>
+				</div>
+			</DynamicSideContent>
+		);
+
+		cy.get("[ui5-dynamic-side-content]")
+			.as("dsc");
+
+		cy.get<DynamicSideContent>("@dsc")
+			.then($dsc => {
+				$dsc.get(0).accessibilityAttributes = {
+					mainContent: { role: "none" },
+					sideContent: { role: "presentation" },
+				};
+			});
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("have.attr", "role", "none")
+			.should("not.have.attr", "aria-label");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("have.attr", "role", "presentation")
+			.should("not.have.attr", "aria-label");
+	});
 });
 
 describe("'sideContentPosition' property", () => {

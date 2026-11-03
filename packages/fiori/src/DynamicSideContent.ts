@@ -380,14 +380,24 @@ class DynamicSideContent extends UI5Element {
 		const hasMainRole = "role" in mainContentAttr;
 		const hasSideRole = "role" in sideContentAttr;
 
+		const mainRole = hasMainRole ? mainContentAttr.role : "main";
+		const isMainPresentational = mainRole === "none" || mainRole === "presentation";
+
+		const sideRole = hasSideRole ? sideContentAttr.role : "complementary";
+		const isSidePresentational = sideRole === "none" || sideRole === "presentation";
+
 		return {
 			mainContent: {
-				ariaLabel: mainContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
-				role: hasMainRole ? mainContentAttr.role : "main",
+				ariaLabel: isMainPresentational
+					? mainContentAttr.ariaLabel
+					: (mainContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL)),
+				role: mainRole,
 			},
 			sideContent: {
-				ariaLabel: sideContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
-				role: hasSideRole ? sideContentAttr.role : "complementary",
+				ariaLabel: isSidePresentational
+					? sideContentAttr.ariaLabel
+					: (sideContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL)),
+				role: sideRole,
 			},
 		};
 	}
