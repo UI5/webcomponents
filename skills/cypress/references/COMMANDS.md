@@ -1,19 +1,33 @@
 # Custom Commands Guide
 
+> **Reference file** — jump to the relevant section with `##` heading search; do not read linearly.
+
 ## Existing Command Families — Do Not Recreate
 
 Before writing any new command, check whether a family already exists for that component. These families already have `ui5<Component><Action>` commands in `cypress/support/commands/`:
 
 **main package:**
-Calendar, ColorPalette, ColorPalettePopover, ColorPicker, DatePicker, DateRangePicker, DateTimePicker,
-TimePicker, TimeSelectionClocks, DynamicDateRange, Dialog, Popover, ResponsivePopover, Menu, MenuItem,
-SegmentedButton, StepInput, Switch, TabContainer, ToggleButton
 
-**fiori package:**
-UserMenu
+| Family | Key commands |
+|---|---|
+| `DatePicker` | `ui5DatePickerGetInnerInput`, `ui5DatePickerValueHelpIconPress`, `ui5DatePickerOpened` |
+| `DateRangePicker` | `ui5DateRangePickerGetInnerInput`, `ui5DateRangePickerOpened` |
+| `DateTimePicker` | `ui5DateTimePickerOpened` |
+| `TimePicker` | `ui5TimePickerGetInnerInput`, `ui5TimePickerOpened` |
+| `Dialog` | `ui5DialogOpened` |
+| `Popover` | `ui5PopoverOpened` |
+| `ResponsivePopover` | `ui5ResponsivePopoverOpened`, `ui5ResponsivePopoverClosed` |
+| `Menu` | `ui5MenuOpened`, `ui5MenuClosed` |
+| `TabContainer` | `ui5TabContainerGetTabStrip` |
+| `StepInput` | `ui5StepInputGetInnerInput` |
+| `Switch` | `ui5SwitchToggle` |
+| `SegmentedButton` | `ui5SegmentedButtonItemToggleSelect` |
+| `ColorPicker` | `ui5ColorPickerGetHexInput` |
+| Calendar, ColorPalette, ColorPalettePopover, DynamicDateRange, MenuItem, TimeSelectionClocks, ToggleButton | *(read the commands file for details)* |
 
-**AI package:**
-Button (AI)
+**fiori package:** `UserMenu`
+
+**AI package:** `Button (AI)`
 
 Most popup families have `Open`/`Opened` state helpers (see § Popup Open/Closed Utilities below for implementation patterns). The `Closed` variant is **not universal**:
 - `Menu` and `ResponsivePopover` — have `Closed`

@@ -1,5 +1,8 @@
 # Writing Spec Files
 
+> **Reference file** — jump to the relevant section with `##` heading search; do not read linearly.
+> **Quick patterns:** [Selectors / attr vs prop](#asserting) · [Async API](#async-base-api-methods) · [Popup open](#setting-properties-and-attributes) · [Keyboard](#real-events) · [ARIA in shadow DOM](#asserting) · [Cleanup](#beforeeach-and-aftereach)
+
 Detailed conventions for authoring a Cypress spec: file layout, meaningful assertions, event testing, configuration, device/viewport/time control, mount helpers, and shared `beforeEach`/`afterEach` setup. Load this alongside `SKILL.md` whenever writing or restructuring a spec file.
 
 ---
@@ -61,7 +64,7 @@ cy.get("[ui5-button]")
 ```typescript
 cy.mount(<Button design="Negative">Delete</Button>);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.shadow()
 	.find(".ui5-button-root")
 	.should("have.class", "ui5-button-negative");
@@ -82,7 +85,7 @@ cy.get("[ui5-button]")
 ```typescript
 cy.mount(<Button onClick={cy.stub().as("click")}>Press</Button>);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realClick();
 cy.get("@click")
 	.should("have.been.calledOnce");
@@ -102,7 +105,7 @@ cy.get("[ui5-button]")
 ```typescript
 cy.mount(<Button accessibleName="Close dialog" />);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.shadow()
 	.find("button")
 	.should("have.attr", "aria-label", "Close dialog");
@@ -122,9 +125,9 @@ cy.get("[ui5-popover]")
 ```typescript
 cy.mount(<Popover opener="btn" open><span>Content</span></Popover>);
 
-cy.get("[ui5-popover]")
+cy.get<Popover>("[ui5-popover]")
 	.should("have.attr", "open");
-cy.get("[ui5-popover]")
+cy.get<Popover>("[ui5-popover]")
 	.shadow()
 	.find(".ui5-popup-root")
 	.should("be.visible");
@@ -146,11 +149,11 @@ cy.get("@click")
 ```typescript
 cy.mount(<Button onClick={cy.stub().as("click")}>Press</Button>);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realClick();
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realPress("Space");
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realPress("Enter");
 cy.get("@click")
 	.should("have.been.calledThrice");
@@ -170,7 +173,7 @@ cy.get("[ui5-button]")
 ```typescript
 cy.mount(<Button disabled onClick={cy.stub().as("click")}>Press</Button>);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realClick({ force: true });
 cy.get("@click")
 	.should("not.have.been.called");
@@ -195,12 +198,12 @@ cy.get("@navigate")
 // Legacy alternative — attach via addEventListener (e.g. for native DOM events)
 cy.mount(<Button></Button>);
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.then($el => {
 		$el[0].addEventListener("click", cy.stub().as("clicked"));
 	});
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.realClick();
 cy.get("@clicked")
 	.should("have.been.called");
@@ -244,7 +247,7 @@ describe("MyComponent - mobile", () => {
 	it("renders the mobile layout", () => {
 		cy.mount(<MyComponent />);
 
-		cy.get("[ui5-my-component]")
+		cy.get<MyComponent>("[ui5-my-component]")
 			.should("have.class", "ui5-my-component-mobile");
 	});
 });
@@ -301,7 +304,7 @@ it("overflows items into the menu below 400px", () => {
 		</Toolbar>
 	);
 
-	cy.get("[ui5-toolbar]")
+	cy.get<Toolbar>("[ui5-toolbar]")
 		.shadow()
 		.find(".ui5-tb-overflow-btn")
 		.should("be.visible");
@@ -365,7 +368,6 @@ cy.get("#cb:invalid")
 | Command | Behaviour |
 |---------|-----------|
 | `cy.mount(jsx)` | Mount, wait for render, wait for `document.fonts.ready` |
-| `cy.waitRenderFinished()` | Drain the render queue. **Rarely needed** — `cy.mount()` and the `real*` interactions already wait for rendering. Only reach for it after a direct property/attribute mutation that isn't followed by a `real*` call. Never use `cy.wait(<number>)`. |
 | `cy.ui5SimulateDevice("phone")` | Force phone behaviour; `"phone"` is the only valid device |
 | `cy.ui5AssertValidityState(partial)` | Assert any subset of form validity state |
 | `realClick`, `realHover`, `realPress`, `realType` | Wait for render before dispatching real events |
@@ -438,13 +440,13 @@ describe("ComboBox - keyboard navigation", () => {
 	});
 
 	it("moves focus to the first link in the value state message", () => {
-		cy.get("[ui5-combobox]")
+		cy.get<ComboBox>("[ui5-combobox]")
 			.realClick();
 		// ...
 	});
 
 	it("moves focus back on Escape", () => {
-		cy.get("[ui5-combobox]")
+		cy.get<ComboBox>("[ui5-combobox]")
 			.realClick();
 		cy.realPress("Escape");
 		// ...
@@ -568,10 +570,10 @@ cy.wrap({ getLanguage })
 ## Setting properties and attributes
 
 ```typescript
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.invoke("prop", "myProp", "newValue");
 
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.invoke("attr", "open", true);
 ```
 
@@ -597,29 +599,37 @@ cy.get<Calendar>("@calendar")
 Use `have.attr` for reflected properties and ARIA attributes; use `have.prop` for state not reflected to an attribute:
 
 ```typescript
-cy.get("[ui5-button]")
+cy.get<Button>("[ui5-button]")
 	.should("have.attr", "title", "my tooltip");
 
 cy.get("#myInput")
 	.should("have.prop", "focused", true);
 ```
 
-**ARIA attributes inside shadow DOM** — UI5 components render their accessible markup inside shadow roots. Always traverse `.shadow().find(...)` to reach the native element that carries the ARIA attribute, and verify the exact value from the component source or i18n bundle — never guess literals:
+**ARIA attributes inside shadow DOM** — UI5 components render their accessible markup inside shadow roots. Always traverse `.shadow().find(...)` to reach the native element that carries the ARIA attribute, and verify the exact value from the component source or i18n bundle — never guess or hardcode English literals:
 
 ```typescript
 // Wrong — the host element rarely carries ARIA attrs directly
 cy.get("[ui5-input]")
 	.should("have.attr", "aria-roledescription", "Search");
 
-// Right — reach the inner input inside the shadow root
+// Wrong — hardcoded English string; breaks under locale changes
 cy.get("[ui5-input]")
 	.shadow()
 	.find("input")
-	.should("have.attr", "aria-roledescription", "Search")
-	.and("have.attr", "aria-label", "Amount");
+	.should("have.attr", "aria-roledescription", "Search");
+
+// Right — value from i18n bundle (see workflow below)
+import MultiInput from "../../src/MultiInput.js";
+import { MULTIINPUT_ROLEDESCRIPTION_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
+
+cy.get<MultiInput>("[ui5-multi-input]")
+	.shadow()
+	.find("input")
+	.should("have.attr", "aria-roledescription", MultiInput.i18nBundle.getText(MULTIINPUT_ROLEDESCRIPTION_TEXT));
 
 // Asserting absence of an ARIA attribute
-cy.get("[ui5-input]")
+cy.get<Input>("[ui5-input]")
 	.shadow()
 	.find("input")
 	.should("not.have.attr", "aria-expanded");
@@ -627,15 +637,31 @@ cy.get("[ui5-input]")
 
 Before asserting an ARIA attribute value, read the component source or i18n bundle for the exact string — never guess English literals. Guessed values break under locale changes and fail when the actual text differs. Check `packages/{package}/src/{ComponentName}.ts` or the i18n bundle for the specific attribute value — especially for localised attributes like `aria-label`.
 
+**How to find the correct ARIA value — required workflow:**
+1. Open `packages/{package}/src/{ComponentName}.ts`
+2. Search for the attribute name (e.g. `ariaRoledescription`, `ariaLabel`) in the `accInfo` getter or template
+3. If it references an i18n key, find the key in `packages/{package}/src/generated/i18n/i18n-defaults.js` (generated from `messagebundle.properties`), import it, and use `Component.i18nBundle.getText(KEY)` in the assertion — never hardcode the English string
+
+```typescript
+// Find the value in source first, then assert it
+import MultiInput from "../../src/MultiInput.js";
+import { MULTIINPUT_ROLEDESCRIPTION_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
+
+cy.get<MultiInput>("[ui5-multi-input]")
+	.shadow()
+	.find("input")
+	.should("have.attr", "aria-roledescription", MultiInput.i18nBundle.getText(MULTIINPUT_ROLEDESCRIPTION_TEXT));
+```
+
 **Events** — no global helper; attach a stub, then assert call count and payload:
 
 ```typescript
-cy.get("[ui5-tag]")
+cy.get<Tag>("[ui5-tag]")
 	.then($tag => {
 		$tag[0].addEventListener("click", cy.stub().as("clicked"));
 	});
 
-cy.get("[ui5-tag]")
+cy.get<Tag>("[ui5-tag]")
 	.realClick();
 cy.get("@clicked")
 	.should("have.been.calledOnce");
@@ -668,7 +694,7 @@ cy.get("[ui5-form-group]")
 	.should("have.attr", "aria-label", "Group 1");
 
 // Right — compare against the bundle
-cy.get("[ui5-form-group]")
+cy.get<FormGroup>("[ui5-form-group]")
 	.should(
 		"have.attr",
 		"aria-label",

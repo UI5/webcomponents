@@ -1,6 +1,6 @@
 # Example Specs
 
-Four complete, copy-ready specs demonstrating all conventions. Use these as a starting point — adapt imports and assertions to the actual component.
+Five complete, copy-ready specs demonstrating all conventions. Use these as a starting point — adapt imports and assertions to the actual component.
 
 ---
 
@@ -227,4 +227,31 @@ describe("Dialog", () => {
 			.should("not.have.attr", "open");
 	});
 });
+
+---
+
+## ARIA attributes spec (MultiInput)
+
+Demonstrates: shadow DOM traversal, i18n bundle import, ARIA attribute assertion without hardcoded strings.
+
+```typescript
+import MultiInput from "../../src/MultiInput.js";
+import { MULTIINPUT_ROLEDESCRIPTION_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
+
+describe("MultiInput — ARIA", () => {
+	it("inner input has correct aria-roledescription from i18n bundle", () => {
+		cy.mount(<MultiInput />);
+
+		cy.get<MultiInput>("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.should(
+				"have.attr",
+				"aria-roledescription",
+				MultiInput.i18nBundle.getText(MULTIINPUT_ROLEDESCRIPTION_TEXT)
+			)
+			.and("not.have.attr", "aria-expanded");
+	});
+});
+```
 ```
