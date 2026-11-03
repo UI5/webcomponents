@@ -112,7 +112,7 @@ function App() {
             </div>
           </DynamicPageHeader>
 
-          <TabContainer slot="stickySubheaderArea" fixed tabLayout="Standard" collapsed>
+          <TabContainer slot="stickySubheaderArea" tabLayout="Standard" collapsed>
             <Tab text="Overview" selected={true} />
             <Tab text="Specifications" />
             <Tab text="Reviews" />
