@@ -8925,13 +8925,13 @@ __metadata:
     glob: "npm:^13.0.6"
     glob-parent: "npm:^6.0.2"
     globby: "npm:^13.1.1"
-    handlebars: "npm:^4.7.9"
+    handlebars: "npm:^4.7.10"
     ignore: "npm:^7.0.5"
     is-port-reachable: "npm:^3.1.0"
     json-beautify: "npm:^1.1.1"
     postcss: "npm:^8.5.26"
     postcss-cli: "npm:^9.1.0"
-    postcss-selector-parser: "npm:^6.0.10"
+    postcss-selector-parser: "npm:^7.1.7"
     prompts: "npm:^2.4.2"
     properties-reader: "npm:^2.2.0"
     recursive-readdir: "npm:^2.2.2"
@@ -16884,6 +16884,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"handlebars@npm:^4.7.10":
+  version: 4.7.10
+  resolution: "handlebars@npm:4.7.10"
+  dependencies:
+    minimist: "npm:^1.2.8"
+    neo-async: "npm:^2.6.2"
+    source-map: "npm:^0.6.1"
+    uglify-js: "npm:^3.1.4"
+    wordwrap: "npm:^1.0.0"
+  dependenciesMeta:
+    uglify-js:
+      optional: true
+  bin:
+    handlebars: bin/handlebars
+  checksum: 10c0/9b5573584ae5836172ae3f1502d9819568ba1b92ee83b81b18223beeb4c07486595e7b0fa633102beabc66ed06fe6e7da1dd9a9ea8c7072b9550b9a88809165c
+  languageName: node
+  linkType: hard
+
 "handlebars@npm:^4.7.7":
   version: 4.7.7
   resolution: "handlebars@npm:4.7.7"
@@ -16899,24 +16917,6 @@ __metadata:
   bin:
     handlebars: bin/handlebars
   checksum: 10c0/4c0913fc0018a2a2e358ee94e4fe83f071762b8bec51a473d187e6642e94e569843adcf550ffe329554c63ad450c062f3a05447bd2e3fff5ebfe698e214225c6
-  languageName: node
-  linkType: hard
-
-"handlebars@npm:^4.7.9":
-  version: 4.7.9
-  resolution: "handlebars@npm:4.7.9"
-  dependencies:
-    minimist: "npm:^1.2.5"
-    neo-async: "npm:^2.6.2"
-    source-map: "npm:^0.6.1"
-    uglify-js: "npm:^3.1.4"
-    wordwrap: "npm:^1.0.0"
-  dependenciesMeta:
-    uglify-js:
-      optional: true
-  bin:
-    handlebars: bin/handlebars
-  checksum: 10c0/22f8105a7e68e81aff2662bb434edf05f757d21d850731d71cec886d69c10cd33d3c43e34b2892968ec62de8241611851d3d0674c8ef324ea3e01dc66262faa9
   languageName: node
   linkType: hard
 
@@ -24323,16 +24323,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-selector-parser@npm:^6.0.10":
-  version: 6.0.13
-  resolution: "postcss-selector-parser@npm:6.0.13"
-  dependencies:
-    cssesc: "npm:^3.0.0"
-    util-deprecate: "npm:^1.0.2"
-  checksum: 10c0/51f099b27f7c7198ea1826470ef0adfa58b3bd3f59b390fda123baa0134880a5fa9720137b6009c4c1373357b144f700b0edac73335d0067422063129371444e
-  languageName: node
-  linkType: hard
-
 "postcss-selector-parser@npm:^6.0.11, postcss-selector-parser@npm:^6.0.16":
   version: 6.1.4
   resolution: "postcss-selector-parser@npm:6.1.4"
@@ -24350,6 +24340,16 @@ __metadata:
     cssesc: "npm:^3.0.0"
     util-deprecate: "npm:^1.0.2"
   checksum: 10c0/0fef257cfd1c0fe93c18a3f8a6e739b4438b527054fd77e9a62730a89b2d0ded1b59314a7e4aaa55bc256204f40830fecd2eb50f20f8cb7ab3a10b52aa06c8aa
+  languageName: node
+  linkType: hard
+
+"postcss-selector-parser@npm:^7.1.7":
+  version: 7.1.7
+  resolution: "postcss-selector-parser@npm:7.1.7"
+  dependencies:
+    cssesc: "npm:^3.0.0"
+    util-deprecate: "npm:^1.0.2"
+  checksum: 10c0/94db1cfb838957729dd632a229f86cc631cee98f0418026a8460ba3d24feb47da0a28f295a2ae4be37b548ffa6e61eff0f74fbc2ae309c48a6dd3fe1cb25e396
   languageName: node
   linkType: hard
 
