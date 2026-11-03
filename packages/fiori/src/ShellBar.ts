@@ -343,7 +343,7 @@ class ShellBar extends UI5Element {
 	 * @since 2.12.0
 	 * @public
 	 */
-	@slot()
+	@slot({ type: HTMLElement, invalidateOnChildChange: true })
 	branding!: Slot<ShellBarBranding>;
 
 	/**
@@ -1309,7 +1309,7 @@ class ShellBar extends UI5Element {
 			search: this.searchField.length > 0,
 			profile: this.profile.length > 0,
 			content: this.content.length > 0,
-			branding: this.branding.length > 0,
+			branding: this.branding.length > 0 && !this.branding[0].isEmpty,
 			overflow: this.showOverflowButton,
 			assistant: this.assistant.length > 0,
 			startButton: this.startButton.length > 0,

@@ -7,6 +7,10 @@
     min-width: 0;
 }
 
+:host([_empty]) {
+    display: none;
+}
+
 .ui5-shellbar-branding-root {
 	display: flex;
 	align-items: center;

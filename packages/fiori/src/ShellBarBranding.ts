@@ -105,6 +105,15 @@ class ShellBarBranding extends UI5Element {
 	@slot({ type: HTMLElement })
 	logo!: Slot<HTMLElement>;
 
+	/**
+	 * Returns `true` when the branding has neither an assigned logo nor title text,
+	 * so it should render nothing instead of an empty.
+	 * @private
+	 */
+	get isEmpty() {
+		return this.logo.length === 0 && !this.titleText;
+	}
+
 	get parsedRef() {
 		return (this.href && this.href.length > 0) ? this.href : undefined;
 	}
@@ -134,6 +143,10 @@ class ShellBarBranding extends UI5Element {
 
 	_fireClick() {
 		this.fireDecoratorEvent("click");
+	}
+
+	onBeforeRendering() {
+		this.toggleAttribute("_empty", this.isEmpty);
 	}
 
 	private _activate(e: Event) {
