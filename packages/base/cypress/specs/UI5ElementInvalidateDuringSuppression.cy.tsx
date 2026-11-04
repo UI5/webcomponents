@@ -127,6 +127,64 @@ describe("Invalidation during suppressed rendering (onBeforeRendering)", () => {
 			.should("have.been.calledOnce");
 	});
 
+	it("setting strProp to undefined skips derivedProp update in onBeforeRendering", () => {
+		cy.mount(<InvalidateOnBeforeRendering></InvalidateOnBeforeRendering>);
+
+		cy.get<InvalidateOnBeforeRendering>("[ui5-test-invalidate-on-before-rendering]")
+			.should($el => {
+				expect($el[0].getDomRef()).to.exist;
+			});
+
+		// First render with a value so derivedProp gets set
+		cy.get("[ui5-test-invalidate-on-before-rendering]")
+			.as("el")
+			.invoke("prop", "strProp", "initial");
+
+		cy.get<InvalidateOnBeforeRendering>("@el")
+			.should($el => {
+				expect($el[0].derivedProp).to.equal("derived:initial");
+			});
+
+		// Now install the spy and set strProp back to undefined
+		cy.get("@el")
+			.then($el => {
+				cy.spy<UI5Element>(($el.get(0) as UI5Element), "onInvalidation").as("onInvalidation");
+			});
+
+		cy.get("@el")
+			.then($el => {
+				($el.get(0) as InvalidateOnBeforeRendering).strProp = undefined;
+			});
+
+		// Wait for render to settle — strProp is now undefined
+		cy.get<InvalidateOnBeforeRendering>("@el")
+			.should($el => {
+				expect($el[0].strProp).to.equal(undefined);
+			});
+
+		cy.get("@onInvalidation")
+			.then(spy => {
+				const calls = (spy as unknown as sinon.SinonSpy).args;
+
+				// onInvalidation fires for the strProp → undefined change (normal, non-suppressed path)
+				const strPropCall = calls.find(([info]) => info.name === "strProp");
+				expect(strPropCall, "onInvalidation fires for strProp → undefined").to.exist;
+				const [strPropInfo] = strPropCall as [InvalidationInfo];
+				expect(strPropInfo.newValue).to.equal(undefined);
+
+				// The onBeforeRendering guard (strProp !== undefined) prevents derivedProp from being
+				// set, so there must be NO suppressed invalidation for derivedProp
+				const derivedPropCall = calls.find(([info]) => info.name === "derivedProp");
+				expect(derivedPropCall, "onInvalidation must NOT fire for derivedProp when strProp is undefined").to.not.exist;
+			});
+
+		// derivedProp retains its last computed value — it was not reset
+		cy.get<InvalidateOnBeforeRendering>("@el")
+			.should($el => {
+				expect($el[0].derivedProp).to.equal("derived:initial");
+			});
+	});
+
 	it("derivedProp has the correct value after the render cycle", () => {
 		cy.mount(<InvalidateOnBeforeRendering></InvalidateOnBeforeRendering>);
 
