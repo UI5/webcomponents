@@ -19,7 +19,6 @@ export default function NumericInputTemplate(this: NumericInput) {
 			{this._showStepButtons && !this.readonly &&
 			<div
 				class="ui5-step-icon ui5-step-dec"
-				title={this.decIconTitle}
 				onMouseDown={this._decSpin}
 				onMouseUp={this._resetSpin}
 				onMouseOut={this._resetSpinOut}
@@ -70,7 +69,6 @@ export default function NumericInputTemplate(this: NumericInput) {
 			{this._showStepButtons && !this.readonly &&
 				<div
 					class="ui5-step-icon ui5-step-inc"
-					title={this.incIconTitle}
 					onMouseDown={this._incSpin}
 					onMouseUp={this._resetSpin}
 					onMouseOut={this._resetSpinOut}

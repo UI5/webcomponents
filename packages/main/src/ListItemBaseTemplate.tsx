@@ -17,7 +17,7 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			class={this.classes.main}
 			draggable={this.movable}
 			role={injectedProps?.role}
-			title={injectedProps?.title}
+			data-ui5-tooltip={injectedProps?.title || undefined}
 			aria-selected={injectedProps?.role === "option" ? this.selected : undefined}
 			{...(injectedProps?.ariaSetsize !== undefined && { "aria-setsize": injectedProps.ariaSetsize })}
 			{...(injectedProps?.ariaPosinset !== undefined && { "aria-posinset": injectedProps.ariaPosinset })}

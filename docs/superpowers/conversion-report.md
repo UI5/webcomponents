@@ -25,6 +25,13 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 ### G1 — Getter name must not collide with the `ariaDescription` DOM/JSX prop
 - A public getter named `ariaDescription` fails TypeScript: Preact's JSX types the DOM `ariaDescription` property as `string | null`, so a getter returning `string | undefined` makes the component invalid as a JSX element (`TS2786`). **Use a `_`-prefixed internal name** (e.g. `_ariaDescription`), matching the RatingIndicator convention. Hit on Switch; fixed by renaming.
 
+### G2 — Import cycle when wiring tooltip support into the `Popup` base
+- `TooltipSupport.ts` imports `Tooltip`, whose template imports `Popover`, which extends `Popup`. A **static** `import { startTooltipSupport } from "./TooltipSupport.js"` at the top of `Popup.ts` therefore forms a cycle and throws `ReferenceError: Cannot access 'Popup' before initialization` at runtime (whole Dialog spec failed to load).
+- **Fix:** in `Popup.onEnterDOM`, load it lazily — `void import("./TooltipSupport.js").then(m => m.startTooltipSupport())` — keeping it out of the static graph. Only Popup-chain modules (Popup/Popover/Dialog) need this; leaf components import it statically without issue.
+
+### G3 — Pre-existing unrelated test failure (not caused by this migration)
+- `NumericInput.cy.tsx` has one failing assertion `formValidity.patternMismatch: expected true to equal false`. Verified by stashing the migration change: it fails on the clean baseline too. **Out of scope** for this migration; left as-is.
+
 ## Special-handling cases
 
 ### Prerequisite — TooltipSupport delegation reworked (Phase 0)
@@ -55,6 +62,22 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - **Calendar header (×5):** tooltip = `"{label} ({shortcut})"` while the button's `aria-description` = label and `aria-keyshortcuts` = shortcut. The tooltip adds nothing not already exposed, so it is a clean swap (REDUNDANT-A11Y). `startTooltipSupport()` wired in `Calendar.onEnterDOM` (the header is rendered by Calendar; there is no standalone CalendarHeader component).
 - **DayPicker day cells:** `day.tooltip` (special-day text) is **already appended into `day.ariaLabel`** (`DayPicker.ts:286`), so removing native title loses nothing for AT. Per-cell attribute (no getter). New `onEnterDOM`.
 
+### NumericInput — redundant outer-div title dropped, not converted
+- The inc/dec step `<div>`s carried a native `title` duplicating the inner `<Icon accessibleName=... showTooltip>` (which renders its own tooltip + aria). The outer-div `title` was **removed entirely** (no `data-ui5-tooltip` added) to avoid a double tooltip; a11y + visual tooltip remain via the inner Icon. No `startTooltipSupport` wiring needed.
+
+### InputIcon — title == aria-label (redundant)
+- `effectiveTitle` and `effectiveAriaLabel` both resolve to `accessibleName`, so the `aria-label` already carries the text. Clean swap to `data-ui5-tooltip`; no description reroute.
+
+### Prop-passthroughs converted to data-ui5-tooltip on the host (no new API)
+- Per user decision, instead of adding a public `tooltip` property to receivers, the `title` is placed as `data-ui5-tooltip` **directly on the receiving component host**; the document delegate picks it up via `composedPath()`.
+- **TableSelection / TableSelectionMulti → `<CheckBox>`:** host gets `data-ui5-tooltip` (select/deselect-all text). CheckBox already has `accessibleName={TABLE_ROW_SELECTOR}`, so the tooltip is supplementary — **no a11y regression**. `startTooltipSupport()` wired in `CheckBox.onEnterDOM`.
+- **ListItemBase injected `title`:** swapped to `data-ui5-tooltip` on the `<li>` (support started by ListItem).
+- SideNavigationPopover → NavigationMenuItem: handled in the fiori phase.
+
+### Breadcrumbs dropdown arrow / AvatarBadge — icon modes differ
+- **Breadcrumbs arrow `<Icon>` (default Decorative, aria-hidden):** parent `<Link accessibleName>` already names the control; swap to `data-ui5-tooltip` only (visual). Not announced before either.
+- **AvatarBadge `<Icon mode="Image">` (role=img, NOT aria-hidden):** `accessibleName` IS exposed, so set both `accessibleName` and `data-ui5-tooltip` to the tooltip text (invariant honored).
+
 ### Switch
 - **Files:** `Switch.ts`, `SwitchTemplate.tsx`.
 - New `onEnterDOM` (Switch had none) + new `_ariaDescription` getter (see G1). Switch keeps its separate `aria-describedby` readonly hidden-span; the tooltip goes to a distinct `aria-description`.
@@ -75,3 +98,12 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 | DayPicker (day cells) | TOOLTIP | ✅ done | `day.tooltip` already appended into `day.ariaLabel`; swap only; new `onEnterDOM` |
 | BusyIndicator | REDUNDANT-A11Y | ✅ done | `aria-labelledby` carries name; swap only |
 | ColorPaletteItem | REDUNDANT-A11Y | ✅ done | `aria-label` carries name; new `onEnterDOM` |
+| Dialog + Popover (resize handle) | TOOLTIP | ✅ done | wired lazily in `Popup.onEnterDOM` (see G2) |
+| InputIcon | REDUNDANT-A11Y | ✅ done | title == aria-label |
+| ListItem + ListItemBase | TOOLTIP / passthrough | ✅ done | supplementary to aria-labelledby/describedby |
+| NumericInput (×2) | REDUNDANT-A11Y | ✅ done | outer-div title dropped (inner Icon covers) |
+| TabContainer (expand btn) | TOOLTIP | ✅ done | decorative; wired in TabContainer |
+| AvatarBadge | ICON (Image) | ✅ done | accessibleName + data-ui5-tooltip |
+| Breadcrumbs (arrow) | ICON (decorative) | ✅ done | Link names it; tooltip-only |
+| CheckBox | enabler | ✅ done | `startTooltipSupport` for host-level data-ui5-tooltip |
+| TableSelection / Multi | PROP-PASSTHROUGH | ✅ done | data-ui5-tooltip on CheckBox host; accessibleName already set |

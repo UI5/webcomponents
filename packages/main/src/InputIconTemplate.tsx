@@ -13,7 +13,7 @@ export default function InputIconTemplate(this: InputIcon) {
 			role="button"
 			tabindex={-1}
 			aria-label={this.effectiveAriaLabel}
-			title={this.effectiveTitle}
+			data-ui5-tooltip={this.effectiveTitle}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}
 			onMouseUp={this._onmouseup}

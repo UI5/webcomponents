@@ -294,6 +294,9 @@ abstract class Popup extends UI5Element {
 
 		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
+		// Enable data-ui5-tooltip (e.g. dialog/popover resize handle). Loaded lazily
+		// to avoid a static import cycle (TooltipSupport -> Tooltip -> Popover -> Popup).
+		void import("./TooltipSupport.js").then(m => m.startTooltipSupport());
 	}
 
 	handleOpenOnEnterDOM() {

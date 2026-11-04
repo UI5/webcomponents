@@ -60,6 +60,7 @@ import type { IButton } from "./Button.js";
 
 // Templates
 import TabContainerTemplate from "./TabContainerTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import tabContainerCss from "./generated/themes/TabContainer.css.js";
@@ -438,6 +439,8 @@ class TabContainer extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute on the tab strip expand button.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {

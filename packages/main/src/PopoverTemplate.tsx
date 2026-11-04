@@ -38,7 +38,7 @@ function afterContent(this: Popover) {
 		{this._showResizeHandle &&
 			<div class="ui5-popover-resize-handle"
 				 onMouseDown={this._onResizeMouseDown}
-				 title={this._resizeHandleTooltip}
+				 data-ui5-tooltip={this._resizeHandleTooltip || undefined}
 			>
 				<Icon name={resizeCorner} />
 			</div>

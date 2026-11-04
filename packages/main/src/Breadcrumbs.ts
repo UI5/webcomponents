@@ -41,6 +41,7 @@ import type { ListSelectionChangeEventDetail } from "./List.js";
 
 // Templates
 import BreadcrumbsTemplate from "./BreadcrumbsTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import breadcrumbsCss from "./generated/themes/Breadcrumbs.css.js";
@@ -228,6 +229,8 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._onResizeHandler);
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {

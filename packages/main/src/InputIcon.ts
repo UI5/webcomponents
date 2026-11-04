@@ -5,6 +5,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import InputIconTemplate from "./InputIconTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import inputIconCss from "./generated/themes/InputIcon.css.js";
 import "./Icon.js";
 
@@ -120,6 +121,11 @@ class InputIcon extends UI5Element {
 			this._pressed = false;
 			this.fireDecoratorEvent("click");
 		}
+	}
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	get effectiveAriaLabel() {
