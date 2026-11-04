@@ -38,12 +38,8 @@ function getSharedTooltip(): Tooltip {
 // composedPath() crosses shadow boundaries and is not retargeted, so it sees the
 // real inner element (e.g. the <button> inside ui5-button's shadow root).
 function matchInPath(e: Event): HTMLElement | null {
-	for (const node of e.composedPath()) {
-		if (node instanceof HTMLElement && node.hasAttribute(ATTRIBUTE)) {
-			return node;
-		}
-	}
-	return null;
+	const match = e.composedPath().find(node => node instanceof HTMLElement && node.hasAttribute(ATTRIBUTE));
+	return (match as HTMLElement) ?? null;
 }
 
 // Point the shared tooltip at `target`, syncing all per-target state, and open it.
@@ -133,4 +129,5 @@ function startTooltipSupport(): void {
 	document.addEventListener("touchstart", onPointerOver, true);
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export { startTooltipSupport };
