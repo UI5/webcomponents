@@ -44,6 +44,7 @@ import type DateTimeInput from "./DateTimeInput.js";
 import type { InputAccInfo } from "./Input.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import type { TimeSelectionChangeEventDetail } from "./TimePickerInternals.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 import {
 	TIMEPICKER_SUBMIT_BUTTON,
@@ -64,6 +65,8 @@ import {
 	TIMEPICKER_TOGGLE_INPUT_VIEW_LABEL,
 	TIMEPICKER_TOGGLE_DESC_SWITCH_TO_INPUTS,
 	TIMEPICKER_TOGGLE_DESC_IN_INPUTS,
+	TIMEPICKER_ANNOUNCE_KEYBOARD,
+	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -540,6 +543,10 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 */
 	_togglePickerMode() {
 		this._useInputsMode = !this._useInputsMode;
+		announce(
+			TimePicker.i18nBundle.getText(this._useInputsMode ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			"Assertive",
+		);
 	}
 
 	get _switchToKeyboardLabel() {
