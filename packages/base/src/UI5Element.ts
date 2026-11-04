@@ -240,7 +240,7 @@ abstract class UI5Element extends HTMLElement {
 		super();
 
 		const ctor = this.constructor as typeof UI5Element;
-		this._suppressRendering = true; // A flag telling whether all invalidations should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
+		this._suppressRendering = true; // A flag telling whether all re-renderings should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
 		this._inDOM = false; // A flag telling whether the UI5Element is currently in the DOM tree of the document or not
 		this._fullyConnected = false; // A flag telling whether the UI5Element's onEnterDOM hook was called (since it's possible to have the element removed from DOM before that)
 		this._childChangeListeners = new Map(); // used to store lazy listeners per slot for the child change event of every child inside that slot
@@ -917,7 +917,7 @@ abstract class UI5Element extends HTMLElement {
 			});
 			this.initializedProperties.clear();
 		}
-		// suppress invalidation to prevent state changes scheduling another rendering
+		// suppress re-rendering to prevent state changes scheduling another rendering
 		this._suppressRendering = true;
 
 		try {
@@ -931,7 +931,7 @@ abstract class UI5Element extends HTMLElement {
 			// Intended for framework usage only. Currently ItemNavigation updates tab indexes after the component has updated its state but before the template is rendered
 			this._componentStateFinalizedEventProvider.fireEvent("componentStateFinalized");
 		} finally {
-			// always resume normal invalidation handling
+			// always resume normal re-rendering handling
 			this._suppressRendering = false;
 		}
 
