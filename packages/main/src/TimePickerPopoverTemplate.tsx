@@ -26,7 +26,6 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 			_hideHeader={this._shouldHideHeader}
 			hideArrow={true}
 			preventInitialFocus={this._preventPickerInitialFocus}
-			initialFocus={this._initialFocusId}
 			accessibleName={this.pickerAccessibleName}
 			onClose={this.onResponsivePopoverAfterClose}
 			onBeforeOpen={this.onResponsivePopoverBeforeOpen}
