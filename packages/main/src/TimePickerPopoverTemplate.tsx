@@ -73,6 +73,8 @@ function defaultHeader(this: TimePicker) {
 				design="Transparent"
 				icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
 				tooltip={this._pickerModeToggleLabel}
+				accessibleName={this._pickerModeToggleAccessibleName}
+				accessibleDescription={this._pickerModeToggleAccessibleDesc}
 				onClick={this._togglePickerMode}
 			/>
 		</Bar>
