@@ -621,12 +621,8 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onResponsivePopoverAfterOpen() {
 		this.fireDecoratorEvent("open");
-		if (this.showHeader) {
-			const focusTarget = this._useInputsMode
-				? this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-time-sel"]`)
-				: this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-mode-toggle"]`);
-			focusTarget?.focus();
-		}
+		const toggleBtn = this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-mode-toggle"]`);
+		toggleBtn?.focus();
 	}
 
 	/**
