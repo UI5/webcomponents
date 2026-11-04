@@ -669,7 +669,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
-	 * Attach a callback that will be executed whenever the component is invalidated
+	 * Attach a callback that will be executed whenever the component state is changed
 	 *
 	 * @param callback
 	 * @public
@@ -679,7 +679,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
-	 * Detach the callback that is executed whenever the component is invalidated
+	 * Detach the callback that is executed whenever the component state is changed
 	 *
 	 * @param callback
 	 * @public
