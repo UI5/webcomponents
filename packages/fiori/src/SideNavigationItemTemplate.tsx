@@ -44,7 +44,7 @@ function ItemTemplate(this: SideNavigationItem) {
 						  aria-owns={this._groupId}
 						  aria-label={this._ariaLabel}
 						  aria-expanded={this._expanded}
-						  aria-labelledby={this._textId}
+						  aria-labelledby={this.accessibleName ? undefined : this._textId}
 						  aria-describedby={this._describedBy}
 			>
 				{this.sideNavCollapsed ?
