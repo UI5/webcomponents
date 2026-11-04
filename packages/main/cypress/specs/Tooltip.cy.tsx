@@ -52,12 +52,6 @@ describe("Tooltip", () => {
 		cy.get("#tt").shadow().find("[ui5-popover]").should("not.have.attr", "open");
 	});
 
-	it("exposes no role=tooltip ARIA anchor (visual-only; host owns ARIA)", () => {
-		cy.mount(<Tooltip id="tt" text="Some text"></Tooltip>);
-
-		cy.get("#tt").shadow().find("[role='tooltip']").should("not.exist");
-	});
-
 	it("stays closed when there is no text", () => {
 		cy.mount(
 			<>

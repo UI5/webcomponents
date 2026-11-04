@@ -38,6 +38,7 @@ import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
 import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import {
 	BUTTON_ARIA_TYPE_ACCEPT,
 	BUTTON_ARIA_TYPE_REJECT,
@@ -468,6 +469,9 @@ class Button extends UI5Element implements IButton {
 			this.addEventListener("click", this._onclickBound);
 			this._clickHandlerAttached = true;
 		}
+
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 
 		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
 	}

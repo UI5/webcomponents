@@ -312,8 +312,8 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("[ui5-tooltip]")
-			.should("have.attr", "text", "Go home");
+			.find("button")
+			.should("have.attr", "data-ui5-tooltip", "Go home");
 	});
 
 	it("tooltip from inner icon is propagated", () => {
@@ -321,8 +321,8 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("[ui5-tooltip]")
-			.should("have.attr", "text", "Download");
+			.find("button")
+			.should("have.attr", "data-ui5-tooltip", "Download");
 	});
 
 	it("tooltip not displayed when there is a text", () => {
@@ -330,8 +330,8 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("[ui5-tooltip]")
-			.should("not.exist");
+			.find("button")
+			.should("not.have.attr", "data-ui5-tooltip");
 	});
 
 	it("aria-label is properly applied on the button tag", () => {
@@ -761,14 +761,13 @@ describe("Button form attribute", () => {
 });
 
 describe("Button enhanced tooltip", () => {
-	it("renders an enhanced (visual) tooltip reflecting the tooltip property", () => {
+	it("reflects the tooltip property onto the enhanced-tooltip magic attribute", () => {
 		cy.mount(<Button id="b" tooltip="Save the document">Save</Button>);
 
 		cy.get("#b")
 			.shadow()
-			.find("[ui5-tooltip]")
-			.should("exist")
-			.and("have.attr", "text", "Save the document");
+			.find("button")
+			.should("have.attr", "data-ui5-tooltip", "Save the document");
 	});
 
 	it("does not set the native title attribute", () => {
@@ -776,9 +775,21 @@ describe("Button enhanced tooltip", () => {
 		cy.get("#b2").shadow().find("button").should("not.have.attr", "title");
 	});
 
-	it("renders no enhanced tooltip when there is no tooltip text", () => {
+	it("sets no magic attribute when there is no tooltip text", () => {
 		cy.mount(<Button id="b3">Save</Button>);
-		cy.get("#b3").shadow().find("[ui5-tooltip]").should("not.exist");
+		cy.get("#b3").shadow().find("button").should("not.have.attr", "data-ui5-tooltip");
+	});
+
+	it("opens a shared enhanced tooltip on hover", () => {
+		cy.mount(<Button id="b5" tooltip="Save the document">Save</Button>);
+
+		cy.get("#b5").realHover();
+
+		cy.get("body > [ui5-tooltip]", { timeout: 2000 })
+			.should("exist")
+			.and("have.attr", "text", "Save the document");
+
+		cy.get("body > [ui5-tooltip]").shadow().find("[ui5-popover]").should("have.attr", "open");
 	});
 
 	it("icon-only button exposes the tooltip as its accessible name", () => {

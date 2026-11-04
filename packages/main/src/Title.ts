@@ -3,6 +3,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import TitleLevel from "./types/TitleLevel.js";
 import type WrappingType from "./types/WrappingType.js";
 
@@ -80,6 +81,8 @@ class Title extends UI5Element {
 
 	onEnterDOM(): void {
 		ResizeHandler.register(this, this._titleResizeHandler);
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onExitDOM(): void {

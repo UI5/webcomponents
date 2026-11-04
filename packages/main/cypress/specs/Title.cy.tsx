@@ -65,7 +65,7 @@ describe("Title", () => {
 	});
 
 	describe("Enhanced tooltip (truncation)", () => {
-		it("shows a tooltip with the full text when truncated", () => {
+		it("sets the enhanced-tooltip magic attribute with the full text when truncated", () => {
 			cy.mount(
 				<Title id="t" wrappingType="None" style="display:block;width:80px">
 					A very long title that overflows its box
@@ -74,25 +74,23 @@ describe("Title", () => {
 
 			cy.get("#t")
 				.shadow()
-				.find("[ui5-tooltip]")
-				.should("exist")
-				.and($tt => {
-					expect($tt.attr("text")).to.contain("A very long title");
+				.find(".ui5-title-root")
+				.should($root => {
+					expect($root.attr("data-ui5-tooltip")).to.contain("A very long title");
 				});
 		});
 
-		it("shows no tooltip when the text fits", () => {
+		it("sets no magic attribute when the text fits", () => {
 			cy.mount(
 				<Title id="t2" wrappingType="None" style="display:block;width:600px">
 					Short
 				</Title>
 			);
 
-			cy.get("#t2").shadow().find("[ui5-tooltip]").should($tt => {
-				if ($tt.length) {
-					expect($tt.attr("text") || "").to.equal("");
-				}
-			});
+			cy.get("#t2")
+				.shadow()
+				.find(".ui5-title-root")
+				.should("not.have.attr", "data-ui5-tooltip");
 		});
 	});
 });
