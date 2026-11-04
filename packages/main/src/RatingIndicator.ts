@@ -15,6 +15,7 @@ import {
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/favorite.js";
@@ -68,7 +69,7 @@ type Star = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 
 @customElement({
@@ -108,7 +109,7 @@ class RatingIndicator extends UI5Element {
 	 * The number of displayed rating symbols.
 	 * @default 5
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Number })
 	max: number = 5;
@@ -159,7 +160,7 @@ class RatingIndicator extends UI5Element {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -196,7 +197,7 @@ class RatingIndicator extends UI5Element {
 	 *
 	 * @default "favorite"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	ratedIcon = "favorite";
@@ -205,7 +206,7 @@ class RatingIndicator extends UI5Element {
 	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
 	 * @default "unfavorite"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	unratedIcon = "unfavorite";
@@ -216,12 +217,6 @@ class RatingIndicator extends UI5Element {
 	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
-	/**
-	 * @private
-	 */
-	@property({ type: Boolean })
-	_focused = false;
-
 	_liveValue?: number;
 
 	@i18n("@ui5/webcomponents")
@@ -229,6 +224,12 @@ class RatingIndicator extends UI5Element {
 
 	constructor() {
 		super();
+	}
+
+	onEnterDOM() {
+		if (isDesktop()) {
+			this.setAttribute("desktop", "");
+		}
 	}
 
 	onBeforeRendering() {
@@ -326,12 +327,7 @@ class RatingIndicator extends UI5Element {
 			return;
 		}
 
-		this._focused = true;
 		this._liveValue = this.value;
-	}
-
-	_onfocusout() {
-		this._focused = false;
 	}
 
 	get effectiveTabIndex() {

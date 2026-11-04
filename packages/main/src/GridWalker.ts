@@ -123,6 +123,10 @@ class GridWalker {
 	getLastRowPos() {
 		return this.lastRowPos;
 	}
+
+	includes(item: unknown) {
+		return this.grid.flat().includes(item);
+	}
 }
 
 export default GridWalker;

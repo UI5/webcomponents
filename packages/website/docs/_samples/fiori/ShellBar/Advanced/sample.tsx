@@ -1,3 +1,5 @@
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -16,6 +18,7 @@ import "@ui5/webcomponents-icons/dist/nav-back.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
@@ -31,6 +34,12 @@ const Text = createReactComponent(TextClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
+  const [jouleIcon, setJouleIcon] = useState("da");
+
+  const handleToggleClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
+    setJouleIcon(e.currentTarget.pressed ? "da-2" : "da");
+  };
+
   return (
     <>
       <ShellBar
@@ -65,7 +74,13 @@ function App() {
         />
 
         <ShellBarItem icon="sys-help" text="Help" />
-        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <ToggleButton
+          icon={jouleIcon}
+          design="Transparent"
+          tooltip="Joule"
+          slot="assistant"
+          onClick={handleToggleClick}
+        />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
         </Avatar>

@@ -76,7 +76,8 @@
 	outline: none;
 }
 
-.ui5-slider-scale-progress:focus::after,
+:host([desktop]) .ui5-slider-scale-progress:focus::after,
+.ui5-slider-scale-progress:focus-visible::after,
 .ui5-slider-scale-progress.ui5-slider-progress--focused::after {
 	border: var(--_ui5_range_slider_progress_focus_border);
 	border-radius: var(--_ui5_range_slider_progress_focus_border_radius, 0.5rem);
@@ -91,7 +92,8 @@
 	box-sizing: border-box;
 }
 
-.ui5-slider-scale-progress:focus::before,
+:host([desktop]) .ui5-slider-scale-progress:focus::before,
+.ui5-slider-scale-progress:focus-visible::before,
 .ui5-slider-scale-progress.ui5-slider-progress--focused::before {
 	display: var(--_ui5_range_slider_legacy_progress_focus_display);
 	content: '';

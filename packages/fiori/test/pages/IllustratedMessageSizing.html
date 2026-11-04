@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IllustratedMessage — Sizing Scenarios</title>
+
+  <script>// delete Document.prototype.adoptedStyleSheets</script>
+  <script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+  <link rel="stylesheet" type="text/css" href="./styles/IllustratedMessage.css">
+
+</head>
+
+<body class="illustratedmessage1auto">
+
+<!-- ═══════════════════ CONTROLS BAR ═══════════════════ -->
+<div id="im-sizing-controls">
+
+  <div style="display:flex;align-items:flex-start;gap:12px">
+
+    <fieldset data-panel="size" style="flex-shrink:0">
+      <legend>Container size (px)</legend>
+      <div class="im-sizing-slider-row">
+        <label>w</label>
+        <div class="im-sizing-slider-track">
+          <input id="wSlider" type="range" min="80" max="900" value="700">
+          <div class="im-sizing-ticks" id="wTicks"></div>
+        </div>
+        <input id="wNum" type="number" min="80" max="900" value="700" style="width:56px">
+      </div>
+      <div class="im-sizing-slider-row" style="margin-top:4px">
+        <label>h</label>
+        <div class="im-sizing-slider-track">
+          <input id="hSlider" type="range" min="40" max="800" value="400">
+          <div class="im-sizing-ticks" id="hTicks"></div>
+        </div>
+        <input id="hNum" type="number" min="40" max="800" value="400" style="width:56px">
+      </div>
+    </fieldset>
+
+    <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+      <div style="display:flex;align-items:center;gap:8px">
+        <label for="panelSelect" style="font-weight:600;font-size:13px;white-space:nowrap">Show:</label>
+        <select id="panelSelect" style="font:inherit;padding:3px 6px;border:1px solid #ccc;border-radius:4px;cursor:pointer">
+          <option value="width-presets">Width presets</option>
+          <option value="height-presets">Height presets</option>
+          <option value="trans-width">Transition — width</option>
+          <option value="trans-height">Transition — height</option>
+          <option value="trans-wh">Transition — width + height</option>
+        </select>
+      </div>
+      <div id="panelHost">
+
+        <fieldset data-panel="width-presets">
+          <legend>Width presets (at/near breakpoints) — large → small</legend>
+          <!-- scene/dialog: 681 -->
+          <button class="im-sizing-btn" data-w="686" data-h="400" title="5px above scene/dialog">w=681+5</button>
+          <button class="im-sizing-btn" data-w="681" data-h="400" title="exact scene/dialog boundary">w=681</button>
+          <button class="im-sizing-btn" data-w="676" data-h="400" title="5px below scene/dialog">w=681−5</button>
+          <span style="display:inline-block;width:8px"></span>
+          <!-- dialog/spot: 360 -->
+          <button class="im-sizing-btn" data-w="365" data-h="400" title="5px above dialog/spot">w=360+5</button>
+          <button class="im-sizing-btn" data-w="360" data-h="400" title="exact dialog/spot boundary">w=360</button>
+          <button class="im-sizing-btn" data-w="355" data-h="400" title="5px below dialog/spot">w=360−5</button>
+          <span style="display:inline-block;width:8px"></span>
+          <!-- spot/dot: 260 -->
+          <button class="im-sizing-btn" data-w="265" data-h="400" title="5px above spot/dot">w=260+5</button>
+          <button class="im-sizing-btn" data-w="260" data-h="400" title="exact spot/dot boundary">w=260</button>
+          <button class="im-sizing-btn" data-w="255" data-h="400" title="5px below spot/dot">w=260−5</button>
+          <span style="display:inline-block;width:8px"></span>
+          <!-- dot/base: 160 -->
+          <button class="im-sizing-btn" data-w="165" data-h="400" title="5px above dot/base">w=160+5</button>
+          <button class="im-sizing-btn" data-w="160" data-h="400" title="exact dot/base boundary">w=160</button>
+          <button class="im-sizing-btn" data-w="155" data-h="400" title="5px below dot/base">w=160−5</button>
+        </fieldset>
+
+        <fieldset data-panel="height-presets">
+          <legend>Height presets (at/near thresholds, w=800) — large → small</legend>
+          <!-- scene/dialog height boundary ≈ 415px -->
+          <button class="im-sizing-btn" data-w="800" data-h="420" title="5px above scene/dialog height">h=415+5</button>
+          <button class="im-sizing-btn" data-w="800" data-h="415" title="approx scene/dialog height boundary">h=415</button>
+          <button class="im-sizing-btn" data-w="800" data-h="410" title="5px below scene/dialog height">h=415−5</button>
+          <span style="display:inline-block;width:8px"></span>
+          <!-- dialog/spot height boundary ≈ 250px -->
+          <button class="im-sizing-btn" data-w="800" data-h="255" title="5px above dialog/spot height">h=250+5</button>
+          <button class="im-sizing-btn" data-w="800" data-h="250" title="approx dialog/spot height boundary">h=250</button>
+          <button class="im-sizing-btn" data-w="800" data-h="245" title="5px below dialog/spot height">h=250−5</button>
+          <span style="display:inline-block;width:8px"></span>
+          <!-- spot/dot height boundary ≈ 180px -->
+          <button class="im-sizing-btn" data-w="800" data-h="185" title="5px above spot/dot height">h=180+5</button>
+          <button class="im-sizing-btn" data-w="800" data-h="180" title="approx spot/dot height boundary">h=180</button>
+          <button class="im-sizing-btn" data-w="800" data-h="175" title="5px below spot/dot height">h=180−5</button>
+        </fieldset>
+
+        <fieldset data-panel="trans-width">
+          <legend>Transition tests — width (A then B, expects ≤ 2 media switches total)</legend>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="w" data-osc-a="696" data-osc-b="680" data-osc-h="360" title="scroll-container: width crosses scene/dialog with scrollbar present">w 696 → 680 (scroll)</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="w" data-osc-a="686" data-osc-b="676" data-osc-h="400" title="scene → dialog (681 boundary)">w 686 → 676</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="w" data-osc-a="365" data-osc-b="355" data-osc-h="400" title="dialog → spot (360 boundary)">w 365 → 355</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="w" data-osc-a="265" data-osc-b="255" data-osc-h="400" title="spot → dot (260 boundary)">w 265 → 255</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="w" data-osc-a="165" data-osc-b="155" data-osc-h="400" title="dot → base (160 boundary)">w 165 → 155</button>
+        </fieldset>
+
+        <fieldset data-panel="trans-height">
+          <legend>Transition tests — height (A then B, w=800, expects ≤ 2 media switches total)</legend>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="h" data-osc-a="420" data-osc-b="410" data-osc-w="800" title="scene → dialog height boundary">h 420 → 410</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="h" data-osc-a="255" data-osc-b="245" data-osc-w="800" title="dialog → spot height boundary">h 255 → 245</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="h" data-osc-a="185" data-osc-b="175" data-osc-w="800" title="spot → dot height boundary">h 185 → 175</button>
+        </fieldset>
+
+        <fieldset data-panel="trans-wh">
+          <legend>Transition tests — width + height combined (A then B, expects ≤ 2 media switches total)</legend>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="wh" data-osc-wa="686" data-osc-wb="676" data-osc-ha="420" data-osc-hb="410" title="scene → dialog: both axes cross together">w 686→676 + h 420→410</button>
+          <button class="im-sizing-btn im-sizing-btn--osc" data-osc-type="wh" data-osc-wa="365" data-osc-wb="355" data-osc-ha="255" data-osc-hb="245" title="dialog → spot: both axes cross together">w 365→355 + h 255→245</button>
+        </fieldset>
+
+        <div id="oscResult" style="display:none"></div>
+
+      </div><!-- /#panelHost -->
+    </div><!-- /right column -->
+
+  </div><!-- /row -->
+
+</div><!-- /#im-sizing-controls -->
+
+<!-- ═══════════════════ RESULTS BAR ═══════════════════ -->
+<div id="im-sizing-results-bar">
+  <span class="rb-label">Results per sample</span>
+  <button id="im-sizing-clear-btn" title="Clear switch counts">
+    <svg viewBox="0 0 16 16"><path d="M2 3h12v1.5l-1 .5v8a1 1 0 01-1 1H4a1 1 0 01-1-1V5l-1-.5V3zm3 0V2h6v1M6 6v5.5M8 6v5.5M10 6v5.5"/></svg>
+    Clear
+  </button>
+  <div class="rb-scenarios">
+    <div class="rb-box rb-box--idle" id="rb-scroll">
+      <span class="rb-num">1</span>
+      <span class="rb-name">Scroll</span>
+      <span class="rb-count" id="rbc-scroll">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-hidden">
+      <span class="rb-num">2</span>
+      <span class="rb-name">Hidden</span>
+      <span class="rb-count" id="rbc-hidden">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-flex-col">
+      <span class="rb-num">3</span>
+      <span class="rb-name">Flex col</span>
+      <span class="rb-count" id="rbc-flex-col">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-flex-row">
+      <span class="rb-num">4</span>
+      <span class="rb-name">Flex row</span>
+      <span class="rb-count" id="rbc-flex-row">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-grid">
+      <span class="rb-num">5</span>
+      <span class="rb-name">Grid</span>
+      <span class="rb-count" id="rbc-grid">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-padded">
+      <span class="rb-num">6</span>
+      <span class="rb-name">Padded</span>
+      <span class="rb-count" id="rbc-padded">—</span>
+    </div>
+    <div class="rb-box rb-box--idle" id="rb-height">
+      <span class="rb-num">7</span>
+      <span class="rb-name">Height</span>
+      <span class="rb-count" id="rbc-height">—</span>
+    </div>
+  </div>
+</div><!-- /#im-sizing-results-bar -->
+
+<!-- ═══════════════════ SCENARIO GRID ═══════════════════ -->
+<div id="im-sizing-grid">
+
+  <!-- Scenario 1: scroll container (the original oscillation case) -->
+  <div class="im-sizing-tile sc-scroll" data-scenario="scroll">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">1 — Scrollable container (overflow: auto)</span>
+        <span class="im-sizing-tile-badge" id="badge-scroll">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">The IM sits inside an auto-height div inside a fixed-size scroll box. A classic scrollbar (~15px) steals width from the container, which can push the IM across a breakpoint and trigger the oscillation this fix targets.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-scroll">
+        <div>
+          <ui5-illustrated-message
+            id="im-scroll"
+            name="NoData" design="Auto"
+            title-text="No data"
+            subtitle-text="Nothing to show">
+          </ui5-illustrated-message>
+        </div>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-scroll"></div>
+  </div>
+
+  <!-- Scenario 2: overflow:hidden — no scrollbar feedback loop -->
+  <div class="im-sizing-tile sc-hidden" data-scenario="hidden">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">2 — Clipping container (overflow: hidden)</span>
+        <span class="im-sizing-tile-badge" id="badge-hidden">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">No scrollbar at all — the container clips its content. The IM's available width equals the frame width exactly, with no scrollbar side-effect. Useful baseline to confirm no spurious re-sizing.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-hidden">
+        <ui5-illustrated-message
+          id="im-hidden"
+          name="NoData" design="Auto"
+          title-text="No data"
+          subtitle-text="Nothing to show">
+        </ui5-illustrated-message>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-hidden"></div>
+  </div>
+
+  <!-- Scenario 3: flex column — IM fills column width naturally -->
+  <div class="im-sizing-tile sc-flex-col" data-scenario="flex-col">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">3 — Flex column parent (align-items: stretch)</span>
+        <span class="im-sizing-tile-badge" id="badge-flex-col">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">IM is a direct child of a flex column with stretch alignment — the layout algorithm sets the IM's width, not the IM itself. Common in full-page app shells and panel bodies.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-flex-col">
+        <ui5-illustrated-message
+          id="im-flex-col"
+          name="NoData" design="Auto"
+          title-text="No data"
+          subtitle-text="Nothing to show">
+        </ui5-illustrated-message>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-flex-col"></div>
+  </div>
+
+  <!-- Scenario 4: flex:1 in a flex row (sidebar + IM) -->
+  <div class="im-sizing-tile sc-flex-row" data-scenario="flex-row">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">4 — Flex row: sidebar + flex:1 IM</span>
+        <span class="im-sizing-tile-badge" id="badge-flex-row">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">A fixed 60px sidebar sits left of the IM, which takes flex:1. The IM's available width is always (frame width − 60px). Tests that the IM responds correctly to fractional flex-derived widths near breakpoints.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-flex-row">
+        <div class="flex-filler"></div>
+        <div class="flex-im">
+          <ui5-illustrated-message
+            id="im-flex-row"
+            name="NoData" design="Auto"
+            title-text="No data"
+            subtitle-text="Nothing to show"
+            style="width:100%;height:100%">
+          </ui5-illustrated-message>
+        </div>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-flex-row"></div>
+  </div>
+
+  <!-- Scenario 5: CSS grid cell -->
+  <div class="im-sizing-tile sc-grid" data-scenario="grid">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">5 — CSS grid cell (60px sidebar + 1fr IM)</span>
+        <span class="im-sizing-tile-badge" id="badge-grid">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">IM occupies a 1fr grid column next to a fixed 60px sidebar. The grid engine computes the IM's width fractionally — tests that ResizeObserver picks up grid-driven size changes correctly.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-grid">
+        <div class="grid-sidebar"></div>
+        <ui5-illustrated-message
+          id="im-grid"
+          name="NoData" design="Auto"
+          title-text="No data"
+          subtitle-text="Nothing to show"
+          style="width:100%;height:100%">
+        </ui5-illustrated-message>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-grid"></div>
+  </div>
+
+  <!-- Scenario 6: padded border-box parent -->
+  <div class="im-sizing-tile sc-padded" data-scenario="padded">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">6 — Padded parent (24px padding, box-sizing: border-box)</span>
+        <span class="im-sizing-tile-badge" id="badge-padded">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">The frame has 24px padding on all sides. The IM's offsetWidth is (frame width − 48px). Tests that padding on an ancestor does not confuse the ResizeObserver or cause the IM to pick a breakpoint based on the wrong width.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-padded">
+        <ui5-illustrated-message
+          id="im-padded"
+          name="NoData" design="Auto"
+          title-text="No data"
+          subtitle-text="Nothing to show">
+        </ui5-illustrated-message>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-padded"></div>
+  </div>
+
+  <!-- Scenario 7: height-constrained, IM fills 100%×100% (like ui5-dialog content) -->
+  <div class="im-sizing-tile sc-height" data-scenario="height">
+    <div class="im-sizing-tile-header">
+      <div class="im-sizing-tile-header-row">
+        <span class="im-sizing-tile-title">7 — Height-constrained: IM fills width:100% height:100%</span>
+        <span class="im-sizing-tile-badge" id="badge-height">—</span>
+      </div>
+      <span class="im-sizing-tile-desc">IM stretches to fill its container completely. When the container is too short for the current illustration, the IM downgrades to a smaller media size. Mirrors how IM behaves inside a ui5-dialog content area.</span>
+    </div>
+    <div class="im-sizing-tile-stage">
+      <div class="im-sizing-frame" id="frame-height">
+        <div class="fill">
+          <ui5-illustrated-message
+            id="im-height"
+            name="NoData" design="Auto"
+            title-text="No data"
+            subtitle-text="Nothing to show"
+            style="width:100%;height:100%">
+          </ui5-illustrated-message>
+        </div>
+      </div>
+    </div>
+    <div class="im-sizing-tile-log" id="log-height"></div>
+  </div>
+
+</div><!-- /#im-sizing-grid -->
+
+
+<script type="module">
+  // ── Breakpoints (must match IllustratedMessage.ts BREAKPOINTS) ────────────
+  const BP = { BASE: 160, DOT: 260, SPOT: 360, DIALOG: 681 };
+  const W_MIN = 80, W_MAX = 900, H_MIN = 40, H_MAX = 800;
+  const OSC_THRESHOLD = 2;
+
+  // ── Build slider tick marks ───────────────────────────────────────────────
+  function buildTicks(containerEl, bpValues, min, max) {
+    for (const val of bpValues) {
+      const t = document.createElement('span');
+      t.className = 'im-sizing-tick im-sizing-tick--bp';
+      t.title = String(val);
+      t.style.left = `calc(${(val - min) / (max - min) * 100}%)`;
+      containerEl.appendChild(t);
+    }
+  }
+  buildTicks(document.getElementById('wTicks'), Object.values(BP), W_MIN, W_MAX);
+  // No standard height breakpoints, just note the approximate content heights
+  buildTicks(document.getElementById('hTicks'), [180, 250, 350, 450], H_MIN, H_MAX);
+
+  // ── Scenario registry ─────────────────────────────────────────────────────
+  const SCENARIOS = ['scroll','hidden','flex-col','flex-row','grid','padded','height'];
+
+  const state = {}; // per-scenario: { switchCount, logEl, badgeEl, rbBoxEl, rbCountEl, frameEl, imEl }
+  for (const id of SCENARIOS) {
+    state[id] = {
+      logEl:    document.getElementById(`log-${id}`),
+      badgeEl:  document.getElementById(`badge-${id}`),
+      rbBoxEl:  document.getElementById(`rb-${id}`),
+      rbCountEl:document.getElementById(`rbc-${id}`),
+      frameEl:  document.getElementById(`frame-${id}`),
+      imEl:     document.getElementById(`im-${id}`),
+      totalSwitches: 0,
+    };
+  }
+
+  // ── Per-scenario MutationObserver ─────────────────────────────────────────
+  for (const id of SCENARIOS) {
+    const s = state[id];
+    new MutationObserver(() => {
+      const media = s.imEl.getAttribute('media') ?? '—';
+      const w = s.imEl.offsetWidth;
+      const h = s.imEl.offsetHeight;
+      s.totalSwitches++;
+      // update the current session count too
+      if (s._currentSession) s._currentSession.count++;
+      const msg = `media→${media.padEnd(6)} (${w}×${h})`;
+      s.logEl.textContent += msg + '\n';
+      s.logEl.scrollTop = s.logEl.scrollHeight;
+      updateBadge(id);
+    }).observe(s.imEl, { attributes: true, attributeFilter: ['media'] });
+  }
+
+  function updateBadge(id) {
+    const s = state[id];
+    const n = s.totalSwitches;
+    const media = s.imEl.getAttribute('media') ?? '—';
+
+    // tile badge
+    const el = s.badgeEl;
+    el.textContent = `${media} (${n})`;
+    el.className = 'im-sizing-tile-badge';
+    if (s._oscDone && n > OSC_THRESHOLD) el.classList.add('im-sizing-tile-badge--err');
+    else if (n > OSC_THRESHOLD)          el.classList.add('im-sizing-tile-badge--warn');
+
+    // results bar box
+    s.rbCountEl.textContent = n === 0 ? '—' : String(n);
+    s.rbBoxEl.className = 'rb-box';
+    if (n === 0) {
+      s.rbBoxEl.classList.add('rb-box--idle');
+    } else if (s._oscDone && n > OSC_THRESHOLD) {
+      s.rbBoxEl.classList.add('rb-box--err');
+    } else if (n > OSC_THRESHOLD) {
+      s.rbBoxEl.classList.add('rb-box--warn');
+    } else {
+      s.rbBoxEl.classList.add('rb-box--ok');
+    }
+  }
+
+  // ── Clear button ──────────────────────────────────────────────────────────
+  document.getElementById('im-sizing-clear-btn').addEventListener('click', () => {
+    for (const id of SCENARIOS) {
+      const s = state[id];
+      s.totalSwitches = 0;
+      s._oscDone = false;
+      s._currentSession = null;
+      s.logEl.textContent = '';
+      updateBadge(id);
+    }
+    document.getElementById('oscResult').textContent = 'Press a transition test to run.';
+    document.getElementById('oscResult').removeAttribute('data-done');
+    document.getElementById('oscResult').removeAttribute('data-all-ok');
+  });
+
+  // ── Expose on window for Playwright ──────────────────────────────────────
+  // window.imTestState[scenarioId] = { switchCount, lastMedia }
+  window.imTestState = new Proxy({}, {
+    get(_, id) {
+      if (!state[id]) return undefined;
+      const s = state[id];
+      return {
+        switchCount: s._currentSession?.count ?? s.totalSwitches,
+        lastMedia: s.imEl.getAttribute('media'),
+      };
+    }
+  });
+
+  // ── Apply size to all frames ──────────────────────────────────────────────
+  function applySize(w, h) {
+    document.getElementById('wSlider').value = w;
+    document.getElementById('hSlider').value = h;
+    document.getElementById('wNum').value = w;
+    document.getElementById('hNum').value = h;
+
+    for (const id of SCENARIOS) {
+      const { frameEl } = state[id];
+      frameEl.style.width  = w + 'px';
+      frameEl.style.height = h + 'px';
+      frameEl.dataset.size = `${w} × ${h}`;
+    }
+  }
+
+  // ── Sync sliders ↔ number inputs ─────────────────────────────────────────
+  const wSlider = document.getElementById('wSlider');
+  const hSlider = document.getElementById('hSlider');
+  const wNum    = document.getElementById('wNum');
+  const hNum    = document.getElementById('hNum');
+
+  wSlider.addEventListener('input', () => { wNum.value = wSlider.value; applySize(+wSlider.value, +hNum.value); });
+  hSlider.addEventListener('input', () => { hNum.value = hSlider.value; applySize(+wNum.value, +hSlider.value); });
+  wNum.addEventListener('change', () => { wSlider.value = wNum.value; applySize(+wNum.value, +hNum.value); });
+  hNum.addEventListener('change', () => { hSlider.value = hNum.value; applySize(+wNum.value, +hNum.value); });
+
+  // ── Sticky results bar: sits below controls ───────────────────────────────
+  const resultsBar = document.getElementById('im-sizing-results-bar');
+  function pinResultsBar() {
+    resultsBar.style.top = document.getElementById('im-sizing-controls').offsetHeight + 'px';
+  }
+  new ResizeObserver(pinResultsBar).observe(document.getElementById('im-sizing-controls'));
+  pinResultsBar();
+
+  // ── Results bar: click scrolls to scenario tile ───────────────────────────
+  document.querySelectorAll('.rb-box').forEach(box => {
+    box.style.cursor = 'pointer';
+    box.addEventListener('click', () => {
+      const id = box.id.replace('rb-', '');
+      const tile = document.querySelector(`.im-sizing-tile[data-scenario="${id}"]`);
+      if (!tile) return;
+      const stickyH = document.getElementById('im-sizing-controls').offsetHeight
+                    + resultsBar.offsetHeight + 8;
+      const top = tile.getBoundingClientRect().top + window.scrollY - stickyH;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  // ── Panel switcher ────────────────────────────────────────────────────────
+  const panelSelect = document.getElementById('panelSelect');
+  const switchableFieldsets = document.querySelectorAll('#panelHost fieldset[data-panel]');
+
+  function showPanel(value) {
+    switchableFieldsets.forEach(fs => {
+      fs.style.display = fs.dataset.panel === value ? '' : 'none';
+    });
+  }
+
+  panelSelect.addEventListener('change', () => showPanel(panelSelect.value));
+  showPanel(panelSelect.value); // apply on load
+
+  // ── Preset buttons ────────────────────────────────────────────────────────
+  document.querySelectorAll('.im-sizing-btn[data-w]').forEach(btn => {
+    btn.addEventListener('click', () => applySize(+btn.dataset.w, +btn.dataset.h));
+  });
+
+  // ── Oscillation tests ─────────────────────────────────────────────────────
+  async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  document.querySelectorAll('.im-sizing-btn[data-osc-type]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const type   = btn.dataset.oscType;           // 'w', 'h', or 'wh'
+      const a      = +btn.dataset.oscA;
+      const b      = +btn.dataset.oscB;
+      const wa     = +btn.dataset.oscWa;
+      const wb     = +btn.dataset.oscWb;
+      const ha     = +btn.dataset.oscHa;
+      const hb     = +btn.dataset.oscHb;
+      const fixedW = btn.dataset.oscW ? +btn.dataset.oscW : +wNum.value;
+      const fixedH = btn.dataset.oscH ? +btn.dataset.oscH : +hNum.value;
+
+      // reset per-scenario counters
+      for (const id of SCENARIOS) {
+        const s = state[id];
+        s.totalSwitches = 0;
+        s._oscDone = false;
+        s._currentSession = { count: 0 };
+        s.logEl.textContent = '';
+        updateBadge(id);
+      }
+
+      document.getElementById('oscResult').textContent = 'Running…';
+      document.getElementById('oscResult').removeAttribute('data-done');
+      document.getElementById('oscResult').removeAttribute('data-all-ok');
+
+      // Step 1: apply size A, wait for the component to settle
+      if (type === 'w')       applySize(a, fixedH);
+      else if (type === 'h')  applySize(fixedW, a);
+      else /* wh */           applySize(wa, ha);
+      await sleep(500);
+
+      // Reset counts — we only care about what happens during the A→B transition
+      for (const id of SCENARIOS) {
+        state[id].totalSwitches = 0;
+        state[id].logEl.textContent = '';
+        updateBadge(id);
+      }
+
+      // Step 2: apply size B, wait for settle
+      if (type === 'w')       applySize(b, fixedH);
+      else if (type === 'h')  applySize(fixedW, b);
+      else /* wh */           applySize(wb, hb);
+      await sleep(500);
+
+      // collect results
+      const results = SCENARIOS.map(id => {
+        const s = state[id];
+        const count = s.totalSwitches;
+        const ok = count <= OSC_THRESHOLD;
+        s._oscDone = true;
+        updateBadge(id);
+        return `${id.padEnd(9)}: ${count} switch${count === 1 ? '' : 'es'} ${ok ? '✓' : '✗ FLICKER!'}`;
+      });
+      document.getElementById('oscResult').textContent = results.join('\n');
+
+      // expose structured result for Playwright
+      window.lastOscResult = Object.fromEntries(
+        SCENARIOS.map(id => [id, {
+          switchCount: state[id].totalSwitches,
+          ok: state[id].totalSwitches <= OSC_THRESHOLD,
+          lastMedia: state[id].imEl.getAttribute('media'),
+        }])
+      );
+      // data attributes for Playwright polling
+      document.getElementById('oscResult').dataset.done = 'true';
+      document.getElementById('oscResult').dataset.allOk =
+        String(SCENARIOS.every(id => state[id].totalSwitches <= OSC_THRESHOLD));
+    });
+  });
+
+  // ── Initial size ─────────────────────────────────────────────────────────
+  applySize(700, 400);
+</script>
+</body>
+</html>

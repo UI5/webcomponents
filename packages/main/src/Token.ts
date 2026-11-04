@@ -13,6 +13,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import { TOKEN_ARIA_DELETE, TOKEN_ARIA_DELETABLE, TOKEN_ARIA_LABEL } from "./generated/i18n/i18n-defaults.js";
 
 import type { IIcon } from "./Icon.js";
@@ -39,7 +40,7 @@ type TokenDeleteEventDetail = {
  * `import "@ui5/webcomponents/dist/Token.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.9
+ * @since 1.0.0
  * @implements {IToken}
  * @public
  */
@@ -146,7 +147,7 @@ class Token extends UI5Element implements IToken {
 	 * Defines the close icon for the token. If nothing is provided to this slot, the default close icon will be used.
 	 * Accepts `ui5-icon`.
 	 * @public
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 */
 	@slot()
 	closeIcon!: Slot<IIcon>;
@@ -158,6 +159,12 @@ class Token extends UI5Element implements IToken {
 		if (!this.toBeDeleted) {
 			this.selected = !this.selected;
 			this.fireDecoratorEvent("select");
+		}
+	}
+
+	onEnterDOM() {
+		if (isDesktop()) {
+			this.setAttribute("desktop", "");
 		}
 	}
 

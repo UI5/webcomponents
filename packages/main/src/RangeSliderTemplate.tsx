@@ -20,6 +20,7 @@ const startHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				active={slider.rangePressed}
+				desktop={slider._isDesktop}
 				handleType={SliderHandleType.Start}
 				aria-orientation="horizontal"
 				part="handle"
@@ -55,6 +56,7 @@ const endHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				active={slider.rangePressed}
+				desktop={slider._isDesktop}
 				handleType={SliderHandleType.End}
 				aria-orientation="horizontal"
 				part="handle"
@@ -147,6 +149,7 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 					progressAriaDisabled={this._ariaDisabled}
 					progressPressed={this.rangePressed}
 					progressFocused={this._progressFocused}
+					desktop={this._isDesktop}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}
 					part="scale"

@@ -50,7 +50,7 @@ import switchCss from "./generated/themes/Switch.css.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.8.0
+ * @since 1.0.0
  * @csspart slider - Used to style the track, where the handle is being slid
  * @csspart text-on - Used to style the `textOn` property text
  * @csspart text-off - Used to style the `textOff` property text

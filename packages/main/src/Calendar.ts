@@ -224,7 +224,10 @@ type DisabledDateRangeT = {
  * @csspart year-range-picker-root - Used to style the year range picker root container.
  * @csspart calendar-header-middle-button - Used to style the calendar header middle buttons (month/year/year-range buttons).
  * @csspart calendar-header-arrow-button - Used to style the calendar header navigation arrow buttons (previous/next buttons).
- * @since 1.0.0-rc.11
+ * @since 1.0.0
+ * @ui5subcomponent CalendarDate
+ * @ui5subcomponent CalendarDateRange
+ * @ui5subcomponent SpecialCalendarDate
  */
 @customElement({
 	tag: "ui5-calendar",
@@ -639,8 +642,7 @@ class Calendar extends CalendarPart {
 		}
 	}
 
-	async onAfterRendering() {
-		await renderFinished(); // Await for the current picker to render and then ask if it has previous/next pages
+	onAfterRendering() {
 		this._previousButtonDisabled = !this._currentPickerDOM._hasPreviousPage();
 		this._nextButtonDisabled = !this._currentPickerDOM._hasNextPage();
 

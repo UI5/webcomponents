@@ -52,12 +52,14 @@ function ItemTemplate(this: SideNavigationItem) {
 					:
 					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text" id={this._textId}>{this.text}</div>
-				{this.hasTag &&
-					<div id={this._tagId} class="ui5-sn-item-tag-slot">
-						<slot name="tag"></slot>
-					</div>
-				}
+				<div class="ui5-sn-item-text-tag-container">
+					<div class="ui5-sn-item-text" id={this._textId} dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
+					{this.hasTag &&
+						<div class="ui5-sn-item-tag-slot" aria-hidden="true">
+							<slot name="tag"></slot>
+						</div>
+					}
+				</div>
 				{this.sideNavCollapsed ?
 					!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
@@ -89,6 +91,9 @@ function ItemTemplate(this: SideNavigationItem) {
 			}
 			{this._selectableItemDescriptionText &&
 				<span id={this._selectableItemDescriptionId} class="ui5-hidden-text">{this._selectableItemDescriptionText}</span>
+			}
+			{this.hasTag &&
+				<span id={this._tagId} class="ui5-hidden-text">{this._tagDescriptionText}</span>
 			}
 		</>
 	);

@@ -90,7 +90,9 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.8.0
+ * @since 1.0.0
+ * @ui5subcomponent TimelineGroupItem
+ * @ui5subcomponent TimelineItem
  */
 @customElement({
 	tag: "ui5-timeline",
@@ -118,7 +120,7 @@ class Timeline extends UI5Element {
 	/**
 	 * Defines the items orientation.
 	 * @default "Vertical"
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()
@@ -370,6 +372,21 @@ class Timeline extends UI5Element {
 		}
 
 		this._itemNavigation.setCurrentItem(target);
+
+		if (this.layout === TimelineLayout.Horizontal) {
+			this._scrollFocusedListItemIntoView(e);
+		}
+	}
+
+	_scrollFocusedListItemIntoView(e: FocusEvent) {
+		const listItem = e.composedPath().find(
+			(el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains("ui5-timeline-list-item"),
+		);
+
+		listItem?.scrollIntoView({
+			block: "nearest",
+			inline: "nearest",
+		});
 	}
 
 	_onwheel(e: WheelEvent) {

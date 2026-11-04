@@ -23,7 +23,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
  * @constructor
  * @extends UI5Element
  * @abstract
- * @since 1.0.0-rc.10
+ * @since 1.0.0
  * @public
  * @slot {Node[]} default - Defines the step content.
  */
@@ -36,7 +36,7 @@ class WizardStep extends UI5Element {
 	 * **Note:** The text is displayed in the `ui5-wizard` navigation header.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	titleText?: string
@@ -47,7 +47,7 @@ class WizardStep extends UI5Element {
 	 * **Note:** the text is displayed in the `ui5-wizard` navigation header.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	subtitleText?: string

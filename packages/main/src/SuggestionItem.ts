@@ -36,7 +36,7 @@ class SuggestionItem extends ListItemBase implements IInputSuggestionItemSelecta
 	/**
 	 * Defines the `additionalText`, displayed in the end of the item.
 	 * @default undefined
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()

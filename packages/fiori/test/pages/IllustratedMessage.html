@@ -212,6 +212,46 @@
 		</ui5-illustrated-message>
 	</div>
 
+	<h2>Width between the scene/dialog breakpoint (must not cause endless scrollbar toggle)</h2>
+	<!-- Reproduces conditions for the endless scene<->dialog loop: an auto-height wrapper inside a scrollable
+	     container whose width is a few px above the scene breakpoint (681px) and whose height falls
+	     between the dialog and scene content heights. Choosing "scene" grows the content, a classic
+	     scrollbar appears and steals ~15px of width, pushing it below the breakpoint to "dialog";
+	     "dialog" removes the overflow, the scrollbar disappears, width grows back and "scene" is
+	     chosen again. The on-page log must settle after a bounded number of transitions. -->
+
+	<div class="osc-controls">
+		<label for="oscSlider">Box width: <span id="oscSliderValue">696</span>px</label>
+		<div class="osc-slider-row">
+			<span class="osc-slider-min">400</span>
+			<div class="osc-slider-track">
+				<input id="oscSlider" type="range" min="400" max="900" value="696" step="1">
+				<!-- tick marks for the 3 critical presets -->
+				<div class="osc-ticks">
+					<span class="osc-tick" style="left:calc((640 - 400) / 500 * 100%)" title="640px"></span>
+					<span class="osc-tick osc-tick--warn" style="left:calc((696 - 400) / 500 * 100%)" title="696px"></span>
+					<span class="osc-tick" style="left:calc((740 - 400) / 500 * 100%)" title="740px"></span>
+				</div>
+			</div>
+			<span class="osc-slider-max">900</span>
+		</div>
+	</div>
+
+	<div id="oscBox" class="osc-box border">
+		<!-- auto-height wrapper (table cell, card body, ...): the message grows with its content,
+		     so its overflow surfaces as a scrollbar on #oscBox -->
+		<div>
+			<ui5-illustrated-message
+				id="illustratedMsg6"
+				name="NoData"
+				design="Auto"
+				title-text="No data"
+				subtitle-text="Nothing to show"
+			></ui5-illustrated-message>
+		</div>
+	</div>
+	<div id="oscLog" class="osc-log"></div>
+
 	<script type="module">
 		import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
@@ -262,6 +302,32 @@
 		containerThemeSelect.addEventListener("ui5-change", (event) => {
 			setTheme(event.detail.selectedOption.textContent);
 		});
+
+		// Oscillation box width controls
+		const oscBox = document.getElementById("oscBox");
+		const oscSlider = document.getElementById("oscSlider");
+		const oscSliderValue = document.getElementById("oscSliderValue");
+
+		const setOscWidth = (px) => {
+			oscBox.style.width = `${px}px`;
+			oscSlider.value = px;
+			oscSliderValue.textContent = px;
+		};
+
+		oscSlider.addEventListener("input", () => {
+			setOscWidth(Number(oscSlider.value));
+		});
+
+		// Detect media oscillation: log every media transition so a regression (endless flipping) is
+		// visible on the page. With the fix, the log settles after a bounded number of lines.
+		const oscMessage = document.getElementById("illustratedMsg6");
+		const oscLog = document.getElementById("oscLog");
+		const oscOut = (line) => {
+			oscLog.textContent += line + "\n";
+		};
+		new MutationObserver(() => {
+			oscOut(`media -> ${oscMessage.getAttribute("media")} (width ${oscMessage.offsetWidth}px)`);
+		}).observe(oscMessage, { attributes: true, attributeFilter: ["media"] });
 	</script>
 </body>
 

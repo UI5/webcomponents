@@ -184,6 +184,19 @@ type TableRowActionClickEventDetail = {
  * @extends UI5Element
  * @since 2.0.0
  * @public
+ * @ui5subcomponent TableCell
+ * @ui5subcomponent TableGroupRow
+ * @ui5subcomponent TableGrowing
+ * @ui5subcomponent TableHeaderCell
+ * @ui5subcomponent TableHeaderCellActionAI
+ * @ui5subcomponent TableHeaderRow
+ * @ui5subcomponent TableRow
+ * @ui5subcomponent TableRowAction
+ * @ui5subcomponent TableRowActionNavigation
+ * @ui5subcomponent TableSelection
+ * @ui5subcomponent TableSelectionMulti
+ * @ui5subcomponent TableSelectionSingle
+ * @ui5subcomponent TableVirtualizer
  */
 @customElement({
 	tag: "ui5-table",
@@ -278,7 +291,9 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	rows!: DefaultSlot<TableRow>;
+	get rows(): DefaultSlot<TableRow> {
+		return this.getSlottedNodes<TableRow>("rows") as DefaultSlot<TableRow>;
+	}
 
 	/**
 	 * Defines the header row of the component.
@@ -287,8 +302,13 @@ class Table extends UI5Element {
 	 *
 	 * @public
 	 */
-	@slot({ type: HTMLElement, invalidateOnChildChange: { properties: false, slots: true } })
-	headerRow!: Slot<TableHeaderRow>;
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: { properties: false, slots: true },
+	})
+	get headerRow(): Slot<TableHeaderRow> {
+		return this.getSlottedNodes<TableHeaderRow>("headerRow") as Slot<TableHeaderRow>;
+	}
 
 	/**
 	 * Defines the custom visualization if there is no data available.
@@ -383,7 +403,7 @@ class Table extends UI5Element {
 	 * Determines whether the table rows are displayed with alternating background colors.
 	 *
 	 * @default false
-	 * @since 2.17
+	 * @since 2.17.0
 	 * @public
 	 */
 	@property({ type: Boolean })

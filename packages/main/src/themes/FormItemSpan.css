@@ -9,6 +9,7 @@
 :host {
 	--ui5-form-item-label-justify-internal: start;
 	--ui5-form-item-label-padding-internal: 0.625rem 0.25rem 0 0.25rem;
+	--ui5-form-item-label-text-align-internal: left;
 }
 
 @container (width < 600px) {
@@ -20,6 +21,7 @@
 	:host(:is([label-span~="S12"], :not([label-span*="S"]))) .ui5-form-item,
 	:host(:is([label-span~="S12"], :not([label-span*="S"]))) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-text-align: var(--ui5-form-item-label-text-align-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
@@ -33,6 +35,7 @@
 	:host([label-span~="M12"]) .ui5-form-item,
 	:host([label-span~="M12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-text-align: var(--ui5-form-item-label-text-align-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
@@ -46,6 +49,7 @@
 	:host([label-span~="L12"]) .ui5-form-item,
 	:host([label-span~="L12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-text-align: var(--ui5-form-item-label-text-align-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
@@ -59,6 +63,7 @@
 	:host([label-span~="XL12"]) .ui5-form-item,
 	:host([label-span~="XL12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-text-align: var(--ui5-form-item-label-text-align-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }

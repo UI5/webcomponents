@@ -170,6 +170,10 @@ enum TableFocusTargetElement {
  * @extends UI5Element
  * @public
  * @deprecated Deprecated as of version 2.12.0, use `@ui5/webcomponents/dist/Table.js` instead.
+ * @ui5subcomponent TableCell
+ * @ui5subcomponent TableColumn
+ * @ui5subcomponent TableGroupRow
+ * @ui5subcomponent TableRow
  */
 @customElement({
 	tag: "ui5-table",

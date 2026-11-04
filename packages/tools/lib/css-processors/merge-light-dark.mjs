@@ -1,91 +1,156 @@
 import postcss from "postcss";
 
 /**
- * Merges two CSS theme files (light and dark) into a single file using
- * CSS light-dark() for color values and space toggles for non-color values.
+ * Merges two CSS theme files (light and dark) into a single auto-theme file.
  *
- * The space toggle pattern uses --_ui5-dark-scheme / --_ui5-light-scheme,
- * following the same approach as the compact/cozy density toggles.
+ * Walks the entire CSS tree of both files without targeting a specific selector.
+ * Every rule found (under any at-rule context) is merged by (atRuleContext, selector):
+ *   - identical values  → base selector block
+ *   - differing colors  → light-dark() in base selector block
+ *   - differing other   → split into @media (prefers-color-scheme: light/dark) blocks
  *
- * @param {string} lightCSS - The light theme CSS string
- * @param {string} darkCSS - The dark theme CSS string
- * @param {string} selector - The selector to match (":root" for theming package, ":host" for component packages)
- * @returns {string} Merged CSS string with light-dark() and space toggle values
+ * @param {string} lightCSS
+ * @param {string} darkCSS
+ * @returns {string} Merged CSS string
  */
-const mergeLightDark = (lightCSS, darkCSS, selector = ":root") => {
-	const lightRoot = postcss.parse(lightCSS);
-	const darkRoot = postcss.parse(darkCSS);
-
+const mergeLightDark = (lightCSS, darkCSS) => {
 	// Extract all custom property declarations from each theme
-	const lightVars = extractVars(lightRoot, selector);
-	const darkVars = extractVars(darkRoot, selector);
+	const lightGroups = extractVarGroups(postcss.parse(lightCSS));
+	const darkGroups = extractVarGroups(postcss.parse(darkCSS));
 
-	// Build merged declarations
-	const allProps = new Set([...lightVars.keys(), ...darkVars.keys()]);
-	const mergedRule = postcss.rule({ selector });
+	const allContexts = new Set([...lightGroups.keys(), ...darkGroups.keys()]);
+	const root = postcss.root();
 
-	for (const prop of allProps) {
-		const lightVal = lightVars.get(prop);
-		const darkVal = darkVars.get(prop);
+	for (const context of allContexts) {
+		const lightSelectors = lightGroups.get(context) ?? new Map();
+		const darkSelectors = darkGroups.get(context) ?? new Map();
 
-		if (prop.startsWith("--sapThemeMetaData")) {
-			// Keep light version only for metadata
-			if (lightVal !== undefined) {
-				mergedRule.append(postcss.decl({ prop, value: lightVal }));
+		const allSelectors = new Set([...lightSelectors.keys(), ...darkSelectors.keys()]);
+
+		const sharedNodes = [];
+		const lightNodes = [];
+		const darkNodes = [];
+
+		for (const selector of allSelectors) {
+			const lightVars = lightSelectors.get(selector) ?? new Map();
+			const darkVars = darkSelectors.get(selector) ?? new Map();
+
+			const allProps = new Set([...lightVars.keys(), ...darkVars.keys()]);
+
+			const sharedRule = postcss.rule({ selector });
+			const lightRule = postcss.rule({ selector });
+			const darkRule = postcss.rule({ selector });
+
+			for (const prop of allProps) {
+				const lightVal = lightVars.get(prop);
+				const darkVal = darkVars.get(prop);
+
+				if (prop.startsWith("--sapThemeMetaData")) {
+					if (lightVal !== undefined) {
+						sharedRule.append(postcss.decl({ prop, value: lightVal }));
+					}
+					continue;
+				}
+
+				if (lightVal !== undefined && darkVal !== undefined) {
+					if (lightVal === darkVal) {
+						// Identical values - output once
+						sharedRule.append(postcss.decl({ prop, value: lightVal }));
+					} else if (isColorValue(lightVal) && isColorValue(darkVal)) {
+						// Different color values - use light-dark()
+						sharedRule.append(postcss.decl({ prop, value: `light-dark(${lightVal}, ${darkVal})` }));
+					} else {
+						// Different non-color values - use space toggle
+						lightRule.append(postcss.decl({ prop, value: lightVal }));
+						darkRule.append(postcss.decl({ prop, value: darkVal }));
+					}
+				} else if (lightVal !== undefined) {
+					// Only in light theme - use space toggle with guaranteed-invalid for dark
+					lightRule.append(postcss.decl({ prop, value: lightVal }));
+				} else {
+					// Only in dark theme - use space toggle with guaranteed-invalid for light
+					darkRule.append(postcss.decl({ prop, value: darkVal }));
+				}
 			}
-			continue;
+
+			if (sharedRule.nodes.length > 0) sharedNodes.push(sharedRule);
+			if (lightRule.nodes.length > 0) lightNodes.push(lightRule);
+			if (darkRule.nodes.length > 0) darkNodes.push(darkRule);
 		}
 
-		if (lightVal !== undefined && darkVal !== undefined) {
-			if (lightVal === darkVal) {
-				// Identical values - output once
-				mergedRule.append(postcss.decl({ prop, value: lightVal }));
-			} else if (isColorValue(lightVal) && isColorValue(darkVal)) {
-				// Different color values - use light-dark()
-				mergedRule.append(postcss.decl({ prop, value: `light-dark(${lightVal}, ${darkVal})` }));
+		const appendGroup = (nodes, mediaParams) => {
+			if (nodes.length === 0) return;
+			const wrapped = context ? wrapInAtRule(context, nodes) : nodes;
+			if (mediaParams) {
+				const media = postcss.atRule({ name: "media", params: mediaParams });
+				if (Array.isArray(wrapped)) {
+					wrapped.forEach(n => media.append(n));
+				} else {
+					media.append(wrapped);
+				}
+				root.append(media);
 			} else {
-				// Different non-color values - use space toggle
-				mergedRule.append(postcss.decl({
-					prop,
-					value: `var(--_ui5-light-scheme, ${lightVal}) var(--_ui5-dark-scheme, ${darkVal})`,
-				}));
+				if (Array.isArray(wrapped)) {
+					wrapped.forEach(n => root.append(n));
+				} else {
+					root.append(wrapped);
+				}
 			}
-		} else if (lightVal !== undefined) {
-			// Only in light theme - use space toggle with guaranteed-invalid for dark
-			mergedRule.append(postcss.decl({
-				prop,
-				value: `var(--_ui5-light-scheme, ${lightVal}) var(--_ui5-dark-scheme, var(--_ui5-f2d95f8))`,
-			}));
-		} else {
-			// Only in dark theme - use space toggle with guaranteed-invalid for light
-			mergedRule.append(postcss.decl({
-				prop,
-				value: `var(--_ui5-dark-scheme, ${darkVal}) var(--_ui5-light-scheme, var(--_ui5-f2d95f8))`,
-			}));
-		}
+		};
+
+		appendGroup(sharedNodes, null);
+		appendGroup(lightNodes, "(prefers-color-scheme: light)");
+		appendGroup(darkNodes, "(prefers-color-scheme: dark)");
 	}
 
-	return mergedRule.toString();
+	return root.toString();
 };
 
 /**
- * Extract custom property declarations from a parsed CSS root for a given selector.
- * @param {postcss.Root} root
- * @param {string} selector
- * @returns {Map<string, string>}
+ * Wraps an array of rules inside a clone of an at-rule identified by its signature.
+ * The signature is "{name} {params}", e.g. "container style(--foo: bar)".
  */
-const extractVars = (root, selector) => {
-	const vars = new Map();
-	root.walkRules(rule => {
-		if (rule.selector === selector) {
-			rule.walkDecls(decl => {
-				if (decl.prop.startsWith("--")) {
-					vars.set(decl.prop, decl.value);
-				}
-			});
-		}
+const wrapInAtRule = (signature, rules) => {
+	const spaceIdx = signature.indexOf(" ");
+	const name = signature.slice(0, spaceIdx);
+	const params = signature.slice(spaceIdx + 1);
+	const atRule = postcss.atRule({ name, params });
+	rules.forEach(r => atRule.append(r));
+	return atRule;
+};
+
+/**
+ * Extract custom property declarations grouped by (atRuleContext, selector).
+ *
+ * Returns: Map<atRuleContext, Map<selector, Map<prop, value>>>
+ *   atRuleContext — "" for top-level rules, "{name} {params}" for rules inside an at-rule
+ */
+const extractVarGroups = (root) => {
+	const groups = new Map();
+
+	const addVar = (context, selector, prop, value) => {
+		if (!groups.has(context)) groups.set(context, new Map());
+		const bySelector = groups.get(context);
+		if (!bySelector.has(selector)) bySelector.set(selector, new Map());
+		bySelector.get(selector).set(prop, value);
+	};
+
+	root.walk(node => {
+		if (node.type !== "rule") return;
+
+		const parent = node.parent;
+		const context = (parent && parent.type === "atrule")
+			? `${parent.name} ${parent.params}`
+			: "";
+
+		node.walkDecls(decl => {
+			if (decl.prop.startsWith("--")) {
+				addVar(context, node.selector, decl.prop, decl.value);
+			}
+		});
 	});
-	return vars;
+
+	return groups;
 };
 
 /**

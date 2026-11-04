@@ -27,7 +27,7 @@ type ColorPaletteItemNativeClickEventDetail = {
  * The `ui5-color-palette-item` component represents a color in the the `ui5-color-palette`.
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.12
+ * @since 1.0.0
  * @implements { IColorPaletteItem }
  * @public
  */
@@ -112,7 +112,7 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 	/**
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	_disabled = false;

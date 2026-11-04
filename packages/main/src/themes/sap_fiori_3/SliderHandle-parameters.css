@@ -13,7 +13,7 @@
 	--_ui5_slider_handle_active_border: 0.125rem solid var(--sapContent_FocusColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_slider_handle_width: 1.5rem;
 		--_ui5_slider_handle_height: 1.5rem;

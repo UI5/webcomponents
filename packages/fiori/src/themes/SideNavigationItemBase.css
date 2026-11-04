@@ -1,3 +1,5 @@
+@import "./InvisibleTextStyles.css";
+
 :host {
 	display: block;
 }
@@ -125,7 +127,7 @@ and there is an additional border that appears on hover. */
 	cursor: unset;
 }
 
-:host(:not([ui5-side-navigation-item][in-popover][unselectable])) .ui5-sn-item:not(.ui5-sn-item-disabled):not(.ui5-sn-item-selected):hover {
+:host(:not([ui5-side-navigation-item][in-popover][unselectable]):not(.ui5-sn-item-no-match)) .ui5-sn-item:not(.ui5-sn-item-disabled):not(.ui5-sn-item-selected):hover {
 	background: var(--sapList_Hover_Background);
 }
 
@@ -149,7 +151,7 @@ and there is an additional border that appears on hover. */
 
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected:active,
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected.ui5-sn-item-active,
-:host(:not([ui5-side-navigation-item][in-popover][unselectable])) .ui5-sn-item:not(.ui5-sn-item-disabled):active,
+:host(:not([ui5-side-navigation-item][in-popover][unselectable]):not(.ui5-sn-item-no-match)) .ui5-sn-item:not(.ui5-sn-item-disabled):active,
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-active,
 :host(.ui5-sn-item-overflow.ui5-sn-item-active) .ui5-sn-item,
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected:active,
@@ -212,7 +214,6 @@ and there is an additional border that appears on hover. */
 :host(:not([side-nav-collapsed])) .ui5-sn-item-toggle-icon {
 	width: var(--_ui5_side_navigation_expand_icon_width);
 	padding-inline-end: 0.375rem;
-	padding-block: var(--_ui5_side_navigation_item_expand_arrow_padding);
 	margin-inline-start: 0.5rem;
 	height: var(--sapElement_Condensed_Height);
 }
@@ -336,8 +337,16 @@ and there is an additional border that appears on hover. */
 	display: none;
 }
 
-.ui5-sn-item-text {
+.ui5-sn-item-text-tag-container {
 	flex: 1;
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.ui5-sn-item-text {
 	min-width: 0;
 }
 
@@ -354,28 +363,25 @@ and there is an additional border that appears on hover. */
 	white-space: nowrap;
 }
 
-:host(:not([side-nav-collapsed]):not([in-popover])) .ui5-sn-item-text {
-	margin: var(--_ui5_side_navigation_item_margin) 0;
+:host(:not([side-nav-collapsed])) .ui5-sn-item-text {
+	margin: 0;
 }
 
-:host(:not([side-nav-collapsed])) .ui5-sn-item:not(.ui5-sn-item-group):not(.ui5-sn-item-with-expander) .ui5-sn-item-text {
+:host(:not([side-nav-collapsed]):not([design="Action"])) .ui5-sn-item:not(.ui5-sn-item-group) {
+	padding-block: var(--_ui5_side_navigation_item_margin);
+}
+
+:host(:not([side-nav-collapsed]):not([in-popover])) .ui5-sn-item:not(.ui5-sn-item-group):not(.ui5-sn-item-with-expander) .ui5-sn-item-text-tag-container:not(:has(+ .ui5-sn-item-toggle-icon)):not(:has(+ .ui5-sn-item-external-link-icon)) {
 	padding-inline-end: 0.375rem;
 }
 
 .ui5-sn-item-tag-slot {
-	padding-inline-start: 0.5rem;
-	padding-inline-end: 0.375rem;
 	display: inline-flex;
 	align-items: center;
 }
 
-.ui5-sn-item-tag-slot:has(+ .ui5-sn-item-toggle-icon),
-.ui5-sn-item-tag-slot:has(+ .ui5-sn-item-external-link-icon) {
-	padding-inline-end: 0;
-}
-
-.ui5-sn-item-tag-slot + .ui5-sn-item-toggle-icon,
-.ui5-sn-item-tag-slot + .ui5-sn-item-external-link-icon {
+.ui5-sn-item-text-tag-container + .ui5-sn-item-toggle-icon,
+.ui5-sn-item-text-tag-container + .ui5-sn-item-external-link-icon {
 	margin-inline-start: 0.375rem;
 }
 
@@ -390,7 +396,21 @@ and there is an additional border that appears on hover. */
 
 :host([in-popover]) .ui5-sn-item-tag-slot {
 	display: inline-flex;
-	padding-inline-end: 0.5rem;
+}
+
+/* Collapsed rail hover/focus flyout: tag stays on one line and truncates at 6rem.
+   The popover (in-popover) is NOT clamped - the tag shows full and the popover widens. */
+:host([side-nav-collapsed]) .ui5-sn-item-text-tag-container {
+	flex-wrap: nowrap;
+}
+
+:host([side-nav-collapsed]) .ui5-sn-item-tag-slot {
+	max-width: 6rem;
+	overflow: hidden;
+}
+
+:host([side-nav-collapsed]) .ui5-sn-item-tag-slot ::slotted([slot="tag"]) {
+	max-width: 6rem;
 }
 
 :host([side-nav-collapsed]) .ui5-sn-item-with-expander .ui5-sn-item-icon::after {
@@ -407,4 +427,10 @@ and there is an additional border that appears on hover. */
 
 .ui5-sn-item-separator {
 	min-height: 0.625rem;
+}
+
+.ui5-sn-item-highlight {
+	background-color: var(--sapContent_SearchHighlightColor);
+	font-family: var(--sapFontBoldFamily);
+	font-size: var(--sapFontSize);
 }

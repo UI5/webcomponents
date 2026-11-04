@@ -28,7 +28,7 @@ body:
     id: example
     attributes:
       label: Isolated Example
-      description: Please provide a link to an isolated example if possible by forking [this stackblitz](https://stackblitz.com/edit/js-vsrpnb?file=index.js,index.html).
+      description: Please provide a link to an isolated example if possible by forking [this stackblitz](https://stackblitz.com/edit/vitejs-vite-yvbx9z87?file=index.html).
     validations:
       required: false
   - type: textarea

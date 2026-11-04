@@ -121,7 +121,7 @@ import RatingIndicatorClass from "@ui5/webcomponents/dist/RatingIndicator.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import RangeSliderClass from "@ui5/webcomponents/dist/RangeSlider.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
-import NumberInputClass from "@ui5/webcomponents/dist/NumberInput.js";
+import NumericInputClass from "@ui5/webcomponents/dist/NumericInput.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
@@ -200,6 +200,7 @@ import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js
 import SideNavigationItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import SideNavigationSubItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
+import SideNavigationSearchFieldClass from "@ui5/webcomponents-fiori/dist/SideNavigationSearchField.js";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
@@ -306,7 +307,7 @@ const ComponentClasses: Record<string, any> = {
   ListItemGroupClass, DialogClass, IconClass, AvatarClass, AvatarGroupClass, AvatarBadgeClass,
   DatePickerClass, TimePickerClass, DateTimePickerClass, DateRangePickerClass, TextAreaClass,
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
-  StepInputClass, NumberInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
+  StepInputClass, NumericInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
   TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,
@@ -323,7 +324,7 @@ const ComponentClasses: Record<string, any> = {
   TableHeaderCellActionAIClass, ToolbarItemClass, DateRangeClass,
   // fiori package
   ShellBarClass, ShellBarItemClass, SideNavigationClass, SideNavigationItemClass,
-  SideNavigationSubItemClass, SideNavigationGroupClass, NotificationListClass, NotificationListItemClass,
+  SideNavigationSubItemClass, SideNavigationGroupClass, SideNavigationSearchFieldClass, NotificationListClass, NotificationListItemClass,
   NotificationListGroupItemClass, UploadCollectionClass, UploadCollectionItemClass, WizardClass,
   WizardStepClass, IllustratedMessageClass, TimelineClass, TimelineItemClass, TimelineGroupItemClass,
   PageClass, DynamicPageClass, DynamicPageTitleClass, DynamicPageHeaderClass, DynamicSideContentClass,

@@ -45,7 +45,7 @@ describe("ShellBarSearch visual", () => {
 				<SearchItem text="Canada" icon={searchIcon} />
 			</ShellBarSearch>
 		);
-		cy.get("[ui5-shellbar-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-shellbar-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -62,7 +62,7 @@ describe("ShellBarSearch visual", () => {
 				</SearchItemGroup>
 			</ShellBarSearch>
 		);
-		cy.get("[ui5-shellbar-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-shellbar-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -75,7 +75,7 @@ describe("ShellBarSearch visual", () => {
 				<SearchItem text="Bulgaria" icon={history} />
 			</ShellBarSearch>
 		);
-		cy.get("[ui5-shellbar-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-shellbar-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -89,7 +89,7 @@ describe("ShellBarSearch visual", () => {
 				</ShellBarSearch>
 			</div>
 		);
-		cy.get("[ui5-shellbar-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-shellbar-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });

@@ -25,6 +25,7 @@ import navigationMenuItemCss from "./generated/themes/NavigationMenuItem.css.js"
 
 import {
 	NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT,
+	SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -114,13 +115,25 @@ class NavigationMenuItem extends MenuItem {
 		return `${this._id}-tag-container`;
 	}
 
+	get _tagTextId() {
+		return `${this._id}-tag-text`;
+	}
+
+	get _tagText() {
+		return this.tag[0]?.textContent?.trim() ?? "";
+	}
+
+	get _tagDescriptionText() {
+		return this.hasTag ? NavigationMenuItem.i18nBundleFiori.getText(SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT, this._tagText) : undefined;
+	}
+
 	get _ariaDescribedByIds() {
 		const ids = [
 			`${this._id}-invisibleText-describedby`,
 		];
 
 		if (this.hasTag) {
-			ids.push(this._tagContainerId);
+			ids.push(this._tagTextId);
 		}
 
 		return ids.filter(Boolean).join(" ");

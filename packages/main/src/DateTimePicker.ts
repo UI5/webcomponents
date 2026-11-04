@@ -112,7 +112,7 @@ type PreviewValues = {
  * `import "@ui5/webcomponents/dist/DateTimePicker.js";`
  * @constructor
  * @extends DatePicker
- * @since 1.0.0-rc.7
+ * @since 1.0.0
  * @public
  */
 @customElement({

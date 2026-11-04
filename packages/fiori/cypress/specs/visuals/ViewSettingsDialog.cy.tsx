@@ -4,6 +4,7 @@ import SortItem from "../../../src/SortItem.js";
 import FilterItem from "../../../src/FilterItem.js";
 import FilterItemOption from "../../../src/FilterItemOption.js";
 import GroupItem from "../../../src/GroupItem.js";
+import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import actionSettings from "@ui5/webcomponents-icons/dist/action-settings.js";
 import tableView from "@ui5/webcomponents-icons/dist/table-view.js";
 
@@ -11,7 +12,7 @@ const openDialog = (id: string) => {
 	cy.get(`[ui5-view-settings-dialog]#${id}`).invoke("prop", "open", true);
 	cy.get(`[ui5-view-settings-dialog]#${id}`)
 		.shadow()
-		.find("[ui5-dialog]")
+		.find<Dialog>("[ui5-dialog]")
 		.ui5DialogOpened();
 };
 

@@ -5,6 +5,12 @@
     z-index: 3;
 }
 
+.ui5-dynamic-page-header-actions-wrapper {
+    position: sticky;
+    top: var(--_ui5_dp_header_actions_top, auto);
+    z-index: 4;
+}
+
 :host {
     display: block;
     height: 100%;

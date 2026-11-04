@@ -45,12 +45,45 @@ describe("Initial rendering", () => {
     	cy.get("@userMenu").should("exist");
     	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
     	cy.get("@responsivePopover").should("exist");
-    	cy.get("@responsivePopover").find("[ui5-text]").as("name");
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").as("name");
     	cy.get("@name").should("have.length", 1);
     	cy.get("@name").contains("Alain Chevalier");
-    	cy.get("@name").should("have.class", "ui5-user-menu-selected-account-title");
+    	cy.get("@name").should("have.attr", "level", "H2");
 
     });
+
+    it("tests heading levels", () => {
+    	cy.mount(
+    		<>
+    			<Button id="openUserMenuBtn">Open User Menu</Button>
+    			<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Alain Chevalier">
+    				</UserMenuAccount>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Jane Doe">
+    				</UserMenuAccount>
+    			</UserMenu>
+    		</>
+    	);
+    	cy.get("[ui5-user-menu]").as("userMenu");
+    	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+
+    	// invisible H1 "User menu" at the top
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-hidden-text").as("heading");
+    	cy.get("@heading").should("have.length", 1);
+    	cy.get("@heading").should("have.attr", "level", "H1");
+    	cy.get("@heading").shadow().find("h1").should("exist");
+
+    	// selected account titleText is H2
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("have.attr", "level", "H2");
+
+    	// "Other accounts" panel title is H3
+    	cy.get("@responsivePopover").find(".ui5-user-menu-other-accounts [ui5-title][slot=header]").should("have.attr", "level", "H3");
+    });
+
 
     it("tests subtitle", () => {
         cy.mount(

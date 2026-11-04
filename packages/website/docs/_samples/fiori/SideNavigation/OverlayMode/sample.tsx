@@ -30,6 +30,7 @@ import "@ui5/webcomponents-icons/dist/write-new.js";
 import "@ui5/webcomponents-icons/dist/widgets.js";
 import "@ui5/webcomponents-icons/dist/compare.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 
 const Page = createReactComponent(PageClass);
@@ -53,6 +54,11 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 function App() {
   const [navOpen, setNavOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [jouleIcon, setJouleIcon] = useState("da");
+
+  const handleToggleClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
+    setJouleIcon(e.currentTarget.pressed ? "da-2" : "da");
+  };
 
   const handleSideNavigationSelectionChange = (
     e: UI5CustomEvent<SideNavigationClass, "selection-change">,
@@ -113,7 +119,13 @@ function App() {
           />
 
           <ShellBarItem icon="sys-help" text="Help" />
-          <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+          <ToggleButton
+            icon={jouleIcon}
+            design="Transparent"
+            tooltip="Joule"
+            slot="assistant"
+            onClick={handleToggleClick}
+          />
           <Avatar slot="profile">
             <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
           </Avatar>

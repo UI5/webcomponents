@@ -33,6 +33,7 @@ const customElement = (tagNameOrComponentSettings: string | {
 	dependencies?: Array<typeof UI5Element>,
 	/**
 	 * Whether the custom element should be re-rendered when the language changes.
+	 * @deprecated automatically set for components that use i18n texts
 	 */
 	languageAware?: boolean,
 	/**

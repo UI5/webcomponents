@@ -16,7 +16,7 @@ describe("SearchItem visual", () => {
 				<SearchItem text="Canada" />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -28,7 +28,7 @@ describe("SearchItem visual", () => {
 				<SearchItem text="Canada" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -40,7 +40,7 @@ describe("SearchItem visual", () => {
 				<SearchItem text="Canada" description="Country in North America" icon={searchIcon} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -55,7 +55,7 @@ describe("SearchItem visual", () => {
 				</SearchItem>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -67,7 +67,7 @@ describe("SearchItem visual", () => {
 				<SearchItem text="Canada" icon={history} deletable />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -84,7 +84,7 @@ describe("SearchItem visual", () => {
 				</SearchItem>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -96,7 +96,7 @@ describe("SearchItem visual", () => {
 				<SearchItem text="Canada" icon={history} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -110,7 +110,7 @@ describe("SearchItem visual", () => {
 				</Search>
 			</div>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });

@@ -70,7 +70,7 @@ type DesignCloseButtonTooltip = Record<MessageStripDesign, string>;
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.9.0
+ * @since 1.0.0
  * @slot {Array<Node>} default
  * Defines the text of the component.
  *
@@ -99,7 +99,7 @@ class MessageStrip extends UI5Element {
 	 * Defines the component type.
 	 * @default "Information"
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	design: `${MessageStripDesign}` = "Information";
@@ -124,7 +124,7 @@ class MessageStrip extends UI5Element {
 	 *
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideIcon = false

@@ -31,6 +31,11 @@ import "@ui5/webcomponents-icons/dist/menu2.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
+
+document.getElementById("joule")?.addEventListener("click", (e) => {
+    e.target.icon = e.target.pressed ? "da-2" : "da";
+});
 
 import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/NavigationLayoutMode.js";
 

@@ -108,7 +108,7 @@ import SliderHandle from "./SliderHandle.js";
 import SliderScale from "./SliderScale.js";
 import SplitButton from "./SplitButton.js";
 import StepInput from "./StepInput.js";
-import NumberInput from "./NumberInput.js";
+import NumericInput from "./NumericInput.js";
 import RangeSlider from "./RangeSlider.js";
 import Switch from "./Switch.js";
 import MessageStrip from "./MessageStrip.js";
