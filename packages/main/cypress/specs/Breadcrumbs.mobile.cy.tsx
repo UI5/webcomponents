@@ -35,7 +35,9 @@ describe("Breadcrumbs mobile behavior", () => {
             .find("ui5-responsive-popover")
             .shadow()
             .find("ui5-dialog")
-            .should("be.visible");
+            .shadow()
+            .find(".ui5-popup-root")
+            .should($root => { expect($root[0].matches(":modal")).to.be.true; });
 
         // Verify that all items are displayed in the popover
         cy.get("ui5-breadcrumbs")

@@ -1,3 +1,4 @@
+import Dialog from "../../src/Dialog.js";
 import { mountUI5Fixtures, cleanupUI5Fixtures, isOpenUI5DialogOpen } from "./OpenUI5andWebCPopups.utils.js";
 
 describe("ui5 and web components integration", () => {
@@ -20,8 +21,8 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get("#webCDialog1")
-			.should('be.visible');
+		cy.get<Dialog>("#webCDialog1")
+			.ui5DialogOpened();
 
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
@@ -76,8 +77,8 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5DialogWithButtons")
 			.should('not.exist');
 
-		cy.get("#webCDialog1")
-			.should('be.visible');
+		cy.get<Dialog>("#webCDialog1")
+			.ui5DialogOpened();
 
 		cy.realPress("Escape");
 
