@@ -954,7 +954,7 @@ abstract class Popup extends UI5Element {
 		// never inert an element that is - or hosts - an open top-layer popover: an open popup, or a
 		// portal container such as OpenUI5's static UIArea / block layer. Such elements are not
 		// background content, and inerting them would make the popup they host non-interactive.
-		if (element.matches(":popover-open") || element.querySelector(":popover-open")) {
+		if (Popup._hasOpenPopover(element)) {
 			return false;
 		}
 
@@ -975,6 +975,22 @@ abstract class Popup extends UI5Element {
 	 */
 	static _isPopup(element: Element) {
 		return "isModal" in element && "open" in element;
+	}
+
+	/**
+	 * Checks whether the element is, or contains, an open popover (top-layer element).
+	 * Uses the `popover` attribute + open state instead of `:popover-open` which isn't
+	 * supported in all environments.
+	 */
+	static _hasOpenPopover(element: Element): boolean {
+		const isOpen = (el: Element) => el.hasAttribute("popover") && el.matches(":popover-open");
+
+		try {
+			return isOpen(element) || (!!element.querySelector("[popover]") && !!element.querySelector(":popover-open"));
+		} catch {
+			// :popover-open not supported — fall back to attribute-only check
+			return element.hasAttribute("popover") || !!element.querySelector("[popover]");
+		}
 	}
 
 	_registerResizeHandler() {
