@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.5](https://github.com/UI5/webcomponents/compare/v2.16.4...v2.16.5) (2026-11-04)
+
+
+### Bug Fixes
+
+* **ui5-form:** group elements ordering ([#12890](https://github.com/UI5/webcomponents/issues/12890)) ([dbfddf0](https://github.com/UI5/webcomponents/commit/dbfddf073a01f3d06d523a959e501a20868d8cc9))
+
+
+
+
+
 ## [2.16.4](https://github.com/UI5/webcomponents/compare/v2.16.3...v2.16.4) (2026-10-13)
 
 
