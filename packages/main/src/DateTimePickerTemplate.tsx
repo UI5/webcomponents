@@ -28,7 +28,7 @@ function header(this: DateTimePicker) {
 				<SegmentedButtonItem data-ui5-key="Date" selected={this.showDateView}>{this.btnDateLabel}</SegmentedButtonItem>
 				<SegmentedButtonItem data-ui5-key="Time" selected={this.showTimeView}>{this.btnTimeLabel}</SegmentedButtonItem>
 			</SegmentedButton>
-			{ this.showTimeView &&
+			{ this._showTimeViewToggle &&
 				<Button
 					slot="endContent"
 					design="Transparent"

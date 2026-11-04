@@ -433,6 +433,10 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		this._useTimeInputsMode = !this._useTimeInputsMode;
 	}
 
+	get _showTimeViewToggle() {
+		return isPhone() && this.showTimeView;
+	}
+
 	get _dtpTimeToggleLabel() {
 		return this._useTimeInputsMode
 			? DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_CLOCK)
