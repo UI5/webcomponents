@@ -51,6 +51,10 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - Template tooltip is `tooltip || slotTextContent` (slot text shown on hover when truncated). Both are shown via `data-ui5-tooltip`.
 - **Only the explicit `tooltip`** is folded into `ariaDescriptionText` — the slot text is already the accessible name (`ariaLabelText`), so folding it would duplicate the label in the description.
 
+### Calendar header & DayPicker — tooltip text already in other a11y
+- **Calendar header (×5):** tooltip = `"{label} ({shortcut})"` while the button's `aria-description` = label and `aria-keyshortcuts` = shortcut. The tooltip adds nothing not already exposed, so it is a clean swap (REDUNDANT-A11Y). `startTooltipSupport()` wired in `Calendar.onEnterDOM` (the header is rendered by Calendar; there is no standalone CalendarHeader component).
+- **DayPicker day cells:** `day.tooltip` (special-day text) is **already appended into `day.ariaLabel`** (`DayPicker.ts:286`), so removing native title loses nothing for AT. Per-cell attribute (no getter). New `onEnterDOM`.
+
 ### Switch
 - **Files:** `Switch.ts`, `SwitchTemplate.tsx`.
 - New `onEnterDOM` (Switch had none) + new `_ariaDescription` getter (see G1). Switch keeps its separate `aria-describedby` readonly hidden-span; the tooltip goes to a distinct `aria-description`.
@@ -67,3 +71,7 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 | SegmentedButtonItem | TOOLTIP | ✅ done | fold explicit tooltip only, not slot-text |
 | Carousel (arrows) | ICON (decorative) | ✅ done | tooltip-only; see D2 |
 | FileUploader | ICON + input | ✅ done | file input swap (aria kept); 2 decorative icons tooltip-only (D2); hidden display input = no-op |
+| Calendar header (×5 buttons) | REDUNDANT-A11Y | ✅ done | shortcut already in `aria-keyshortcuts`; wired via `Calendar.onEnterDOM` |
+| DayPicker (day cells) | TOOLTIP | ✅ done | `day.tooltip` already appended into `day.ariaLabel`; swap only; new `onEnterDOM` |
+| BusyIndicator | REDUNDANT-A11Y | ✅ done | `aria-labelledby` carries name; swap only |
+| ColorPaletteItem | REDUNDANT-A11Y | ✅ done | `aria-label` carries name; new `onEnterDOM` |

@@ -7,6 +7,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IColorPaletteItem } from "./ColorPalette.js";
 import ColorPaletteItemTemplate from "./ColorPaletteItemTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import {
 	COLORPALETTE_COLOR_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
@@ -122,6 +123,11 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 	constructor() {
 		super();
+	}
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onBeforeRendering() {

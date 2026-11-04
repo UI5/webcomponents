@@ -58,6 +58,7 @@ import {
 
 // Template
 import DayPickerTemplate from "./DayPickerTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import dayPickerCSS from "./generated/themes/DayPicker.css.js";
@@ -215,6 +216,11 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute on the day cells.
+		startTooltipSupport();
+	}
 
 	onBeforeRendering() {
 		const localeData = getCachedLocaleDataInstance(getLocale());

@@ -616,7 +616,7 @@ describe("Accessibility", () => {
 		cy.get("[ui5-busy-indicator]")
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("not.be.empty");
 	});
 

@@ -15,6 +15,7 @@ import BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
 
 // Template
 import BusyIndicatorTemplate from "./BusyIndicatorTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 import { BUSY_INDICATOR_TITLE } from "./generated/i18n/i18n-defaults.js";
 
@@ -140,6 +141,8 @@ class BusyIndicator extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {

@@ -10,7 +10,7 @@ export default function BusyIndicatorTemplate(this: BusyIndicator) {
 						"ui5-busy-indicator-busy-area": true,
 						"ui5-busy-indicator-busy-area-over-content": this.hasContent,
 					}}
-					title={this.ariaTitle}
+					data-ui5-tooltip={this.ariaTitle || undefined}
 					tabindex={0}
 					role="progressbar"
 					aria-valuemin={0}

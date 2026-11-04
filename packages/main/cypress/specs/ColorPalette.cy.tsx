@@ -322,7 +322,7 @@ describe("Color Palette Item - tooltip", () => {
 		cy.get("#no-tooltip")
 			.shadow()
 			.find(".ui5-cp-item")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "darkblue");
 	});
 
@@ -336,7 +336,7 @@ describe("Color Palette Item - tooltip", () => {
 		cy.get("#custom-tooltip")
 			.shadow()
 			.find(".ui5-cp-item")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Raspberry")
 			.and("not.contain", "#d60d5a");
 	});
