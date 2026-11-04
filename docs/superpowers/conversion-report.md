@@ -32,6 +32,22 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - Interactive: tooltip composed with value state via new `_interactiveAriaDescription` getter (`[this._valueState, this._title].filter(Boolean).join(" ")`) so the value state is **not** overwritten.
 - Non-interactive: added `aria-description={this._title}` (previously had none).
 
+### Select — tooltip on outer root, a11y via inner hidden span
+- **Files:** `Select.ts`, `SelectTemplate.tsx`.
+- `data-ui5-tooltip={this._effectiveTooltip}` sits on the **outer** `.ui5-select-root` (where `title` was); the combobox a11y lives on an **inner** div using the hidden-span + `aria-describedby` model.
+- `_effectiveTooltip` folded into `ariaDescriptionText`, which renders the `#accessibleDescription` hidden span the inner combobox references. So the tooltip reaches a11y through Select's own idiom.
+- **Note:** `_effectiveTooltip` includes a readonly-truncation fallback (full selected text); that fallback now also flows into `aria-description` when readonly + truncated.
+- `[ui5-option]` `title` (Option/OptionCustom, lines 185/189 of the spec) is a **different component, out of scope** — left as native title.
+
+### SegmentedButtonItem — fold only explicit tooltip, not slot-text fallback
+- **Files:** `SegmentedButtonItem.ts`, `SegmentedButtonItemTemplate.tsx`.
+- Template tooltip is `tooltip || slotTextContent` (slot text shown on hover when truncated). Both are shown via `data-ui5-tooltip`.
+- **Only the explicit `tooltip`** is folded into `ariaDescriptionText` — the slot text is already the accessible name (`ariaLabelText`), so folding it would duplicate the label in the description.
+
+### Switch
+- **Files:** `Switch.ts`, `SwitchTemplate.tsx`.
+- New `onEnterDOM` (Switch had none) + new `_ariaDescription` getter (see G1). Switch keeps its separate `aria-describedby` readonly hidden-span; the tooltip goes to a distinct `aria-description`.
+
 ## Components converted (status)
 
 | Component | Bucket | Status | Notes |
@@ -40,3 +56,5 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 | RatingIndicator | TOOLTIP | ✅ done | see D1 |
 | Switch | TOOLTIP | ✅ done | new `onEnterDOM` + `_ariaDescription` (see G1) |
 | Tag | TOOLTIP | ✅ done | dual root, composed description |
+| Select | TOOLTIP | ✅ done | tooltip outer root; a11y via inner hidden span; readonly fallback |
+| SegmentedButtonItem | TOOLTIP | ✅ done | fold explicit tooltip only, not slot-text |

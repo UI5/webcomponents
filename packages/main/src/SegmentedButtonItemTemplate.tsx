@@ -16,7 +16,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 			tabindex={this.tabIndexValue ? parseInt(this.tabIndexValue) : undefined }
 			aria-label={this.ariaLabelText}
 			aria-description={this.ariaDescriptionText}
-			title={this.tooltip || this.slotTextContent}
+			data-ui5-tooltip={this.tooltip || this.slotTextContent || undefined}
 		>
 			{this.icon &&
 				<Icon
