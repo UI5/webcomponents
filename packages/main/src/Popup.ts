@@ -276,6 +276,7 @@ abstract class Popup extends UI5Element {
 	_inertContainers: Set<HTMLElement> = new Set();
 	_inertObserver?: MutationObserver;
 	_inertedShadowElements: Array<HTMLElement> = [];
+	_inertedAncestorPopups: Array<Popup> = [];
 
 	constructor() {
 		super();
@@ -713,6 +714,17 @@ abstract class Popup extends UI5Element {
 			this._inertSiblings(element);
 		});
 
+		// DOM-nested case: mute ancestor popups on the path (their shadow chrome stays
+		// live because the popup element itself can't be inerted without killing us)
+		this._inertedAncestorPopups = [];
+		this._inertPath.forEach(element => {
+			if (element !== this && Popup._isPopup(element) && "_inertOwnShadowContent" in element) {
+				const ancestor = element as Popup;
+				ancestor._inertOwnShadowContent();
+				this._inertedAncestorPopups.push(ancestor);
+			}
+		});
+
 		this._observeInertMutations();
 	}
 
@@ -881,6 +893,10 @@ abstract class Popup extends UI5Element {
 		this._inertPath = new Set();
 		this._inertContainers = new Set();
 
+		// revert ancestor popups' shadow content that we muted in _setInert
+		this._inertedAncestorPopups.forEach(popup => popup._revertOwnShadowContent());
+		this._inertedAncestorPopups = [];
+
 		// also clean up own shadow muting if this popup was below a modal when it closed
 		this._revertOwnShadowContent();
 	}
@@ -983,13 +999,13 @@ abstract class Popup extends UI5Element {
 	 * supported in all environments.
 	 */
 	static _hasOpenPopover(element: Element): boolean {
-		const isOpen = (el: Element) => el.hasAttribute("popover") && el.matches(":popover-open");
-
 		try {
-			return isOpen(element) || (!!element.querySelector("[popover]") && !!element.querySelector(":popover-open"));
+			return element.matches(":popover-open") || !!element.querySelector(":popover-open");
 		} catch {
-			// :popover-open not supported — fall back to attribute-only check
-			return element.hasAttribute("popover") || !!element.querySelector("[popover]");
+			// :popover-open not supported — can't detect open popovers reliably.
+			// _isPopup already prevents popup elements from being inerted, and
+			// _escapeInertness handles popovers opening inside an inerted branch.
+			return false;
 		}
 	}
 

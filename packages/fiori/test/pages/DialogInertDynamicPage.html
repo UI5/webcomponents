@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog Inert - DynamicPage scenario</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: "72", "72full", Arial, sans-serif; margin: 0; }
+		.steps { padding: 0.5rem 1rem; background: var(--sapBackgroundColor); }
+		.steps ol { margin: 0; padding-left: 1.25rem; }
+		.dialogFooter { display: flex; justify-content: flex-end; gap: 0.25rem; padding: 0.25rem 0; width: 100%; }
+	</style>
+</head>
+
+<body>
+
+	<section class="steps">
+		<h3>Real-world scenario: DynamicPage + Dialog (mirrors StackBlitz sample)</h3>
+		<ol>
+			<li><b>Open Dialog (body level)</b> &rarr; JAWS Buttons/Regions: only the dialog's own. DynamicPage regions gone. <b>Fix works.</b></li>
+			<li><b>Open Dialog (inside page)</b> &rarr; JAWS Regions: DynamicPage regions <b>still listed</b> (the limitation). Buttons are hidden.</li>
+		</ol>
+	</section>
+
+	<!-- DynamicPage with header, title, content, and footer -->
+	<ui5-dynamic-page id="page" show-footer style="height: 500px;">
+		<ui5-dynamic-page-title slot="titleArea">
+			<ui5-breadcrumbs slot="breadcrumbs">
+				<ui5-breadcrumbs-item>Home</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 1</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 2</ui5-breadcrumbs-item>
+			</ui5-breadcrumbs>
+
+			<ui5-title slot="heading" wrapping-type="None" style="font-size: var(--sapObjectHeader_Title_FontSize)">
+				Dynamic Page Header Title
+			</ui5-title>
+
+			<ui5-title slot="snappedHeading" style="font-size: var(--sapObjectHeader_Title_SnappedFontSize)">
+				Snapped Header Title
+			</ui5-title>
+
+			<ui5-label slot="subheading">Subheader</ui5-label>
+			<ui5-label slot="snappedSubheading">Snapped Subheader</ui5-label>
+
+			<ui5-tag>Status: OK</ui5-tag>
+
+			<ui5-toolbar slot="actionsBar" design="Transparent">
+				<ui5-toolbar-button id="openDialog" design="Emphasized" text="Open Dialog (body level)"></ui5-toolbar-button>
+				<ui5-toolbar-button id="openInsideDialog" design="Attention" text="Open Dialog (inside page)"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" text="Delete"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" text="Copy"></ui5-toolbar-button>
+			</ui5-toolbar>
+
+			<ui5-toolbar slot="navigationBar" design="Transparent">
+				<ui5-toolbar-button design="Transparent" icon="full-screen"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" icon="exit-full-screen"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" icon="decline"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-dynamic-page-title>
+
+		<ui5-dynamic-page-header slot="headerArea">
+			<ui5-label>Location: Warehouse A</ui5-label>
+			<ui5-label>Halway: 23L</ui5-label>
+			<ui5-label>Rack: 34</ui5-label>
+			<span style="width: 1rem; display: inline-block;"></span>
+			<ui5-label>Availability:</ui5-label>
+			<ui5-label>In Stock</ui5-label>
+		</ui5-dynamic-page-header>
+
+		<!-- page content -->
+		<div role="region" aria-label="page content">
+			<ui5-title style="font-size: var(--sapObjectHeader_Title_FontSize)" level="H2">
+				Page Content title
+			</ui5-title>
+			<div>page content</div>
+		</div>
+
+		<!-- LIMITATION: dialog inside the DynamicPage — its ancestor landmarks cannot be inerted -->
+		<ui5-dialog id="insideDlg" header-text="Dialog (inside DynamicPage)">
+			<ui5-label>This dialog is authored inside the DynamicPage. JAWS Regions still lists the page's landmarks.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeInsideDlg">Close</ui5-button>
+			</div>
+		</ui5-dialog>
+
+		<ui5-bar slot="footerArea" design="FloatingFooter">
+			<ui5-button slot="endContent" design="Positive">Accept</ui5-button>
+			<ui5-button slot="endContent" design="Negative">Reject</ui5-button>
+		</ui5-bar>
+	</ui5-dynamic-page>
+
+	<!-- Dialog: placed at body level (sibling of DynamicPage, no landmark ancestor) -->
+	<ui5-dialog id="dlg" header-text="Dialog Header">
+		<div role="region" aria-label="dialog content">
+			<ui5-date-picker></ui5-date-picker>
+			<ui5-date-range-picker></ui5-date-range-picker>
+		</div>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="closeDlg">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<script>
+		document.getElementById("openDialog").addEventListener("click", () => {
+			document.getElementById("dlg").open = true;
+		});
+		document.getElementById("closeDlg").addEventListener("click", () => {
+			document.getElementById("dlg").open = false;
+		});
+		document.getElementById("openInsideDialog").addEventListener("click", () => {
+			document.getElementById("insideDlg").open = true;
+		});
+		document.getElementById("closeInsideDlg").addEventListener("click", () => {
+			document.getElementById("insideDlg").open = false;
+		});
+	</script>
+</body>
+
+</html>
