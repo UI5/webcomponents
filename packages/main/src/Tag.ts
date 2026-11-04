@@ -22,6 +22,7 @@ import TagDesign from "./types/TagDesign.js";
 import type TagSize from "./types/TagSize.js";
 // Template
 import TagTemplate from "./TagTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 import {
 	TAG_DESCRIPTION_TAG,
@@ -176,6 +177,8 @@ class Tag extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onBeforeRendering() {
@@ -216,6 +219,12 @@ class Tag extends UI5Element {
 
 	get _title() {
 		return this.title || undefined;
+	}
+
+	// Interactive tag description: value state plus the tooltip text, so dropping
+	// the native title for the visual-only data-ui5-tooltip keeps it for a11y.
+	get _interactiveAriaDescription() {
+		return [this._valueState, this._title].filter(Boolean).join(" ") || undefined;
 	}
 
 	get tagDescription() {

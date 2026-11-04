@@ -15,6 +15,7 @@ import "@ui5/webcomponents-icons/dist/accept.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/less.js";
 import SwitchDesign from "./types/SwitchDesign.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import {
 	FORM_CHECKABLE_REQUIRED,
 	SWITCH_ON,
@@ -362,6 +363,11 @@ class Switch extends UI5Element implements IFormInputElement {
 		return this.disabled ? "true" : undefined;
 	}
 
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
+
 	get ariaLabelText() {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined;
 	}
@@ -372,6 +378,12 @@ class Switch extends UI5Element implements IFormInputElement {
 
 	get ariaDescribedByText() {
 		return this.readonly ? Switch.i18nBundle.getText(ACC_STATE_READONLY) : "";
+	}
+
+	// Carries the tooltip text so dropping the native title for the visual-only
+	// data-ui5-tooltip keeps it available to screen readers.
+	get _ariaDescription() {
+		return this.tooltip || undefined;
 	}
 }
 

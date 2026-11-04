@@ -8,16 +8,16 @@ export default function TagTemplate(this: Tag) {
 				this.interactive ?
 					<button
 						class="ui5-tag-root"
-						title={this._title}
+						data-ui5-tooltip={this._title}
 						aria-roledescription={this._roleDescription}
-						aria-description={this._valueState}
+						aria-description={this._interactiveAriaDescription}
 						onClick={this._onclick}
 						part="root"
 					>
 						{ content.call(this) }
 					</button>
 					:
-					<div class="ui5-tag-root" title={this._title} part="root">
+					<div class="ui5-tag-root" data-ui5-tooltip={this._title} aria-description={this._title} part="root">
 						{ content.call(this) }
 					</div>
 			}

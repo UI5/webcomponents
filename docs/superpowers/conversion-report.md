@@ -10,12 +10,15 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - **File:** `packages/main/src/RatingIndicator.ts` (`_ariaDescription` getter).
 - **Change:** folded `ratingTooltip` into `_ariaDescription` via `[this.ratingTooltip, required].filter(Boolean).join(" ")`.
 - **Effect:** with default tooltips enabled (the default), a `required` rating's `aria-description` changed from `"Required"` to **`"Rating Required"`** — the default tooltip text "Rating" now joins the required description.
-- **Decision:** **Accepted** (user). Rationale: the control becomes self-describing and the tooltip text is preserved for screen readers per the migration invariant. Existing test updated to expect `"Rating Required"`.
+- **Decision:** **Accepted** (user). The control becomes self-describing and the tooltip text is preserved per the invariant. Existing test updated to expect `"Rating Required"`.
 - **Alternative rejected:** fold only user-set tooltips (not the auto default) into aria.
 
-## Special-handling cases
+## Engineering notes / gotchas
 
-_(Recorded as each is implemented.)_
+### G1 — Getter name must not collide with the `ariaDescription` DOM/JSX prop
+- A public getter named `ariaDescription` fails TypeScript: Preact's JSX types the DOM `ariaDescription` property as `string | null`, so a getter returning `string | undefined` makes the component invalid as a JSX element (`TS2786`). **Use a `_`-prefixed internal name** (e.g. `_ariaDescription`), matching the RatingIndicator convention. Hit on Switch; fixed by renaming.
+
+## Special-handling cases
 
 ### Prerequisite — TooltipSupport delegation reworked (Phase 0)
 - **Files:** `packages/main/src/TooltipSupport.ts`, `TooltipGestures.ts`.
@@ -23,9 +26,17 @@ _(Recorded as each is implemented.)_
 - **Non-obvious fix:** `TooltipGestures.triggerFromDiscovery()` was added because listeners attached during the dispatch of the discovering `mouseover`/`focusin` are skipped by the DOM, so the *first* hover/focus would otherwise be lost.
 - **Correctness fix:** the shared tooltip now closes when the active target's `data-ui5-tooltip` text is cleared or the target leaves the DOM.
 
+### Tag — dual root, composed description
+- **Files:** `Tag.ts`, `TagTemplate.tsx`.
+- Tag has two roots: interactive `<button>` (already had `aria-description={this._valueState}`) and non-interactive `<div>` (no aria).
+- Interactive: tooltip composed with value state via new `_interactiveAriaDescription` getter (`[this._valueState, this._title].filter(Boolean).join(" ")`) so the value state is **not** overwritten.
+- Non-interactive: added `aria-description={this._title}` (previously had none).
+
 ## Components converted (status)
 
 | Component | Bucket | Status | Notes |
 |---|---|---|---|
-| Link | TOOLTIP | ✅ done | `ariaDescriptionText` folds in `tooltip`; title→data-ui5-tooltip |
+| Link | TOOLTIP | ✅ done | `ariaDescriptionText` folds in `tooltip` |
 | RatingIndicator | TOOLTIP | ✅ done | see D1 |
+| Switch | TOOLTIP | ✅ done | new `onEnterDOM` + `_ariaDescription` (see G1) |
+| Tag | TOOLTIP | ✅ done | dual root, composed description |
