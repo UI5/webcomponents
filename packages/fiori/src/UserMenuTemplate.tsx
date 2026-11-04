@@ -106,7 +106,7 @@ function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account">
-				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
+				<span data-ui5-tooltip={this.showEditButton ? this._editAvatarTooltip : undefined}>
 					<Avatar size="L" onClick={this._isAvatarInteractive ? this._handleAvatarClick : undefined} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" mode={this._isAvatarInteractive ? "Interactive" : "Image"}>
 						{this._selectedAccount.avatarSrc &&
 							<img src={this._selectedAccount.avatarSrc}/>

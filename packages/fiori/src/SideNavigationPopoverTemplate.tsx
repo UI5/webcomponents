@@ -15,7 +15,6 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 			disabled={item.disabled}
 			href={item.href}
 			target={item.target}
-			title={item.title}
 			tooltip={item._tooltip}
 			ref={this.captureRef.bind(item)}
 		>
@@ -28,7 +27,6 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					disabled={item.disabled}
 					href={item.href}
 					target={item.target}
-					title={item.title}
 					tooltip={item._tooltip}
 					ref={this.captureRef.bind(item)}
 				>

@@ -1,5 +1,6 @@
 import UserSettingsView from "./UserSettingsView.js";
 import UserSettingsAccountViewTemplate from "./UserSettingsAccountViewTemplate.js";
+import { startTooltipSupport } from "@ui5/webcomponents/dist/TooltipSupport.js";
 import {
 	customElement, slotStrict as slot, eventStrict as event, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -86,6 +87,11 @@ class UserSettingsAccountView extends UserSettingsView {
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
 
 	_handleEditAvatarClick(e: CustomEvent) {
 		if (e.type === "click") {

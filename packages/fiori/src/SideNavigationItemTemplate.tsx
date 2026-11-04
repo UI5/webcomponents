@@ -32,7 +32,7 @@ function ItemTemplate(this: SideNavigationItem) {
 						  tabIndex={this.effectiveTabIndex}
 						  aria-current={this._ariaCurrent}
 						  aria-selected={this._ariaSelected}
-						  title={this._tooltip}
+						  data-ui5-tooltip={this._tooltip}
 						  aria-disabled={this.effectiveDisabled}
 						  href={this._href}
 						  target={this._target}

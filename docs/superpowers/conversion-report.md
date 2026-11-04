@@ -72,7 +72,7 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - Per user decision, instead of adding a public `tooltip` property to receivers, the `title` is placed as `data-ui5-tooltip` **directly on the receiving component host**; the document delegate picks it up via `composedPath()`.
 - **TableSelection / TableSelectionMulti → `<CheckBox>`:** host gets `data-ui5-tooltip` (select/deselect-all text). CheckBox already has `accessibleName={TABLE_ROW_SELECTOR}`, so the tooltip is supplementary — **no a11y regression**. `startTooltipSupport()` wired in `CheckBox.onEnterDOM`.
 - **ListItemBase injected `title`:** swapped to `data-ui5-tooltip` on the `<li>` (support started by ListItem).
-- SideNavigationPopover → NavigationMenuItem: handled in the fiori phase.
+- **SideNavigationPopover → NavigationMenuItem:** NavigationMenuItem (via MenuItem, which extends the already-migrated ListItem) **already received `tooltip={item._tooltip}`**. The extra `title={item.title}` passthrough was redundant and was **removed**; the tooltip now flows MenuItem → ListItem → `data-ui5-tooltip` with no new API.
 
 ### Breadcrumbs dropdown arrow / AvatarBadge — icon modes differ
 - **Breadcrumbs arrow `<Icon>` (default Decorative, aria-hidden):** parent `<Link accessibleName>` already names the control; swap to `data-ui5-tooltip` only (visual). Not announced before either.
@@ -107,3 +107,8 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 | Breadcrumbs (arrow) | ICON (decorative) | ✅ done | Link names it; tooltip-only |
 | CheckBox | enabler | ✅ done | `startTooltipSupport` for host-level data-ui5-tooltip |
 | TableSelection / Multi | PROP-PASSTHROUGH | ✅ done | data-ui5-tooltip on CheckBox host; accessibleName already set |
+| **fiori** SideNavigation Group/Item/SubItem | TOOLTIP | ✅ done | `_tooltip`→data-ui5-tooltip; wired once in `SideNavigationItemBase.onEnterDOM`; items named by their text/aria |
+| **fiori** SideNavigationPopover → NavigationMenuItem | PROP-PASSTHROUGH | ✅ done | dropped redundant `title`; `tooltip={item._tooltip}` already flows via MenuItem→ListItem→data-ui5-tooltip |
+| **fiori** ShellBarLegacy logos (×3) | REDUNDANT-A11Y | ✅ done | `aria-label` already present; wired in `ShellBar.onEnterDOM` |
+| **fiori** UserMenu / UserSettingsAccountView | TOOLTIP | ✅ done | non-focusable avatar wrapper span; hover-only; new `onEnterDOM` |
+| **fiori** NotificationListGroupItem | TOOLTIP | ✅ done | group named by outer `<li aria-labelledby>`; new `onEnterDOM` |

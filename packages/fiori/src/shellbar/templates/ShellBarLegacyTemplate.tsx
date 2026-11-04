@@ -68,7 +68,7 @@ function ShellBarInteractiveMenuButton(this: ShellBar) {
 					data-ui5-stable="menu"
 					tabIndex={0}>
 					{legacy.showLogoInMenuButton && (
-						<span class="ui5-shellbar-logo" aria-label={legacy.logoAriaLabel} title={legacy.logoAriaLabel}>
+						<span class="ui5-shellbar-logo" aria-label={legacy.logoAriaLabel} data-ui5-tooltip={legacy.logoAriaLabel}>
 							<slot name="logo"></slot>
 						</span>
 					)}
@@ -97,7 +97,7 @@ function ShellBarSingleLogo(this: ShellBar) {
 			role={legacy.logoRole}
 			class="ui5-shellbar-logo ui5-shellbar-gap-end"
 			aria-label={legacy.logoAriaLabel}
-			title={legacy.logoAriaLabel}
+			data-ui5-tooltip={legacy.logoAriaLabel}
 			onClick={legacy.handleLogoClickBound}
 			onKeyDown={legacy.handleLogoKeydownBound}
 			onKeyUp={legacy.handleLogoKeyupBound}
@@ -126,7 +126,7 @@ function ShellBarCombinedLogo(this: ShellBar) {
 			{legacy.hasLogo && (
 				<span
 					class="ui5-shellbar-logo"
-					title={legacy.logoAriaLabel}
+					data-ui5-tooltip={legacy.logoAriaLabel}
 					data-ui5-stable="logo">
 					<slot name="logo"></slot>
 				</span>

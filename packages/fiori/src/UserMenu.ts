@@ -20,6 +20,7 @@ import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
 import UserMenuTemplate from "./UserMenuTemplate.js";
+import { startTooltipSupport } from "@ui5/webcomponents/dist/TooltipSupport.js";
 import UserMenuCss from "./generated/themes/UserMenu.css.js";
 
 // Texts
@@ -316,6 +317,11 @@ class UserMenu extends UI5Element {
 	 */
 	@query("#selected-account-manage-btn")
 	_selectedAccountManageBtn?: Button;
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
 
 	onBeforeRendering() {
 		this._selectedAccount = this.accounts.find(account => account.selected) || this.accounts[0];
