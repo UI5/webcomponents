@@ -67,6 +67,7 @@ import OptionGroup, { isInstanceOfOptionGroup } from "./OptionGroup.js";
 
 // Templates
 import SelectTemplate from "./SelectTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import selectCss from "./generated/themes/Select.css.js";
@@ -488,6 +489,8 @@ class Select extends UI5Element implements IFormInputElement {
 
 	onEnterDOM() {
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {
@@ -1263,7 +1266,10 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get ariaDescriptionText() {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+		const base = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+		// Fold the tooltip into the accessible description so dropping the native
+		// title for the visual-only data-ui5-tooltip keeps it for screen readers.
+		return [base, this._effectiveTooltip].filter(Boolean).join(" ") || undefined;
 	}
 
 	get ariaDescriptionTextId() {

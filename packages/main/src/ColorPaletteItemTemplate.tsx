@@ -8,7 +8,7 @@ export default function ColorPaletteItemTemplate(this: ColorPaletteItem) {
 			role="button"
 			aria-label={this.getLabelText}
 			aria-pressed={this.selected}
-			title={this.getLabelText}
+			data-ui5-tooltip={this.getLabelText || undefined}
 			onClick={this._onClick}
 		></div>
 	);

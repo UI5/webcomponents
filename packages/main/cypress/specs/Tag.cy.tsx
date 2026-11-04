@@ -38,6 +38,25 @@ describe("Tag", () => {
 			cy.get("#noninteractiveTag").shadow().find(".ui5-hidden-text").should("have.text", `${TAG_DESCRIPTION_TAG.defaultText} ${TAG_SUCCESS.defaultText}`);
 		});
 
+		it("shows the title as an enhanced tooltip and preserves it in aria-description", () => {
+			cy.mount(
+				<>
+					<Tag interactive design="Positive" id="itag" title="hint text">Interactive</Tag>
+					<Tag design="Positive" id="ntag" title="hint text">Noninteractive</Tag>
+				</>,
+			);
+
+			// Interactive root: value state + tooltip composed into aria-description.
+			cy.get("#itag").shadow().find(".ui5-tag-root").should("have.attr", "data-ui5-tooltip", "hint text");
+			cy.get("#itag").shadow().find(".ui5-tag-root").should("have.attr", "aria-description", `${TAG_SUCCESS.defaultText} hint text`);
+			cy.get("#itag").shadow().find(".ui5-tag-root").should("not.have.attr", "title");
+
+			// Non-interactive root: tooltip preserved in aria-description.
+			cy.get("#ntag").shadow().find(".ui5-tag-root").should("have.attr", "data-ui5-tooltip", "hint text");
+			cy.get("#ntag").shadow().find(".ui5-tag-root").should("have.attr", "aria-description", "hint text");
+			cy.get("#ntag").shadow().find(".ui5-tag-root").should("not.have.attr", "title");
+		});
+
 		it("tests that label is rendered if there is text content", () => {
 			cy.mount(
 				<Tag

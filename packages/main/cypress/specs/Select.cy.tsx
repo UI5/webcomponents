@@ -200,8 +200,18 @@ describe("Select - Accessibility", () => {
 			.find(".ui5-select-root")
 			.as("select");
 
+		// Enhanced tooltip (not native title) and preserved for a11y in the
+		// accessible description hidden text referenced by aria-describedby.
 		cy.get("@select")
-			.should("have.attr", "title", "Go home");
+			.should("have.attr", "data-ui5-tooltip", "Go home");
+
+		cy.get("@select")
+			.should("not.have.attr", "title");
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("contain.text", "Go home");
 	});
 
 	it("should announce the associated label when Select is focused", () => {
@@ -517,7 +527,7 @@ describe("Select - Accessibility", () => {
 		cy.get("[ui5-select]")
 			.shadow()
 			.find(".ui5-select-root")
-			.should("not.have.attr", "title");
+			.should("not.have.attr", "data-ui5-tooltip");
 	});
 
 	it("should display user tooltip with precedence over the default tooltip", () => {
@@ -531,7 +541,7 @@ describe("Select - Accessibility", () => {
 		cy.get("[ui5-select]")
 			.shadow()
 			.find(".ui5-select-root")
-			.should("have.attr", "title", "Custom tooltip");
+			.should("have.attr", "data-ui5-tooltip", "Custom tooltip");
 	});
 
 	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
@@ -545,7 +555,7 @@ describe("Select - Accessibility", () => {
 		cy.get("[ui5-select]")
 			.shadow()
 			.find(".ui5-select-root")
-			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+			.should("have.attr", "data-ui5-tooltip", "VeryLongOptionText – AdditionalInfo");
 	});
 
 	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
@@ -559,7 +569,7 @@ describe("Select - Accessibility", () => {
 		cy.get("[ui5-select]")
 			.shadow()
 			.find(".ui5-select-root")
-			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+			.should("have.attr", "data-ui5-tooltip", "VeryLongOptionTextThatWillBeTruncated");
 	});
 
 	it("should show the text and additionalText, separated by '-' when select is read-only", () => {

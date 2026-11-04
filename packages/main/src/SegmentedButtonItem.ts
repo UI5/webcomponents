@@ -18,6 +18,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "./generated/i18n/i18n-defaults.js";
 import type { ISegmentedButtonItem } from "./SegmentedButton.js";
 import SegmentedButtonItemTemplate from "./SegmentedButtonItemTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 import type { IButton } from "./Button.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -233,6 +234,8 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onBeforeRendering(): void {
@@ -264,7 +267,11 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	}
 
 	get ariaDescriptionText() {
-		return `${(getEffectiveAriaDescriptionText(this) || "")} ${SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`.trim();
+		// Fold an explicit tooltip into the description so dropping the native title
+		// for the visual-only data-ui5-tooltip keeps it for screen readers. The slot
+		// text fallback is not folded in — it is already the accessible name.
+		const parts = [getEffectiveAriaDescriptionText(this) || "", this.tooltip || "", SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)];
+		return parts.filter(Boolean).join(" ").trim();
 	}
 
 	get showIconTooltip() {

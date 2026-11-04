@@ -13,7 +13,7 @@ export default function SelectTemplate(this: Select) {
 				}}
 				id={`${this._id}-select`}
 				onClick={this._onclick}
-				title={this._effectiveTooltip}
+				data-ui5-tooltip={this._effectiveTooltip}
 			>
 				{!this.icon && this.selectedOptionIcon &&
 					<Icon

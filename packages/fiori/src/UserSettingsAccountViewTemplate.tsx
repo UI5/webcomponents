@@ -12,7 +12,7 @@ export default function UserSettingsAccountViewTemplate(this: UserSettingsAccoun
 		<div class="ui5-user-settings-view-container">
 			<div class="ui5-user-settings-view ui5-user-settings-account-view">
 				<div class="ui5-user-settings-account">
-					<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
+					<span data-ui5-tooltip={this.showEditButton ? this._editAvatarTooltip : undefined}>
 						<Avatar size="XL" onClick={this.showEditButton ? this._handleEditAvatarClick : undefined}
 						        initials={this._account?._initials} fallbackIcon={personPlaceholder}
 						        class="ui5-user-settings-account-avatar"

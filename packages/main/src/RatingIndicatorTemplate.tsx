@@ -20,7 +20,7 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			onFocusIn={this._onfocusin}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
-			title={this.ratingTooltip}
+			data-ui5-tooltip={this.ratingTooltip || undefined}
 			aria-label={this._ariaLabel}
 		>
 			<ul class="ui5-rating-indicator-list" aria-hidden="true">

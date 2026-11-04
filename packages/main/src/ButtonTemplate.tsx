@@ -21,6 +21,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			}}
 			disabled={this.disabled}
 			data-sap-focus-ref
+			data-ui5-tooltip={this.buttonTitle || undefined}
 			aria-pressed={injectedProps?.ariaPressed}
 			aria-valuemin={injectedProps?.ariaValueMin}
 			aria-valuemax={injectedProps?.ariaValueMax}
@@ -41,7 +42,6 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			aria-keyshortcuts={this._computedAccessibilityAttributes?.ariaKeyShortcuts}
 			aria-description={this.ariaDescriptionText}
 			aria-busy={this.loading ? "true" : undefined}
-			title={this.buttonTitle}
 			part="button"
 			role={this.effectiveAccRole}
 		>

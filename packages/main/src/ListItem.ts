@@ -18,6 +18,7 @@ import Highlight from "./types/Highlight.js";
 import ListItemType from "./types/ListItemType.js";
 import ListSelectionMode from "./types/ListSelectionMode.js";
 import ListItemBase from "./ListItemBase.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import type RadioButton from "./RadioButton.js";
 import type CheckBox from "./CheckBox.js";
 import type { IButton } from "./Button.js";
@@ -269,6 +270,8 @@ abstract class ListItem extends ListItemBase {
 		document.addEventListener("mouseup", this.deactivate);
 		document.addEventListener("touchend", this.deactivate);
 		document.addEventListener("keyup", this.deactivateByKey);
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {

@@ -32,6 +32,7 @@ import checkboxCss from "./generated/themes/CheckBox.css.js";
 
 // Template
 import CheckBoxTemplate from "./CheckBoxTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 let isGlobalHandlerAttached = false;
 let activeCb: CheckBox;
@@ -318,6 +319,8 @@ class CheckBox extends UI5Element implements IFormInputElement {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable data-ui5-tooltip when the attribute is set on a checkbox host.
+		startTooltipSupport();
 	}
 
 	_onclick() {

@@ -1,5 +1,5 @@
 import RatingIndicator from "../../src/RatingIndicator.js";
-import { RATING_INDICATOR_ARIA_DESCRIPTION } from "../../src/generated/i18n/i18n-defaults.js";
+import { RATING_INDICATOR_ARIA_DESCRIPTION, RATING_INDICATOR_TOOLTIP_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents-icons/dist/heart.js";
 import "@ui5/webcomponents-icons/dist/heart-2.js";
 import "@ui5/webcomponents-icons/dist/thumb-up.js";
@@ -258,9 +258,29 @@ describe("RatingIndicator", () => {
 			cy.get("@ri")
 				.shadow()
 				.find(".ui5-rating-indicator-root")
-				.should("have.attr", "aria-label", ARIA_LABEL)
-				.and("have.attr", "title", TOOLTIP)
-				.and("not.have.attr", "aria-readonly");
+				.should("have.attr", "aria-label", ARIA_LABEL);
+
+			// Tooltip is shown via the enhanced data-ui5-tooltip (not native title)
+			// and preserved for screen readers in aria-description.
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "data-ui5-tooltip", TOOLTIP);
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-description", TOOLTIP);
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("not.have.attr", "title");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("not.have.attr", "aria-readonly");
 
 			cy.get("#rating-indicator-readonly")
 				.shadow()
@@ -311,16 +331,28 @@ describe("RatingIndicator", () => {
 			cy.get("#rating-indicator-title")
 				.shadow()
 				.find(".ui5-rating-indicator-root")
-				.should("have.attr", "title", TOOLTIP);
+				.should("have.attr", "data-ui5-tooltip", TOOLTIP);
+
+			cy.get("#rating-indicator-title")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-description", TOOLTIP);
+
+			cy.get("#rating-indicator-title")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("not.have.attr", "title");
 		});
 
 		it("Tests ACC attrs - required property add aria-description", () => {
 			cy.mount(<RatingIndicator id="rating-indicator-required" required></RatingIndicator>);
 
+			// With default tooltips enabled, the rating's default tooltip ("Rating")
+			// composes with the required description, so the control is self-describing.
 			cy.get("#rating-indicator-required")
 				.shadow()
 				.find(".ui5-rating-indicator-root")
-				.should("have.attr", "aria-description", RATING_INDICATOR_ARIA_DESCRIPTION.defaultText);
+				.should("have.attr", "aria-description", `${RATING_INDICATOR_TOOLTIP_TEXT.defaultText} ${RATING_INDICATOR_ARIA_DESCRIPTION.defaultText}`);
 		});
 
 		it("Tests ACC attrs - accessible-name-ref", () => {

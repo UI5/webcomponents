@@ -129,7 +129,7 @@ class TableSelectionMulti extends TableSelectionBase {
 			checked={this.isSelected(row)}
 			onChange={() => this._onRowSelectionChange(row)}
 			accessibleName={i18nBundle.getText(TABLE_ROW_SELECTOR)}
-			title={this.isSelected(row) ? i18nBundle.getText(TABLE_DESELECT_ALL_ROWS) : i18nBundle.getText(TABLE_SELECT_ALL_ROWS)}
+			data-ui5-tooltip={this.isSelected(row) ? i18nBundle.getText(TABLE_DESELECT_ALL_ROWS) : i18nBundle.getText(TABLE_SELECT_ALL_ROWS)}
 		></CheckBox>;
 	}
 

@@ -2,6 +2,8 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import TitleLevel from "./types/TitleLevel.js";
 import type WrappingType from "./types/WrappingType.js";
 
@@ -66,6 +68,41 @@ class Title extends UI5Element {
 	 */
 	@property()
 	size: `${TitleLevel}` = "H5";
+
+	/**
+	 * Full text shown via the tooltip, non-empty only when the title is
+	 * truncated. Drives the visual tooltip's `text`.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_truncatedText = "";
+
+	_titleResizeHandler = this._updateTruncation.bind(this);
+
+	onEnterDOM(): void {
+		ResizeHandler.register(this, this._titleResizeHandler);
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
+
+	onExitDOM(): void {
+		ResizeHandler.deregister(this, this._titleResizeHandler);
+	}
+
+	onAfterRendering(): void {
+		this._updateTruncation();
+	}
+
+	// Set the tooltip text only when the title text overflows its box.
+	_updateTruncation(): void {
+		const root = this.getDomRef();
+		if (!root) {
+			this._truncatedText = "";
+			return;
+		}
+		const truncated = root.scrollWidth > root.clientWidth;
+		this._truncatedText = truncated ? (this.textContent || "").trim() : "";
+	}
 
 	get h1() {
 		return this.level === TitleLevel.H1;

@@ -51,6 +51,7 @@ import type Tokenizer from "./Tokenizer.js";
 
 // Template
 import FileUploaderTemplate from "./FileUploaderTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import FileUploaderCss from "./generated/themes/FileUploader.css.js";
@@ -517,6 +518,11 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		}
 
 		return null;
+	}
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onAfterRendering() {

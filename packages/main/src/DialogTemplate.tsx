@@ -65,7 +65,7 @@ function afterContent(this: Dialog) {
 			<div
 				class="ui5-popup-resize-handle"
 				onMouseDown={this._onResizeMouseDown}
-				title={this._resizeHandleTooltip}
+				data-ui5-tooltip={this._resizeHandleTooltip || undefined}
 			>
 				<Icon name={resizeCorner}></Icon>
 			</div>

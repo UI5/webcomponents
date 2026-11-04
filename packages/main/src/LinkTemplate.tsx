@@ -11,7 +11,7 @@ export default function LinkTemplate(this: Link) {
 			target={this.target}
 			rel={this._rel}
 			tabindex={this.effectiveTabIndex}
-			title={this.tooltip}
+			data-ui5-tooltip={this.tooltip || undefined}
 			aria-disabled={this.disabled}
 			aria-label={this.ariaLabelText}
 			aria-haspopup={this._hasPopup}

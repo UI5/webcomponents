@@ -7,6 +7,7 @@ import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
@@ -122,6 +123,11 @@ class AvatarBadge extends UI5Element {
 	 */
 	@property({ noAttribute: true })
 	effectiveTooltip?: string;
+
+	onEnterDOM() {
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
 
 	async onBeforeRendering() {
 		const icon = this.icon;

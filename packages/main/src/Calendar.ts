@@ -45,6 +45,7 @@ import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
 // Template
 import CalendarTemplate from "./CalendarTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import calendarCSS from "./generated/themes/Calendar.css.js";
@@ -393,6 +394,8 @@ class Calendar extends CalendarPart {
 	onEnterDOM() {
 		ResizeHandler.register(document.body, this._handleResizeBound);
 		this._handleResize();
+		// Enable the data-ui5-tooltip magic attribute on the header buttons.
+		startTooltipSupport();
 	}
 
 	get _phoneView() {

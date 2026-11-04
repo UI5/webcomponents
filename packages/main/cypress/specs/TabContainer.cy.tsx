@@ -649,7 +649,7 @@ describe("TabContainer general interaction", () => {
 
 		cy.get("#tabContainerNestedTabs").as("tabContainer");
 		cy.get("@tabContainer").shadow().find(".ui5-tab-expand-button").first().as("expandButton");
-		cy.get("@expandButton").should("have.attr", "title", "More");
+		cy.get("@expandButton").should("have.attr", "data-ui5-tooltip", "More");
 
 		cy.get("@expandButton").click();
 		cy.get("@tabContainer").shadow().find("ui5-responsive-popover").as("popover");

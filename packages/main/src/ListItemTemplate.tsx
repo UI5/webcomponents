@@ -47,7 +47,7 @@ export default function ListItemTemplate(this: ListItem, hooks?: Partial<ListIte
 		onDragStart={this._ondragstart}
 		onDragEnd={this._ondragend}
 		role={this._accInfo.role}
-		title={this._accInfo.tooltip}
+		data-ui5-tooltip={this._accInfo.tooltip || undefined}
 		aria-expanded={this._accInfo.ariaExpanded}
 		aria-level={this._accInfo.ariaLevel}
 		aria-haspopup={this._accInfo.ariaHaspopup}

@@ -38,6 +38,7 @@ import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
 import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import {
 	BUTTON_ARIA_TYPE_ACCEPT,
 	BUTTON_ARIA_TYPE_REJECT,
@@ -469,6 +470,9 @@ class Button extends UI5Element implements IButton {
 			this._clickHandlerAttached = true;
 		}
 
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+
 		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
 	}
 
@@ -694,7 +698,13 @@ class Button extends UI5Element implements IButton {
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
 		// Use either the effective aria label text (if accessibleName is provided) or the button's text content
-		const mainLabelText = effectiveAriaLabelText || textContent;
+		let mainLabelText = effectiveAriaLabelText || textContent;
+
+		// Icon-only: fall back to tooltip as accessible name (visual-only tooltip).
+		if (!mainLabelText && this.iconOnly) {
+			mainLabelText = this.buttonTitle || "";
+		}
+
 		const labelParts = [mainLabelText, internalLabelText].filter(part => part);
 		return labelParts.join(" ");
 	}

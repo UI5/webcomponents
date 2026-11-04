@@ -73,7 +73,7 @@ export default function TabInStripTemplate(this: Tab) {
 			{this.requiresExpandButton &&
 				<>
 					<div class="ui5-tab-expand-button-separator"></div>
-					<div class="ui5-tab-expand-button" title={this.expandButtonTitle}>
+					<div class="ui5-tab-expand-button" data-ui5-tooltip={this.expandButtonTitle || undefined}>
 						<Icon class="ui5-tab-expand-icon" name={slimArrowDownIcon}/>
 					</div>
 				</>

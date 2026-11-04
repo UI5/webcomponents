@@ -165,8 +165,17 @@ describe("General accesibility attributes", () => {
 	it("Should set correct correct tooltip on the root", () => {
 		cy.mount(<Switch tooltip={gpsLocationDescr} text-on="Yes" text-off="No"></Switch>);
 
+		// Enhanced tooltip (not native title) + preserved in aria-description.
 		cy.get("[ui5-switch]")
-			.ui5SwitchCheckAttributeInShadowDomRoot("title", gpsLocationDescr);
+			.ui5SwitchCheckAttributeInShadowDomRoot("data-ui5-tooltip", gpsLocationDescr);
+
+		cy.get("[ui5-switch]")
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-description", gpsLocationDescr);
+
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("not.have.attr", "title");
 	});
 
 	it("Should not have 'aria-label' attribute when 'text-on' and 'text-off' attributes aren't set", () => {

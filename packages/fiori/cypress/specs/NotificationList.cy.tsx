@@ -567,7 +567,7 @@ describe("Notification List Item Tests", () => {
 			.find(".ui5-nli-menu-btn")
 			.shadow()
 			.find("button")
-			.should("have.attr", "title", 'Actions')
+			.should("have.attr", "data-ui5-tooltip", 'Actions')
 			.and("have.attr", "aria-haspopup", 'menu');
 
 		cy.get("#nli3")
@@ -595,7 +595,7 @@ describe("Notification List Item Tests", () => {
 			.shadow()
 			.find("button")
 			.should("have.attr", "aria-label", 'Close')
-			.and("have.attr", "title", 'Close')
+			.and("have.attr", "data-ui5-tooltip", 'Close')
 			.and("have.attr", "role", 'button');
 
 		cy.get("#nli3")
@@ -716,7 +716,7 @@ describe("Notification List Item Tests", () => {
 					.should("have.attr", "aria-expanded", "true")
 					.and("have.attr", "aria-controls", id)
 					.and("have.attr", "role", "button")
-					.and("have.attr", "title", "Expand/Collapse");
+					.and("have.attr", "data-ui5-tooltip", "Expand/Collapse");
 			});
 
 		cy.get("#nlgi2")
@@ -742,7 +742,7 @@ describe("Notification List Item Tests", () => {
 					.should("have.attr", "aria-expanded", "false")
 					.and("have.attr", "aria-controls", id)
 					.and("have.attr", "role", "button")
-					.and("have.attr", "title", "Expand/Collapse");
+					.and("have.attr", "data-ui5-tooltip", "Expand/Collapse");
 			});
 
 		cy.get("#nlgi2")

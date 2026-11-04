@@ -32,7 +32,7 @@ export default function NotificationListItemTemplate(this: NotificationListGroup
 					role="button"
 					aria-expanded={this._expanded}
 					aria-controls={`${this._id}-notificationsList`}
-					title={this.toggleIconAccessibleName}>
+					data-ui5-tooltip={this.toggleIconAccessibleName}>
 					<Icon
 						name={this.groupCollapsedIcon}
 						class="ui5-nli-group-toggle-icon"

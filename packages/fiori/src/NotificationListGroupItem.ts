@@ -25,6 +25,7 @@ import {
 
 // Templates
 import NotificationListGroupItemTemplate from "./NotificationListGroupItemTemplate.js";
+import { startTooltipSupport } from "@ui5/webcomponents/dist/TooltipSupport.js";
 
 // Styles
 import NotificationListGroupItemCss from "./generated/themes/NotificationListGroupItem.css.js";
@@ -126,6 +127,12 @@ class NotificationListGroupItem extends NotificationListItemBase {
 	 */
 	@slot({ type: HTMLElement, "default": true })
 	items!: DefaultSlot<NotificationListItem>
+
+	onEnterDOM() {
+		super.onEnterDOM?.();
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
+	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

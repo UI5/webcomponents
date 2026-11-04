@@ -30,6 +30,7 @@ import daIcon from "@ui5/webcomponents-icons/dist/da.js";
 import overflowIcon from "@ui5/webcomponents-icons/dist/overflow.js";
 
 import ShellBarTemplate from "./ShellBarTemplate.js";
+import { startTooltipSupport } from "@ui5/webcomponents/dist/TooltipSupport.js";
 import shellBarStyles from "./generated/themes/ShellBar.css.js";
 import ShellBarPopoverCss from "./generated/themes/ShellBarPopover.css.js";
 import shellBarLegacyStyles from "./generated/themes/ShellBarLegacy.css.js";
@@ -641,6 +642,8 @@ class ShellBar extends UI5Element {
 	onEnterDOM() {
 		ResizeHandler.register(this, this.handleResizeBound);
 		this.searchAdaptor?.subscribe();
+		// Enable the data-ui5-tooltip magic attribute (legacy logo).
+		startTooltipSupport();
 	}
 
 	onExitDOM() {

@@ -59,7 +59,7 @@ function renderPrevButton(this: Calendar, isFirst: boolean, isMultiple: boolean)
 			onKeyDown={this.onPrevButtonKeyDown}
 			onKeyUp={this.onPrevButtonKeyUp}
 			tabindex={this._previousButtonDisabled ? -1 : 0}
-			title={this.accInfo.tooltipPrevButton}
+			data-ui5-tooltip={this.accInfo.tooltipPrevButton}
 			aria-label={this.accInfo.ariaLabelPrevButton}
 			aria-description={this.accInfo.ariaLabelPrevButton}
 			aria-keyshortcuts={this.accInfo.keyShortcutPrevButton}
@@ -89,7 +89,7 @@ function renderMiddleButtons(
 				role="button"
 				aria-label={this.accInfo.ariaLabelMonthButton}
 				aria-description={this.accInfo.ariaLabelMonthButton}
-				title={this.accInfo.tooltipMonthButton}
+				data-ui5-tooltip={this.accInfo.tooltipMonthButton}
 				aria-keyshortcuts={this.accInfo.keyShortcutMonthButton}
 				onClick={this.onHeaderMonthButtonPress}
 				onKeyDown={this.onMonthButtonKeyDown}
@@ -113,7 +113,7 @@ function renderMiddleButtons(
 				onClick={this.onHeaderYearButtonPress}
 				onKeyDown={this.onYearButtonKeyDown}
 				onKeyUp={this.onYearButtonKeyUp}
-				title={this.accInfo.tooltipYearButton}
+				data-ui5-tooltip={this.accInfo.tooltipYearButton}
 				aria-keyshortcuts={this.accInfo.keyShortcutYearButton}
 			>
 				<span>{headerText.yearText}</span>
@@ -131,7 +131,7 @@ function renderMiddleButtons(
 				role="button"
 				aria-label={this.accInfo.ariaLabelYearRangeButton}
 				aria-description={this.accInfo.ariaLabelYearRangeButton}
-				title={this.accInfo.tooltipYearRangeButton}
+				data-ui5-tooltip={this.accInfo.tooltipYearRangeButton}
 				aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
 				onClick={this.onHeaderYearRangeButtonPress}
 				onKeyDown={this.onYearRangeButtonKeyDown}
@@ -166,7 +166,7 @@ function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isM
 				onKeyDown={this.onNextButtonKeyDown}
 				onKeyUp={this.onNextButtonKeyUp}
 				tabindex={this._nextButtonDisabled ? -1 : 0}
-				title={this.accInfo.tooltipNextButton}
+				data-ui5-tooltip={this.accInfo.tooltipNextButton}
 				aria-label={this.accInfo.ariaLabelNextButton}
 				aria-description={this.accInfo.ariaLabelNextButton}
 				aria-keyshortcuts={this.accInfo.keyShortcutNextButton}

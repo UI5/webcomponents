@@ -1309,12 +1309,12 @@ describe("Calendar accessibility", () => {
 
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-prev]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Previous Month (Pagedown)");
 
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-next]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Next Month (Pageup)");
 	});
 
@@ -1374,14 +1374,14 @@ describe("Calendar accessibility", () => {
 		// Check month button title includes both label and shortcut
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-month]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Month November")
 			.and("contain", "(F4)");
 
 		// Check year button title includes both label and shortcut
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-year]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Year 2000")
 			.and("contain", "(Shift + F4)");
 	});
@@ -1441,7 +1441,7 @@ describe("Calendar accessibility", () => {
 
 		// Check title includes both label and shortcut
 		cy.get("@yearRangeBtn")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "Year range from")
 			.and("contain", "1991")
 			.and("contain", "to")
@@ -1561,12 +1561,12 @@ describe("Calendar accessibility", () => {
 		// Verify tooltips still contain shortcuts
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-month]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "(F4)");
 
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-year]")
-			.should("have.attr", "title")
+			.should("have.attr", "data-ui5-tooltip")
 			.and("contain", "(Shift + F4)");
 	});
 

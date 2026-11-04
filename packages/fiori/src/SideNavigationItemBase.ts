@@ -4,6 +4,7 @@ import {
 	isDesktop,
 } from "@ui5/webcomponents-base/dist/Device.js";
 import highlightText from "@ui5/webcomponents-base/dist/util/highlightText.js";
+import { startTooltipSupport } from "@ui5/webcomponents/dist/TooltipSupport.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type SideNavigation from "./SideNavigation.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
@@ -110,6 +111,8 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the item templates.
+		startTooltipSupport();
 	}
 
 	get _tooltip() {

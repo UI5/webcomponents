@@ -23,12 +23,13 @@ export default function SwitchTemplate(this: Switch) {
 			aria-readonly={this.effectiveAriaReadonly}
 			aria-required={this.required}
 			aria-describedby={this.ariaDescribedBy}
+			aria-description={this._ariaDescription}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
 			tabindex={this.effectiveTabIndex}
-			title={this.tooltip}
+			data-ui5-tooltip={this.tooltip || undefined}
 		>
 			<div class="ui5-switch-inner">
 				<div class="ui5-switch-track" part="slider">

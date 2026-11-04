@@ -537,7 +537,7 @@ describe("SegmentedButtonItem Accessibility", () => {
         cy.get("#item1")
             .shadow()
             .find("li")
-            .should("have.attr", "title", "Segmented Item Text");
+            .should("have.attr", "data-ui5-tooltip", "Segmented Item Text");
     });
 
     it("should show tooltip for disabled items", () => {
@@ -553,7 +553,7 @@ describe("SegmentedButtonItem Accessibility", () => {
         cy.get("[ui5-segmented-button-item][disabled]")
             .shadow()
             .find("li")
-            .should("have.attr", "title", TOOLTIP_TEXT);
+            .should("have.attr", "data-ui5-tooltip", TOOLTIP_TEXT);
     });
 
     it("should show tooltip on hover for disabled items", () => {
@@ -570,7 +570,11 @@ describe("SegmentedButtonItem Accessibility", () => {
         cy.get("#disabledItem")
             .shadow()
             .find("li")
-            .should("have.attr", "title", TOOLTIP_TEXT)
+            .should("have.attr", "data-ui5-tooltip", TOOLTIP_TEXT);
+
+        cy.get("#disabledItem")
+            .shadow()
+            .find("li")
             .should("have.attr", "aria-disabled", "true");
 
         // Test that hovering shows tooltip (this is browser behavior, but we can verify the title is present)
@@ -578,7 +582,7 @@ describe("SegmentedButtonItem Accessibility", () => {
             .shadow()
             .find("li")
             .trigger("mouseover")
-            .should("have.attr", "title", TOOLTIP_TEXT);
+            .should("have.attr", "data-ui5-tooltip", TOOLTIP_TEXT);
     });
 });
 

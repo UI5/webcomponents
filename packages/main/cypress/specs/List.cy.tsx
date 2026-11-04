@@ -2663,7 +2663,7 @@ describe("List Tests", () => {
 		cy.get("@listItem")
 			.shadow()
 			.find("li")
-			.should("have.attr", "title", "Option #1");
+			.should("have.attr", "data-ui5-tooltip", "Option #1");
 
 		const newTooltip = "Updated tooltip";
 		cy.get("@listItem")
@@ -2677,7 +2677,7 @@ describe("List Tests", () => {
 		cy.get("@listItem")
 			.shadow()
 			.find("li")
-			.should("have.attr", "title", newTooltip);
+			.should("have.attr", "data-ui5-tooltip", newTooltip);
 	});
 
 	it("Tests the highlight property", () => {

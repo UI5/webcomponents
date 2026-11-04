@@ -32,7 +32,7 @@ function TreeItemTemplate(this: SideNavigationGroup) {
 				 tabIndex={this.effectiveTabIndex}
 				 aria-expanded={this._expanded}
 				 aria-label={this.accessibleName || undefined}
-				 title={this._tooltip}
+				 data-ui5-tooltip={this._tooltip}
 				 aria-owns={this._groupId}
 			>
 				<div class="ui5-sn-item-text" dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
