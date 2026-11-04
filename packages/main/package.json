@@ -23,6 +23,7 @@
     "generate": "wc-dev generate",
     "generateCEM": "wc-dev generateAPI.generateCEM",
     "mergeCEM": "wc-dev generateAPI.mergeCEM",
+    "generateLLMs": "wc-dev generateAPI.generateLLMs",
     "validateCEM": "wc-dev generateAPI.validateCEM",
     "build": "wc-dev build",
     "bundle": "wc-dev build.bundle",
@@ -39,12 +40,14 @@
     "test:vitest": "yarn vitest run",
     "test:ssr": "node -e \"import('./test/ssr/component-imports.js')\"",
     "create-ui5-element": "wc-create-ui5-element",
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b",
+    "prepack": "yarn generateLLMs"
   },
   "exports": {
     "./src/*": "./src/*",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json",
+    "./llms.txt": "./llms.txt",
     "./bundle.esm.js": "./bundle.esm.js",
     "./bundle.common.js": "./bundle.common.js",
     "./bundle.scoped.esm.js": "./bundle.scoped.esm.js",
