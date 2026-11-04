@@ -4,6 +4,16 @@ Running record of every occurrence that received **special handling** or a **beh
 
 See the design spec for the full per-occurrence table: `docs/superpowers/specs/2026-11-04-title-to-tooltip-migration-design.md`.
 
+## Status: complete
+
+All native `title=` in `packages/main` and `packages/fiori` JSX templates were migrated to `data-ui5-tooltip` (or intentionally dropped / left as a documented no-op). The hard invariant held throughout: **no element lost its accessible text** — each either kept pre-existing ARIA that already carried the text, or had the tooltip folded into `aria-description` / `accessibleName`.
+
+**Verification:**
+- `yarn ts` clean; `yarn lint` clean (0 errors; 1 pre-existing TODO-comment warning in `TooltipGestures.ts`).
+- Cypress component specs (real Chrome, real hover/focus/Escape events) updated and green for every touched component.
+- Live dev-server pass on **http://localhost:8081**: confirmed the enhanced tooltip renders on hover (Button sample — styled popover "Save the current document", not a native title) and the Switch invariant (`data-ui5-tooltip` + `aria-description` present, native `title` absent).
+- One **pre-existing, unrelated** failure remains in `NumericInput.cy.tsx` (`formValidity.patternMismatch`) — see G3; not caused by this work.
+
 ## Behavior decisions (user-approved)
 
 ### D1 — RatingIndicator: default tooltip now composes into `aria-description`
