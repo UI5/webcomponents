@@ -636,11 +636,14 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_handleInputClick(e: MouseEvent) {
-		if (this._isMobileDevice) {
+		if (this._isIconClick(e) || this.open) {
 			return;
 		}
 
-		if (this._isIconClick(e) || this.open) {
+		if (this._isMobileDevice) {
+			if (this._isInputFieldClick(e)) {
+				this._openPickerInInputsMode();
+			}
 			return;
 		}
 
@@ -990,11 +993,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		}
 
 		this._hideMobileKeyboard();
-
-		if (this._isInputFieldFocus(e) && !this.open) {
-			this._openPickerInInputsMode();
-			e.preventDefault();
-		}
 	}
 
 	get valueStateDefaultText(): string | undefined {
