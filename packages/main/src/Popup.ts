@@ -276,6 +276,7 @@ abstract class Popup extends UI5Element {
 	_inertContainers: Set<HTMLElement> = new Set();
 	_inertObserver?: MutationObserver;
 	_inertedShadowElements: Array<HTMLElement> = [];
+	_inertedAncestorPopups: Array<Popup> = [];
 
 	constructor() {
 		super();
@@ -713,6 +714,17 @@ abstract class Popup extends UI5Element {
 			this._inertSiblings(element);
 		});
 
+		// DOM-nested case: mute ancestor popups on the path (their shadow chrome stays
+		// live because the popup element itself can't be inerted without killing us)
+		this._inertedAncestorPopups = [];
+		this._inertPath.forEach(element => {
+			if (element !== this && Popup._isPopup(element) && "_inertOwnShadowContent" in element) {
+				const ancestor = element as Popup;
+				ancestor._inertOwnShadowContent();
+				this._inertedAncestorPopups.push(ancestor);
+			}
+		});
+
 		this._observeInertMutations();
 	}
 
@@ -880,6 +892,10 @@ abstract class Popup extends UI5Element {
 		this._unInertedElements = [];
 		this._inertPath = new Set();
 		this._inertContainers = new Set();
+
+		// revert ancestor popups' shadow content that we muted in _setInert
+		this._inertedAncestorPopups.forEach(popup => popup._revertOwnShadowContent());
+		this._inertedAncestorPopups = [];
 
 		// also clean up own shadow muting if this popup was below a modal when it closed
 		this._revertOwnShadowContent();
