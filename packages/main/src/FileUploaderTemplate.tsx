@@ -29,7 +29,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 						accept={this.accept}
 						disabled={this.disabled}
 						required={this.required}
-						title={this.inputTitle}
+						data-ui5-tooltip={this.inputTitle || undefined}
 						aria-roledescription={this.accInfo.ariaRoledescription}
 						aria-haspopup={this.accInfo.ariaHasPopup}
 						aria-label={this.accInfo.ariaLabel}
@@ -74,7 +74,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 										name={decline}
 										class="ui5-file-uploader-clear-icon inputIcon"
 										onClick={this._onClearIconClick}
-										title={this.clearIconTitle}
+										data-ui5-tooltip={this.clearIconTitle || undefined}
 									/>
 								</>
 							) : (
@@ -82,6 +82,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 									class="ui5-file-uploader-display-input"
 									tabindex={-1}
 									aria-hidden="true"
+									/* aria-hidden display-only input: native title kept intentionally (no AT/hover surface). */
 									title={this.inputTitle}
 									placeholder={this.resolvedPlaceholder}
 									inner-input
@@ -92,7 +93,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 							<Icon
 								name={browseIcon}
 								class="ui5-file-uploader-value-help-icon inputIcon"
-								title={this.valueHelpTitle}
+								data-ui5-tooltip={this.valueHelpTitle || undefined}
 							/>
 						</div>
 

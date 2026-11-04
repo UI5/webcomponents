@@ -13,6 +13,13 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 - **Decision:** **Accepted** (user). The control becomes self-describing and the tooltip text is preserved per the invariant. Existing test updated to expect `"Rating Required"`.
 - **Alternative rejected:** fold only user-set tooltips (not the auto default) into aria.
 
+### D2 — Decorative icons: tooltip-only, accessibleName NOT added (corrects earlier plan)
+- **Files:** `CarouselTemplate.tsx` (prev/next arrows), `FileUploaderTemplate.tsx` (clear + value-help icons).
+- These 4 were triaged as "a11y-risk" with an initial decision of "accessibleName + tooltip". On implementation they turned out to be `<Icon mode="Decorative">` → `aria-hidden="true"` + `role="presentation"` (`Icon.ts:291-304`). An `accessibleName` (aria-label) on an aria-hidden element is **ignored by assistive tech**, so it would be a misleading no-op.
+- **Finding:** the native `title` on these aria-hidden icons was **already not announced** to AT before the migration. Converting to `data-ui5-tooltip` preserves the exact prior (visual-only) behavior and loses nothing.
+- **Decision:** **Tooltip-only** (user). Did **not** add `accessibleName`. The arrows'/icons' real accessibility is a **pre-existing gap** (decorative, aria-hidden interactive affordances) outside this migration's scope — recorded here for follow-up.
+- **Alternatives rejected:** change icon `mode` to Image/Interactive to expose the name (wider blast radius, changes focus/role semantics); skip the icons entirely.
+
 ## Engineering notes / gotchas
 
 ### G1 — Getter name must not collide with the `ariaDescription` DOM/JSX prop
@@ -58,3 +65,5 @@ See the design spec for the full per-occurrence table: `docs/superpowers/specs/2
 | Tag | TOOLTIP | ✅ done | dual root, composed description |
 | Select | TOOLTIP | ✅ done | tooltip outer root; a11y via inner hidden span; readonly fallback |
 | SegmentedButtonItem | TOOLTIP | ✅ done | fold explicit tooltip only, not slot-text |
+| Carousel (arrows) | ICON (decorative) | ✅ done | tooltip-only; see D2 |
+| FileUploader | ICON + input | ✅ done | file input swap (aria kept); 2 decorative icons tooltip-only (D2); hidden display input = no-op |

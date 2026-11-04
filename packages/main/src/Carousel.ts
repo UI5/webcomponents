@@ -41,6 +41,7 @@ import CarouselPageIndicatorType from "./types/CarouselPageIndicatorType.js";
 import type BackgroundDesign from "./types/BackgroundDesign.js";
 import type BorderDesign from "./types/BorderDesign.js";
 import CarouselTemplate from "./CarouselTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import type Icon from "./Icon.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
@@ -383,6 +384,8 @@ class Carousel extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted on the nav arrows.
+		startTooltipSupport();
 	}
 
 	onExitDOM() {
