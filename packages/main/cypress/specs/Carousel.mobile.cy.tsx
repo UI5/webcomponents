@@ -45,6 +45,35 @@ describe("Carousel general interaction", () => {
 			.should("have.length", 2);
 	});
 
+	it("Navigation arrows change the page on touchend", () => {
+		cy.mount(
+			<Carousel id="carousel4" arrowsPlacement="Navigation">
+				<Button>Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+			</Carousel>);
+
+		cy.get("#carousel4").should("have.prop", "visibleItemsIndices").and("deep.equal", [0]);
+
+		cy.get("#carousel4")
+			.shadow()
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
+			.then($arrow => {
+				const arrow = $arrow[0];
+				cy.get<Carousel>("#carousel4").then($c => {
+					const touch = new Touch({ identifier: 0, target: arrow });
+					const event = new TouchEvent("touchend", {
+						cancelable: true,
+						changedTouches: [touch],
+					});
+					Object.defineProperty(event, "target", { value: arrow });
+					$c[0]._ontouchend(event);
+				});
+			});
+
+		cy.get("#carousel4").should("have.prop", "visibleItemsIndices").and("deep.equal", [1]);
+	});
+
 	it("Arrows (navigation arrows) and Dots (page indicator) not displayed in case of single page", () => {
 		cy.mount(
 			<Carousel id="carousel6">

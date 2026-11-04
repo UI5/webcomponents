@@ -105,6 +105,50 @@ describe("SideNavigationItem visual", () => {
 		cy.screenshot();
 	});
 
+	it("with tag and trailing toggle icon", () => {
+		cy.mount(
+			<SideNavigation style={{ height: "300px" }}>
+				<SideNavigationItem text="Leads" icon={home} expanded>
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+					<SideNavigationSubItem text="All Leads" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+		cy.screenshot();
+	});
+
+	it("tag wraps to the second line on long text", () => {
+		cy.mount(
+			<SideNavigation style={{ width: "220px", height: "300px" }}>
+				<SideNavigationItem text="Customer Relationship Management System" icon={home}>
+					<Tag slot="tag" design="Set2" colorScheme="8" hideStateIcon>Beta Version</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+		cy.screenshot();
+	});
+
+	it("collapsed popover — wrapped tag keeps vertical spacing", () => {
+		cy.viewport(650, 400);
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed style={{ height: "300px" }}>
+				<SideNavigationItem id="parentItem" text="Favorites Long Text Favorites Long Text" icon={home} expanded unselectable>
+					<Tag slot="tag" design="Set2" colorScheme="5" hideStateIcon>Beta Long Text Beta Long Text Beta Long Text</Tag>
+					<SideNavigationSubItem text="My Accounts Long Text My Accounts Long Text">
+						<Tag slot="tag" design="Set2" colorScheme="8" hideStateIcon>Active Long Text Active Long Text Active Long Text Active Long Text</Tag>
+					</SideNavigationSubItem>
+					<SideNavigationSubItem text="My Orders">
+						<Tag slot="tag" design="Set2" colorScheme="7" hideStateIcon>Pending</Tag>
+					</SideNavigationSubItem>
+					<SideNavigationSubItem text="No tag" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+		cy.get("#parentItem").realClick();
+		cy.get("#sideNav").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.screenshot();
+	});
+
 	it("collapsed side navigation", () => {
 		cy.mount(
 			<SideNavigation collapsed style={{ height: "300px" }}>

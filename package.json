@@ -11,10 +11,11 @@
   "type": "module",
   "scripts": {
     "generate": "yarn workspaces foreach --all --parallel run generate",
-    "generateAPI": "yarn generateCEM && yarn mergeCEM && yarn validateCEM",
+    "generateAPI": "yarn generateCEM && yarn mergeCEM && yarn validateCEM && yarn generateLLMs",
     "generateCEM": "yarn workspaces foreach --all --parallel run generateCEM",
     "mergeCEM": "yarn workspaces foreach --all --parallel run mergeCEM",
     "validateCEM": "yarn workspaces foreach --all --parallel run validateCEM",
+    "generateLLMs": "yarn workspaces foreach --all --parallel run generateLLMs",
     "generateProd": "yarn workspaces foreach --all --parallel run generateProd",
     "ts": "tsc -b",
     "bundle": "yarn workspaces foreach --all --parallel run bundle",

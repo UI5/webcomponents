@@ -86,7 +86,7 @@ export default function SliderTemplate(this: Slider) {
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
 					part="scale"
-					exportparts="inner: scale-inner, progress: progress"
+					exportparts="inner: scale-inner, progress: progress-bar"
 				>
 					{handle(this)}
 

@@ -244,7 +244,7 @@ describe("TabContainer visual", () => {
 				<Tab text="Four">Four content</Tab>
 			</TabContainer>
 		);
-		cy.get("#tcNested").shadow().find(".ui5-tab-expand-button [ui5-button]").first().realClick();
+		cy.get("#tcNested").shadow().find(".ui5-tab-expand-button").first().realClick();
 		cy.get("#tcNested").shadow().find(".ui5-tab-container-responsive-popover").should("be.visible");
 		cy.screenshot();
 	});

@@ -8,6 +8,18 @@ Please use the Table from `@ui5/webcomponents` package instead.
 While `@ui5/webcomponents-compat` will remain available for compatibility purposes (until the next major release),
 migration is strongly recommended, as new development and enhancements will be focused on `@ui5/webcomponents/Table`.
 
+## Guidance for coding assistants
+
+The npm package includes `llms.txt`, which provides usage conventions and a generated component index for the installed package version. Consult `dist/custom-elements.json` and the component TypeScript declarations for complete API details.
+
+To make this guidance discoverable, add the following to your application's agent instructions:
+
+> When using `@ui5/webcomponents-compat`, read its installed `llms.txt` before writing component code, and check the relevant declaration in its public API manifest.
+
+The file ships with the npm package and can be resolved as `@ui5/webcomponents-compat/llms.txt` by tools that read package documentation.
+
+For repository development, run `yarn generateAPI` from the root to generate the public manifests and guidance. The generated `llms.txt` files are ignored by Git and refreshed during release builds and packing; commit changes to the generator rather than its output. Packing requires the public manifests from the build.
+
 ## Provided components
 
 The package provides Table web component and several subcomopnents as descrived below.

@@ -108,11 +108,77 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-dsc-main")
 			.should("not.have.attr", "role");
+		
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("not.have.attr", "aria-label");
 
 		cy.get("@dsc")
 			.shadow()
 			.find(".ui5-dsc-side")
 			.should("not.have.attr", "role");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("not.have.attr", "aria-label");
+	});
+
+	it("tests no aria-label when role is 'none' or 'presentation' to comply with WAI-ARIA presentational roles", () => {
+		cy.mount(
+			<DynamicSideContent>
+				<div>
+					<h1>Main Content</h1>
+				</div>
+				<div slot="sideContent">
+					<h1>Side Content</h1>
+				</div>
+			</DynamicSideContent>
+		);
+
+		cy.get("[ui5-dynamic-side-content]")
+			.as("dsc");
+
+		cy.get<DynamicSideContent>("@dsc")
+			.then($dsc => {
+				$dsc.get(0).accessibilityAttributes = {
+					mainContent: { role: "none" },
+					sideContent: { role: "none" },
+				};
+			});
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("have.attr", "role", "none")
+			.and("not.have.attr", "aria-label");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("have.attr", "role", "none")
+			.and("not.have.attr", "aria-label");
+
+		cy.get<DynamicSideContent>("@dsc")
+			.then($dsc => {
+				$dsc.get(0).accessibilityAttributes = {
+					mainContent: { role: "presentation" },
+					sideContent: { role: "presentation" },
+				};
+			});
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("have.attr", "role", "presentation")
+			.and("not.have.attr", "aria-label");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("have.attr", "role", "presentation")
+			.and("not.have.attr", "aria-label");
 	});
 
 	it("tests custom roles via accessibilityAttributes", () => {
