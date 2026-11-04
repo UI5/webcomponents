@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog Inert - worked example</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: "72", "72full", Arial, sans-serif; }
+		main { padding: 0.5rem; margin: 0.5rem; border: 1px solid var(--sapList_BorderColor); }
+		main::before { content: "main (main region)"; display: block; color: var(--sapContent_LabelColor); }
+		.steps { margin: 0.5rem; }
+		.steps h3 { margin: 0.75rem 0 0.25rem; }
+		.steps ol { margin: 0; padding-left: 1.25rem; }
+		.row { display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; }
+		.dialogFooter { display: flex; justify-content: flex-end; align-items: center; gap: 0.25rem; padding: 0.25rem 0; width: 100%; }
+	</style>
+</head>
+
+<body>
+
+	<!-- live region singleton - must never be inerted -->
+	<ui5-announcement-area></ui5-announcement-area>
+
+	<section class="steps">
+		<h3>1. Check the fix (#6902 + #13906)</h3>
+		<ol>
+			<li>Click <b>Open Dialog 1</b>.</li>
+			<li>DevTools: <code>main</code> gets <code>inert</code>; the dialog does not.</li>
+			<li>JAWS Buttons list (<code>Insert+Ctrl+B</code>): only the dialog's buttons - the <b>PAGE button</b> is gone.</li>
+			<li>JAWS Regions (<code>Insert+Ctrl+R</code>): only the dialog - the <code>main</code> region is gone.</li>
+			<li>From the footer, <b>Open nested dialog</b> and <b>Open Popover 1</b> stay interactive; close reverts all <code>inert</code>.</li>
+		</ol>
+
+		<h3>2. Check the limitation (dialog inside a landmark)</h3>
+		<ol>
+			<li>Click <b>Open Dialog in &lt;main&gt;</b> (authored inside <code>&lt;main&gt;</code>).</li>
+			<li>JAWS Regions: <b>main still appears</b> - <code>inert</code> cannot mark the dialog's own ancestor. DevTools: <code>&lt;main&gt;</code> is not <code>inert</code>.</li>
+			<li>Fix: author dialogs shallowly (no landmark ancestor).</li>
+		</ol>
+
+		<h3>3. Deep alternating nesting (modal-on-modal gap)</h3>
+		<ol>
+			<li>Open the stack: <b>Open Dialog 1</b> &rarr; (footer) <b>Open Popover 1</b> &rarr; <b>Open Dialog 2</b> &rarr; <b>Open Popover 2</b>.</li>
+			<li><b>Works</b>: the <b>PAGE button</b> stays out of the Buttons list (page inerted).</li>
+			<li><b>Breaks</b>: buttons of <b>Dialog 1</b> and <b>Popover 1</b> (the lower open levels) are still listed - lower open popups are not isolated. DevTools: their branches are not <code>inert</code>.</li>
+			<li><b>Why</b>: a dialog never inerts an element that is, or hosts, an open popup.</li>
+			<li>Close all &rarr; console: <code>document.querySelectorAll('[data-ui5-dialog-old-no-inert]').length</code> is <code>0</code> (no leak).</li>
+		</ol>
+	</section>
+
+	<main>
+		<div class="row">
+			<ui5-button id="open" design="Emphasized">Open Dialog 1</ui5-button>
+			<ui5-button id="openInMain" design="Attention">Open Dialog in &lt;main&gt;</ui5-button>
+		</div>
+		<ui5-button id="pageBtn">PAGE button (background)</ui5-button>
+
+		<!-- LIMITATION: authored inside <main>, so <main> is its ancestor and cannot be inerted -->
+		<ui5-dialog id="inMainDlg" header-text="Dialog nested in <main>">
+			<ui5-label>The "main" region stays visible to JAWS (the documented limitation).</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeInMain" design="Emphasized">Close</ui5-button>
+			</div>
+		</ui5-dialog>
+
+		<!-- Popover 1: declared in <main> (a background branch), opened from Dialog 1 (escape inertness) -->
+		<ui5-popover id="pop" opener="openP1" header-text="Popover 1">
+			<ui5-label>Popover 1 - declared outside the dialog, opened from inside it.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="openD2">Open Dialog 2</ui5-button>
+				<ui5-button id="closePop" design="Emphasized">Close Popover 1</ui5-button>
+			</div>
+		</ui5-popover>
+	</main>
+
+	<!-- FIX + stack root: Dialog 1, body-level (no landmark ancestor) -->
+	<ui5-dialog id="dlg" header-text="Dialog 1" draggable resizable>
+		<ui5-label>Body-level dialog - the background region gets inerted.</ui5-label>
+
+		<!-- directly nested dialog -->
+		<ui5-dialog id="nestedDlg" header-text="Nested Dialog" draggable>
+			<ui5-label>Declared inside Dialog 1.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeNested" design="Emphasized">Close</ui5-button>
+			</div>
+		</ui5-dialog>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="openNested">Open nested dialog</ui5-button>
+			<ui5-button id="openP1">Open Popover 1</ui5-button>
+			<ui5-button id="closeDlg" design="Emphasized">Close Dialog 1</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<!-- Level 3: Dialog 2, separate branch, opened from Popover 1 -->
+	<div id="wrapD2">
+		<ui5-dialog id="d2" header-text="Dialog 2" draggable>
+			<ui5-label>Dialog 2 content.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="openP2">Open Popover 2</ui5-button>
+				<ui5-button id="closeD2" design="Emphasized">Close Dialog 2</ui5-button>
+			</div>
+		</ui5-dialog>
+	</div>
+
+	<!-- Level 4: Popover 2, separate branch, opened from Dialog 2 -->
+	<div id="wrapP2">
+		<ui5-popover id="p2" opener="openP2" header-text="Popover 2">
+			<ui5-label>Popover 2 content.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeP2" design="Emphasized">Close Popover 2</ui5-button>
+			</div>
+		</ui5-popover>
+	</div>
+
+	<script>
+		const open = (id) => document.getElementById(id).open = true;
+		const close = (id) => document.getElementById(id).open = false;
+
+		// 1. fix + stack root
+		document.getElementById("open").addEventListener("click", () => open("dlg"));
+		document.getElementById("closeDlg").addEventListener("click", () => close("dlg"));
+		document.getElementById("openNested").addEventListener("click", () => open("nestedDlg"));
+		document.getElementById("closeNested").addEventListener("click", () => close("nestedDlg"));
+
+		// 2. limitation
+		document.getElementById("openInMain").addEventListener("click", () => open("inMainDlg"));
+		document.getElementById("closeInMain").addEventListener("click", () => close("inMainDlg"));
+
+		// 3. deep alternating stack: Dialog 1 -> Popover 1 -> Dialog 2 -> Popover 2
+		document.getElementById("openP1").addEventListener("click", () => open("pop"));
+		document.getElementById("closePop").addEventListener("click", () => close("pop"));
+		document.getElementById("openD2").addEventListener("click", () => open("d2"));
+		document.getElementById("closeD2").addEventListener("click", () => close("d2"));
+		document.getElementById("openP2").addEventListener("click", () => open("p2"));
+		document.getElementById("closeP2").addEventListener("click", () => close("p2"));
+	</script>
+</body>
+
+</html>
