@@ -1046,11 +1046,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _preventPickerInitialFocus() {
-		return isPhone() && !this._useInputsMode;
+		return false;
 	}
 
 	get _initialFocusId() {
-		return this._useInputsMode ? `${this._id}-time-sel` : undefined;
+		return this._useInputsMode ? `${this._id}-time-sel` : `${this._id}-mode-toggle`;
 	}
 
 	/**

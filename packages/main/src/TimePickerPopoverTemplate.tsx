@@ -69,6 +69,7 @@ function defaultHeader(this: TimePicker) {
 		<Bar slot="header" design="Header">
 			<span class="ui5-tp-header-title" slot="startContent">{this._headerTitleText}</span>
 			<Button
+				id={`${this._id}-mode-toggle`}
 				slot="endContent"
 				design="Transparent"
 				icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
