@@ -181,16 +181,15 @@ class TableRow extends TableRowBase<TableCell> {
 		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
 	}
 
-	get _isNavigable() {
-		return this._fixedActions.find(action => {
-			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
-		}) !== undefined;
-	}
-
 	get _navigationAction() {
 		return this.actions.find(action => {
 			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible;
 		});
+	}
+
+	get _isNavigable() {
+		const action = this._navigationAction;
+		return !!action && !action._isInteractive;
 	}
 
 	get _rowIndex() {
