@@ -120,9 +120,11 @@ const defaultConverter = {
  * @private
  */
 function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
-	// Invalidation should be suppressed: 1) before the component is rendered for the first time 2) and during the execution of onBeforeRendering
+	// Rendering should be suppressed: 1) before the component is rendered for the first time 2) and during the execution of onBeforeRendering
 	// This is necessary not only as an optimization, but also to avoid infinite loops on invalidation between children and parents (when invalidateOnChildChange is used)
-	if (this._suppressInvalidation) {
+	if (this._suppressRendering) {
+		this.onInvalidation(changeInfo);
+		this._invalidationEventProvider.fireEvent("invalidate", { ...changeInfo, target: this });
 		return;
 	}
 
@@ -138,7 +140,6 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 	// Call the onInvalidation hook
 	this.onInvalidation(changeInfo);
 
-	this._changedState.push(changeInfo);
 	renderDeferred(this);
 	this._invalidationEventProvider.fireEvent("invalidate", { ...changeInfo, target: this });
 }
@@ -208,8 +209,7 @@ abstract class UI5Element extends HTMLElement {
 	_jsxProps!: Pick<JSX.AllHTMLAttributes<HTMLElement>, GlobalHTMLAttributeNames> & ElementProps<this> & Partial<this["_jsxEvents"]> & { key?: any };
 
 	__id?: string;
-	_suppressInvalidation: boolean;
-	_changedState: Array<ChangeInfo>;
+	_suppressRendering: boolean;
 	_invalidationEventProvider: EventProvider<InvalidationInfo, void>;
 	_componentStateFinalizedEventProvider: EventProvider<void, void>;
 	_inDOM: boolean;
@@ -240,8 +240,7 @@ abstract class UI5Element extends HTMLElement {
 		super();
 
 		const ctor = this.constructor as typeof UI5Element;
-		this._changedState = []; // Filled on each invalidation, cleared on re-render (used for debugging)
-		this._suppressInvalidation = true; // A flag telling whether all invalidations should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
+		this._suppressRendering = true; // A flag telling whether all invalidations should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
 		this._inDOM = false; // A flag telling whether the UI5Element is currently in the DOM tree of the document or not
 		this._fullyConnected = false; // A flag telling whether the UI5Element's onEnterDOM hook was called (since it's possible to have the element removed from DOM before that)
 		this._childChangeListeners = new Map(); // used to store lazy listeners per slot for the child change event of every child inside that slot
@@ -919,7 +918,7 @@ abstract class UI5Element extends HTMLElement {
 			this.initializedProperties.clear();
 		}
 		// suppress invalidation to prevent state changes scheduling another rendering
-		this._suppressInvalidation = true;
+		this._suppressRendering = true;
 
 		try {
 			this.onBeforeRendering();
@@ -933,31 +932,8 @@ abstract class UI5Element extends HTMLElement {
 			this._componentStateFinalizedEventProvider.fireEvent("componentStateFinalized");
 		} finally {
 			// always resume normal invalidation handling
-			this._suppressInvalidation = false;
+			this._suppressRendering = false;
 		}
-
-		// Update the shadow root with the render result
-		/*
-		if (this._changedState.length) {
-			let element = this.localName;
-			if (this.id) {
-				element = `${element}#${this.id}`;
-			}
-			console.log("Re-rendering:", element, this._changedState.map(x => { // eslint-disable-line
-				let res = `${x.type}`;
-				if (x.reason) {
-					res = `${res}(${x.reason})`;
-				}
-				res = `${res}: ${x.name}`;
-				if (x.type === "property") {
-					res = `${res} ${JSON.stringify(x.oldValue)} => ${JSON.stringify(x.newValue)}`;
-				}
-
-				return res;
-			}));
-		}
-		*/
-		this._changedState = [];
 
 		// Update shadow root
 		if (ctor._needsShadowDOM()) {
