@@ -167,10 +167,41 @@ describe("General API", () => {
 			.find(".ui5-link-root")
 			.should("have.attr", "aria-label", "more info");
 
+		// The tooltip is shown via the enhanced data-ui5-tooltip (not native title),
+		// and its text is preserved for screen readers in aria-description.
 		cy.get("[ui5-link]")
 			.shadow()
 			.find(".ui5-link-root")
-			.should("have.attr", "title", "my tooltip");
+			.should("have.attr", "data-ui5-tooltip", "my tooltip");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "aria-description", "my tooltip");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("composes tooltip with an existing accessibleDescription in aria-description", () => {
+		cy.mount(<Link accessibleDescription="opens in new tab" tooltip="my tooltip">Click me</Link>);
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "aria-description", "opens in new tab my tooltip");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "data-ui5-tooltip", "my tooltip");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("not.have.attr", "title");
 	});
 
 	it("passes special keys pressed while item clicked", () => {

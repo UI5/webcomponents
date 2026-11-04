@@ -26,6 +26,7 @@ import {
 	RATING_INDICATOR_ARIA_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 import RatingIndicatorTemplate from "./RatingIndicatorTemplate.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import RatingIndicatorCss from "./generated/themes/RatingIndicator.css.js";
@@ -230,6 +231,8 @@ class RatingIndicator extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onBeforeRendering() {
@@ -364,7 +367,10 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get _ariaDescription() {
-		return this.required ? RatingIndicator.i18nBundle.getText(RATING_INDICATOR_ARIA_DESCRIPTION) : undefined;
+		const required = this.required ? RatingIndicator.i18nBundle.getText(RATING_INDICATOR_ARIA_DESCRIPTION) : undefined;
+		// Fold the tooltip into the accessible description so dropping the native
+		// title for the visual-only data-ui5-tooltip keeps it for screen readers.
+		return [this.ratingTooltip, required].filter(Boolean).join(" ") || undefined;
 	}
 
 	get ariaReadonly() {

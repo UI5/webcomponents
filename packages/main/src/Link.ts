@@ -14,6 +14,7 @@ import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import { getLocationHostname, getLocationPort, getLocationProtocol } from "@ui5/webcomponents-base/dist/Location.js";
 import LinkDesign from "./types/LinkDesign.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 import type WrappingType from "./types/WrappingType.js";
 import type LinkAccessibleRole from "./types/LinkAccessibleRole.js";
 import type InteractiveAreaSize from "./types/InteractiveAreaSize.js";
@@ -303,6 +304,8 @@ class Link extends UI5Element implements ITabbable {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the template.
+		startTooltipSupport();
 	}
 
 	onBeforeRendering() {
@@ -357,7 +360,10 @@ class Link extends UI5Element implements ITabbable {
 	}
 
 	get ariaDescriptionText() {
-		return this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		// Fold the tooltip text into the accessible description so moving off the
+		// native title to the visual-only data-ui5-tooltip keeps it for screen readers.
+		return [accessibleDescription, this.tooltip || undefined].filter(Boolean).join(" ") || undefined;
 	}
 
 	get _hasPopup() {
