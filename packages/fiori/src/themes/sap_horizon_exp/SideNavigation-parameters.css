@@ -10,7 +10,7 @@
 	--_ui5_side_navigation_item_transition: background-color 0.3s ease-in-out;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_side_navigation_item_height: 2rem;
 	}

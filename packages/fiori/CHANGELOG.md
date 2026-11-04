@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **ui5-side-navigation:** align indication tag with new spec ([#14200](https://github.com/UI5/webcomponents/issues/14200)) ([1fac660](https://github.com/UI5/webcomponents/commit/1fac6601cd24a7ac3db3b3347eccddb82e10eb62))
+
+
+
+
+
 ## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

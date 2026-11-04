@@ -16,7 +16,7 @@
 	--_ui5_panel_header_background_color: var(--sapBackgroundColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
 	}

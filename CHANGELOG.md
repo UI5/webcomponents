@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **framework:** verify resolved origin matches current origin for relative URLs ([#14213](https://github.com/UI5/webcomponents/issues/14213)) ([0b65b28](https://github.com/UI5/webcomponents/commit/0b65b2875a58a083e100966a14945bc861c22505))
+* **release:** add build step to republish job ([fd229df](https://github.com/UI5/webcomponents/commit/fd229dfb9cd0b1a821f2257d5e3f6306426991cd))
+* **release:** add republish job and disable provenance for all jobs ([f3245f3](https://github.com/UI5/webcomponents/commit/f3245f3053e6a7a4b5c604840909a15062adbdd8))
+* **ui5-calendar:** show correct year range when secondaryCalendarType… ([#14191](https://github.com/UI5/webcomponents/issues/14191)) ([692a645](https://github.com/UI5/webcomponents/commit/692a645344dc0cc5e28e839eceb6a36ce468ad0d)), closes [#14185](https://github.com/UI5/webcomponents/issues/14185)
+* **ui5-side-navigation:** align indication tag with new spec ([#14200](https://github.com/UI5/webcomponents/issues/14200)) ([1fac660](https://github.com/UI5/webcomponents/commit/1fac6601cd24a7ac3db3b3347eccddb82e10eb62))
+* **ui5-slider:** rename exported CSS part "progress" to "progress-bar" ([#14190](https://github.com/UI5/webcomponents/issues/14190)) ([3751d55](https://github.com/UI5/webcomponents/commit/3751d552f9039f28264f8e1f1940efa806d55dc7))
+
+
+### Features
+
+* **date components:** Adjustment of the Placeholder and its Default … ([#14059](https://github.com/UI5/webcomponents/issues/14059)) ([e3a17c3](https://github.com/UI5/webcomponents/commit/e3a17c30c6da1f15b4988da766599f90abadf3f9))
+* **ui5-numeric-input, ui5-step-input:** use extended numeric keyboard and locale-independent formatting on mobile ([#14178](https://github.com/UI5/webcomponents/issues/14178)) ([29fbd3e](https://github.com/UI5/webcomponents/commit/29fbd3ea3d423e9e04fd2739137ad5002a2bc0f4))
+
+
+### Reverts
+
+* Revert "chore(tools): remove postcss workaround for CSS container style queries" (#14203) ([aeaa29a](https://github.com/UI5/webcomponents/commit/aeaa29a82718aaad1fd7d6493f0b0e2fdc4ff670)), closes [#14203](https://github.com/UI5/webcomponents/issues/14203)
+
+
+
+
+
 ## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
 
 

@@ -161,7 +161,7 @@
 	--___ui5-test-both: red;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--___ui5-test-both: blue;
 		--___ui5-test-compact-only: blue;

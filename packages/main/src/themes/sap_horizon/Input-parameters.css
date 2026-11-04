@@ -30,7 +30,7 @@
 	--_ui5_input_icon_wrapper_success_state_height: calc(100% - var(--_ui5_input_value_state_success_border_width));
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_input_information_icon_padding: .3125rem .5rem .1875rem .5rem;
 		--_ui5_input_information_focused_icon_padding: .3125rem .5rem .25rem .5rem;
