@@ -16,18 +16,5 @@ tool. Load it **on demand**, not up front.
 - You write or debug a Cypress spec.
 - The task names a `ui5-*` component, a property, slot, event, design token, or ARIA attribute.
 
-Then open **only** the reference file its routing table names for your task — do not read every file.
-The relevant references for base-package work:
-
-| Your task | Open |
-|-----------|------|
-| How a component is assembled, which file does what | `references/component-anatomy.md` |
-| A property, slot, event, or public method | `references/api-design.md` |
-| A brand-new component | `references/new-component.md` |
-| CSS, theming, design tokens, `themeAware` | `references/theming-and-css.md` |
-| Keyboard, ARIA, focus | `references/accessibility.md` |
-| Any user-visible text, `languageAware` | `references/i18n.md` |
-
-The non-negotiables (full rationale in `INDEX.md`): never run the full test suite;
-enums are type-only; select by attribute not tag name; no `instanceof` on a UI5 class; `@query` refs are
-for method calls like `.focus()`, not state; make the smallest change that solves the problem.
+Then open **only** the reference files its routing table names for the areas your task touches — do not
+read every file.

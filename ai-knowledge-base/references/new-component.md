@@ -1,5 +1,10 @@
 # Creating a New Component
 
+## Contents
+
+1. Scaffold · 2. Write the component · 3. Types · 4. Register in the bundle · 5. Styles and theme
+parameters · 6. Text · 7. Accessibility · 8. Tests · 9. Manual test page · 10. Website · 11. Verify
+
 The scaffolder writes three files; the rest is manual. Theme bundles and website wiring get skipped.
 
 ## 1. Scaffold
@@ -23,8 +28,7 @@ A Fiori component is scaffolded the same way from `packages/fiori`, which has it
 
 ## 2. Write the component
 
-Follow `component-anatomy.md` for file layout and member order, `api-design.md` for the public
-surface and its JSDoc. The smallest complete component in the repo:
+The smallest complete component in the repo:
 
 ```ts
 // The smallest complete component (class JSDoc and IMenuItem specifics omitted)

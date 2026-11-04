@@ -1,5 +1,16 @@
 # Accessibility
 
+## Contents
+
+- The accessibility API: which properties to expose, resolving the texts, keeping the ref texts live
+- Wiring ARIA in the template: presence-only vs state attributes, `accessibilityInfo` for containers, `tooltip`
+- Focus
+- Keyboard: F6 fast navigation, roving tabindex with `ItemNavigation`, `div` with `role="button"`
+- Announcing dynamic changes
+- Disabled state
+- Checklist
+- Testing
+
 ## The accessibility API
 
 These six properties are the public accessibility contract. Application developers set them from outside the component; component developers wire the resolved values into the shadow DOM. They exist because shadow DOM breaks native ARIA ID relationships — a `for` attribute or `aria-labelledby` in the light DOM cannot reach into the shadow tree — so the framework provides a typed abstraction instead.

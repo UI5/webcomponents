@@ -1,14 +1,22 @@
 # Public API Design
 
+## Contents
+
+- Choosing the mechanism: writing your own public property, features as a slotted subcomponent
+- Properties: `@default`, boolean polarity, `@property` on a setter, naming, enums, accessibility properties, form-associated components, re-typing an inherited property
+- Slots: typing slot children
+- Events: subclasses and `eventDetails`, what one `fireDecoratorEvent` dispatches, cancelable events
+- Public methods
+- JSDoc that passes CEM: tag shape, allowed tags per member, class-level JSDoc, three misleading errors
+- Versioning
+
 Properties, slots, events, methods, CSS parts, and the JSDoc that documents them.
 
 JSDoc is validated when the Custom Elements Manifest is generated, by `yarn generateAPI`. Neither
 `yarn ts` nor `yarn start` runs it, so a documentation error is invisible while you type and fails
 later. Run `yarn generateAPI` before declaring an API change done.
 
-Load alongside `core-rules.md` for any API task — this file covers how to shape and document the
-API; that one covers invariants (declarative API, event ordering, boolean defaults, strict
-decorators).
+This file covers how to shape and document the API. Invariants — declarative API, event ordering, boolean defaults, strict decorators — are in `core-rules.md`.
 
 ## Choosing the mechanism
 

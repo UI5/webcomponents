@@ -1,11 +1,22 @@
 # Component Anatomy
 
+## Contents
+
+- The file set: beyond the standard set, `packages/ai` and `packages/compat`
+- Order inside the `.ts` file: order inside the class
+- Decorators: `@customElement` config keys
+- Lifecycle
+- Templates
+
 ## The file set
 
-A component named `Foo` in package `main`. Fiori is identical under `packages/fiori/src` — swap the
-package prefix (`ShellBar.ts`, `ShellBarTemplate.tsx`, `themes/ShellBar.css`). `ai` and `compat` share
-the same file set and build pipeline; see "packages/ai and packages/compat" below for where `ai`
-diverges.
+The table below uses a component named `Foo` in `packages/main`. The other component packages use the
+same file set; only the path changes:
+
+- `fiori` and `compat` are identical: replace `packages/main/` with `packages/fiori/` or
+  `packages/compat/` (e.g. `packages/fiori/src/ShellBar.ts`, `ShellBarTemplate.tsx`,
+  `themes/ShellBar.css`).
+- `ai` has a few incidental differences; see "packages/ai and packages/compat" below.
 
 | File | Required | Purpose |
 |------|----------|---------|
@@ -74,7 +85,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import ButtonDesign from "./types/ButtonDesign.js";
+import type ButtonDesign from "./types/ButtonDesign.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
 import {
@@ -85,8 +96,7 @@ import {
 import buttonCss from "./generated/themes/Button.css.js";
 ```
 
-`Button.ts` compares against `ButtonDesign` members at runtime. Enum import and comparison
-conventions are in `core-rules.md` — team guidance on standardising this is still evolving.
+Property enums are imported type-only, as above. The real `Button.ts` still imports `ButtonDesign` at runtime and compares against its members — legacy, not precedent; see `core-rules.md` (Enum import and comparison).
 
 Decorator imports come from individual files here; the Table family instead imports from
 `decorators.js`. Both compile identically; importing from `decorators.js` is essentially a
@@ -209,4 +219,4 @@ the component, so `this.foo` in the JSX reads the instance.
   (`MultiComboBoxPopoverTemplate.tsx`, `RangeSliderTemplate.tsx`, `SearchPopoverTemplate.tsx`) — it
   is not a pattern to avoid. If a container-level keydown or click handler misbehaves, check
   whether it reads `event.target` instead of `event.composedPath()` first; see the Debugging
-  section of `INDEX.md`.
+  section of `commands-and-debugging.md`.

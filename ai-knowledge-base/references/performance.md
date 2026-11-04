@@ -1,5 +1,16 @@
 # Performance and Rendering
 
+## Contents
+
+- The invalidation model
+- What schedules a render
+- One suppression flag, two phases
+- The four rules: state only JavaScript reads, scoped `invalidateOnChildChange`, guarding `onAfterRendering`, cleanup in `onExitDOM`
+- Repo patterns to reuse
+- Animations
+- Awaiting a render
+- Large lists
+
 ## The invalidation model
 
 ```

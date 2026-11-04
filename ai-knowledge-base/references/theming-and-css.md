@@ -1,5 +1,15 @@
 # Theming and CSS
 
+## Contents
+
+- The variable tiers
+- How CSS reaches the component
+- Where each file goes
+- Selectors
+- Right-to-left
+- Density
+- Focus, animation, high contrast
+
 ## The variable tiers
 
 | Tier | Prefix | Defined in | Use it for |
