@@ -27,6 +27,19 @@ class TooltipGestures {
 		this._attach();
 	}
 
+	// Replay the pointer/focus event that triggered binding. Listeners attached in
+	// _attach() during that event's dispatch are skipped by the DOM, so the first
+	// hover/focus would otherwise be missed; the delegate calls this once on bind.
+	triggerFromDiscovery(type: "mouseover" | "focusin" | "touchstart"): void {
+		if (type === "mouseover") {
+			this._onMouseOver();
+		} else if (type === "focusin") {
+			this._onFocusIn();
+		} else {
+			this._onTouchStart();
+		}
+	}
+
 	_attach() {
 		const el = this._config.opener;
 		el.addEventListener("mouseover", this._onMouseOver);
