@@ -68,6 +68,7 @@ import {
 	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
 	SHELLBAR_BRANDING_HOME,
+	SHELLBAR_HOME,
 } from "./generated/i18n/i18n-defaults.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
@@ -1050,11 +1051,16 @@ class ShellBar extends UI5Element {
 	}
 
 	get brandingOverflowLabel(): string | undefined {
-		// Spec: aria-label = "[ProductIdentifier] Home". Prefer the product identifier (title);
-		// for logo-only branding (no title) fall back to the accessible name.
 		const branding = this.branding[0];
-		const name = branding?.titleText?.trim() || branding?.accessibleNameText?.trim();
-		return name ? ShellBar.i18nBundle.getText(SHELLBAR_BRANDING_HOME, name) : undefined;
+		const explicitName = branding?.accessibleName?.trim();
+		if (explicitName) {
+			return ShellBar.i18nBundle.getText(SHELLBAR_BRANDING_HOME, explicitName);
+		}
+		const titleText = branding?.titleText?.trim();
+		if (titleText) {
+			return ShellBar.i18nBundle.getText(SHELLBAR_BRANDING_HOME, titleText);
+		}
+		return ShellBar.i18nBundle.getText(SHELLBAR_HOME);
 	}
 
 	/**

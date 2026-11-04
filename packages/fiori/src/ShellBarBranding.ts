@@ -4,6 +4,8 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isSpace,
 	isEnter,
@@ -15,6 +17,10 @@ import ShellBarBrandingTemplate from "./ShellBarBrandingTemplate.js";
 
 // Styles
 import shellBarBrandingCss from "./generated/themes/ShellBarBranding.css.js";
+
+import {
+	SHELLBAR_HOME,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -50,6 +56,9 @@ class ShellBarBranding extends UI5Element {
 	eventDetails!: {
 		click: void,
 	}
+
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
 
 	/**
 	 * Defines the component href.
@@ -138,7 +147,7 @@ class ShellBarBranding extends UI5Element {
 			return this.accessibleName;
 		}
 
-		return this.titleText;
+		return this.titleText || ShellBarBranding.i18nBundle.getText(SHELLBAR_HOME);
 	}
 
 	_fireClick() {
