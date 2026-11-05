@@ -121,10 +121,11 @@ const defaultConverter = {
  * @private
  */
 function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
+	this._stateChangeEventProvider.fireEvent("state-change", { ...changeInfo, target: this });
+
 	// Invalidation should be suppressed: 1) before the component is rendered for the first time 2) and during the execution of onBeforeRendering
 	// This is necessary not only as an optimization, but also to avoid infinite loops on invalidation between children and parents (when invalidateOnChildChange is used)
 	if (this._suppressInvalidation) {
-		this._stateChangeEventProvider.fireEvent("state-change", { ...changeInfo, target: this });
 		return;
 	}
 
@@ -142,7 +143,6 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 
 	renderDeferred(this);
 	this._invalidationEventProvider.fireEvent("invalidate", { ...changeInfo, target: this });
-	this._stateChangeEventProvider.fireEvent("state-change", { ...changeInfo, target: this });
 }
 
 /**
