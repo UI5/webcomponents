@@ -1,6 +1,13 @@
 :host {
-	height: var(--_ui5_list_item_dropdown_base_height);
+	height: auto;
+	min-height: var(--_ui5_list_item_dropdown_base_height);
 	--_ui5_list_item_title_size: var(--sapFontSize);
+}
+
+:host .ui5-li-content {
+	margin: calc((var(--_ui5_list_item_dropdown_base_height) - var(--sapFontSize)) / 2) 0;
+	overflow: visible;
+	white-space: normal;
 }
 
 :host(:active[actionable]:not([data-moving])),
