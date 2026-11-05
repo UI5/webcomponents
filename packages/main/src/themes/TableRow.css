@@ -89,6 +89,11 @@
 	position: absolute;
 	inset: 0;
 	width: calc(var(--_ui5_table_highlight_cell_width) - 1px);
+
+	:host([highlight="Negative"]) & { background: var(--sapErrorBorderColor); }
+	:host([highlight="Critical"]) & { background: var(--sapWarningBorderColor); }
+	:host([highlight="Positive"]) & { background: var(--sapSuccessBorderColor); }
+	:host([highlight="Information"]) & { background: var(--sapInformationBorderColor); }
 }
 
 #navigated {
@@ -128,19 +133,3 @@
 #selection-cell ~ #popin-cell {
 	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
 }
-
-:host([highlight="Negative"]) #highlight { background: var(--sapErrorBorderColor); }
-:host([highlight="Critical"]) #highlight { background: var(--sapWarningBorderColor); }
-:host([highlight="Positive"]) #highlight { background: var(--sapSuccessBorderColor); }
-:host([highlight="Information"]) #highlight { background: var(--sapInformationBorderColor); }
-
-:host([highlight="Indication01"]) #highlight { background: var(--sapIndicationColor_1); }
-:host([highlight="Indication02"]) #highlight { background: var(--sapIndicationColor_2); }
-:host([highlight="Indication03"]) #highlight { background: var(--sapIndicationColor_3); }
-:host([highlight="Indication04"]) #highlight { background: var(--sapIndicationColor_4); }
-:host([highlight="Indication05"]) #highlight { background: var(--sapIndicationColor_5); }
-:host([highlight="Indication06"]) #highlight { background: var(--sapIndicationColor_6); }
-:host([highlight="Indication07"]) #highlight { background: var(--sapIndicationColor_7); }
-:host([highlight="Indication08"]) #highlight { background: var(--sapIndicationColor_8); }
-:host([highlight="Indication09"]) #highlight { background: var(--sapIndicationColor_9); }
-:host([highlight="Indication10"]) #highlight { background: var(--sapIndicationColor_10); }
