@@ -270,6 +270,56 @@ This mirrors Vaadin: a single `<vaadin-tooltip>` element does the work, while co
 
 ---
 
+## Review feedback — pros & cons of the three solutions
+
+Feedback captured during review, summarizing the trade-offs of each option (with PRs where applicable).
+
+### Option A: use "title" and enhance it to render the new tooltip
+
+**Pros**
+
+- It solves ACC problems.
+- We don't need changes in the components.
+
+**Cons**
+
+- We need to remove it on hover — this is hacky.
+- It is hard to understand which `title`s on the page must be hacked and which must not be changed.
+- May confuse with other frameworks on the page which use the `title`.
+- Overrides the behavior of a native attribute.
+
+### Option B: use a custom property "data-ui5-tooltip"
+
+- **PR:** 14243
+
+**Pros**
+
+- Very small change in the components.
+
+**Cons**
+
+- Hard to assign other properties like `horizontalAlign`, it may need a second attribute.
+- Any ACC has to be magically added, e.g. an element has to be rendered for `aria-describedby` or `aria-description` must be touched.
+
+*(to be discussed further)*
+
+### Option C: a `<ui5-tooltip>` component
+
+- **PR:** 14248
+
+**Pros**
+
+- We can have more properties like the `horizontalAlign` for the tooltip.
+- There is a rendered component which we can refer to for `aria-describedby`.
+
+**Cons**
+
+- A big change in every component.
+
+*(to be discussed further)*
+
+---
+
 ### Sources
 
 - Material UI Tooltip — https://mui.com/material-ui/react-tooltip / API https://mui.com/material-ui/api/tooltip
