@@ -1,8 +1,10 @@
 import type Link from "./Link.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function LinkTemplate(this: Link) {
 	return (
+		<>
 		<a
 			part="root"
 			class="ui5-link-root"
@@ -11,7 +13,6 @@ export default function LinkTemplate(this: Link) {
 			target={this.target}
 			rel={this._rel}
 			tabindex={this.effectiveTabIndex}
-			title={this.tooltip}
 			aria-disabled={this.disabled}
 			aria-label={this.ariaLabelText}
 			aria-haspopup={this._hasPopup}
@@ -47,5 +48,9 @@ export default function LinkTemplate(this: Link) {
 				part="endIcon"
 			/>
 			}
-		</a>);
+		</a>
+		{ this.tooltip &&
+			<Tooltip text={this.tooltip} opener={this.getDomRef()} />
+		}
+		</>);
 }

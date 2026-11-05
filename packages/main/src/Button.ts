@@ -709,7 +709,11 @@ class Button extends UI5Element implements IButton {
 		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
 		const typeLabelText = this.hasButtonType ? this.buttonTypeText : "";
 
-		const descriptionParts = [accessibleDescription, typeLabelText].filter(part => part);
+		// The visual tooltip replaces the native title; announce its text as a
+		// description unless it is already serving as the accessible name.
+		const tooltipText = this.buttonTitle && this.ariaLabelText !== this.buttonTitle ? this.buttonTitle : "";
+
+		const descriptionParts = [accessibleDescription, typeLabelText, tooltipText].filter(part => part);
 		return descriptionParts.length > 0 ? descriptionParts.join(" ") : undefined;
 	}
 

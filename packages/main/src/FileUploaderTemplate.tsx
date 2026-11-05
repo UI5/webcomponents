@@ -1,4 +1,5 @@
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 import browseIcon from "@ui5/webcomponents-icons/dist/browse-folder.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import Tokenizer from "./Tokenizer.js";
@@ -29,7 +30,6 @@ export default function FileUploaderTemplate(this: FileUploader) {
 						accept={this.accept}
 						disabled={this.disabled}
 						required={this.required}
-						title={this.inputTitle}
 						aria-roledescription={this.accInfo.ariaRoledescription}
 						aria-haspopup={this.accInfo.ariaHasPopup}
 						aria-label={this.accInfo.ariaLabel}
@@ -74,7 +74,8 @@ export default function FileUploaderTemplate(this: FileUploader) {
 										name={decline}
 										class="ui5-file-uploader-clear-icon inputIcon"
 										onClick={this._onClearIconClick}
-										title={this.clearIconTitle}
+										accessibleName={this.clearIconTitle}
+										showTooltip
 									/>
 								</>
 							) : (
@@ -82,7 +83,6 @@ export default function FileUploaderTemplate(this: FileUploader) {
 									class="ui5-file-uploader-display-input"
 									tabindex={-1}
 									aria-hidden="true"
-									title={this.inputTitle}
 									placeholder={this.resolvedPlaceholder}
 									inner-input
 									readonly
@@ -92,7 +92,8 @@ export default function FileUploaderTemplate(this: FileUploader) {
 							<Icon
 								name={browseIcon}
 								class="ui5-file-uploader-value-help-icon inputIcon"
-								title={this.valueHelpTitle}
+								accessibleName={this.valueHelpTitle}
+								showTooltip
 							/>
 						</div>
 
@@ -102,6 +103,10 @@ export default function FileUploaderTemplate(this: FileUploader) {
 			</div>
 
 			{ FileUploaderPopoverTemplate.call(this) }
+
+			{ this.inputTitle &&
+				<Tooltip text={this.inputTitle} opener={this.getFocusDomRef()} />
+			}
 		</>
 	);
 }

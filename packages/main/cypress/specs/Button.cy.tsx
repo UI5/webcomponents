@@ -553,6 +553,45 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-description", "A long description.");
 	});
 
+	it("tooltip text is merged into aria-description on a text button", () => {
+		cy.mount(<Button tooltip="Saves the document">Save</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", "Saves the document");
+	});
+
+	it("tooltip text is appended after accessible-description and type in aria-description", () => {
+		cy.mount(<Button design="Emphasized" accessibleDescription="Decline" tooltip="Saves the document">Save</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", `Decline ${Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED)} Saves the document`);
+	});
+
+	it("tooltip serving as the accessible name is not duplicated into aria-description", () => {
+		cy.mount(<Button icon={employee} tooltip="Employee"></Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Employee");
+
+		cy.get("@button")
+			.should("not.have.attr", "aria-description");
+	});
+
 	it("button with a badge", () => {
 		cy.mount(
 			<Button design="Emphasized" icon={employee}>Emphasized

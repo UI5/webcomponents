@@ -259,8 +259,12 @@ describe("RatingIndicator", () => {
 				.shadow()
 				.find(".ui5-rating-indicator-root")
 				.should("have.attr", "aria-label", ARIA_LABEL)
-				.and("have.attr", "title", TOOLTIP)
 				.and("not.have.attr", "aria-readonly");
+
+			cy.get("@ri")
+				.shadow()
+				.find("[ui5-tooltip]")
+				.should("have.attr", "text", TOOLTIP);
 
 			cy.get("#rating-indicator-readonly")
 				.shadow()
@@ -310,8 +314,8 @@ describe("RatingIndicator", () => {
 
 			cy.get("#rating-indicator-title")
 				.shadow()
-				.find(".ui5-rating-indicator-root")
-				.should("have.attr", "title", TOOLTIP);
+				.find("[ui5-tooltip]")
+				.should("have.attr", "text", TOOLTIP);
 		});
 
 		it("Tests ACC attrs - required property add aria-description", () => {

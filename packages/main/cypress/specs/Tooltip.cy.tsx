@@ -120,6 +120,8 @@ describe("Tooltip", () => {
 		);
 
 		cy.get("#opener").should("exist");
+		// Anchor window focus before Tab so realPress lands focus on the opener.
+		cy.get("body").realClick({ position: "topLeft" });
 		cy.realPress("Tab");
 		cy.get("#opener").should("have.focus");
 		cy.get("#tt").should($el => {
@@ -132,6 +134,31 @@ describe("Tooltip", () => {
 		});
 	});
 
+	it("stays open while keyboard focus is held (no open/close blinking)", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Focus me</Button>
+				<Tooltip id="tt" opener="opener" text="Focus info" delay={0}></Tooltip>
+			</>
+		);
+
+		cy.get("#opener").should("exist");
+		// Anchor window focus before Tab so realPress lands focus on the opener.
+		cy.get("body").realClick({ position: "topLeft" });
+		cy.realPress("Tab");
+		cy.get("#opener").should("have.focus");
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(true);
+		});
+
+		// Hold focus well past several delay cycles; the tooltip must remain open.
+		cy.wait(500);
+		cy.get("#opener").should("have.focus");
+		cy.get("#tt").should($el => {
+			expect(($el[0] as Tooltip).isOpen()).to.equal(true);
+		});
+	});
+
 	it("Escape during the open delay cancels the pending open", () => {
 		cy.mount(
 			<>
@@ -141,6 +168,8 @@ describe("Tooltip", () => {
 		);
 
 		cy.get("#opener").should("exist");
+		// Anchor window focus before Tab so realPress lands focus on the opener.
+		cy.get("body").realClick({ position: "topLeft" });
 		cy.realPress("Tab");
 		cy.get("#opener").should("have.focus");
 

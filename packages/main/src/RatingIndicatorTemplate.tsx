@@ -1,9 +1,11 @@
 import type RatingIndicator from "./RatingIndicator.js";
 import type { Star } from "./RatingIndicator.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function RatingIndicatorTemplate(this: RatingIndicator) {
 	return (
+		<>
 		<div
 			class="ui5-rating-indicator-root"
 			role="slider"
@@ -20,13 +22,16 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			onFocusIn={this._onfocusin}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
-			title={this.ratingTooltip}
 			aria-label={this._ariaLabel}
 		>
 			<ul class="ui5-rating-indicator-list" aria-hidden="true">
 				{ this._stars.map(star => starLi.call(this, star))}
 			</ul>
 		</div>
+		{ this.ratingTooltip &&
+			<Tooltip text={this.ratingTooltip} opener={this.getDomRef()} />
+		}
+		</>
 	);
 }
 

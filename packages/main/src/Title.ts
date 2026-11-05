@@ -8,7 +8,6 @@ import type WrappingType from "./types/WrappingType.js";
 
 // Template
 import TitleTemplate from "./TitleTemplate.js";
-import Tooltip from "./Tooltip.js";
 
 // Styles
 import titleCss from "./generated/themes/Title.css.js";
@@ -100,6 +99,11 @@ class Title extends UI5Element {
 		}
 		const truncated = root.scrollWidth > root.clientWidth;
 		this._truncatedText = truncated ? (this.textContent || "").trim() : "";
+	}
+
+	// Accessible description mirrors the truncation tooltip: full text when truncated, nothing otherwise.
+	get _accDescription() {
+		return this._truncatedText || undefined;
 	}
 
 	get h1() {

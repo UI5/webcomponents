@@ -1,8 +1,10 @@
 import type SegmentedButtonItem from "./SegmentedButtonItem.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 	return (
+		<>
 		<li
 			role="option"
 			class="ui5-segmented-button-item-root"
@@ -16,7 +18,6 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 			tabindex={this.tabIndexValue ? parseInt(this.tabIndexValue) : undefined }
 			aria-label={this.ariaLabelText}
 			aria-description={this.ariaDescriptionText}
-			title={this.tooltip || this.slotTextContent}
 		>
 			{this.icon &&
 				<Icon
@@ -32,5 +33,9 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 				</bdi>
 			</span>
 		</li>
+		{ (this.tooltip || this.slotTextContent) &&
+			<Tooltip text={this.tooltip || this.slotTextContent} opener={this.getFocusDomRef()} />
+		}
+		</>
 	);
 }

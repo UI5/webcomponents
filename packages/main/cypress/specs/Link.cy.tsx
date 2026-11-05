@@ -170,7 +170,12 @@ describe("General API", () => {
 		cy.get("[ui5-link]")
 			.shadow()
 			.find(".ui5-link-root")
-			.should("have.attr", "title", "my tooltip");
+			.should("not.have.attr", "title");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "my tooltip");
 	});
 
 	it("passes special keys pressed while item clicked", () => {

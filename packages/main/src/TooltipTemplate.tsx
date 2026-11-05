@@ -9,6 +9,7 @@ export default function TooltipTemplate(this: Tooltip) {
 			placement={this.placement}
 			horizontalAlign={this.horizontalAlign}
 			open={this._open}
+			preventInitialFocus={true}
 			onClose={this._onPopoverClose}
 		>
 			<span class="ui5-tooltip-text">{this.text}</span>
