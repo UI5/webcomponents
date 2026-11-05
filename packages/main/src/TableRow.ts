@@ -147,11 +147,9 @@ class TableRow extends TableRowBase<TableCell> {
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
 			this._onclick();
-		}
-
-		if ((eventOrigin === this || eventOrigin.hasAttribute("ui5-table-cell-base")) && isEnterAlt(e)) {
+		} else if ((eventOrigin === this || eventOrigin.hasAttribute("ui5-table-cell-base")) && isEnterAlt(e)) {
 			const navigationAction = this._navigationAction;
-			if (navigationAction) {
+			if (navigationAction?._isInteractive) {
 				navigationAction._fireClickEvent();
 				e.preventDefault();
 			}
@@ -189,7 +187,7 @@ class TableRow extends TableRowBase<TableCell> {
 
 	get _isNavigable() {
 		const action = this._navigationAction;
-		return !!action && !action._isInteractive;
+		return action?._isInteractive;
 	}
 
 	get _rowIndex() {

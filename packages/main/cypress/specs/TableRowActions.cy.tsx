@@ -252,17 +252,23 @@ describe("TableRowActions", () => {
 			</>
 			);
 
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
 			// Focus the row with navigation action and press Alt+Enter
 			cy.get("@row1").focus();
 			cy.get("@row1").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
 
 			// Focus the row without navigation action and press Alt+Enter - should not fire
 			cy.get("@row2").focus();
 			cy.get("@row2").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
 		});
 
 		it("Alt+Enter triggers navigation action from cell", () => {
@@ -278,17 +284,23 @@ describe("TableRowActions", () => {
 			</>
 			);
 
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
 			// Focus a cell in the row with navigation action and press Alt+Enter
 			cy.get("#navRowCell").realClick();
 			cy.get("#navRowCell").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
 
 			// Focus a cell in the row without navigation action and press Alt+Enter - should not fire
 			cy.get("#noNavRowCell").realClick();
 			cy.get("#noNavRowCell").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
 		});
 
 		it("Alt+Enter does not trigger navigation action from control inside cell", () => {
@@ -318,5 +330,6 @@ describe("TableRowActions", () => {
 			cy.get("@row1").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("not.have.been.called");
 		});
+
 	});
 });
