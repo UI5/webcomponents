@@ -670,7 +670,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		const inputField = this._getInputField();
 
 		if (inputField && this._isInputFieldClick(e)) {
-			(inputField as HTMLInputElement).select();
+			inputField.select();
 		}
 	}
 
