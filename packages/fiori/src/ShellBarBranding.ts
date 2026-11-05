@@ -4,6 +4,8 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isSpace,
 	isEnter,
@@ -15,6 +17,10 @@ import ShellBarBrandingTemplate from "./ShellBarBrandingTemplate.js";
 
 // Styles
 import shellBarBrandingCss from "./generated/themes/ShellBarBranding.css.js";
+
+import {
+	SHELLBAR_HOME,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -50,6 +56,9 @@ class ShellBarBranding extends UI5Element {
 	eventDetails!: {
 		click: void,
 	}
+
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
 
 	/**
 	 * Defines the component href.
@@ -89,14 +98,6 @@ class ShellBarBranding extends UI5Element {
 	accessibleName?: string;
 
 	/**
-     * Defines if the title of the branding is shown on an S breakpoint.
-     * @default false
-     * @private
-     */
-	@property({ type: Boolean })
-	_isSBreakPoint = false;
-
-	/**
 	 * Defines the title for the ui5-shellbar-branding component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -113,6 +114,15 @@ class ShellBarBranding extends UI5Element {
 	@slot({ type: HTMLElement })
 	logo!: Slot<HTMLElement>;
 
+	/**
+	 * Returns `true` when the branding has neither an assigned logo nor title text,
+	 * so it should render nothing instead of an empty.
+	 * @private
+	 */
+	get isEmpty() {
+		return this.logo.length === 0 && !this.titleText;
+	}
+
 	get parsedRef() {
 		return (this.href && this.href.length > 0) ? this.href : undefined;
 	}
@@ -121,19 +131,31 @@ class ShellBarBranding extends UI5Element {
 		return this.href && this.href.length > 0 ? "link" : "button";
 	}
 
-	get accessibleNameText() {
-		if (this.accessibleName) {
-			return this.accessibleName;
-		}
-
+	/**
+	 * Returns the trimmed text of the default (title) slot only — ignores the logo slot.
+	 * @private
+	 */
+	get titleText() {
 		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])") as HTMLSlotElement;
 		return defaultSlot?.assignedNodes({ flatten: true })
 			.find(n => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
 			?.textContent!.trim();
 	}
 
+	get accessibleNameText() {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+
+		return this.titleText || ShellBarBranding.i18nBundle.getText(SHELLBAR_HOME);
+	}
+
 	_fireClick() {
 		this.fireDecoratorEvent("click");
+	}
+
+	onBeforeRendering() {
+		this.toggleAttribute("_empty", this.isEmpty);
 	}
 
 	private _activate(e: Event) {
