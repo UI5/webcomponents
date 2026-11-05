@@ -12,7 +12,6 @@ import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type Highlight from "./types/Highlight.js";
-import type IndicationColor from "./types/IndicationColor.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -111,6 +110,16 @@ class TableRow extends TableRowBase<TableCell> {
 	navigated = false;
 
 	/**
+	 * Defines whether the row is movable.
+	 *
+	 * @default false
+	 * @since 2.6.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	movable = false;
+
+	/**
 	 * Defines the highlight state of the row.
 	 *
 	 * @default "None"
@@ -118,7 +127,7 @@ class TableRow extends TableRowBase<TableCell> {
 	 * @since 2.29.0
 	 */
 	@property()
-	highlight: `${Highlight | IndicationColor}` = "None";
+	highlight: `${Highlight}` = "None";
 
 	/**
 	 * Defines the text alternative for the highlight indicator, used by screen readers.
@@ -129,16 +138,6 @@ class TableRow extends TableRowBase<TableCell> {
 	 */
 	@property()
 	highlightText?: string;
-
-	/**
-	 * Defines whether the row is movable.
-	 *
-	 * @default false
-	 * @since 2.6.0
-	 * @public
-	 */
-	@property({ type: Boolean })
-	movable = false;
 
 	@query("#popin-cell")
 	_popinCell?: TableCell;

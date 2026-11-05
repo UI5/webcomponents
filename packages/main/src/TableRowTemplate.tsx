@@ -11,7 +11,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					aria-hidden={true}
 					role="none"
 				>
-					{ this._hasHighlight && <div id="highlight"></div> }
+					{ this._hasHighlight && <div id="highlight" part="highlight"></div> }
 				</TableCell>
 			}
 
