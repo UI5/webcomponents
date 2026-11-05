@@ -290,6 +290,10 @@ describe("TableRowActions", () => {
 
 			// Focus a cell in the row with navigation action and press Alt+Enter
 			cy.get("#navRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
 			cy.get("#navRowCell").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
@@ -298,6 +302,10 @@ describe("TableRowActions", () => {
 
 			// Focus a cell in the row without navigation action and press Alt+Enter - should not fire
 			cy.get("#noNavRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
 			cy.get("#noNavRowCell").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
 			cy.get("@rowClick").should("not.have.been.called");
