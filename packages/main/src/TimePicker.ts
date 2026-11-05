@@ -64,6 +64,7 @@ import {
 	TIMEPICKER_SWITCH_TO_CLOCK,
 	TIMEPICKER_TOGGLE_INPUT_VIEW_LABEL,
 	TIMEPICKER_TOGGLE_INPUT_VIEW_DESC,
+	TIMEPICKER_TOGGLE_DESC_SWITCH_TO_INPUTS,
 	TIMEPICKER_ANNOUNCE_KEYBOARD,
 	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
@@ -561,7 +562,9 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _pickerModeToggleAccessibleDesc() {
-		return TimePicker.i18nBundle.getText(TIMEPICKER_TOGGLE_INPUT_VIEW_DESC);
+		return TimePicker.i18nBundle.getText(
+			this._useInputsMode ? TIMEPICKER_TOGGLE_INPUT_VIEW_DESC : TIMEPICKER_TOGGLE_DESC_SWITCH_TO_INPUTS,
+		);
 	}
 
 	get _pickerModeToggleLabel() {
