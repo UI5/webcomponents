@@ -219,7 +219,7 @@
 			{
 				"name": "CalendarWithLegend",
 				"title": "Calendar with Legend",
-				"description": "You can use the [CalendarLegend](../CalendarLegend/CalendarLegend.mdx) component in addition to the Calendar to highlight specific days.\nDiscover all the available <Link to={useBaseUrl(\"/components/CalendarLegend#calendarlegenditem-types\")}>CalendarLegendItem Types</Link>."
+				"description": "You can use the [CalendarLegend](../CalendarLegend/CalendarLegend.mdx) component in addition to the Calendar to highlight specific days.\nDiscover all the available [CalendarLegendItem Types](/components/CalendarLegend#calendarlegenditem-types)."
 			},
 			{
 				"name": "CalendarInDifferentTimezone",
