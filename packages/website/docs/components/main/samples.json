@@ -1341,6 +1341,11 @@
 				"description": "Make a column header clickable by setting the `interactive` property of the `ui5-table-header-cell`. Clicking the header fires the `header-click` event, which can be used, for example, to open a column menu with sorting options. Set the `sortIndicator` property to display the sort direction icon in the header, and set the `aria-haspopup` attribute to announce the type of popup (`menu` or `dialog`) to assistive technologies."
 			},
 			{
+				"name": "Highlight",
+				"title": "Row Highlight",
+				"description": "Use the `highlight` property on the `ui5-table-row` to display a colored indicator at the start of the row, signaling its status at a glance."
+			},
+			{
 				"name": "DragAndDrop",
 				"title": "Drag and Drop",
 				"description": "Enable Drag and Drop by using the `move-over` and `move` events in combination with the `movable` property on the `ui5-table-row`."
