@@ -95,6 +95,38 @@ describe("Properties", () => {
 			.should("be.focused");
 	});
 
+	it("returns focus to the input on ArrowUp from the first item (with message area)", () => {
+		cy.mount(
+			<Search showClearIcon={true}>
+				<SearchMessageArea slot="messageArea" description="You can try the following" text="Oh, there are no results"></SearchMessageArea>
+				<SearchItem text="List Item" icon={history}></SearchItem>
+				<SearchItem text="List Item" icon={history}></SearchItem>
+			</Search>
+		);
+
+		// open the suggestions and move focus to the first item
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("L");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("be.focused");
+
+		// ArrowUp on the first item must return focus to the search input, not lose it
+		cy.get("[ui5-search]")
+			.realPress("ArrowUp");
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+	});
+
 	it("items slot arrow navigation with groups and headerText", () => {
 		cy.mount(
 			<Search>
