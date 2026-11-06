@@ -1,5 +1,9 @@
-import { customElement, property, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
-import { toggleAttribute } from "./TableUtils.js";
+import {
+	customElement, property, slotStrict as slot,
+	eventStrict as event,
+} from "@ui5/webcomponents-base/dist/decorators.js";
+import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
+import { toggleAttribute, isFocusedElementInside } from "./TableUtils.js";
 import TableCellBase from "./TableCellBase.js";
 import TableHeaderCellTemplate from "./TableHeaderCellTemplate.js";
 import TableHeaderCellStyles from "./generated/themes/TableHeaderCell.css.js";
@@ -21,6 +25,16 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  * As it is tightly coupled to the `ui5-table`, it should only be used in the `ui5-table-header-row`
  * to ensure correct layout and design.
  *
+ * ### Accessibility
+ *
+ * When the `header-click` event is used to open a menu or a dialog, set the `aria-haspopup` attribute
+ * on the `ui5-table-header-cell` correspondingly.
+ * This allows assistive technologies to properly announce the associated popup.
+ *
+ * ```html
+ * <ui5-table-header-cell interactive aria-haspopup="menu">Column Header</ui5-table-header-cell>
+ * ```
+ *
  * ### ES6 Module Import
  *
  * `import "@ui5/webcomponents/dist/TableHeaderCell.js";`
@@ -35,7 +49,22 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 	styles: [TableCellBase.styles, TableHeaderCellStyles],
 	template: TableHeaderCellTemplate,
 })
+
+/**
+ * Fired when the column header is activated by a click, <kbd>Enter</kbd> or <kbd>Space</kbd>.
+ *
+ * **Note:** This event is only fired if the `interactive` property is set to `true`.
+ *
+ * @public
+ * @since 2.29.0
+ */
+@event("header-click")
+
 class TableHeaderCell extends TableCellBase {
+	eventDetails!: TableCellBase["eventDetails"] & {
+		"header-click": void,
+	}
+
 	/**
 	 * Defines the width of the column.
 	 *
@@ -116,6 +145,23 @@ class TableHeaderCell extends TableCellBase {
 	popinHidden: boolean = false;
 
 	/**
+	 * Defines whether the column header is interactive.
+	 *
+	 * When set to `true`, the column header can be activated by a click, <kbd>Enter</kbd> or <kbd>Space</kbd>,
+	 * which fires the `header-click` event and can be used, for example, to open a column menu.
+	 * A hover effect is shown to signal the interactivity to the user.
+	 *
+	 * **Note:** If the click opens a menu or dialog, set the `aria-haspopup` attribute on the `ui5-table-header-cell`
+	 * correspondingly. This allows assistive technologies to properly announce the associated popup.
+	 *
+	 * @default false
+	 * @since 2.29.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	interactive = false;
+
+	/**
 	 * Defines the action of the column.
 	 *
 	 * **Note:** While multiple actions are technically possible, this is not supported.
@@ -155,6 +201,50 @@ class TableHeaderCell extends TableCellBase {
 		this.style.textAlign = this.horizontalAlign || "";
 		this.style.justifyContent = this.horizontalAlign || "";
 		toggleAttribute(this, "aria-sort", this.sortIndicator !== SortOrder.None, this.sortIndicator.toLowerCase());
+	}
+
+	async _onclick(e: MouseEvent) {
+		if (this.interactive && !await isFocusedElementInside(this, e)) {
+			this.fireDecoratorEvent("header-click");
+		}
+	}
+
+	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
+		if (eventOrigin !== this || !this.interactive) {
+			return;
+		}
+
+		if (isEnter(e)) {
+			this._setActive("keyup");
+			this.fireDecoratorEvent("header-click");
+		} else if (isSpace(e)) {
+			e.preventDefault(); // prevent the table from scrolling
+			this.toggleAttribute("_active", true);
+		}
+	}
+
+	_onkeyup(e: KeyboardEvent, eventOrigin: HTMLElement) {
+		if (eventOrigin === this && this.interactive && isSpace(e)) {
+			this.removeAttribute("_active");
+			this.fireDecoratorEvent("header-click");
+		}
+	}
+
+	async _onpointerdown(e: PointerEvent) {
+		if (e.button !== 0 || !this.interactive) {
+			return;
+		}
+
+		if (!await isFocusedElementInside(this, e)) {
+			this._setActive("pointerup");
+		}
+	}
+
+	_setActive(deactivationEvent: string) {
+		this.toggleAttribute("_active", true);
+		document.addEventListener(deactivationEvent, () => {
+			this.removeAttribute("_active");
+		}, { once: true });
 	}
 
 	get accessibilityInfo() {

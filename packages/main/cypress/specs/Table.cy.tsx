@@ -1462,3 +1462,109 @@ describe("Table - Slot forwarding", () => {
 		});
 	});
 });
+
+describe("Table - Interactive Header Cell", () => {
+	beforeEach(() => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="plainHeader" minWidth="200px">Column A</TableHeaderCell>
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell A</TableCell>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+	});
+
+	it("fires the header-click event on click, Enter, Space only when interactive", () => {
+		cy.get("#plainHeader").invoke("on", "header-click", cy.stub().as("plainClick"));
+		cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+		// non-interactive header does not fire the header-click event
+		cy.get("#plainHeader").realClick();
+		cy.get("@plainClick").should("not.have.been.called");
+
+		cy.get("#interactiveHeader").realClick();
+		cy.get("@headerClick").should("have.been.calledOnce");
+
+		// click on slotted content still fires the header-click
+		cy.get("#interactiveHeader").find("ui5-label").realClick();
+		cy.get("@headerClick").should("have.been.calledTwice");
+
+		// keyboard: Enter and Space
+		cy.get("#interactiveHeader").realPress("Enter");
+		cy.get("@headerClick").should("have.been.calledThrice");
+		cy.get("#interactiveHeader").realPress("Space");
+		cy.get("@headerClick").should("have.callCount", 4);
+	});
+
+	it("sets the _active attribute while clicked", () => {
+		cy.get("#interactiveHeader").realMouseDown();
+		cy.get("#interactiveHeader").should("have.attr", "_active");
+		cy.get("#interactiveHeader").realMouseUp();
+		cy.get("#interactiveHeader").should("not.have.attr", "_active");
+	});
+
+	describe("with a slotted action", () => {
+		beforeEach(() => {
+			cy.mount(
+				<Table id="table">
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+							<Label>Column B</Label>
+							<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
+						</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow>
+						<TableCell>Cell B</TableCell>
+					</TableRow>
+				</Table>
+			);
+		});
+
+		it("keeps focus on the interactive header on Enter instead of moving it to a slotted action", () => {
+			cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+			// click
+			cy.get("#interactiveHeader").realClick();
+			cy.focused().should("have.id", "interactiveHeader");
+			cy.get("@headerClick").should("have.been.calledOnce");
+			cy.focused().should("have.id", "interactiveHeader");
+
+			// Enter fires the event again, but focus must stay on the header cell and not move to the slotted action button
+			cy.get("#interactiveHeader").realPress("Enter");
+			cy.get("@headerClick").should("have.been.calledTwice");
+			cy.focused().should("have.id", "interactiveHeader");
+		});
+
+		it("does not activate or fire header-click when a slotted action is clicked", () => {
+			cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
+
+			// clicking the action button must not set the _active state on the header cell
+			cy.get("@actionButton").realMouseDown();
+			cy.get("#interactiveHeader").should("not.have.attr", "_active");
+			cy.get("@actionButton").realMouseUp();
+
+			// clicking the header cell itself still sets the _active state
+			cy.get("#interactiveHeader").realMouseDown();
+			cy.get("#interactiveHeader").should("have.attr", "_active");
+			cy.get("#interactiveHeader").realMouseUp();
+
+			// attach stub after _active checks so the mousedown/mouseup above don't affect the count
+			cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+			// clicking the action button must not fire the header-click event
+			cy.get("@actionButton").realClick();
+			cy.get("@headerClick").should("not.have.been.called");
+
+			// clicking the header cell itself still fires the event
+			cy.get("#interactiveHeader").realClick();
+			cy.get("@headerClick").should("have.been.calledOnce");
+		});
+	});
+});
