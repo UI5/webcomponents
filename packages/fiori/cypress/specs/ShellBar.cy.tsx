@@ -1365,6 +1365,19 @@ describe("Component Behavior", () => {
 				.should("have.attr", "role", "link");
 		});
 
+		it("right container does not have role='toolbar'", () => {
+			cy.mount(
+				<ShellBar primaryTitle="Product Title" showNotifications showProductSwitch>
+					<Avatar slot="profile" initials="JD" colorScheme="Accent6" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-container-right")
+				.should("not.have.attr", "role", "toolbar");
+		});
+
 		it("tests accessibilityAttributes property", () => {
 			const NOTIFICATIONS_BTN_ARIA_HASPOPUP = "dialog";
 
