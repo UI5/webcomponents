@@ -39,13 +39,12 @@ import {
 	isF6Previous,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
-import type Popover from "./Popover.js";
 import TimePickerTemplate from "./TimePickerTemplate.js";
 import type DateTimeInput from "./DateTimeInput.js";
 import type { InputAccInfo } from "./Input.js";
-import type TimeSelectionInputs from "./TimeSelectionInputs.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import type { TimeSelectionChangeEventDetail } from "./TimePickerInternals.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 import {
 	TIMEPICKER_SUBMIT_BUTTON,
@@ -61,7 +60,13 @@ import {
 	TIMEPICKER_PATTERN_MISSMATCH,
 	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
 	TIMEPICKER_OPEN_ICON_TITLE,
-	INPUT_SUGGESTIONS_TITLE,
+	TIMEPICKER_SWITCH_TO_KEYBOARD,
+	TIMEPICKER_SWITCH_TO_CLOCK,
+	TIMEPICKER_TOGGLE_INPUT_VIEW_LABEL,
+	TIMEPICKER_TOGGLE_DESC_CLOCK_VIEW,
+	TIMEPICKER_TOGGLE_DESC_INPUTS_VIEW,
+	TIMEPICKER_ANNOUNCE_KEYBOARD,
+	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -346,9 +351,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleDescriptionRef?: string;
 
-	@property({ type: Boolean, noAttribute: true })
-	_isInputsPopoverOpen = false;
-
 	/**
 	 * Defines the value state message that will be displayed as pop up under the `ui5-time-picker`.
 	 *
@@ -365,13 +367,17 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@query("[ui5-time-selection-clocks]")
 	_timeSelectionClocks?: TimeSelectionClocks;
 
-	@query("[ui5-popover]")
-	_inputsPopover!: Popover;
-
 	@query("[ui5-datetime-input]")
 	_dateTimeInput!: DateTimeInput;
 
 	tempValue?: string;
+
+	/**
+	 * True when the user has toggled to keyboard (numeric inputs) mode in the mobile picker dialog.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_useInputsMode = false;
 
 	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
@@ -520,7 +526,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get shouldDisplayValueStateMessageInResponsivePopover() {
-		return this.hasValueStateText && !this._inputsPopover?.open;
+		return this.hasValueStateText;
 	}
 
 	/**
@@ -529,6 +535,40 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 */
 	get _iconMode() {
 		return isDesktop() ? IconMode.Decorative : IconMode.Interactive;
+	}
+
+	/**
+	 * Toggles between clock view and keyboard input view in the mobile picker dialog.
+	 * @private
+	 */
+	_togglePickerMode() {
+		this._useInputsMode = !this._useInputsMode;
+		announce(
+			TimePicker.i18nBundle.getText(this._useInputsMode ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			"Assertive",
+		);
+	}
+
+	get _switchToKeyboardLabel() {
+		return TimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_KEYBOARD);
+	}
+
+	get _switchToClockLabel() {
+		return TimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_CLOCK);
+	}
+
+	get _pickerModeToggleAccessibleName() {
+		return TimePicker.i18nBundle.getText(TIMEPICKER_TOGGLE_INPUT_VIEW_LABEL);
+	}
+
+	get _pickerModeToggleAccessibleDesc() {
+		return TimePicker.i18nBundle.getText(
+			this._useInputsMode ? TIMEPICKER_TOGGLE_DESC_INPUTS_VIEW : TIMEPICKER_TOGGLE_DESC_CLOCK_VIEW,
+		);
+	}
+
+	get _pickerModeToggleLabel() {
+		return this._useInputsMode ? this._switchToClockLabel : this._switchToKeyboardLabel;
 	}
 
 	onTimeSelectionChange(e: CustomEvent<TimeSelectionChangeEventDetail>) {
@@ -545,9 +585,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	_togglePicker() {
 		this.open = !this.open;
-		if (this._isMobileDevice) {
-			this._inputsPopover.open = false;
-		}
 	}
 
 	/**
@@ -584,6 +621,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onResponsivePopoverAfterClose() {
 		this.open = false;
+		this._useInputsMode = false;
 		if (isPhone()) {
 			this.blur(); // close device's keyboard and prevent further typing
 		} else {
@@ -603,67 +641,37 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onResponsivePopoverAfterOpen() {
 		this.fireDecoratorEvent("open");
-	}
-
-	/**
-	 * Opens the Inputs popover.
-	 * @private
-	 * @returns Resolves when the Inputs popover is open
-	 */
-	openInputsPopover() {
-		this.tempValue = this.value && this.isValidValue(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
-		const popover = this._inputsPopover;
-		popover.opener = this;
-		popover.open = true;
-		this._isInputsPopoverOpen = true;
-	}
-
-	/**
-	 * Closes the Inputs popover
-	 * @private
-	 * @returns Resolves when the Inputs popover is closed
-	 */
-	closeInputsPopover() {
-		const popover = this._inputsPopover;
-		popover.open = false;
-	}
-
-	toggleInputsPopover() {
-		if (this.isInputsPopoverOpen()) {
-			this.closeInputsPopover();
-		} else if (this._canOpenInputsPopover()) {
-			this.openInputsPopover();
+		if (!this.showHeader) {
+			return;
+		}
+		if (this._useInputsMode) {
+			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-time-sel"]`)?.focus();
+		} else {
+			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-mode-toggle"]`)?.focus();
 		}
 	}
 
 	/**
-	 * Checks if the inputs popover is open
+	 * Opens the picker in keyboard/input mode (triggered by clicking the input field on mobile).
 	 * @private
 	 */
-	isInputsPopoverOpen(): boolean {
-		return !!this._isInputsPopoverOpen;
-	}
-
-	submitInputsPopover() {
-		this._updateValueAndFireEvents(this.tempValue!, true, ["change", "value-changed"]);
-		this.closeInputsPopover();
-	}
-
-	onInputsPopoverAfterOpen() {
-		const popover = this._inputsPopover;
-		popover.querySelector<TimeSelectionInputs>("[ui5-time-selection-inputs]")!._addNumericAttributes();
-	}
-
-	onInputsPopoverAfterClose() {
-		this._isInputsPopoverOpen = false;
+	_openPickerInInputsMode() {
+		this.tempValue = this.value && this.isValidValue(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
+		this._useInputsMode = true;
+		if (!this.open) {
+			this._togglePicker();
+		}
 	}
 
 	_handleInputClick(e: MouseEvent) {
-		if (this._isMobileDevice) {
+		if (this._isIconClick(e) || this.open) {
 			return;
 		}
 
-		if (this._isIconClick(e) || this.open) {
+		if (this._isMobileDevice) {
+			if (this._isInputFieldClick(e)) {
+				this._openPickerInInputsMode();
+			}
 			return;
 		}
 
@@ -744,17 +752,13 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return !this.disabled && !this.readonly;
 	}
 
-	_canOpenInputsPopover() {
-		return !this.disabled && this._isMobileDevice;
-	}
-
 	_getInputField() {
 		const input = this._dateTimeInput;
 		return input && input.getInputDOMRef();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this._isMobileDevice && !this.isInputsPopoverOpen()) {
+		if (this._isMobileDevice && !this.open) {
 			e.preventDefault();
 		}
 		if (isShow(e)) {
@@ -1017,17 +1021,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		}
 
 		this._hideMobileKeyboard();
-
-		if (this._isInputsPopoverOpen) {
-			this._inputsPopover.applyFocus();
-			e.preventDefault();
-			return;
-		}
-
-		if (this._isInputFieldFocus(e)) {
-			this.toggleInputsPopover();
-			e.preventDefault();
-		}
 	}
 
 	get valueStateDefaultText(): string | undefined {
@@ -1071,7 +1064,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return this.ariaLabelText || TimePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.ariaLabelText;
 	}
 
 	get showHeader() {
@@ -1079,7 +1072,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get _preventPickerInitialFocus() {
-		return isPhone();
+		return false;
 	}
 
 	/**
