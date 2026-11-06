@@ -6,6 +6,7 @@ export default function IconTemplate(this: Icon) {
 		return (
 			<>
 				<span
+					id={`${this._id}-root`}
 					class="ui5-icon-root"
 					part="root"
 					tabindex={this._tabIndex}
@@ -19,7 +20,7 @@ export default function IconTemplate(this: Icon) {
 					<slot name="fontIcon"></slot>
 				</span>
 				{ this.hasIconTooltip &&
-					<Tooltip text={this.effectiveAccessibleName} opener={this.getDomRef()} />
+					<Tooltip text={this.effectiveAccessibleName} opener={`${this._id}-root`} />
 				}
 			</>
 		);
@@ -28,6 +29,7 @@ export default function IconTemplate(this: Icon) {
 	return (
 		<>
 			<svg
+				id={`${this._id}-root`}
 				class="ui5-icon-root"
 				part="root"
 				tabindex={this._tabIndex}
@@ -48,7 +50,7 @@ export default function IconTemplate(this: Icon) {
 				</g>
 			</svg>
 			{ this.hasIconTooltip &&
-				<Tooltip text={this.effectiveAccessibleName} opener={this.getDomRef()} />
+				<Tooltip text={this.effectiveAccessibleName} opener={`${this._id}-root`} />
 			}
 		</>
 	);

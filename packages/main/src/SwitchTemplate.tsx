@@ -9,6 +9,7 @@ export default function SwitchTemplate(this: Switch) {
 	return (
 		<>
 		<div
+			id={`${this._id}-root`}
 			class={{
 				"ui5-switch-root": true,
 				"ui5-switch--desktop": isDesktop(),
@@ -72,7 +73,7 @@ export default function SwitchTemplate(this: Switch) {
 			<input type='checkbox' checked={this.checked} class="ui5-switch-input" data-sap-no-tab-ref/>
 		</div>
 		{ this.tooltip &&
-			<Tooltip text={this.tooltip} opener={this.getDomRef()} />
+			<Tooltip text={this.tooltip} opener={`${this._id}-root`} />
 		}
 		</>);
 }

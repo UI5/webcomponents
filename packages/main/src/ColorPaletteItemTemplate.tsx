@@ -5,6 +5,7 @@ export default function ColorPaletteItemTemplate(this: ColorPaletteItem) {
 	return (
 		<>
 		<div
+			id={`${this._id}-root`}
 			class="ui5-cp-item"
 			tabindex={parseInt(this.forcedTabIndex)}
 			role="button"
@@ -13,7 +14,7 @@ export default function ColorPaletteItemTemplate(this: ColorPaletteItem) {
 			onClick={this._onClick}
 		></div>
 		{ this.getLabelText &&
-			<Tooltip text={this.getLabelText} opener={this.getDomRef()} />
+			<Tooltip text={this.getLabelText} opener={`${this._id}-root`} />
 		}
 		</>
 	);

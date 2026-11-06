@@ -13,6 +13,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 }) {
 	return (<>
 		<button
+			id={`${this._id}-root`}
 			type="button"
 			class={{
 				"ui5-button-root": true,
@@ -76,7 +77,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 		{this.buttonTitle &&
 			<Tooltip
 				text={this.buttonTitle}
-				opener={this.getFocusDomRef()}
+				opener={`${this._id}-root`}
 			/>
 		}
 		{this.loading &&

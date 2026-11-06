@@ -6,6 +6,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 	return (
 		<>
 		<li
+			id={`${this._id}-root`}
 			role="option"
 			class="ui5-segmented-button-item-root"
 			aria-posinset={this.posInSet}
@@ -34,7 +35,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 			</span>
 		</li>
 		{ (this.tooltip || this.slotTextContent) &&
-			<Tooltip text={this.tooltip || this.slotTextContent} opener={this.getFocusDomRef()} />
+			<Tooltip text={this.tooltip || this.slotTextContent} opener={`${this._id}-root`} />
 		}
 		</>
 	);

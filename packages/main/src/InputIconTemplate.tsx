@@ -6,6 +6,7 @@ export default function InputIconTemplate(this: InputIcon) {
 	return (
 		<>
 		<div
+			id={`${this._id}-root`}
 			class={{
 				"ui5-input-icon-root": true,
 				"inputIcon": true,
@@ -34,7 +35,7 @@ export default function InputIconTemplate(this: InputIcon) {
 			)}
 		</div>
 		{ this.effectiveTitle &&
-			<Tooltip text={this.effectiveTitle} opener={this.getDomRef()} />
+			<Tooltip text={this.effectiveTitle} opener={`${this._id}-root`} />
 		}
 		</>
 	);

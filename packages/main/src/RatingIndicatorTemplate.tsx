@@ -7,6 +7,7 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 	return (
 		<>
 		<div
+			id={`${this._id}-root`}
 			class="ui5-rating-indicator-root"
 			role="slider"
 			aria-roledescription={this._ariaRoleDescription}
@@ -29,7 +30,7 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			</ul>
 		</div>
 		{ this.ratingTooltip &&
-			<Tooltip text={this.ratingTooltip} opener={this.getDomRef()} />
+			<Tooltip text={this.ratingTooltip} opener={`${this._id}-root`} />
 		}
 		</>
 	);

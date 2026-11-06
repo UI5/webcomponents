@@ -6,6 +6,7 @@ export default function LinkTemplate(this: Link) {
 	return (
 		<>
 		<a
+			id={`${this._id}-root`}
 			part="root"
 			class="ui5-link-root"
 			role={this.effectiveAccRole}
@@ -50,7 +51,7 @@ export default function LinkTemplate(this: Link) {
 			}
 		</a>
 		{ this.tooltip &&
-			<Tooltip text={this.tooltip} opener={this.getDomRef()} />
+			<Tooltip text={this.tooltip} opener={`${this._id}-root`} />
 		}
 		</>);
 }

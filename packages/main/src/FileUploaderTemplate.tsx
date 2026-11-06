@@ -11,6 +11,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 	return (
 		<>
 			<div
+				id={`${this._id}-root`}
 				class="ui5-file-uploader-root"
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
@@ -105,7 +106,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 			{ FileUploaderPopoverTemplate.call(this) }
 
 			{ this.inputTitle &&
-				<Tooltip text={this.inputTitle} opener={this.getFocusDomRef()} />
+				<Tooltip text={this.inputTitle} opener={`${this._id}-root`} />
 			}
 		</>
 	);
