@@ -187,7 +187,7 @@ class TableRow extends TableRowBase<TableCell> {
 
 	get _isNavigable() {
 		const action = this._navigationAction;
-		return !action?._isInteractive;
+		return !!action && !action._isInteractive;
 	}
 
 	get _rowIndex() {
