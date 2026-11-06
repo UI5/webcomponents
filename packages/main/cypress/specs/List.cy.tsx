@@ -3920,6 +3920,48 @@ describe("List - ListItem accessible role inheritance", () => {
 			.find("li")
 			.should("have.attr", "role", "listitem");
 	});
+
+	it("list items with role 'listitem' do not have aria-selected", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" selected>Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem")
+			.and("not.have.attr", "aria-selected");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem")
+			.and("not.have.attr", "aria-selected");
+	});
+
+	it("list items with role 'option' have aria-selected when selectionMode is active", () => {
+		cy.mount(
+			<List accessibleRole="ListBox" selectionMode="Multiple">
+				<ListItemStandard id="item1" selected>Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option")
+			.and("have.attr", "aria-selected", "true");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option")
+			.and("have.attr", "aria-selected", "false");
+	});
 });
 
 describe("List - InactiveSelectable type", () => {
