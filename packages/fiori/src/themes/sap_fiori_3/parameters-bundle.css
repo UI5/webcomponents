@@ -4,7 +4,7 @@
 @import "../base/MediaGalleryItem-parameters.css";
 @import "../base/NotificationListItem-parameters.css";
 @import "../base/Page-parameters.css";
-@import "../base/ProductSwitchItem-parameters.css";
+@import "./ProductSwitchItem-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "../base/SideNavigation-parameters.css";
 @import "./TimelineItem-parameters.css";

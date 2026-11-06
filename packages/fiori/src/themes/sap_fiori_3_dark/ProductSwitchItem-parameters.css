@@ -1,0 +1,7 @@
+@import "../base/ProductSwitchItem-parameters.css";
+
+:host {
+	/* In Fiori 3 the normal icon color matches the active background, so recolor the icon
+	   on press to keep it visible. */
+	--_ui5_product_switch_item_active_icon_color: var(--sapList_Active_TextColor);
+}

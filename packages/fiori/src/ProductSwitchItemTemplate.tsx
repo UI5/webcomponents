@@ -6,6 +6,7 @@ export default function ProductSwitchItemTemplate(this: ProductSwitchItem) {
 		<>
 			{this.targetSrc ?
 				<a
+					role="menuitem"
 					data-sap-focus-ref
 					class="ui5-product-switch-item-root"
 					onFocusOut={this._onfocusout}
@@ -21,7 +22,7 @@ export default function ProductSwitchItemTemplate(this: ProductSwitchItem) {
 				</a>
 				:
 				<div
-					role="listitem"
+					role="menuitem"
 					class="ui5-product-switch-item-root"
 					data-sap-focus-ref
 					onFocusOut={this._onfocusout}
