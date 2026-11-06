@@ -166,7 +166,9 @@ describe("General accesibility attributes", () => {
 		cy.mount(<Switch tooltip={gpsLocationDescr} text-on="Yes" text-off="No"></Switch>);
 
 		cy.get("[ui5-switch]")
-			.ui5SwitchCheckAttributeInShadowDomRoot("title", gpsLocationDescr);
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", gpsLocationDescr);
 	});
 
 	it("Should not have 'aria-label' attribute when 'text-on' and 'text-off' attributes aren't set", () => {

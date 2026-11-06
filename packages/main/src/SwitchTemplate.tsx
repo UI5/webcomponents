@@ -1,12 +1,15 @@
 import Icon from "./Icon.js";
 import { isDesktop, isSafari } from "@ui5/webcomponents-base/dist/Device.js";
 import type Switch from "./Switch.js";
+import Tooltip from "./Tooltip.js";
 import acceptIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function SwitchTemplate(this: Switch) {
 	return (
+		<>
 		<div
+			id={`${this._id}-root`}
 			class={{
 				"ui5-switch-root": true,
 				"ui5-switch--desktop": isDesktop(),
@@ -28,7 +31,6 @@ export default function SwitchTemplate(this: Switch) {
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
 			tabindex={this.effectiveTabIndex}
-			title={this.tooltip}
 		>
 			<div class="ui5-switch-inner">
 				<div class="ui5-switch-track" part="slider">
@@ -69,5 +71,9 @@ export default function SwitchTemplate(this: Switch) {
 				</div>
 			</div>
 			<input type='checkbox' checked={this.checked} class="ui5-switch-input" data-sap-no-tab-ref/>
-		</div>);
+		</div>
+		{ this.tooltip &&
+			<Tooltip text={this.tooltip} opener={`${this._id}-root`} />
+		}
+		</>);
 }
