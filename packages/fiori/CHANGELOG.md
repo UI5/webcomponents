@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.6](https://github.com/UI5/webcomponents/compare/v2.16.5...v2.16.6) (2026-11-06)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** remove toolbar role from actions container ([#14271](https://github.com/UI5/webcomponents/issues/14271)) ([581a9a1](https://github.com/UI5/webcomponents/commit/581a9a175c447ef66383ac8238eb76f1cc4d5f96)), closes [#14242](https://github.com/UI5/webcomponents/issues/14242)
+
+
+
+
+
 ## [2.16.5](https://github.com/UI5/webcomponents/compare/v2.16.4...v2.16.5) (2026-11-04)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori
