@@ -11,6 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type Highlight from "./types/Highlight.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -118,6 +119,26 @@ class TableRow extends TableRowBase<TableCell> {
 	@property({ type: Boolean })
 	movable = false;
 
+	/**
+	 * Defines the highlight state of the row.
+	 *
+	 * @default "None"
+	 * @public
+	 * @since 2.29.0
+	 */
+	@property()
+	highlight: `${Highlight}` = "None";
+
+	/**
+	 * Defines the text alternative for the highlight indicator, used by screen readers.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.29.0
+	 */
+	@property()
+	highlightText?: string;
+
 	@query("#popin-cell")
 	_popinCell?: TableCell;
 
@@ -173,6 +194,10 @@ class TableRow extends TableRowBase<TableCell> {
 		const ctor = this.actions[0].constructor as typeof TableRowActionBase;
 		ctor.showMenu(this._overflowActions, e.target as HTMLElement);
 		e.stopPropagation();
+	}
+
+	get _hasHighlight() {
+		return this.highlight !== "None";
 	}
 
 	get _isInteractive() {

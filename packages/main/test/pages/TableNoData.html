@@ -48,12 +48,14 @@
 	</ui5-table>
 
 	<script>
+		const highlights = ["Negative", "Critical", "Positive", "Information"];
 		let rowCount2 = 0;
 		const table2 = document.getElementById("table2");
 
 		document.getElementById("addRow2").addEventListener("click", () => {
 			rowCount2++;
 			const row = document.createElement("ui5-table-row");
+			row.setAttribute("highlight", highlights[(rowCount2 - 1) % highlights.length]);
 			const cell = document.createElement("ui5-table-cell");
 			const text = document.createElement("ui5-text");
 			text.textContent = "Product " + rowCount2;
@@ -91,6 +93,7 @@
 		document.getElementById("addRow3").addEventListener("click", () => {
 			rowCount3++;
 			const row = document.createElement("ui5-table-row");
+			row.setAttribute("highlight", highlights[(rowCount3 - 1) % highlights.length]);
 			["Product " + rowCount3, "Supplier " + rowCount3, rowCount3 * 100 + " EUR"].forEach(value => {
 				const cell = document.createElement("ui5-table-cell");
 				const text = document.createElement("ui5-text");
@@ -135,6 +138,7 @@
 		document.getElementById("addRow4").addEventListener("click", () => {
 			rowCount4++;
 			const row = document.createElement("ui5-table-row");
+			row.setAttribute("highlight", highlights[(rowCount4 - 1) % highlights.length]);
 			["Product " + rowCount4, "Supplier " + rowCount4, "30 x 18 x 3 cm", rowCount4 * 100 + " EUR"].forEach(value => {
 				const cell = document.createElement("ui5-table-cell");
 				const text = document.createElement("ui5-text");

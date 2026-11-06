@@ -34,6 +34,7 @@ const {
 	TABLE_ROW_SELECTED: { defaultText: SELECTED },
 	TABLE_ROW_NAVIGATED: { defaultText: NAVIGATED },
 	TABLE_ROW_ACTIVE: { defaultText: ACTIVE },
+	TABLE_ROW_HIGHLIGHT_NEGATIVE: { defaultText: NEGATIVE },
 } = Translations;
 
 describe("Cell Custom Announcement - More details", () => {
@@ -285,7 +286,7 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 	});
 
-	function checkAnnouncement(expectedText: string, focusAgain = false, check: "contains" | "equal" = "contains") {
+	function checkAnnouncement(expectedText: string, focusAgain = false, check: "contains" | "equal" | "not.contain" = "contains") {
 		focusAgain && cy.focused().then($el => {
 			if ($el.attr("ui5-table-header-row") !== undefined) {
 				cy.realPress("ArrowDown");
@@ -297,7 +298,8 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 
 		cy.get("body").then($body => {
-			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+			const announcement = expect($body.find("#ui5-invisible-text").text());
+			check === "not.contain" ? announcement.to.not.contain(expectedText) : announcement[check](expectedText);
 		});
 	}
 
@@ -308,6 +310,15 @@ describe("Row Custom Announcement - Less details", () => {
 		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
 		cy.focused().should("have.attr", "aria-rowindex", "2")
 					.should("have.attr", "role", "row");
+
+		cy.get("@row1").invoke("prop", "highlight", "Negative");
+		checkAnnouncement(NEGATIVE, true);
+
+		cy.get("@row1").invoke("prop", "highlightText", "Custom highlight");
+		checkAnnouncement("Custom highlight", true);
+
+		cy.get("@row1").invoke("prop", "highlight", "None");
+		checkAnnouncement("Custom highlight", true, "not.contain");
 
 		cy.get("#selection").invoke("attr", "selected", "");
 		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE}`, true);
