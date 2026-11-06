@@ -1,4 +1,4 @@
-import { slotStrict as slot, property, customElement } from "@ui5/webcomponents-base/dist/decorators.js";
+import { property, customElement } from "@ui5/webcomponents-base/dist/decorators.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
@@ -15,7 +15,6 @@ import ListItemGroupHeaderTemplate from "./ListItemGroupHeaderTemplate.js";
 import ListItemGroupHeaderCss from "./generated/themes/ListItemGroupHeader.css.js";
 import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 import type WrappingType from "./types/WrappingType.js";
-import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * Maximum number of characters to display for small screens (Size S)
@@ -61,7 +60,7 @@ class ListItemGroupHeader extends ListItemBase {
 	accessibleName?: string;
 
 	@property()
-	accessibleRole: `${ListItemAccessibleRole}` | "Group" = ListItemAccessibleRole.ListItem;
+	accessibleRole: `${ListItemAccessibleRole}` | "Group" | "Heading" = ListItemAccessibleRole.ListItem;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.
@@ -98,14 +97,15 @@ class ListItemGroupHeader extends ListItemBase {
 	@property({ noAttribute: true })
 	expandableTextTemplate?: ExpandableTextTemplate;
 
-	@slot()
-	subItems!: Slot<HTMLElement>;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	get effectiveAccRole(): AriaRole {
 		return toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get accAriaLevel(): number | undefined {
+		return this.effectiveAccRole === "heading" ? 3 : undefined;
 	}
 
 	get groupItem() {
@@ -126,10 +126,6 @@ class ListItemGroupHeader extends ListItemBase {
 
 	get ariaLabelText() {
 		return [this.textContent, this.accessibleName].filter(Boolean).join(" ");
-	}
-
-	get hasSubItems() {
-		return this.subItems.length > 0;
 	}
 
 	onBeforeRendering() {

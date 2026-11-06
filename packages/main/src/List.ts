@@ -66,7 +66,6 @@ import listCss from "./generated/themes/List.css.js";
 // Texts
 import {
 	LIST_ROLE_DESCRIPTION,
-	LIST_ROLE_LIST_GROUP_DESCRIPTION,
 	LIST_ROLE_LISTBOX_GROUP_DESCRIPTION,
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
@@ -843,12 +842,12 @@ class List extends UI5Element {
 	_getDescriptionForGroups(): string {
 		let description = "";
 
-		if (this._groupCount > 0) {
-			if (this.accessibleRole === ListAccessibleRole.List) {
-				description = List.i18nBundle.getText(LIST_ROLE_LIST_GROUP_DESCRIPTION, this._groupCount, this._groupItemCount);
-			} else if (this.accessibleRole === ListAccessibleRole.ListBox) {
-				description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
-			}
+		// The List role conveys grouping structurally via each group's role="group"
+		// and heading, so no extra "contains N sub groups" summary is added (it was
+		// the second confusing announcement reported in issue #14184). The ListBox
+		// role keeps its summary, as its grouping is announced differently.
+		if (this._groupCount > 0 && this.accessibleRole === ListAccessibleRole.ListBox) {
+			description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
 		}
 
 		return description;
