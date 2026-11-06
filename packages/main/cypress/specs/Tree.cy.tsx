@@ -484,6 +484,34 @@ describe("Tree has screen reader support", () => {
 				});
 		});
 	});
+
+	it("TreeItemCustom aria-setsize counts only tree item children, ignoring slotted content elements", () => {
+		cy.mount(
+			<Tree>
+				<TreeItemCustom id="parent" expanded>
+					<div slot="content">Item 1 Header</div>
+					<TreeItemCustom id="child1">
+						<div slot="content">Item 1.1</div>
+					</TreeItemCustom>
+					<TreeItemCustom id="child2">
+						<div slot="content">Item 1.2</div>
+					</TreeItemCustom>
+				</TreeItemCustom>
+			</Tree>
+		);
+
+		cy.get("#child1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-setsize", "2")
+			.and("have.attr", "aria-posinset", "1");
+
+		cy.get("#child2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-setsize", "2")
+			.and("have.attr", "aria-posinset", "2");
+	});
 });
 
 describe("Tree slots", () => {
