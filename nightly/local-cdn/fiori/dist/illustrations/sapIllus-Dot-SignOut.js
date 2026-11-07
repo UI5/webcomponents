@@ -1,0 +1,11 @@
+export default `<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg" id="sapIllus-Dot-SignOut">
+<path d="M0 32.7764L25.5445 33.0758L34.933 40.8052L17.9653 40.3771L0 32.7764Z" fill="var(--sapContent_Illustrative_Color21)"/>
+<path d="M33.2109 39.0639L33.763 6.18311H19.1968V38.226L31.4101 43.0001H45.0001L33.2109 39.0639Z" fill="var(--sapContent_Illustrative_Color26)"/>
+<path d="M17.9277 4.55713H34.5809V39.0639H33.2107V5.67295H18.8894V38.6545H17.9647L17.9277 4.55713Z" fill="var(--sapContent_Illustrative_Color15)"/>
+<path d="M18.8896 5.67285L18.8981 5.68452L18.8896 38.6544L19.4491 38.1082V6.51821H33.211V5.67285H18.8896Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M34.9326 4.55713H34.5811V39.0639H34.9326V4.55713Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M18.8896 5.67285V38.6544L19.4491 38.1082L19.1968 6.18303L18.8896 5.67285Z" fill="var(--sapContent_Illustrative_Color30)"/>
+<path d="M19.1968 5.46097V38.398L27.7566 41.5917V2L19.1968 5.46097Z" fill="var(--sapContent_Illustrative_Color15)"/>
+<path d="M28.3237 2H27.7568V41.5917L28.3237 41.4633V2Z" fill="var(--sapContent_Illustrative_Color30)"/>
+<ellipse cx="1.43152" cy="1.43152" rx="1.43152" ry="1.43152" transform="matrix(0.866025 0.5 -0.309017 0.951057 25.6143 20.0708)" fill="var(--sapContent_Illustrative_Color26)"/>
+</svg>`;

@@ -1,0 +1,2 @@
+declare const _default: ".ui5-overflow-popover::part(content){padding:var(--_ui5_toolbar_overflow_padding)}.ui5-overflow-list{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}.ui5-tb-popover-item{width:100%}::slotted([slot^=\"default\"])::part(button){width:100%;display:block}.ui5-tb-popover-item:not(:last-child){margin-bottom:.25rem}.ui5-tb-separator-in-overflow{display:none;height:.0625rem;background:var(--sapToolbar_SeparatorColor);box-sizing:border-box}.ui5-tb-separator-in-overflow[visible]{display:block}\n";
+export default _default;

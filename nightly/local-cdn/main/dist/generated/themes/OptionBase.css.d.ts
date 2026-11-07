@@ -1,0 +1,2 @@
+declare const _default: ":host(:not([hidden])){display:flex}:host{height:auto;min-height:var(--_ui5_list_item_dropdown_base_height);--_ui5_list_item_title_size: var(--sapFontSize)}:host .ui5-li-root{height:auto}:host .ui5-li-content{padding-block:.375rem;overflow:visible;white-space:normal}:host(:active[actionable]:not([data-moving])),:host(:active[actionable][selected]:not([data-moving])){background-color:var(--sapList_Active_Background);border-bottom-color:var(--sapList_Active_Background)}\n";
+export default _default;

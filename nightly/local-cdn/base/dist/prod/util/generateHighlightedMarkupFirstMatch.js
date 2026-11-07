@@ -1,0 +1,2 @@
+"use strict";import u from"./escapeRegex.js";import r from"../sap/base/security/encodeXML.js";function m(o,s){const e=o||"";if(!e||!s)return r(e);const i=s.toLowerCase(),n=e.toLowerCase(),a=s.length;let t=n.search(new RegExp(`(^|\\s)${u(i)}`));if(t!==-1&&n[t]===" "&&t++,t===-1)return r(e);const c=r(e.substring(0,t)),g=r(e.substring(t,t+a)),f=r(e.substring(t+a));return`${c}<b>${g}</b>${f}`}export default m;
+//# sourceMappingURL=generateHighlightedMarkupFirstMatch.js.map

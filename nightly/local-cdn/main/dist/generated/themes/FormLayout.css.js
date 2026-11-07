@@ -1,0 +1,8 @@
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/sap_horizon/parameters-bundle.css.js";
+import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s", "sap_horizon", async () => defaultTheme, "host");
+export default `@container (width < 600px){.ui5-form-layout{grid-template-columns:repeat(var(--ui5-form-columns-s),1fr)}::slotted(*){justify-self:start}::slotted(:nth-child(2n)){margin-bottom:.5rem}.ui5-form-column{grid-column:span var(--ui5-form-column-span-s, 1)}.ui5-form-group-layout{column-count:var(--ui5-form-column-span-s, 1)}}@container (600px <= width < 1024px){.ui5-form-layout{grid-template-columns:repeat(var(--ui5-form-columns-m),1fr)}.ui5-form-column{grid-column:span var(--ui5-form-column-span-m, 1)}.ui5-form-group-layout{column-count:var(--ui5-form-column-span-m, 1)}}@container (1024px <= width < 1440px){.ui5-form-layout{grid-template-columns:repeat(var(--ui5-form-columns-l),1fr)}.ui5-form-column{grid-column:span var(--ui5-form-column-span-l, 1)}.ui5-form-group-layout{column-count:var(--ui5-form-column-span-l, 1)}}@container (width >= 1440px){.ui5-form-layout{grid-template-columns:repeat(var(--ui5-form-columns-xl),1fr)}.ui5-form-column{grid-column:span var(--ui5-form-column-span-xl, 1)}.ui5-form-group-layout{column-count:var(--ui5-form-column-span-xl, 1)}}
+`;
+//# sourceMappingURL=FormLayout.css.js.map

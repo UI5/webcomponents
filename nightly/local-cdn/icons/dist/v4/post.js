@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "post";
+const pathData = "M0 3c0-.542.198-1.01.594-1.406A1.922 1.922 0 0 1 2 1h12c.563 0 1.037.198 1.422.594.385.396.578.864.578 1.406v7c0 .542-.193 1.01-.578 1.406-.386.396-.86.594-1.422.594h-1v2.344c0 .208-.068.37-.203.484a.684.684 0 0 1-.453.172c-.167 0-.292-.042-.375-.125L9.5 12.031 2 12a1.92 1.92 0 0 1-1.406-.594A1.922 1.922 0 0 1 0 10V3Zm1 0v7c0 .292.099.531.297.719A.988.988 0 0 0 2 11h8l2 2.5V11h2a.974.974 0 0 0 .719-.281A.974.974 0 0 0 15 10V3a.988.988 0 0 0-.281-.703A.947.947 0 0 0 14 2H2a.961.961 0 0 0-.703.297A.961.961 0 0 0 1 3Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/post";
+export { pathData, ltr, viewBox, accData };
