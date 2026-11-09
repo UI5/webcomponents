@@ -4294,3 +4294,38 @@ describe("List - InactiveSelectable type", () => {
 		cy.get("@itemClickStub").should("not.have.been.called");
 	});
 });
+
+describe("List - Navigation arrow", () => {
+	const longText = "Navigation item with looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong text";
+
+	it("renders the navigation arrow with its dedicated class", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard type="Navigation">{longText}</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]")
+			.shadow()
+			.find(".ui5-li-navigation-arrow")
+			.should("exist");
+	});
+
+	it("does not compress the navigation arrow on long non-wrapping titles", () => {
+		cy.mount(
+			<List style={{ width: "250px" }}>
+				<ListItemStandard type="Navigation">{longText}</ListItemStandard>
+			</List>
+		);
+
+		// The arrow must keep its natural square size (flex-shrink: 0),
+		// i.e. not be squeezed horizontally while the title overflows.
+		cy.get("[ui5-li]")
+			.shadow()
+			.find(".ui5-li-navigation-arrow")
+			.then($arrow => {
+				const { width, height } = $arrow[0].getBoundingClientRect();
+				expect(width).to.be.closeTo(height, 1);
+			});
+	});
+});

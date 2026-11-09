@@ -7,8 +7,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
 
 import {
 	isPhone,
@@ -336,7 +334,7 @@ class Input extends InputField implements SuggestionComponent {
 	// ======================= Suggestion-related methods =======================
 
 	_highlightSuggestionItem(item: SuggestionItem) {
-		item.markupText = this.typedInValue ? this.Suggestions?.hightlightInput((item.text || ""), this.typedInValue) : encodeXML(item.text || "");
+		item.markupText = this.typedInValue;
 	}
 
 	_isGroupItem(item: IInputSuggestionItem) {
