@@ -1,5 +1,6 @@
 import TimePicker from "../../src/TimePicker.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import ResponsivePopover from "../../src/ResponsivePopover.js";
 
 describe("TimePicker on phone - general interactions", () => {
 	beforeEach(() => {
@@ -238,4 +239,149 @@ describe.skip("TimePicker on phone - accessibility and other input attributes", 
 			.and("have.attr", "pattern", "[0-9]*")
 			.and("have.attr", "inputmode", "numeric");
  	});
+});
+
+describe("TimePicker on phone - view toggle button", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("toggle button is visible in picker header on phone", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.should("exist")
+			.and("be.visible");
+	});
+
+	it("picker opens in clock view by default when opened via icon", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.should("exist");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.should("not.exist");
+	});
+
+	it("clicking toggle button switches from clock view to inputs view", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.should("have.attr", "icon", "keyboard-and-mouse")
+			.realClick();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.should("exist");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.should("not.exist");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.should("have.attr", "icon", "time-entry-request");
+	});
+
+	it("clicking toggle button again switches back to clock view", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.realClick();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.realClick();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.should("exist");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.should("not.exist");
+	});
+
+	it("clicking input field on phone opens picker directly in inputs view", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.should("exist");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.should("not.exist");
+	});
+});
+
+describe("TimePicker on desktop - no view toggle", () => {
+	it("toggle button is not rendered on desktop", () => {
+		cy.mount(<TimePicker></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.should("not.exist");
+	});
 });
