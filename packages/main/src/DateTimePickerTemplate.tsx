@@ -16,7 +16,9 @@ import timeEntryRequest from "@ui5/webcomponents-icons/dist/time-entry-request.j
 export default function DateTimePickerTemplate(this: DateTimePicker) {
 	return [
 		DatePickerInputTemplate.call(this),
-		DatePickerPopoverTemplate.call(this, { header, content, footer, initialFocus: this.initialFocusId }),
+		DatePickerPopoverTemplate.call(this, {
+			header, content, footer, initialFocus: this.initialFocusId,
+		}),
 	];
 }
 
