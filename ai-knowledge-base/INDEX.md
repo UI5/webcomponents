@@ -26,21 +26,7 @@ file. If the task touches no component code, you do not need it.
 ## When sources disagree
 
 1. `references/` governs how you write new code. The rules are absolute even where existing code
-   disagrees; each one records how much legacy code violates it so you can recognise the violation
-   rather than copy it.
+   disagrees; where legacy code is known to violate a rule, the reference names it so you can
+   recognise the violation rather than copy it.
 2. Neighbouring source code governs structure and idiom — file layout, naming, how a template is put
-   together. Copy its shape, not its rule violations. `Button.ts` is the reference component and it
-   still uses runtime enum imports.
-
-## Keeping this accurate
-
-Add a learning here only when it is a repeatable rule that applies beyond one component. One-off
-incidents don't belong here.
-
-Cite files without line numbers and state rules without counts — both go stale on unrelated commits.
-
-The per-tool files that point agents here are maintained by hand. When you rename a reference file
-or change a rule they quote, update every copy:
-
-- The non-negotiables and the per-file-type rules in the root `AGENTS.md` — the only copy of each.
-- The `ui5-kb` command, in `.github/prompts/ui5-kb.prompt.md` and `.gemini/commands/ui5-kb.toml`.
+   together. Copy its shape, not its rule violations. `Button.ts` is the reference component.

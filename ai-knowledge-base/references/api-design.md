@@ -166,14 +166,10 @@ default slot varies by component (`Button.text` is a slot; `MenuItem.text`, `Tab
 
 ### Enums
 
-Import the enum type-only, type the property as `` `${Enum}` ``, default it to a string literal, and
-compare against string literals. The attribute path assigns a raw string, so a property typed as the
-enum itself is a type lie. One enum per file in `src/types/`.
-
-Much of the existing code differs from the form recommended here — importing enums as runtime values
-and comparing against members like `ButtonDesign.Default`. Write the correct form; do not migrate
-neighbours as a drive-by. If the file you are editing already uses the old pattern, follow the new
-form only in the code you write — do not mix styles within a single expression.
+Type the property as `` `${Enum}` `` and default it to a string literal. The attribute path assigns a
+raw string, so a property typed as the enum itself is a type lie. One enum per file in `src/types/`.
+Whether the import is type-only depends on whether the code reads enum members — see `core-rules.md`
+(Enum import and comparison).
 
 ### Accessibility properties
 
@@ -204,8 +200,7 @@ invalidating, and the console warns that the property is "shadowed by the instan
 
 ## Slots
 
-Import the default export of `decorators/slot-strict.js`. The `decorators.js` barrel also exports
-`slotStrict` if you need it, but the plain `slot` export there is the deprecated decorator.
+Import the default export of `decorators/slot-strict.js`.
 
 Two member types, both exported from `UI5Element.js`. Getting this wrong is the most common slot
 mistake:
@@ -281,8 +276,7 @@ A slot with no accessor is documented with a class-level tag instead:
 
 ## Events
 
-Import the default export of `decorators/event-strict.js`. The `decorators.js` barrel also exports
-`eventStrict` if you need it.
+Import the default export of `decorators/event-strict.js`.
 Omitted options default to `bubbles: false` and `cancelable: false`. Write the booleans as literals —
 CEM reads them literally and records anything that is not a literal `false` as `true`.
 

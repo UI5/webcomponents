@@ -9,6 +9,7 @@ packages/website/docs/_samples/
 │       └── Basic/
 │           ├── sample.html   # HTML with component usage
 │           ├── main.js       # JS imports
+│           ├── sample.tsx    # React version of the sample
 │           ├── main.css      # Optional CSS
 │           └── Basic.md      # Markdown wrapper
 └── fiori/          # For @ui5/webcomponents-fiori
@@ -48,12 +49,33 @@ import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 ```
 
+**`sample.tsx`** - The same sample in React, shown in the playground's React tab:
+```tsx
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import ButtonClass from "@ui5/webcomponents/dist/Button.js";
+import "@ui5/webcomponents-icons/dist/edit.js";
+
+const Button = createReactComponent(ButtonClass);
+
+function App() {
+  return (
+    <>
+      <Button>Press</Button>
+      <Button icon="edit">Edit</Button>
+    </>
+  );
+}
+
+export default App;
+```
+
 **`<SampleName>.md`** - Wrapper that loads the sample into the Editor:
 ```markdown
 import html from '!!raw-loader!./sample.html';
 import js from '!!raw-loader!./main.js';
+import react from '!!raw-loader!./sample.tsx';
 
-<Editor html={html} js={js} />
+<Editor html={html} js={js} react={react} />
 ```
 
 If the sample has CSS, include it:
@@ -61,8 +83,9 @@ If the sample has CSS, include it:
 import html from '!!raw-loader!./sample.html';
 import js from '!!raw-loader!./main.js';
 import css from '!!raw-loader!./main.css';
+import react from '!!raw-loader!./sample.tsx';
 
-<Editor html={html} js={js} css={css} />
+<Editor html={html} js={js} css={css} react={react} />
 ```
 
 ## Playground Fold Comments

@@ -22,7 +22,7 @@ component code, you do not need it.
 **Non-negotiables** — these apply to every code task, whether or not you open the knowledge base:
 
 1. Never run the full test suite. Run one spec: `yarn test:cypress:single cypress/specs/<Component>.cy.tsx`.
-2. Property enums are type-only: `import type X`, declare the property as `` `${X}` ``, compare against string literals.
+2. Enum properties are declared as `` `${X}` `` with a string-literal default. Import the enum with `import type` unless the code reads its members (`X.Value`).
 3. Select by attribute, never by tag name: `[ui5-button]` in CSS, in `querySelector`, and in specs.
 4. No `instanceof` against a UI5 class. Use `createInstanceChecker` with a duck-typing marker.
 5. `@query` refs exist to call methods like `.focus()`. Set child state through the template instead.
@@ -51,14 +51,14 @@ when the task goes beyond them:
     `margin-left`, `left:`, or `text-align: left`.
   - Style persistent state from reflected attributes (`:host([open])`), not classes.
   - Anything marked `part="..."` is public API: document it with `@csspart`; renaming it is a breaking change.
-  - `rem` for sizing; `px` only for hairline borders and small offsets. A
-    `@container style(--ui5_content_density: compact)` block works only inside a `-parameters.css` file.
+  - `rem` for sizing; `px` only for hairline borders and small offsets. An `@ui5-compact-size` block
+    works only inside a `-parameters.css` file; in component CSS it never applies.
 - **Translatable text** (`packages/*/src/i18n/messagebundle.properties`) — `i18n.md`.
   - Every user-visible or screen-reader-audible string is a key — ARIA labels, announcements, and tooltips included.
   - Every new key carries an annotation comment: `#XACT:` for ARIA text, `#XFLD:` for a label, `#XTOL:` for a tooltip.
   - Names are `SCREAMING_SNAKE_CASE` prefixed with the component name. Reuse the shared unprefixed keys
     (`DELETE`, `ACC_STATE_REQUIRED`), and never point at another component's key.
-  - Placeholders are positional (`{0}`, `{1}`); plurals are separate keys. Edit only `messagebundle.properties`.
+  - Placeholders are positional (`{0}`, `{1}`); plurals are separate keys. Add keys only to `messagebundle.properties`.
 - **Cypress specs** (`packages/*/cypress/**`) — `commands-and-debugging.md`, plus `performance.md` when a
   spec passes locally and fails in CI.
   - Assert translated text against the bundle (`getText(...)` or `.defaultText`), never an English literal.

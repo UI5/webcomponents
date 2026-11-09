@@ -71,7 +71,8 @@ child, as `AvatarBadge` did with `Avatar.ts` and `themes/Avatar.css`. This is no
 ## 3. Types
 
 One enum per file in `src/types/`, with `export default` there and `@public` on the enum and every
-member. Import it type-only and type the property as `` `${FooDesign}` ``. Do not re-export the enum
+member. Type the property as `` `${FooDesign}` ``, and import the enum type-only unless the component
+reads its members (see `core-rules.md`, Enum import and comparison). Do not re-export the enum
 from the component file — `ButtonBadge.ts` imports `ButtonBadgeDesign` and exports only itself. CEM
 requires the export only for a type declared in the component file itself; that case fails the build
 with `Type 'X' is used to describe a public API but is not exported.`
@@ -128,8 +129,8 @@ path, and ARIA. A new visual component also gets `cypress/specs/visuals/Foo.cy.t
 
 ## 10. Website
 
-Sample file layout (`sample.html`, `main.js`, `sample.tsx`, `<SampleName>.md`) is in `AGENTS.md`.
-This section covers the wiring that file does not list.
+Sample file layout (`sample.html`, `main.js`, `sample.tsx`, `<SampleName>.md`) is in
+`packages/website/AGENTS.md`. This section covers the wiring that file does not list.
 
 **API page.** One `.mdx` under `packages/website/docs/_components_pages/<package>/` — top-level
 (`main/ExpandableText.mdx`) or nested under the parent for a subcomponent

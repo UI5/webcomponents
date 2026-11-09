@@ -33,8 +33,8 @@ Renders are batched and deduped, so you cannot read the DOM right after setting 
 `RenderQueue.add()` ignores a component already queued, and `scheduleRenderTask()` drains the whole
 queue inside a single `requestAnimationFrame`: N assignments in one synchronous turn cost
 one render per component. A component re-queued during the drain is processed again; the queue throws
-after a component is processed eleven times in one task (the `MAX_PROCESS_COUNT` guard) — the
-only guard against a render loop.
+once a component exceeds `MAX_PROCESS_COUNT` renders in one task — the only guard against a render
+loop.
 
 ## What schedules a render
 
@@ -73,7 +73,7 @@ cannot loop — those assignments update `_state` silently.
 
 The flag is `false` again for the entire rest of `_render()`: through `updateShadowRoot`, past
 `_rendered = true`, and through `onAfterRendering`. Any `@property` assignment in that whole span
-queues a second render. This is why rule 3 exists.
+queues a second render. This is why rule 3 below (guard `onAfterRendering`) exists.
 
 Invalidation is also skipped for a `languageAware` component while language bundles load; the language
 change re-renders it when the data arrives.
@@ -86,7 +86,7 @@ Assigning an `@property` there queues a second render, so cache into a plain fie
 
 ### 1. State only JavaScript reads is not a property
 
-The rule is `core-rules.md` rule 13. The invalidation consequence: the wasted render runs
+The rule is in `core-rules.md` ("Non-rendered state is a plain field"). The invalidation consequence: the wasted render runs
 `onBeforeRendering`, which can overwrite input the user is still editing. A re-render on the first
 keystroke reset the value and moved the caret to the start of the field.
 
@@ -172,9 +172,8 @@ environment may have animations disabled while the component waits for a transit
 
 `renderFinished()`, from `@ui5/webcomponents-base/dist/Render.js`, is not "after paint": it awaits
 `whenAllCustomElementsAreDefined()` and then `whenDOMUpdated()`. `whenDOMUpdated` is one
-`requestAnimationFrame` that resolves once the queue is empty; the render task itself adds a 200 ms
-`setTimeout` settle after draining the queue (named `mutationObserverTimer`, but it is a plain
-timeout, not a `MutationObserver`). Do not call `renderFinished()` in a hot path.
+`requestAnimationFrame` that resolves once the queue is empty, and the render task adds a short
+`setTimeout` settle after draining the queue. Do not call `renderFinished()` in a hot path.
 
 `onAfterRendering` runs synchronously at the end of `_render()`: after the DOM
 patch, still before the next paint. Measure your own DOM there, not through `renderFinished()`.

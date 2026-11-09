@@ -16,7 +16,7 @@
 |------|--------|------------|-----------|
 | Global design tokens | `--sap*` | Outside this repo | Colors, fonts, shadows, focus |
 | Component parameters | `--_ui5_<component>_*` | The component's `-parameters.css` | Values that differ per theme or density |
-| Cross-boundary values | `--ui5_*` / `--ui5-*`, no leading underscore | Component CSS, a shared partial, or a template | Values the build or another module reads |
+| Cross-boundary values | `--ui5_*` / `--ui5-*`, no leading underscore | Component CSS, a shared partial, or a template | Values another module reads |
 
 A common point of confusion: this repo does not define the `--sap*` token set. Each theme's `parameters-bundle.css` under `packages/theming` only `@import`s it from `@sap-theming/theming-base-content` — install that npm package to browse which tokens exist. A few component files re-assign an individual `--sap*` value inside their own scope (`fiori`'s `HeroBanner.css`, `DynamicPageTitle-parameters.css`); that is a local override, not a token definition.
 
@@ -24,7 +24,7 @@ For a **new** component, start with `Foo.css` and existing `--sap*` tokens — t
 
 Component-private `--_ui5_<component>_*` parameters live in a `-parameters.css` file. They exist throughout the codebase, but add one only when a value differs per theme in a way existing UI5 CSS parameters cannot express.
 
-Cross-boundary `--ui5_*` / `--ui5-*` variables (no leading underscore) are rare, and reserved for a value read across a boundary the declaring CSS cannot see: `--ui5_content_density` is read by the build's postcss plugin (below), and `--ui5-form-column-span-s` is written as an inline style by `FormTemplate.tsx` and read back in `FormLayout.css`.
+Cross-boundary `--ui5_*` / `--ui5-*` variables (no leading underscore) are rare, and reserved for a value read across a boundary the declaring CSS cannot see — `--ui5-form-column-span-s` is written as an inline style by `FormTemplate.tsx` and read back in `FormLayout.css`.
 
 ```css
 :host {
@@ -75,9 +75,9 @@ src/themes/sap_fiori_3/Foo-parameters.css  overrides
 
 A per-theme file usually `@import`s the base one and overrides only what changes. A few extend another *theme's* file instead of `base/` and override only the difference — `sap_horizon_hcw/rtl-parameters.css` imports `../sap_horizon/rtl-parameters.css`. That is the exception, not the pattern.
 
-Ten themes are supported: `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`). `packages/tools/assets-meta.js` is the authoritative list. `packages/fiori/src/themes` also holds `sap_belize*` and `*_exp` folders that are absent from that list and unreachable from any `parameters-bundle.css` — ignore them.
+The supported themes are `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`); `packages/tools/assets-meta.js` is the authoritative list. `packages/fiori/src/themes` has two extra sets. The `sap_belize*` folders have no `parameters-bundle.css` and are not built — ignore them. The `*_exp` folders are not in `assets-meta.js`, but they have their own `parameters-bundle.css` and are built, so a new fiori component adds its `@import` there too, as `HeroBanner` did.
 
-A new `--_ui5_*` parameter needs a value in `base/` only, not in every theme folder. Per-theme folders `@import` base, so the base value reaches all ten — `--_ui5_button_border_radius` is declared solely in `base/Button-parameters.css` and resolves everywhere. A theme folder gets a file only when it actually overrides something: `Bar-parameters.css` exists in `base/` and in the four high-contrast folders, nowhere else. Central compact overrides live in `base/sizes-parameters.css` onward.
+A new `--_ui5_*` parameter needs a value in `base/` only, not in every theme folder. Per-theme folders `@import` base, so the base value reaches every theme — `--_ui5_button_border_radius` is declared solely in `base/Button-parameters.css` and resolves everywhere. A theme folder gets a file only when it actually overrides something: `Bar-parameters.css` exists in `base/` and in the high-contrast folders, nowhere else. Central compact overrides live in `base/sizes-parameters.css` onward.
 
 Declaring the file is not enough — it must also be `@import`ed from the theme's `parameters-bundle.css`, or it has no effect. That file is the registration unit: `sap_horizon/parameters-bundle.css` aggregates every `-parameters.css` plus `sizes-parameters.css` and `rtl-parameters.css`. Add the `@import` in every theme folder that should load it.
 
@@ -143,33 +143,42 @@ return this.effectiveDir === "rtl" ? "right" : "left";
 
 ## Density
 
-Two densities: cozy (default) and compact. An ancestor carrying `data-ui5-compact-size`, `.ui5-content-density-compact` or `.sapUiSizeCompact` switches compact on by setting `--_ui5_content_density`.
+Two densities: cozy (default) and compact. An ancestor carrying `data-ui5-compact-size`, `.ui5-content-density-compact` or `.sapUiSizeCompact` switches compact on; `SystemCSSVars.css` sets the runtime variables for it.
 
-Scope compact values with a container style query — the pattern used across the theme CSS. Two near-identical variable names carry completely different jobs:
-
-- `--ui5_content_density` (no leading `_`) — a **build-time** directive. Only the postcss plugin reads it, and only inside `-parameters.css` files. It is never set at runtime.
-- `--_ui5_content_density` (leading `_`) — the **runtime** signal, set by `SystemCSSVars.css`.
-
-This is why placement matters. A `@container style(--ui5_content_density: compact)` block works only inside a `-parameters.css` file, where `cssVariablesTarget: "host"` runs the postcss plugin that strips the `@container` and merges both densities into one `:host` declaration — `--_ui5_bar_base_height: var(--_ui5-compact-size, 2.5rem) var(--_ui5-cozy-size, 2.75rem)`. The same block in component CSS (`themes/Foo.css`) is shipped unprocessed and can never fire, because nothing ever sets `--ui5_content_density` in the browser.
+Declare compact values in a `@ui5-compact-size` block. It is a build-time at-rule, not CSS: the postcss plugin of the theme build (enabled by `cssVariablesTarget: "host"`) reads it only inside `-parameters.css` files, strips it, and merges both densities into one `:host` declaration — `--_ui5_bar_base_height: var(--_ui5-compact-size, 2.5rem) var(--_ui5-cozy-size, 2.75rem)`.
 
 ```css
-@container style(--ui5_content_density: compact) {
+/* themes/base/Panel-parameters.css */
+@ui5-compact-size {
 	:host {
-		--_ui5_button_base_height: var(--sapElement_Compact_Height);
-		--_ui5_button_base_min_width: 2rem;
+		--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
 	}
 }
 ```
 
-Every `-parameters.css` declaration is merged into a single shared `CSSStyleSheet` that is adopted into *every* component's shadow root. A `:host` rule there therefore applies inside all of them, and a `::slotted()` rule would match slotted children in all of them. That is why a density block styling *slotted children* belongs in the component CSS and never in `<Component>-parameters.css` — and the same reasoning covers any variable whose producer and consumer are different components.
+Component CSS (`themes/Foo.css`) never goes through that plugin. A `@ui5-compact-size` block there ships to the browser as an unknown at-rule and never applies. `Bar.css` and `UserSettingsNotificationsViewItem.css` contain such blocks — do not copy them.
+
+Every `-parameters.css` declaration is merged into a single shared `CSSStyleSheet` that is adopted into *every* component's shadow root. A `:host` rule there therefore applies inside all of them, and a `::slotted()` rule would match slotted children in all of them — so never put `::slotted()` in a `-parameters.css` file. When a slotted child needs a density-dependent value, declare a component parameter with both densities in `-parameters.css` and read it from the `::slotted()` rule in the component CSS:
 
 ```css
-@container style(--ui5_content_density: compact) {
-	::slotted([ui5-button]) {
-		--_ui5_button_overlay_badge_offset: initial;
+/* themes/base/Foo-parameters.css */
+:host {
+	--_ui5_foo_slotted_button_margin: 0.25rem;
+}
+
+@ui5-compact-size {
+	:host {
+		--_ui5_foo_slotted_button_margin: 0.125rem;
 	}
 }
+
+/* themes/Foo.css */
+::slotted([ui5-button]) {
+	margin-inline: var(--_ui5_foo_slotted_button_margin);
+}
 ```
+
+The full density guide, including the older selector-based approach, is in `docs/07-development/07-styling.md`.
 
 ## Focus, animation, high contrast
 

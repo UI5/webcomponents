@@ -86,7 +86,7 @@ _updateAssociatedLabelsTexts() {
 
 ## Wiring ARIA in the template
 
-ARIA and `tabindex` go on the focusable inner element, **never on the host**. Shadow DOM hosts are largely invisible to the accessibility tree; assistive technology reads the inner shadow content. Placing `role` or `aria-*` on the host has no reliable effect.
+ARIA and `tabindex` go on the focusable inner element, **not on the host**. Focus lands on that inner element, so that is what assistive technology announces, and ARIA ID references (`aria-labelledby`, `aria-controls`) cannot cross the shadow boundary between host and inner content. The exception is a family whose light-DOM children form the ARIA structure themselves: `TableRowBase` and `TableCellBase` set `role` on their own host because the table's grid is built from the slotted rows and cells.
 
 Two patterns exist for marking the focusable element:
 
@@ -107,7 +107,7 @@ role={this.effectiveAccRole}
 
 Split by attribute kind:
 
-- **Presence-only** (`aria-disabled`, `aria-readonly`, `aria-label`, `aria-required`, `aria-description`): return the value or `undefined` — never `false` or an empty string. `aria-disabled={false}` renders as the literal string `"false"`, which AT may treat as disabled.
+- **Presence-only** (`aria-disabled`, `aria-readonly`, `aria-label`, `aria-required`, `aria-description`): return the value or `undefined` — never `false` or an empty string. `aria-disabled={false}` renders the attribute as `"false"`; that is valid ARIA, but `undefined` keeps the attribute off entirely, which is the convention here.
 - **State** (`aria-checked`, `aria-selected`, `aria-expanded`): return the explicit boolean or string value even when `false` — AT needs the explicit state. `aria-checked="false"` and `aria-expanded="false"` are valid and necessary.
 
 Bundle many ARIA outputs into one getter the template reads (e.g. an `accInfo` getter feeding the template).
@@ -261,4 +261,4 @@ Split by whether the native `disabled` attribute is valid on the focusable eleme
 
 ## Testing
 
-This repo has no axe or automated accessibility tooling. Coverage means an explicit Cypress test — `cy.realPress` plus focus and attribute assertions. For manual screen-reader testing, the reference environment is **JAWS 2025 + Chrome (latest)**; for HTML/ARIA validation, use **Access Assistant**. See `docs/2-advanced/09-accessibility.md` for the full testing policy.
+This repo has no axe or automated accessibility tooling. Coverage means an explicit Cypress test — `cy.realPress` plus focus and attribute assertions. For manual screen-reader testing and HTML/ARIA validation, use the reference environment and tools named in `docs/2-advanced/09-accessibility.md`.

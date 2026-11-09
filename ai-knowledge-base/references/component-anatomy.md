@@ -49,13 +49,12 @@ same file set; only the path changes:
 
 Both use the same file set and build pipeline as `main`. `compat` matches `main` structurally.
 
-`ai` currently differs in a few incidental ways — none of these are patterns to copy into new
-components:
+`ai` differs in a few incidental ways — none of these are patterns to copy into new components:
 
-- No local `src/types/` directory today; its components import enums from
+- It has no local `src/types/` directory; its components import enums from
   `@ui5/webcomponents/dist/types/...` instead of declaring their own.
-- `src/themes/` currently contains only `sap_horizon*` folders — whatever theme set was supported
-  when `ai` was added, not an intentional Horizon-only policy.
+- `src/themes/` contains only `sap_horizon*` folders — whatever theme set was supported when `ai`
+  was added, not an intentional Horizon-only policy.
 - Some components subclass a `main` component directly and import the parent's generated CSS, which
   couples `ai` to `main` internals.
 - i18n acquisition is mixed: most components use `@i18n(bundleName)`, but a few still use the
@@ -96,7 +95,7 @@ import {
 import buttonCss from "./generated/themes/Button.css.js";
 ```
 
-Property enums are imported type-only, as above. The real `Button.ts` still imports `ButtonDesign` at runtime and compares against its members — legacy, not precedent; see `core-rules.md` (Enum import and comparison).
+`Button.ts` imports `ButtonDesign` at runtime because it compares against the enum's members; an enum used only as a type is imported with `import type`. See `core-rules.md` (Enum import and comparison).
 
 Decorator imports come from individual files here; the Table family instead imports from
 `decorators.js`. Both compile identically; importing from `decorators.js` is essentially a
@@ -138,7 +137,7 @@ The `@ui5/webcomponents-base/dist/decorators.js` module re-exports every decorat
 | `@i18n(bundleName)` | static field | e.g. `@i18n("@ui5/webcomponents")` |
 | `@query(selector)` | field | Shadow DOM `querySelector`, evaluated on access |
 | `@queryAll(selector)` | field | Shadow DOM `querySelectorAll` |
-| `@bound` | method | Auto-binds `this`. Real, but not currently used by any shipped component — no example to copy if you reach for it |
+| `@bound` | method | Auto-binds `this`. Real, but not used by any shipped component — no example to copy if you reach for it |
 
 The strict decorators take their types from the class's `eventDetails` map and from `Slot<T>` /
 `DefaultSlot<T>`. Use `slot-strict.js` and `event-strict.js` (or `slotStrict`/`eventStrict` from

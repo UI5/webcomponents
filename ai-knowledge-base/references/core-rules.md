@@ -16,7 +16,7 @@ does not mean the codebase is fully following it; it means new code must not add
 
 | # | Rule | Wrong | Right |
 |---|------|-------|-------|
-| 1 | Enum properties use template literal types | `design: ButtonDesign = ButtonDesign.Default`; a new runtime import of a property enum | ``design: `${ButtonDesign}` = "Default"`` |
+| 1 | Enum properties use template literal types and a string-literal default | `design: ButtonDesign = ButtonDesign.Default` | ``design: `${ButtonDesign}` = "Default"`` |
 | 2 | Query by attribute | `querySelector("ui5-popover")` | `querySelector("[ui5-popover]")` |
 | 3 | Style by attribute | `ui5-button { }` | `[ui5-button] { }` |
 | 4 | Identify UI5 components with an instance checker | `el instanceof Button` | `isInstanceOfButton(el)` |
@@ -39,7 +39,7 @@ does not mean the codebase is fully following it; it means new code must not add
 | 16 | Focusable components are reachable via `focus()` — either `delegatesFocus: true`, or an inner focusable element found through `getFocusDomRef()` | neither `delegatesFocus` nor an inner focus target | `shadowRootOptions: { delegatesFocus: true }`, **or** `tabindex` on the inner element (the majority pattern) |
 | 17 | Children never reach for their parent | `this.parentElement as Table`, `this.closest(`, `this.getRootNode().host` | the child fires, the parent listens |
 | 18 | Public properties change only in response to user interaction | reassigns `this.value` from a timer, observer, or fetch callback | update on user action, then fire the event |
-| 19 | State is declared, not commanded | `show(): void` — a new public method named `open`, `show`, `close`, `toggle`, `refresh`, `expand`, `reset` | `@property({ type: Boolean }) open = false` |
+| 19 | State is declared, not commanded | `show(): void` — a new public method that sets a resting state: `open`, `show`, `close`, `toggle`, `expand` | `@property({ type: Boolean }) open = false` |
 | 20 | `fireDecoratorEvent`, never `fireEvent` | `this.fireEvent("change", d, true, true)`, or `.fireEvent(` on a child | `this.fireDecoratorEvent("change", d)` |
 | 21 | Strict decorators only | `decorators/slot.js`, `decorators/event.js` | `decorators/slot-strict.js`, `decorators/event-strict.js` |
 | 22 | Relative imports end in `.js` | `from "./Button"` | `from "./Button.js"` |
@@ -58,32 +58,34 @@ does not mean the codebase is fully following it; it means new code must not add
 
 ## Reviewing a diff
 
-Check every changed line against the **Wrong** column above. Tooling catches only three rules:
-`yarn lint:scope` covers 2 (in `.ts` only, not `.tsx`) and 3, and `yarn lint` covers 22
-(`import/extensions`). Everything else needs eyes. Before flagging 7 or 8, check "When imperative DOM
+Check every changed line against the **Wrong** column above. Tooling catches little of it:
+`yarn lint:scope` covers 2 (in `.ts` only, not `.tsx`) and 3; `yarn lint` covers 22
+(`import/extensions`) and flags a runtime enum import that is only used as a type
+(`consistent-type-imports`). Everything else needs eyes. Before flagging 7 or 8, check "When imperative DOM
 calls are legitimate"; before flagging 16, confirm there is no inner focus target either.
 
 ## Enum import and comparison
 
-Blocking rule 1 covers property declarations. Imports and comparisons follow from it: import the
-enum type-only and compare against string literals.
+Blocking rule 1 covers the property declaration. The import follows from how the code uses the enum:
+
+- Only as a type — `import type`. `yarn lint` rejects a runtime import here.
+- Its members are read at runtime — a comparison or a fallback value — a runtime import is fine.
+
+`Avatar.ts` shows both:
 
 ```ts
-import type WrappingType from "./types/WrappingType.js";
-@property()
-wrappingType: `${WrappingType}` = "Normal";
+import type AvatarShape from "./types/AvatarShape.js";   // only in the property type
+import AvatarMode from "./types/AvatarMode.js";          // members compared at runtime
 
-import type TagDesign from "./types/TagDesign.js";
-if (this.design === "Positive") { /* ... */ }
+@property()
+shape: `${AvatarShape}` = "Circle";
+
+if (this.mode === AvatarMode.Decorative) { /* ... */ }
 ```
 
-Much existing code imports property enums as runtime values and compares against members
-(`=== TagDesign.Positive`) — `Button.ts` does. Do not copy that, and do not migrate it as a drive-by. In
-a file that already uses the old form, write the new form only in the code you add, without mixing styles
-within one expression.
-
-This governs component property enums. Framework configuration enums returned by a function, such as
-`getAnimationMode()`, are compared against the enum member — see `performance.md` (Animations).
+Comparing a type-only import against a string literal (`this.design === "Positive"`) is equally valid.
+Pick one form per enum within a file, match the file you are editing, and do not migrate the other form
+as a drive-by.
 
 The enum file stays a real TypeScript enum and stays exported for consumers.
 
@@ -209,10 +211,6 @@ These are the known production exceptions to rules 7 and 8. They are narrow — 
 **`this.setAttribute` on the component's own host in a lifecycle hook** — for browser-API-required
 attributes (`popover="manual"` must be a real DOM attribute for the native Popover API to activate)
 and for platform-detection markers (`desktop`). Template binding cannot set attributes on `this`.
-
-**Setting attributes on native HTML elements inside shadow DOM** — `<input>` elements accept
-attributes like `autocomplete`, `pattern`, and `inputmode` that have no UI5 property-binding path.
-Use `setAttribute` on them directly.
 
 **Animation-trigger class toggling** — when a CSS animation must start imperatively (e.g., adding
 `ui5-popup-opening` for 50 ms to trigger a CSS transition), the template re-renders synchronously and
