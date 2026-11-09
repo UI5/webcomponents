@@ -66,7 +66,12 @@
 
         <ui5-toolbar-item>
             <ui5-label id="highlightLabel">Highlight:</ui5-label>
-            <ui5-switch id="highlightSwitch" text-on="On" text-off="Off" accessible-name-ref="highlightLabel"></ui5-switch>
+            <ui5-select id="highlightSelect" accessible-name-ref="highlightLabel">
+                <ui5-option data-mode="None" selected>No highlight</ui5-option>
+                <ui5-option data-mode="Simple">Simple</ui5-option>
+                <ui5-option data-mode="Extended">Extended</ui5-option>
+                <ui5-option data-mode="Custom">Custom icons</ui5-option>
+            </ui5-select>
         </ui5-toolbar-item>
     </ui5-toolbar>
 
@@ -384,16 +389,33 @@
             growing.mode = e.detail.selectedToolbarOption?.textContent;
         });
 
-        const HIGHLIGHT_VALUES = ["None", "Positive", "Critical", "Negative", "Information"];
+        const HIGHLIGHT_VALUES = ["Positive", "Critical", "Negative", "Information"];
+        const CUSTOM_ICONS = ["employee", "money-bills", "lead", "pharmacy"];
 
-        const highlightSwitch = document.getElementById("highlightSwitch");
-        highlightSwitch.addEventListener("change", (e) => {
-            table.querySelectorAll("ui5-table-row").forEach(row => {
-                if (e.target.checked) {
-                    row.highlight = HIGHLIGHT_VALUES[Math.floor(Math.random() * HIGHLIGHT_VALUES.length)];
-                } else {
-                    row.highlight = "None";
+        const highlightSelect = document.getElementById("highlightSelect");
+        highlightSelect.addEventListener("change", (e) => {
+            const mode = e.detail.selectedOption.dataset.mode;
+            const headerRow = table.querySelector("ui5-table-header-row");
+            headerRow.querySelector("ui5-table-header-row-highlight")?.remove();
+            table.querySelectorAll("ui5-table-row ui5-table-row-highlight").forEach(el => el.remove());
+
+            if (mode === "None") {
+                return;
+            }
+
+            const headerHighlight = document.createElement("ui5-table-header-row-highlight");
+            headerHighlight.slot = "highlight";
+            headerHighlight.design = mode === "Simple" ? "Simple" : "Extended";
+            headerRow.appendChild(headerHighlight);
+
+            table.querySelectorAll("ui5-table-row").forEach((row, index) => {
+                const rowHighlight = document.createElement("ui5-table-row-highlight");
+                rowHighlight.slot = "highlight";
+                rowHighlight.type = HIGHLIGHT_VALUES[index % HIGHLIGHT_VALUES.length];
+                if (mode === "Custom") {
+                    rowHighlight.icon = CUSTOM_ICONS[index % CUSTOM_ICONS.length];
                 }
+                row.appendChild(rowHighlight);
             });
         });
     </script>

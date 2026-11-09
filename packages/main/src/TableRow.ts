@@ -11,7 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type Highlight from "./types/Highlight.js";
+import type TableRowHighlight from "./TableRowHighlight.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -37,7 +37,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase<TableCell> {
+class TableRow extends TableRowBase<TableCell, TableRowHighlight> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -120,24 +120,15 @@ class TableRow extends TableRowBase<TableCell> {
 	movable = false;
 
 	/**
-	 * Defines the highlight state of the row.
+	 * Defines the highlight indicator of the row.
 	 *
-	 * @default "None"
-	 * @public
-	 * @since 2.29.0
-	 */
-	@property()
-	highlight: `${Highlight}` = "None";
-
-	/**
-	 * Defines the text alternative for the highlight indicator, used by screen readers.
+	 * **Note:** The highlight is only rendered when the `ui5-table-header-row` contains a `ui5-table-header-row-highlight`.
 	 *
-	 * @default undefined
+	 * @since 2.30.0
 	 * @public
-	 * @since 2.29.0
 	 */
-	@property()
-	highlightText?: string;
+	@slot({ type: HTMLElement })
+	highlight!: Slot<TableRowHighlight>;
 
 	@query("#popin-cell")
 	_popinCell?: TableCell;
@@ -190,10 +181,6 @@ class TableRow extends TableRowBase<TableCell> {
 		const ctor = this.actions[0].constructor as typeof TableRowActionBase;
 		ctor.showMenu(this._overflowActions, e.target as HTMLElement);
 		e.stopPropagation();
-	}
-
-	get _hasHighlight() {
-		return this.highlight !== "None";
 	}
 
 	get _isInteractive() {

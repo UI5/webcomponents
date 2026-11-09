@@ -7,7 +7,7 @@
 }
 
 :host([position]) {
-	height: var(--row-height);
+	height: var(--_ui5_table_row-height);
 }
 
 :host(:first-of-type) > [ui5-table-cell],
@@ -85,17 +85,6 @@
 	}
 }
 
-#highlight {
-	position: absolute;
-	inset: 0;
-	width: calc(var(--_ui5_table_highlight_cell_width) - 1px);
-
-	:host([highlight="Negative"]) & { background: var(--sapErrorBorderColor); }
-	:host([highlight="Critical"]) & { background: var(--sapWarningBorderColor); }
-	:host([highlight="Positive"]) & { background: var(--sapSuccessBorderColor); }
-	:host([highlight="Information"]) & { background: var(--sapInformationBorderColor); }
-}
-
 #navigated {
 	position: absolute;
 	inset: 0px 0px 0px 1px;
@@ -105,14 +94,14 @@
 
 :host([tabindex]:focus) {
 	#navigated,
-	#highlight {
+	::slotted([ui5-table-row-highlight]) {
 		bottom: 3px;
 		top: 2px;
 	}
 	#navigated {
 		inset-inline-start: -3px;
 	}
-	#highlight {
+	::slotted([ui5-table-row-highlight]) {
 		inset-inline-start: 4px;
 	}
 }

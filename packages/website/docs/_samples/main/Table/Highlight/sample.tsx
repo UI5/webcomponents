@@ -3,14 +3,18 @@ import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
+import TableHeaderRowHighlightClass from "@ui5/webcomponents/dist/TableHeaderRowHighlight.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import TableRowHighlightClass from "@ui5/webcomponents/dist/TableRowHighlight.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
 const Table = createReactComponent(TableClass);
 const TableCell = createReactComponent(TableCellClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableHeaderRowHighlight = createReactComponent(TableHeaderRowHighlightClass);
 const TableRow = createReactComponent(TableRowClass);
+const TableRowHighlight = createReactComponent(TableRowHighlightClass);
 const Text = createReactComponent(TextClass);
 
 function App() {
@@ -18,6 +22,7 @@ function App() {
     <Table id="table">
       {/* playground-fold */}
       <TableHeaderRow slot="headerRow">
+        <TableHeaderRowHighlight slot="highlight" />
         <TableHeaderCell id="productCol">
           <span>Product</span>
         </TableHeaderCell>
@@ -32,7 +37,8 @@ function App() {
         </TableHeaderCell>
       </TableHeaderRow>
       {/* playground-fold-end */}
-      <TableRow rowKey="a" highlight="Positive" highlightText="In stock">
+      <TableRow>
+        <TableRowHighlight slot="highlight" type="Positive" text="In stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 15</b>
@@ -52,7 +58,8 @@ function App() {
           </Text>
         </TableCell>
       </TableRow>
-      <TableRow rowKey="b" highlight="Critical" highlightText="Low stock">
+      <TableRow>
+        <TableRowHighlight slot="highlight" type="Critical" text="Low stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 17</b>
@@ -72,7 +79,29 @@ function App() {
           </Text>
         </TableCell>
       </TableRow>
-      <TableRow rowKey="c" highlight="Negative" highlightText="Out of stock">
+      <TableRow>
+        <TableRowHighlight slot="highlight" type="None" />
+        <TableCell>
+          <Text>
+            <b>Notebook Professional 17</b>
+            <br />
+            HT-1011
+          </Text>
+        </TableCell>
+        <TableCell>
+          <Text>Technocom</Text>
+        </TableCell>
+        <TableCell>
+          <Text>35 x 23 x 4 cm</Text>
+        </TableCell>
+        <TableCell>
+          <Text>
+            <b>2299</b> EUR
+          </Text>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableRowHighlight slot="highlight" type="Negative" text="Out of stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 18</b>
@@ -92,7 +121,8 @@ function App() {
           </Text>
         </TableCell>
       </TableRow>
-      <TableRow rowKey="d" highlight="Information" highlightText="Newly added">
+      <TableRow>
+        <TableRowHighlight slot="highlight" type="Information" text="Newly added" />
         <TableCell>
           <Text>
             <b>Notebook Professional 15</b>

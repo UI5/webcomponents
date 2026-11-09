@@ -5,7 +5,6 @@ import type TableRow from "./TableRow.js";
 import type TableCell from "./TableCell.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 import type TableGroupRow from "./TableGroupRow.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	TABLE_ROW,
 	TABLE_ROW_INDEX,
@@ -13,20 +12,9 @@ import {
 	TABLE_ROW_ACTIVE,
 	TABLE_ROW_NAVIGABLE,
 	TABLE_ROW_NAVIGATED,
-	TABLE_ROW_HIGHLIGHT_NEGATIVE,
-	TABLE_ROW_HIGHLIGHT_CRITICAL,
-	TABLE_ROW_HIGHLIGHT_POSITIVE,
-	TABLE_ROW_HIGHLIGHT_INFORMATION,
 	TABLE_COLUMN_HEADER_ROW,
 	TABLE_GROUP_ROW,
 } from "./generated/i18n/i18n-defaults.js";
-
-const HIGHLIGHT_TEXTS: Record<string, I18nText> = {
-	Negative: TABLE_ROW_HIGHLIGHT_NEGATIVE,
-	Critical: TABLE_ROW_HIGHLIGHT_CRITICAL,
-	Positive: TABLE_ROW_HIGHLIGHT_POSITIVE,
-	Information: TABLE_ROW_HIGHLIGHT_INFORMATION,
-};
 
 /**
  * Handles the custom announcement for the ui5-table.
@@ -110,8 +98,8 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(groupDescription);
 		}
 
-		if (row._renderHighlight && row._hasHighlight) {
-			const highlightText = row.highlightText ?? this.i18nBundle.getText(HIGHLIGHT_TEXTS[row.highlight]);
+		if (row._renderHighlight) {
+			const highlightText = row._highlight?._accessibleText;
 			highlightText && descriptions.push(highlightText);
 		}
 

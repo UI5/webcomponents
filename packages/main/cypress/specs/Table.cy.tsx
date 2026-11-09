@@ -9,6 +9,9 @@ import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
 import Input from "../../src/Input.js";
 import TableRowAction from "../../src/TableRowAction.js";
+import TableRowHighlight from "../../src/TableRowHighlight.js";
+import TableHeaderRowHighlight from "../../src/TableHeaderRowHighlight.js";
+import TableGroupRow from "../../src/TableGroupRow.js";
 import Bar from "../../src/Bar.js";
 import Title from "../../src/Title.js";
 import Slider from "../../src/Slider.js";
@@ -956,13 +959,16 @@ describe("Table - Navigated Rows", () => {
 });
 
 describe("Table Row - Highlight", () => {
-	it("renders the indicator only for highlighted rows and reacts to changes", () => {
+	it("reserves the column from the header element and renders the bar per row", () => {
 		cy.mount(
 			<Table id="table1">
 				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowHighlight slot="highlight" />
 					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
 				</TableHeaderRow>
-				<TableRow id="row1" highlight="Negative">
+				<TableGroupRow id="group1">Group A</TableGroupRow>
+				<TableRow id="row1">
+					<TableRowHighlight slot="highlight" type="Negative" />
 					<TableCell><Label>Cell A</Label></TableCell>
 				</TableRow>
 				<TableRow id="row2">
@@ -971,19 +977,51 @@ describe("Table Row - Highlight", () => {
 			</Table>
 		);
 
-		cy.get("#row1").shadow().find("#highlight").should($highlight => {
-			expect(getComputedStyle($highlight[0]).backgroundColor).to.not.equal(TRANSPARENT);
+		// highlighted row paints the bar; a row without the element reserves the column but paints nothing
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight").should($bar => {
+			expect(getComputedStyle($bar[0]).backgroundColor).to.not.equal(TRANSPARENT);
 		});
-		cy.get("#row2").shadow().find("#highlight").should("not.exist");
+		cy.get("#row2").find("[ui5-table-row-highlight]").should("not.exist");
+		cy.get("#row2").shadow().find("#highlight-cell").should("exist");
+		// the column is reserved by header presence, not by any row being highlighted (virtualization-jump guard)
 		cy.get("#table1").shadow().find("#table").should($table => {
 			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_width)");
 		});
+		// group rows never get a highlight cell
+		cy.get("#group1").shadow().find("#highlight-cell").should("not.exist");
 
-		cy.get("#row1").invoke("attr", "highlight", "None");
-		cy.get("#row1").shadow().find("#highlight").should("not.exist");
+		// removing the header element removes the whole column
+		cy.get("[ui5-table-header-row-highlight]").then($el => $el[0].remove());
 		cy.get("#row1").shadow().find("#highlight-cell").should("not.exist");
 		cy.get("#table1").shadow().find("#table").should($table => {
 			expect($table[0].style.gridTemplateColumns).to.not.include("table_highlight_cell_width)");
+		});
+	});
+
+	it("renders the extended design with an icon and a wider column", () => {
+		cy.mount(
+			<Table id="table1">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowHighlight slot="highlight" design="Extended" />
+					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableRowHighlight slot="highlight" type="Negative" text="Out of stock" />
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// table fans the design down and a default icon is derived from the type
+		cy.get("#row1").find("[ui5-table-row-highlight]").should("have.prop", "_design", "Extended");
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon").should("have.attr", "name", "error");
+		// the icon exposes the text as a tooltip
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon")
+			.should("have.attr", "accessible-name", "Out of stock")
+			.and("have.attr", "show-tooltip");
+		// the extended column uses the wider track
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_extended_width)");
 		});
 	});
 });

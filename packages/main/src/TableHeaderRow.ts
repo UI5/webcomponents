@@ -3,14 +3,14 @@ import TableRowBase from "./TableRowBase.js";
 import TableHeaderRowTemplate from "./TableHeaderRowTemplate.js";
 import TableHeaderRowStyles from "./generated/themes/TableHeaderRow.css.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
+import type TableHeaderRowHighlight from "./TableHeaderRowHighlight.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	TABLE_SELECTION,
 	TABLE_ROW_POPIN,
 	TABLE_ROW_ACTIONS,
 	TABLE_COLUMN_HEADER_ROW,
 } from "./generated/i18n/i18n-defaults.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-
 /**
  * @class
  *
@@ -43,7 +43,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  *
  * @public
  */
-class TableHeaderRow extends TableRowBase<TableHeaderCell> {
+class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowHighlight> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -61,6 +61,24 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 		individualSlots: true,
 	})
 	cells!: DefaultSlot<TableHeaderCell>;
+
+	/**
+	 * Defines the highlight configuration of the table.
+	 * Its presence reservesthe highlight column and enables the `ui5-table-row-highlight` of the rows to be rendered.
+	 *
+	 * **Note:** Use `ui5-table-header-row-highlight` for the intended design.
+	 *
+	 * @since 2.30.0
+	 * @public
+	 */
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: {
+			properties: ["design"],
+			slots: false,
+		},
+	})
+	highlight!: Slot<TableHeaderRowHighlight>;
 
 	/**
 	 * Sticks the `ui5-table-header-row` to the top of a table.
