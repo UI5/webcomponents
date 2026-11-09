@@ -11,6 +11,7 @@ skill:
 - **Primary guidance:** [`skills/cypress/SKILL.md`](../../skills/cypress/SKILL.md)
 - **Custom commands:** [`skills/cypress/references/COMMANDS.md`](../../skills/cypress/references/COMMANDS.md)
 - **Reviewing existing specs:** [`skills/cypress/references/REVIEWING.md`](../../skills/cypress/references/REVIEWING.md)
+- **Debugging flaky or failing tests:** [`skills/cypress/references/DEBUGGING.md`](../../skills/cypress/references/DEBUGGING.md)
 
 ## Key rules (see the skill for full details)
 

@@ -1,7 +1,7 @@
 ---
 name: writing-cypress-tests
 description: |
-  Write and review Cypress component tests for UI5 web components. Triggers: write/add Cypress tests ("write tests for X", "add spec for X"), review test files, create custom commands, debug flaky tests, or implicit "test this component", "verify attribute", "assert attribute", "check accessibility", "ARIA attributes", "shadow DOM", "test popover", "test dialog" in UI5 context.
+  Write and review Cypress component tests for UI5 web components. Triggers: write/add Cypress tests ("write tests for X", "add spec for X"), review test files, create custom commands, debug flaky or failing tests, or implicit "test this component", "verify attribute", "assert attribute", "check accessibility", "ARIA attributes", "shadow DOM", "test popover", "test dialog" in UI5 context.
 user-invocable: true
 packages: ["@ui5/webcomponents"]
 ---
@@ -18,7 +18,7 @@ Write and review Cypress component tests that match the project's conventions. T
 | Writing or restructuring a spec and need context or full examples | [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) |
 | Adding or modifying custom commands | [`COMMANDS.md`](./references/COMMANDS.md) |
 | Reviewing an existing spec | [`REVIEWING.md`](./references/REVIEWING.md) + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) |
-| Debugging a flaky or intermittent test | [`FLAKY-TESTS.md`](./references/FLAKY-TESTS.md) — async focus, animation timing, CPU throttling |
+| Debugging a flaky, intermittent, or failing test | [`DEBUGGING.md`](./references/DEBUGGING.md) + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) — async focus, animation timing, CPU throttling, deterministic failures |
 
 ## File locations
 

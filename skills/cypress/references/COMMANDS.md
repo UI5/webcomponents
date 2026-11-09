@@ -4,64 +4,31 @@
 
 ## Existing Command Families — Do Not Recreate
 
-Before writing any new command, check whether a family already exists for that component. These families already have `ui5<Component><Action>` commands in `cypress/support/commands/`:
+Before writing any new command, check whether a family already exists for that component:
 
-**main package:**
+**Discover existing commands:**
+```sh
+grep -r "Cypress.Commands.add" packages/{package}/cypress/support/commands/
+```
 
-| Family | Key commands |
-|---|---|
-| `DatePicker` | `ui5DatePickerGetInnerInput`, `ui5DatePickerValueHelpIconPress`, `ui5DatePickerOpened` |
-| `DateRangePicker` | `ui5DateRangePickerGetInnerInput`, `ui5DateRangePickerOpened` |
-| `DateTimePicker` | `ui5DateTimePickerOpened` |
-| `TimePicker` | `ui5TimePickerGetInnerInput`, `ui5TimePickerOpened` |
-| `Dialog` | `ui5DialogOpened` |
-| `Popover` | `ui5PopoverOpened` |
-| `ResponsivePopover` | `ui5ResponsivePopoverOpened`, `ui5ResponsivePopoverClosed` |
-| `Menu` | `ui5MenuOpened`, `ui5MenuClosed` |
-| `TabContainer` | `ui5TabContainerGetTabStrip` |
-| `StepInput` | `ui5StepInputGetInnerInput` |
-| `Switch` | `ui5SwitchToggle` |
-| `SegmentedButton` | `ui5SegmentedButtonItemToggleSelect` |
-| `ColorPicker` | `ui5ColorPickerGetHexInput` |
-| Calendar, ColorPalette, ColorPalettePopover, DynamicDateRange, MenuItem, TimeSelectionClocks, ToggleButton | *(read the commands file for details)* |
+Command files live in:
+- `packages/main/cypress/support/commands/`
+- `packages/fiori/cypress/support/commands/`
+- `packages/ai/cypress/support/commands/`
 
-**fiori package:** `UserMenu`
-
-**AI package:** `Button (AI)`
-
-Most popup families have `Open`/`Opened` state helpers (see § Popup Open/Closed Utilities below for implementation patterns). The `Closed` variant is **not universal**:
-- `Menu` and `ResponsivePopover` — have `Closed`
-- `Dialog` and `Popover` — expose only `Opened`; no `Closed` variant
-
-Read the `support/commands/` file for the relevant family before assuming a `Closed` helper exists. Use these commands instead of asserting the `open` attribute yourself.
+Most popup families have `Open`/`Opened` state helpers (see § Popup Open/Closed Utilities below for implementation patterns). The `Closed` variant is **not universal** — read the commands file for the relevant family before assuming a `Closed` helper exists. Use these commands instead of asserting the `open` attribute yourself.
 
 ---
 
 ## Identifying Repetitive Patterns → Custom Commands
 
 When writing or reviewing tests, look for:
+- Open/close sequences for overlay components (dialogs, popovers, menus, pickers) — these are the most common and most important commands to extract
+- Interaction sequences repeated across tests (toggle, select, type + assert) — copy-pasted `it()` steps are a clear signal
 - The same sequence of getting an element, mutating an attribute, and asserting on the result appearing in 2+ tests
-- Repetitive identical actions repeated across tests (the same interaction steps copy-pasted between `it()` blocks)
-- Open/close sequences for overlay components (dialogs, popovers, menus, pickers)
-- "Wait for component to be ready" sequences (shadow DOM existence + popover open + size > 0)
+- Multi-step `.shadow().find()` chains accessing the same sub-element in 2+ places — a single-step inline `find()` does not need a command
 
 When you find such a pattern, extract it into a custom command.
-
----
-
-## POM Coverage: Every Internal Sub-Element Needs a Command
-
-When creating or reviewing a commands file for a component, **every internal sub-element that tests need to get in order to chain further actions off it, and that is accessed in more than one place, must have a dedicated getter command**. Do not leave such repeated `.shadow().find("ui5-...")` chains in the spec file. A one-off access used a single time in a single test does not need its own command — inline it there.
-
-### What to cover
-
-Cover the internal sub-elements that tests repeatedly reach into, regardless of component type. Typical categories:
-- **Interactive parts** — the input, trigger, icon, buttons, or handles a test drives
-- **Overlay parts** — the popover / responsive-popover / dialog a component opens
-- **Nested components** — a child custom element rendered in the shadow root (its own sub-elements belong in *its* commands file — see "Commands belong to the subject's component" below)
-- **Collection items** — rows, cells, list items, tokens, tabs, or menu items a test selects or asserts on
-
-Name each getter after its subject type and the part it returns (e.g. `ui5<Component>Get<Part>`). Only add a getter when the part is chained off in more than one place; don't pre-emptively create getters for parts no test touches.
 
 ### Commands belong to the subject's component type
 
@@ -85,51 +52,23 @@ cy.get<DatePicker>("@datePicker")
 	.should("be.visible");
 ```
 
-### Chaining pattern for nested sub-elements
+### Inline vs command
+
+A `find()` inside a spec is fine for a one-off access. Extract it into a getter command only when the same multi-step chain appears in more than one place:
 
 ```typescript
-// Chain directly when result is used once
-cy.get<DatePicker>("@datePicker")
-	.ui5DatePickerGetCalendar()
-	.ui5CalendarGetDayPicker()
-	.shadow()
-	.find(".ui5-dp-content");
-
-// Alias the intermediate element for repeated access in one test
-cy.get<DatePicker>("@datePicker")
-	.ui5DatePickerGetCalendar()
-	.as("calendar");
-
-cy.get<Calendar>("@calendar")
-	.ui5CalendarGetMonthPicker()
-	.should("be.visible");
-cy.get<Calendar>("@calendar")
-	.ui5CalendarGetYearPicker()
-	.should("be.visible");
-```
-
-### Rule: prefer attribute selectors, extract a command when repeated
-
-A `find()` inside a spec is fine for a one-off access — but if the **same** `find()` for a sub-element appears in more than one place, extract it into a getter command. When you do use `find()` inline, use the attribute selector (`[ui5-...]`), never a bare tag name:
-```typescript
-// Acceptable — single, one-off access with an attribute selector
+// Acceptable — single, one-off access
 cy.get<DatePicker>("@datePicker")
 	.shadow()
 	.find("[ui5-calendar]");
 
-// Avoid — bare tag selector
-cy.get<DatePicker>("@datePicker")
-	.shadow()
-	.find("ui5-calendar");
-
-// Best when repeated — the same lookup used in 2+ places belongs in a POM command
+// Extract when the same chain appears in 2+ places
 cy.get<DatePicker>("@datePicker")
 	.ui5DatePickerGetCalendar()
-cy.get<Calendar>("@calendar")
-	.ui5CalendarGetDayPicker()
+	.ui5CalendarGetDayPicker();
 ```
 
-Inside a getter command's own implementation, `find()` with an attribute selector is expected — that is where the actual element lookup lives.
+Always use attribute selectors inside `find()`, never bare tag names.
 
 ---
 

@@ -159,25 +159,25 @@ describe("Input", () => {
 	});
 
 	it("does not accept input when disabled", () => {
-		cy.mount(<Input disabled value="initial" />);
+		cy.mount(<Input disabled value="initial" onChange={cy.stub().as("change")} />);
 
 		cy.get<Input>("[ui5-input]")
-			.as("input");
+			.realClick({ force: true });
 
-		cy.get("@input")
-			.should("have.attr", "disabled");
+		cy.realType("changed");
 
-		cy.get("@input")
-			.shadow()
-			.find("input")
-			.should("have.attr", "disabled");
+		cy.get<Input>("[ui5-input]")
+			.should("have.prop", "value", "initial");
+
+		cy.get("@change")
+			.should("not.have.been.called");
 	});
 });
 ```
 
 ---
 
-## Dialog focus trap spec
+## Dialog keyboard interaction spec
 
 Demonstrates: `invoke("prop", "open", true)` to open programmatically, `ui5DialogOpened` custom command, focus assertion with `should("be.focused")`, TAB trap verification.
 
@@ -253,5 +253,4 @@ describe("MultiInput — ARIA", () => {
 			.and("not.have.attr", "aria-expanded");
 	});
 });
-```
 ```

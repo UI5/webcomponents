@@ -43,32 +43,12 @@ describe("{ComponentName}", () => {
 ### What makes a test meaningful
 
 A test only asserting `"exist"` is not meaningful. A meaningful test asserts:
-- The **rendered state** reflects the props (e.g. `design="Negative"` adds the right CSS class)
 - **Events** fire when expected (use `cy.stub` or `cy.spy`), including the correct payload and call count
 - **Accessibility** attributes are correct (`aria-label`, `role`, `aria-disabled`)
 - **Behavior** after interaction (open/close, value change, focus movement)
 - The **keyboard path**, not just the click path — test `realPress` navigation as well as `realClick`
 - **Disabled and read-only states do not react** — assert that interactions produce no change
 
-#### Rendered state reflects the props
-
-**Weak (avoid):**
-```typescript
-cy.mount(<Button design="Negative">Delete</Button>);
-
-cy.get("[ui5-button]")
-	.should("exist");
-```
-
-**Strong (prefer):**
-```typescript
-cy.mount(<Button design="Negative">Delete</Button>);
-
-cy.get<Button>("[ui5-button]")
-	.shadow()
-	.find(".ui5-button-root")
-	.should("have.class", "ui5-button-negative");
-```
 
 #### Events fire when expected
 
@@ -109,28 +89,6 @@ cy.get<Button>("[ui5-button]")
 	.shadow()
 	.find("button")
 	.should("have.attr", "aria-label", "Close dialog");
-```
-
-#### Behavior after interaction
-
-**Weak (avoid):**
-```typescript
-cy.mount(<Popover opener="btn"><span>Content</span></Popover>);
-
-cy.get("[ui5-popover]")
-	.should("exist");
-```
-
-**Strong (prefer):**
-```typescript
-cy.mount(<Popover opener="btn" open><span>Content</span></Popover>);
-
-cy.get<Popover>("[ui5-popover]")
-	.should("have.attr", "open");
-cy.get<Popover>("[ui5-popover]")
-	.shadow()
-	.find(".ui5-popup-root")
-	.should("be.visible");
 ```
 
 #### Keyboard path, not just the click path
@@ -527,28 +485,6 @@ afterEach(() => {
 - Do not use `beforeEach` for setup that only one or two tests need — keep it inline.
 
 ---
-
-## Real events
-
-**CRITICAL: `realPress` and `realType` are global commands that dispatch to the focused element. Never chain them after `.realClick()` on the same line. Always use two separate statements: focus first, then call `cy.realPress()` or `cy.realType()` standalone.**
-
-After `.realClick()` to focus an element, call `cy.realType()` as a separate statement — never chain `.realType()` after `.realClick()` on the same line, as the focus change hasn't settled.
-
-`realPress` and `realType` dispatch CDP key events to whatever currently has focus — a piped subject is silently ignored. Focus the target first, then call them as a separate statement:
-
-```typescript
-// Wrong — realType chained after realClick; the focus change hasn't settled
-cy.get("@input")
-	.realClick()
-	.realType("23");
-
-// Right — two statements
-cy.get("@input")
-	.realClick();
-cy.realType("23");
-```
-
-Never use a numeric `cy.wait(<ms>)` to bridge async UI — assert the condition instead and let `should` retry.
 
 ## Async base API methods
 

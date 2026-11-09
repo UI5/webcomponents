@@ -1,23 +1,14 @@
----
-description: UI5 Web Components Cypress testing conventions. Consult before writing or editing a Cypress spec.
-globs:
-  - packages/**/cypress/specs/**/*.cy.tsx
-  - packages/**/cypress/support/**/*.ts
-alwaysApply: false
----
-
 # UI5 Web Components — Cypress Skill
 
-Full testing conventions — mounting, selectors, real events, custom commands, assertions, i18n, and flaky-test recipes — live in the **Cypress skill** at `skills/cypress/SKILL.md`.
+Full conventions live in `skills/cypress/SKILL.md`. For quick answers without loading the full skill, use the reference files below directly.
 
-Before writing or editing a Cypress spec, open `skills/cypress/SKILL.md`, find your task in the routing table at the top, and open the **one** reference file it names. Do not read every file.
+## Where to look
 
-Non-negotiables:
-
-- Select by attribute, never tag name: `[ui5-button]` not `ui5-button` — in selectors and `.find()`.
-- Use real events: `realClick()`, `realPress()`, `realType()` — never `.click()` or `.type()`.
-- `realPress` and `realType` take no subject — call them as separate statements after focusing.
-- Never use `cy.wait(<number>)` — assert the condition instead; use `cy.waitRenderFinished()` for render cycles.
-- `cy.ui5DOMRef()` is declared but unimplemented — do not call it.
-
-To run tests, see the "Running tests" section in `skills/cypress/SKILL.md`.
+| Task | Go to |
+|------|-------|
+| Selectors, async API calls, popups, prop/attr, ARIA, cleanup | [`skills/cypress/references/QUICK-REFERENCE.md`](../../skills/cypress/references/QUICK-REFERENCE.md) |
+| Writing or restructuring a spec | [`skills/cypress/references/WRITING-SPECS.md`](../../skills/cypress/references/WRITING-SPECS.md) |
+| Complete working examples | [`skills/cypress/references/EXAMPLES.md`](../../skills/cypress/references/EXAMPLES.md) |
+| Custom commands | [`skills/cypress/references/COMMANDS.md`](../../skills/cypress/references/COMMANDS.md) |
+| Reviewing an existing spec | [`skills/cypress/references/REVIEWING.md`](../../skills/cypress/references/REVIEWING.md) |
+| Flaky or failing test | [`skills/cypress/references/FLAKY-TESTS.md`](../../skills/cypress/references/DEBUGGING.md) |

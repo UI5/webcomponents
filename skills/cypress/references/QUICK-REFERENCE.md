@@ -81,20 +81,37 @@ Replace `Popover` / `ui5PopoverOpened` with the actual component type and its co
 
 ---
 
-## Keyboard input — realPress / realType
+## Real events — realClick / realPress / realType
 
-`cy.realPress` and `cy.realType` are global commands that dispatch to whatever currently has focus. A piped subject is silently ignored. Always focus the target first, then call them as separate statements.
+Always use `cy.realClick()`, `cy.realPress()`, and `cy.realType()` — never synthetic `.click()` or `.type()`. Real events go through the browser's CDP input pipeline and trigger the same code path as an actual user; synthetic events bypass it and miss focus management, keyboard handlers, and composition.
+
+`cy.realPress` and `cy.realType` are global commands that dispatch to whatever currently has focus — a piped subject is silently ignored. Always assert focus before calling them; the assertion confirms focus has landed and acts as a synchronization point before input is dispatched.
+
+Never use `cy.wait(<ms>)` to bridge async UI — assert the condition instead and let `should` retry.
 
 ```typescript
-// Wrong — chained; focus change hasn't settled
+// Wrong — synthetic event
+cy.get("@input")
+    .click();
+
+// Wrong — chained; no confirmation that focus landed before typing
 cy.get("@input")
     .realClick()
     .realType("hello");
 
-// Right — two statements
+// Right — assert focus first, then type
 cy.get("@input")
-    .realClick();
+    .realClick()
+    .should("be.focused");
 cy.realType("hello");
+
+// Right — same pattern with Tab navigation
+cy.get("@btn")
+    .realClick()
+    .should("be.focused");
+cy.realPress("Tab");
+cy.get("@nextBtn")
+    .should("be.focused");
 ```
 
 ---
@@ -140,9 +157,30 @@ cy.get("[ui5-button]").shadow().find("button")
 
 ---
 
+## Event assertions (sinon spy API)
+
+Stubs passed as JSX props are sinon spies. `calledOnce`, `calledTwice`, and `calledThrice` are convenience shorthands — the full sinon spy API is available for everything else.
+
+```typescript
+cy.get("@click").should("have.been.calledOnce");            // shorthand
+cy.get("@click").should("have.been.calledTwice");
+cy.get("@click").should("have.callCount", 4);               // arbitrary count
+cy.get("@click").should("have.been.calledWith", "value");   // assert args
+cy.get("@click").should("have.been.calledOnceWith", "v");   // count + args
+cy.get("@click").should("have.been.notCalled");
+// access raw call data
+cy.get("@click").then(stub => {
+    expect(stub.args[0][0].detail).to.equal("value");       // first call, first arg
+});
+```
+
+Full API: https://sinonjs.org/releases/latest/spies/
+
+---
+
 ## Global state cleanup (afterEach)
 
-Any test that changes global configuration must reset it in `afterEach`. Without this, a failing test corrupts state for every subsequent test.
+Tests are independent — each mounts its own component instance. The exception is global configuration (`setLanguage`, `setTheme`, `applyDirection`) which is process-wide and persists across tests. Reset it in `afterEach` whenever a test changes it.
 
 ```typescript
 // Language
