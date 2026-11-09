@@ -109,6 +109,9 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 				"ui5-input-table-suggest-wrapper--phone": this._isPhone,
 			}}
 			onClick={this._onTableRowClick}
+			onMouseDown={this._onTableRowMouseDown}
+			onMouseUp={this._onTableRowMouseUp}
+			onMouseLeave={this._onTableRowMouseUp}
 			onScroll={this._onTableScroll}
 		>
 			<Table

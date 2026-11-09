@@ -1119,6 +1119,7 @@ describe("InputTableSuggest - change event", () => {
 		cy.realPress("ArrowDown");
 		cy.realPress("Enter");
 		cy.get("@input").should("have.value", "Jane");
+		cy.get("@onChange").should("have.been.calledOnce");
 
 		cy.realPress("Tab");
 		cy.get("@onChange").should("have.been.calledOnce");
@@ -1349,5 +1350,11 @@ describe("InputTableSuggest - suggestion-scroll event", () => {
 		cy.get("@onSuggestionScroll")
 			.its("firstCall.args.0.detail.scrollContainer")
 			.should("exist");
+
+		cy.realPress("Escape");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
 	});
 });

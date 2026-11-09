@@ -250,6 +250,14 @@ class InputTableSuggest extends InputField {
 	_rowFocused = false;
 
 	/**
+	 * Internal property reflecting whether a suggestion row is pressed (pointer active).
+	 * Used by CSS to hide the input focus outline during a row press and avoid double focus.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_rowActive = false;
+
+	/**
 	 * Stores the matched row for typeahead
 	 * @private
 	 */
@@ -504,9 +512,33 @@ class InputTableSuggest extends InputField {
 		}
 	}
 
+	_onTableRowMouseDown(e: MouseEvent) {
+		const pressedRow = e.composedPath().find(el => {
+			return (el as HTMLElement).hasAttribute?.("ui5-table-row");
+		}) as ITableSuggestionRow | undefined;
+
+		this._rowActive = !!pressedRow && this._visibleRows.includes(pressedRow);
+	}
+
+	_onTableRowMouseUp() {
+		this._rowActive = false;
+	}
+
+	_click() {
+		super._click();
+
+		if (this._useTableSuggestions && this._rowFocused) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+			this._clearAnnouncement();
+		}
+	}
+
 	_selectRow(row: ITableSuggestionRow, keyboardUsed: boolean) {
 		const rowValue = this._getRowValue(row);
 		const isAlreadySelected = row.focused || row.selected;
+		this._shouldAutocomplete = false;
 
 		this.value = rowValue;
 		this.typedInValue = rowValue;
@@ -634,6 +666,8 @@ class InputTableSuggest extends InputField {
 				// No row to accept: consume Enter to close the picker so the base handler does not
 				// submit the enclosing form in the same keystroke (mirrors _handleEscape).
 				e.preventDefault();
+				this._shouldAutocomplete = false;
+				this.isTyping = false;
 				this._open = false;
 				return;
 			}
@@ -719,6 +753,7 @@ class InputTableSuggest extends InputField {
 	}
 
 	_clearPopoverFocusAndSelection() {
+		this._rowActive = false;
 		this._deselectAllRows();
 	}
 
