@@ -147,7 +147,7 @@ class TableHeaderCell extends TableCellBase {
 	/**
 	 * Defines whether the column header is interactive.
 	 *
-	 * When set to `true`, the column header can be activated by a click, <kbd>Enter</kbd> or <kbd>Space</kbd>,
+	 * If set to `true`, the column header can be activated by a click, <kbd>Enter</kbd> or <kbd>Space</kbd>,
 	 * which fires the `header-click` event and can be used, for example, to open a column menu.
 	 * A hover effect is shown to signal the interactivity to the user.
 	 *
