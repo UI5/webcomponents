@@ -1721,6 +1721,116 @@ describe("Alignment", () => {
 		});
 	});
 
+	describe("Alignment flip when there is no space", () => {
+		it("horizontalAlign=Start flips to End when there is no space on the right", () => {
+			cy.viewport(600, 600);
+			cy.mount(
+				<>
+					<Button id="flipBtn" style="position: absolute; right: 10px; top: 300px;">Open</Button>
+					<Popover id="popoverFlip" placement="Top" opener="flipBtn" horizontalAlign="Start">
+						<div style="width: 300px;"></div>
+					</Popover>
+				</>);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", "true");
+			cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+			let popover: JQuery<HTMLElement>;
+			cy.get("[ui5-popover]").then($popover => {
+				popover = $popover;
+			});
+
+			// No space to the right -> popover should behave as End (right edges aligned)
+			cy.get("#flipBtn").should($opener => {
+				const popoverRect = popover[0].getBoundingClientRect();
+				const openerRect = $opener[0].getBoundingClientRect();
+
+				expect(Math.abs(openerRect.right - popoverRect.right)).to.be.lessThan(2.5);
+			});
+		});
+
+		it("horizontalAlign=End flips to Start when there is no space on the left", () => {
+			cy.viewport(600, 600);
+			cy.mount(
+				<>
+					<Button id="flipBtn" style="position: absolute; left: 10px; top: 300px;">Open</Button>
+					<Popover id="popoverFlip" placement="Top" opener="flipBtn" horizontalAlign="End">
+						<div style="width: 300px;"></div>
+					</Popover>
+				</>);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", "true");
+			cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+			let popover: JQuery<HTMLElement>;
+			cy.get("[ui5-popover]").then($popover => {
+				popover = $popover;
+			});
+
+			// No space to the left -> popover should behave as Start (left edges aligned)
+			cy.get("#flipBtn").should($opener => {
+				const popoverRect = popover[0].getBoundingClientRect();
+				const openerRect = $opener[0].getBoundingClientRect();
+
+				expect(Math.abs(openerRect.left - popoverRect.left)).to.be.lessThan(2.5);
+			});
+		});
+
+		it("verticalAlign=Top flips to Bottom when there is no space below", () => {
+			cy.viewport(600, 600);
+			cy.mount(
+				<>
+					<Button id="flipBtn" style="position: absolute; left: 10px; bottom: 10px;">Open</Button>
+					<Popover id="popoverFlip" placement="End" opener="flipBtn" verticalAlign="Top">
+						<div style="height: 300px;"></div>
+					</Popover>
+				</>);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", "true");
+			cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+			let popover: JQuery<HTMLElement>;
+			cy.get("[ui5-popover]").then($popover => {
+				popover = $popover;
+			});
+
+			// No space below -> popover should behave as Bottom (bottom edges aligned)
+			cy.get("#flipBtn").should($opener => {
+				const popoverRect = popover[0].getBoundingClientRect();
+				const openerRect = $opener[0].getBoundingClientRect();
+
+				expect(Math.abs(openerRect.bottom - popoverRect.bottom)).to.be.lessThan(2.5);
+			});
+		});
+
+		it("verticalAlign=Bottom flips to Top when there is no space above", () => {
+			cy.viewport(600, 600);
+			cy.mount(
+				<>
+					<Button id="flipBtn" style="position: absolute; left: 10px; top: 10px;">Open</Button>
+					<Popover id="popoverFlip" placement="End" opener="flipBtn" verticalAlign="Bottom">
+						<div style="height: 300px;"></div>
+					</Popover>
+				</>);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", "true");
+			cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+			let popover: JQuery<HTMLElement>;
+			cy.get("[ui5-popover]").then($popover => {
+				popover = $popover;
+			});
+
+			// No space above -> popover should behave as Top (top edges aligned)
+			cy.get("#flipBtn").should($opener => {
+				const popoverRect = popover[0].getBoundingClientRect();
+				const openerRect = $opener[0].getBoundingClientRect();
+
+				expect(Math.abs(openerRect.top - popoverRect.top)).to.be.lessThan(2.5);
+			});
+		});
+	});
+
 	describe("Arrow Horizontal Alignment", () => {
 
 		it("Arrow centering when opener has big width", () => {
