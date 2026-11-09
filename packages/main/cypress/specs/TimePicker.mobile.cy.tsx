@@ -268,16 +268,7 @@ describe("TimePicker on phone - view toggle button", () => {
 			.ui5TimePickerValueHelpIconPress();
 
 		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-clocks]")
-			.should("exist");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-inputs]")
-			.should("not.exist");
+			.ui5TimePickerAssertClocksView();
 	});
 
 	it("clicking toggle button switches from clock view to inputs view", () => {
@@ -294,16 +285,7 @@ describe("TimePicker on phone - view toggle button", () => {
 			.realClick();
 
 		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-inputs]")
-			.should("exist");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-clocks]")
-			.should("not.exist");
+			.ui5TimePickerAssertInputsView();
 
 		cy.get<TimePicker>("@timePicker")
 			.shadow()
@@ -329,16 +311,7 @@ describe("TimePicker on phone - view toggle button", () => {
 			.realClick();
 
 		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-clocks]")
-			.should("exist");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-inputs]")
-			.should("not.exist");
+			.ui5TimePickerAssertClocksView();
 	});
 
 	it("clicking input field on phone opens picker directly in inputs view", () => {
@@ -358,16 +331,7 @@ describe("TimePicker on phone - view toggle button", () => {
 			.ui5ResponsivePopoverOpened();
 
 		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-inputs]")
-			.should("exist");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.find("[ui5-time-selection-clocks]")
-			.should("not.exist");
+			.ui5TimePickerAssertInputsView();
 	});
 });
 
