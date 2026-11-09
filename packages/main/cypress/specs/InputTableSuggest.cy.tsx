@@ -455,6 +455,65 @@ describe("InputTableSuggest - Row Selection", () => {
 	});
 });
 
+describe("InputTableSuggest - selection-change on deselection", () => {
+	it("fires selection-change with null when Backspace unselects the matched row", () => {
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+
+		// Typeahead autocompletes "John" and selects the row (first selection-change, with a row).
+		cy.get("@input").realType("j");
+		cy.get("@input").should("have.value", "john");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
+
+		// Backspace removes the autocompleted suffix and unselects the row -> selection-change null.
+		cy.realPress("Backspace");
+		cy.get("@input").should("have.value", "j");
+		cy.get("@onSelectionChange").should("have.been.calledTwice");
+		cy.get("@onSelectionChange").then((spy: any) => {
+			expect(spy.lastCall.args[0].detail.row).to.equal(null);
+		});
+	});
+
+	it("fires selection-change with null when forward typing no longer matches any row", () => {
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+
+		// "j" matches and selects "John" (first selection-change, with a row).
+		cy.get("@input").realType("j");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
+
+		// Typing "x" over the autocompleted suffix yields "jx", which matches nothing -> null.
+		cy.get("@input").realType("x");
+		cy.get("@input").should("have.value", "jx");
+		cy.get("@onSelectionChange").should("have.been.calledTwice");
+		cy.get("@onSelectionChange").then((spy: any) => {
+			expect(spy.lastCall.args[0].detail.row).to.equal(null);
+		});
+	});
+});
+
 describe("InputTableSuggest - Typeahead", () => {
 	it("performs typeahead with first matching row", () => {
 		cy.mount(
@@ -1150,7 +1209,38 @@ describe("InputTableSuggest - change event", () => {
 		cy.get("#outside").realClick();
 		cy.get("@onChange").should("have.been.calledOnce");
 	});
+
+	it("fires change on Enter for free text with no matching row", () => {
+		const onChange = cy.spy().as("onChange");
+		cy.mount(
+			<InputTableSuggest showSuggestions onChange={onChange}>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("xyz");
+
+		cy.realPress("Enter");
+		cy.get("@input").should("have.value", "xyz");
+		cy.get("@onChange").should("have.been.calledOnce");
+
+		// Enter also closes the picker.
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+
+		// No duplicate change on the following blur.
+		cy.realPress("Tab");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
 });
+
 
 describe("InputTableSuggest - open/close/type-ahead events", () => {
 	it("fires open when the popover opens", () => {

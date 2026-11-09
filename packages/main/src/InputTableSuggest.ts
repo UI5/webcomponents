@@ -83,7 +83,7 @@ type InputTableSuggestScrollEventDetail = {
  * - A simple text-based suggestion list is not sufficient
  * - You want to display data in a tabular format
  *
- * ### Difference from ui5-input
+ * ### Structure
  *
  * This component uses its own tabular suggestion mechanism instead of the standard
  * `showSuggestions` / `suggestionItems` from ui5-input. The tabular suggestions
@@ -332,8 +332,7 @@ class InputTableSuggest extends InputField {
 		// exactly matches the already-autocompleted row the value does not change, so
 		// no re-render happens - deselecting here would drop a still-correct selection.
 		if (!this._shouldAutocomplete) {
-			this._deselectAllRows();
-			this._matchedTabularRow = undefined;
+			this._clearRowSelection();
 			this._rowFocused = false;
 		}
 	}
@@ -394,8 +393,7 @@ class InputTableSuggest extends InputField {
 		const matchingRow = this._getFirstMatchingRow(this.value);
 		if (!matchingRow) {
 			// Forward typing no longer matches any row: clear the previous selection.
-			this._deselectAllRows();
-			this._matchedTabularRow = undefined;
+			this._clearRowSelection();
 			return;
 		}
 
@@ -584,6 +582,17 @@ class InputTableSuggest extends InputField {
 		this._updateRowClasses();
 	}
 
+	_clearRowSelection() {
+		const hadSelection = this._allRows.some(row => row.selected || row.focused);
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				row: null,
+			});
+		}
+	}
+
 	_onkeydown(e: KeyboardEvent) {
 		this._shouldAutocomplete = !this.noTypeahead && !(isBackSpace(e) || isDelete(e) || isEscape(e));
 
@@ -663,12 +672,12 @@ class InputTableSuggest extends InputField {
 					return;
 				}
 
-				// No row to accept: consume Enter to close the picker so the base handler does not
-				// submit the enclosing form in the same keystroke (mirrors _handleEscape).
 				e.preventDefault();
 				this._shouldAutocomplete = false;
 				this.isTyping = false;
 				this._open = false;
+				this.lastConfirmedValue = this.value;
+				this._handleChange();
 				return;
 			}
 		}
