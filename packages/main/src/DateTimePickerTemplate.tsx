@@ -32,7 +32,7 @@ function header(this: DateTimePicker) {
 				<Button
 					slot="endContent"
 					design="Transparent"
-					icon={this._useTimeInputsMode ? timeEntryRequest : keyboardAndMouse}
+					icon={this._useTimeInputs ? timeEntryRequest : keyboardAndMouse}
 					tooltip={this._dtpTimeToggleLabel}
 					onClick={this._toggleDtpTimeMode}
 				/>
@@ -76,7 +76,7 @@ function content(this: DateTimePicker) {
 				{ !this._phoneView && <span class="ui5-dt-picker-separator"></span> }
 
 				{ this.showTimeView &&
-					(this._useTimeInputsMode
+					(this._useTimeInputs
 						? <TimeSelectionInputs
 							id={`${this._id}-time-sel`}
 							class={{
@@ -93,7 +93,6 @@ function content(this: DateTimePicker) {
 							id={`${this._id}-time-sel`}
 							class={{
 								"ui5-dt-time": true,
-								"ui5-dt-cal--hidden": this._phoneView && this.showTimeView,
 								"ui5-dt-time--hidden": this._phoneView && this.showDateView,
 							}}
 							formatPattern={this._formatPattern}

@@ -37,7 +37,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 
 			{ this.shouldDisplayValueStateMessageInResponsivePopover && valueStateTextHeader.call(this) }
 
-			{ this._useInputsMode
+			{ this._useInputs
 				? <TimeSelectionInputs
 					id={`${this._id}-time-sel`}
 					class="ui5-tp-mode-inputs"
@@ -71,7 +71,7 @@ function defaultHeader(this: TimePicker) {
 				id={`${this._id}-mode-toggle`}
 				slot="endContent"
 				design="Transparent"
-				icon={this._useInputsMode ? timeEntryRequest : keyboardAndMouse}
+				icon={this._useInputs ? timeEntryRequest : keyboardAndMouse}
 				tooltip={this._pickerModeToggleLabel}
 				accessibleName={this._pickerModeToggleAccessibleName}
 				accessibleDescription={this._pickerModeToggleAccessibleDesc}

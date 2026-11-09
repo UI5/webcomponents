@@ -34,7 +34,10 @@ import {
 	DATETIME_RANGEOVERFLOW,
 	TIMEPICKER_SWITCH_TO_KEYBOARD,
 	TIMEPICKER_SWITCH_TO_CLOCK,
+	TIMEPICKER_ANNOUNCE_KEYBOARD,
+	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 // Template
 import DateTimePickerTemplate from "./DateTimePickerTemplate.js";
@@ -154,7 +157,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
-	_useTimeInputsMode = false;
+	_useTimeInputs = false;
 
 	/**
 	 * Selected, but not yet confirmed date/time
@@ -185,7 +188,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	onResponsivePopoverAfterClose() {
 		super.onResponsivePopoverAfterClose();
 		this._showTimeView = false;
-		this._useTimeInputsMode = false;
+		this._useTimeInputs = false;
 		this._previewValues = {};
 	}
 
@@ -430,15 +433,19 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @private
 	 */
 	_toggleDtpTimeMode() {
-		this._useTimeInputsMode = !this._useTimeInputsMode;
+		this._useTimeInputs = !this._useTimeInputs;
+		announce(
+			DateTimePicker.i18nBundle.getText(this._useTimeInputs ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			"Assertive",
+		);
 	}
 
 	get _showTimeViewToggle() {
-		return isPhone() && this.showTimeView;
+		return this._phoneView && this.showTimeView;
 	}
 
 	get _dtpTimeToggleLabel() {
-		return this._useTimeInputsMode
+		return this._useTimeInputs
 			? DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_CLOCK)
 			: DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_KEYBOARD);
 	}
@@ -451,7 +458,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	_dateTimeSwitchChange(e: CustomEvent<SegmentedButtonSelectionChangeEventDetail>) { // Note: fix when SegmentedButton is implemented in TS
 		const selectedItem = e.detail.selectedItems[0];
 		this._showTimeView = selectedItem.getAttribute("data-ui5-key") === "Time";
-		this._useTimeInputsMode = false;
+		this._useTimeInputs = false;
 	}
 
 	/**

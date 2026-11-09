@@ -377,7 +377,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
-	_useInputsMode = false;
+	_useInputs = false;
 
 	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
@@ -542,9 +542,9 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	_togglePickerMode() {
-		this._useInputsMode = !this._useInputsMode;
+		this._useInputs = !this._useInputs;
 		announce(
-			TimePicker.i18nBundle.getText(this._useInputsMode ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			TimePicker.i18nBundle.getText(this._useInputs ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
 			"Assertive",
 		);
 	}
@@ -563,12 +563,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	get _pickerModeToggleAccessibleDesc() {
 		return TimePicker.i18nBundle.getText(
-			this._useInputsMode ? TIMEPICKER_TOGGLE_DESC_INPUTS_VIEW : TIMEPICKER_TOGGLE_DESC_CLOCK_VIEW,
+			this._useInputs ? TIMEPICKER_TOGGLE_DESC_INPUTS_VIEW : TIMEPICKER_TOGGLE_DESC_CLOCK_VIEW,
 		);
 	}
 
 	get _pickerModeToggleLabel() {
-		return this._useInputsMode ? this._switchToClockLabel : this._switchToKeyboardLabel;
+		return this._useInputs ? this._switchToClockLabel : this._switchToKeyboardLabel;
 	}
 
 	onTimeSelectionChange(e: CustomEvent<TimeSelectionChangeEventDetail>) {
@@ -621,7 +621,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onResponsivePopoverAfterClose() {
 		this.open = false;
-		this._useInputsMode = false;
+		this._useInputs = false;
 		if (isPhone()) {
 			this.blur(); // close device's keyboard and prevent further typing
 		} else {
@@ -644,7 +644,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		if (!this.showHeader) {
 			return;
 		}
-		if (this._useInputsMode) {
+		if (this._useInputs) {
 			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-time-sel"]`)?.focus();
 		} else {
 			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-mode-toggle"]`)?.focus();
@@ -657,7 +657,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 */
 	_openPickerInInputsMode() {
 		this.tempValue = this.value && this.isValidValue(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
-		this._useInputsMode = true;
+		this._useInputs = true;
 		if (!this.open) {
 			this._togglePicker();
 		}
