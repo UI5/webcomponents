@@ -1891,6 +1891,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.tokenizerAvailable = this._getSelectedItems().length > 0;
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
+		if (this._tokenizer) {
+			// Set the CSS variable on the tokenizer element so it's available in the shadow DOM
+			// (mirrors the same pattern used in MultiInput.ts)
+			this._tokenizer.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
+		}
+
 		if (!input || !value) {
 			this._getItems().forEach(item => {
 				if (isInstanceOfMultiComboBoxItem(item)) {

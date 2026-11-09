@@ -51,6 +51,7 @@ export default function TokenizerTemplate(this: Tokenizer) {
 			<span
 				aria-hidden="true"
 				class="ui5-tokenizer-more-text ui5-tokenizer--measure-nmore"
+				part="n-more-text"
 			></span>
 
 			{ TokenizerPopoverTemplate.call(this) }

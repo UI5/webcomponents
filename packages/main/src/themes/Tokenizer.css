@@ -74,6 +74,16 @@
 	box-sizing: border-box;
 }
 
+/* In collapsed mode prevent the content div from being flex-shrunk below its natural
+   width (the sum of visible tokens). Without this guard, any negative free space in the
+   tokenizer-root row is absorbed by the content div (overflow:hidden lets flex shrink it
+   to 0), which clips the last visible token through its own overflow:hidden.
+   In expanded mode the content div must be allowed to shrink so it fits inside the
+   tokenizer host element — tokens then scroll within the constrained content div via JS. */
+:host(:not([expanded])) .ui5-tokenizer--content {
+	flex-shrink: 0;
+}
+
 .ui5-tokenizer--list{
 	display: contents;
 }
