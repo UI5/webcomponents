@@ -14,6 +14,7 @@ import {
 	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import { startTooltipSupport } from "./TooltipSupport.js";
 
 // Styles
 import styles from "./generated/themes/ListItemBase.css.js";
@@ -137,6 +138,9 @@ class ListItemBase extends UI5Element implements ITabbable {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+		// Enable the data-ui5-tooltip magic attribute emitted by the item template
+		// for every ListItemBase subclass (Option, OptionCustom, ListItem, ...).
+		startTooltipSupport();
 	}
 
 	onBeforeRendering(): void {

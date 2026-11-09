@@ -177,16 +177,18 @@ describe("Select - Accessibility", () => {
 			.find("li.ui5-li-root")
 			.should("have.attr", "role", EXPECTED_ROLE);
 
-		// Check if the tooltip is set
+		// Check the tooltip is set (enhanced visual tooltip, not native title)
 		cy
 			.get("[ui5-option][tooltip]")
 			.shadow()
 			.find("li.ui5-li-root")
-			.should("have.attr", "title", EXPECTED_TOOLTIP)
+			.should("have.attr", "data-ui5-tooltip", EXPECTED_TOOLTIP)
+			.and("not.have.attr", "title")
 			.get("[ui5-option-custom][tooltip]")
 			.shadow()
 			.find("li.ui5-li-root")
-			.should("have.attr", "title", EXPECTED_TOOLTIP);
+			.should("have.attr", "data-ui5-tooltip", EXPECTED_TOOLTIP)
+			.and("not.have.attr", "title");
 	});
 
 	it("setting tooltip on the host is reflected on the select's shadow dom root", () => {

@@ -521,6 +521,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	}
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute emitted by the template.
 		startTooltipSupport();
 	}

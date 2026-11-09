@@ -31,7 +31,10 @@ let activeGestures: TooltipGestures | undefined;
 // One shared <ui5-tooltip>, created scoping-safe on first use and re-docked per target.
 function getSharedTooltip(): Tooltip {
 	const tag = Tooltip.getMetadata().getTag();
-	return getSingletonElementInstance(tag, document.body, () => document.createElement(tag)) as Tooltip;
+	const tooltip = getSingletonElementInstance(tag, document.body, () => document.createElement(tag)) as Tooltip;
+	// The delegate owns the gestures; stop the instance from binding its own.
+	tooltip._externalGestures = true;
+	return tooltip;
 }
 
 // First element in the event's composed path that carries the magic attribute.

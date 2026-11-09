@@ -218,6 +218,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute on the day cells.
 		startTooltipSupport();
 	}

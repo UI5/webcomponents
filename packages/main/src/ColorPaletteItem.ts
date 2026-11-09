@@ -126,6 +126,7 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	}
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute emitted by the template.
 		startTooltipSupport();
 	}

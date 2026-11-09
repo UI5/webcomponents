@@ -76,6 +76,21 @@ describe("data-ui5-tooltip support", () => {
 		});
 	});
 
+	it("binds gestures only once for the shared instance (activation closes and stays closed)", () => {
+		cy.mount(<Button data-ui5-tooltip="Save">S</Button>);
+
+		primeZeroDelay("[ui5-button]");
+		cy.get("[ui5-button]").realHover();
+		cy.get(tag()).should($t => expect(($t[0] as unknown as Tooltip).isOpen()).to.equal(true));
+
+		// Activation closes exactly once. A second self-bound gesture machine would
+		// let the trailing focus re-open it, leaving it open; assert it stays closed.
+		cy.get("[ui5-button]").realClick();
+		cy.get(tag()).should($t => expect(($t[0] as unknown as Tooltip).isOpen()).to.equal(false));
+		cy.wait(100);
+		cy.get(tag()).should($t => expect(($t[0] as unknown as Tooltip).isOpen()).to.equal(false));
+	});
+
 	it("releases gestures and closes when the active target is removed", () => {
 		cy.mount(<Button id="rm" data-ui5-tooltip="Save">S</Button>);
 

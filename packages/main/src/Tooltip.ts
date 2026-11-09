@@ -95,6 +95,14 @@ class Tooltip extends UI5Element {
 	_gestures?: TooltipGestures;
 
 	/**
+	 * When true, gestures are driven externally (by TooltipSupport); the
+	 * component does not bind its own TooltipGestures. Set only on the shared
+	 * instance so it is not double-bound.
+	 * @private
+	 */
+	_externalGestures = false;
+
+	/**
 	 * Opens the tooltip against its opener.
 	 * @public
 	 */
@@ -147,6 +155,13 @@ class Tooltip extends UI5Element {
 	}
 
 	_syncGestures(): void {
+		// Gestures owned externally (shared instance driven by TooltipSupport):
+		// never bind our own, or they would double up on the same opener.
+		if (this._externalGestures) {
+			this._gestures?.destroy();
+			this._gestures = undefined;
+			return;
+		}
 		const opener = this._getOpenerElement();
 		if (!opener) {
 			this._gestures?.destroy();

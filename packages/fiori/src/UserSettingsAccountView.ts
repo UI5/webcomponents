@@ -89,6 +89,7 @@ class UserSettingsAccountView extends UserSettingsView {
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute emitted by the template.
 		startTooltipSupport();
 	}

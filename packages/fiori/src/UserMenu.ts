@@ -319,6 +319,7 @@ class UserMenu extends UI5Element {
 	_selectedAccountManageBtn?: Button;
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute emitted by the template.
 		startTooltipSupport();
 	}

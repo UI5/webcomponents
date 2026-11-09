@@ -125,6 +125,7 @@ class AvatarBadge extends UI5Element {
 	effectiveTooltip?: string;
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		// Enable the data-ui5-tooltip magic attribute emitted by the template.
 		startTooltipSupport();
 	}
