@@ -26,7 +26,7 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 				style={this.styles.suggestionsPopover}
 				onOpen={this._afterOpenPicker}
 				onClose={this._afterClosePicker}
-				open={this.open}
+				open={this._open}
 				opener={this}
 				accessibleName={this.suggestionsText}
 			>
@@ -51,7 +51,7 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 						</div>
 						{this.hasValueStateMessage &&
 						<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
-							{valueStateMessage.call(this, this.open)}
+							{valueStateMessage.call(this, this._open)}
 						</div>
 						}
 					</div>
@@ -66,7 +66,7 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 						}}
 						style={this.styles.suggestionPopoverHeader}
 					>
-						{valueStateMessage.call(this, this.open)}
+						{valueStateMessage.call(this, this._open)}
 					</div>
 				}
 
@@ -103,7 +103,14 @@ function valueStateMessage(this: InputTableSuggest, open: boolean) {
 
 function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 	return (
-		<div class="ui5-input-table-suggest-wrapper" onClick={this._onTableRowClick} onScroll={this._onTableScroll}>
+		<div
+			class={{
+				"ui5-input-table-suggest-wrapper": true,
+				"ui5-input-table-suggest-wrapper--phone": this._isPhone,
+			}}
+			onClick={this._onTableRowClick}
+			onScroll={this._onTableScroll}
+		>
 			<Table
 				class="ui5-input-table-suggest-table"
 				overflowMode={this._overflowMode}

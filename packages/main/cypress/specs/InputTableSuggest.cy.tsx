@@ -290,6 +290,77 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 	});
 });
 
+describe("InputTableSuggest - Escape handling", () => {
+	it("first Escape clears the typeahead to the typed text and closes; second Escape restores the last confirmed value", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("jo");
+
+		// Typeahead autocompletes the value and opens the popover.
+		cy.get("@input").should("have.value", "john");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// First Escape: close the popover and strip the autocompleted part, leaving the typed text.
+		cy.realPress("Escape");
+		cy.get("@input").should("have.value", "jo");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+
+		// Second Escape (popover already closed): restore the last confirmed value (empty here).
+		cy.realPress("Escape");
+		cy.get("@input").should("have.value", "");
+	});
+
+	it("second Escape restores the previously confirmed value", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions noTypeahead>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow><InputTableSuggestCell>John</InputTableSuggestCell></InputTableSuggestRow>
+				<InputTableSuggestRow><InputTableSuggestCell>Jane</InputTableSuggestCell></InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+
+		// Confirm "Jane" by clicking the row so it becomes the last confirmed value.
+		cy.get("@input").realType("j");
+		cy.get("@input").find("[ui5-table-row]").eq(1).realClick();
+		cy.get("@input").should("have.value", "Jane");
+
+		// Type again to reopen the popover with a changed value.
+		cy.get("@input").realType("x");
+		cy.get("@input").should("have.value", "Janex");
+
+		// First Escape: back to the typed text and close.
+		cy.realPress("Escape");
+		cy.get("@input").should("have.value", "Janex");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+
+		// Second Escape: restore the confirmed "Jane".
+		cy.realPress("Escape");
+		cy.get("@input").should("have.value", "Jane");
+	});
+});
+
 describe("InputTableSuggest - Row Selection", () => {
 	it("selects row on click", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");

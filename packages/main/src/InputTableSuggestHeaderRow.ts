@@ -56,6 +56,7 @@ class InputTableSuggestHeaderRow extends TableHeaderRow {
 	onEnterDOM() {
 		super.onEnterDOM();
 		this.toggleAttribute("ui5-table-header-row", true);
+		this.sticky = true;
 	}
 }
 

@@ -80,6 +80,7 @@ class InputTableSuggestRow extends TableRow {
 	onEnterDOM() {
 		super.onEnterDOM();
 		this.toggleAttribute("ui5-table-row", true);
+		this.interactive = true;
 	}
 }
 

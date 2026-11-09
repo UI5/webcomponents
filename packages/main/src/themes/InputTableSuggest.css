@@ -55,6 +55,6 @@
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
 
-:host([_isPhone]) .ui5-input-table-suggest-wrapper {
+.ui5-input-table-suggest-wrapper--phone {
 	max-height: none;
 }

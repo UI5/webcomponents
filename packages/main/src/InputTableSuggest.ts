@@ -21,6 +21,7 @@ import {
 	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 
 import InputField from "./InputField.js";
 import type InputTableSuggestRow from "./InputTableSuggestRow.js";
@@ -158,8 +159,8 @@ class InputTableSuggest extends InputField {
 	 * @default false
 	 * @private
 	 */
-	@property({ type: Boolean })
-	open = false;
+	@property({ type: Boolean, noAttribute: true })
+	_open = false;
 
 	/**
 	 * Defines whether suggestions should be shown.
@@ -182,12 +183,6 @@ class InputTableSuggest extends InputField {
 	 * @private
 	 */
 	typedInValue = "";
-
-	/**
-	 * Value before any selection started.
-	 * @private
-	 */
-	valueBeforeSelectionStart = "";
 
 	/**
 	 * Whether autocomplete should run on next render.
@@ -305,17 +300,6 @@ class InputTableSuggest extends InputField {
 		return this._allRows.filter(row => !(row as UI5Element).hidden);
 	}
 
-	_applyTableProperties() {
-		const headerRow = this.headerRow[0];
-		if (headerRow) {
-			headerRow.sticky = true;
-		}
-
-		this.rows.forEach(row => {
-			row.interactive = true;
-		});
-	}
-
 	onBeforeRendering() {
 		this._useTableSuggestions = this._columns.length > 0;
 
@@ -331,7 +315,6 @@ class InputTableSuggest extends InputField {
 		super._input(e, eventType);
 
 		this.typedInValue = this.value;
-		this.valueBeforeSelectionStart = this.value;
 
 		this._isKeyNavigation = false;
 
@@ -364,16 +347,16 @@ class InputTableSuggest extends InputField {
 		// holds a non-text component like an avatar). Don't treat that as "cleared
 		// input" and close the picker mid-navigation.
 		if (preventOpenPicker || (!hasValue && !this._isKeyNavigation)) {
-			this.open = false;
+			this._open = false;
 		} else if (!this._isPhone) {
 			const isTyping = isFocused && this.isTyping;
 			if (isTyping) {
 				// Filtering is the application's responsibility (it hides non-matching
 				// rows). The component does not match internally, so it opens with all
 				// currently provided rows whenever there is something to show.
-				this.open = hasItems;
+				this._open = hasItems;
 			} else {
-				this.open = hasItems && this.open;
+				this._open = hasItems && this._open;
 			}
 		}
 	}
@@ -451,15 +434,19 @@ class InputTableSuggest extends InputField {
 	}
 
 	_selectMatchingRow(row: ITableSuggestionRow) {
+		const selectionChanged = this._matchedTabularRow !== row;
+
 		this._deselectAllRows();
 
 		row.selected = true;
 		this._matchedTabularRow = row;
 		this._updateRowClasses();
 
-		this.fireDecoratorEvent("selection-change", {
-			row,
-		});
+		if (selectionChanged) {
+			this.fireDecoratorEvent("selection-change", {
+				row,
+			});
+		}
 	}
 
 	_updateRowClasses() {
@@ -473,8 +460,6 @@ class InputTableSuggest extends InputField {
 		if (!this._useTableSuggestions) {
 			return super.onAfterRendering();
 		}
-
-		this._applyTableProperties();
 
 		if (this._performTextSelection) {
 			if (this.typedInValue.length && this.value.length) {
@@ -492,8 +477,7 @@ class InputTableSuggest extends InputField {
 	 */
 	_updateValueStateLinks() {
 		const currentLinks = this.linksInAriaValueStateHiddenText;
-		if (this._valueStateLinks.length !== currentLinks.length
-			|| !this._valueStateLinks.every((link, i) => link === currentLinks[i])) {
+		if (!arraysAreEqual(this._valueStateLinks, currentLinks)) {
 			this._removeLinksEventListeners();
 			this._addLinksEventListeners();
 			this._valueStateLinks = currentLinks;
@@ -512,7 +496,7 @@ class InputTableSuggest extends InputField {
 
 	_onTableRowClick(e: MouseEvent) {
 		const clickedRow = e.composedPath().find(el => {
-			return el instanceof HTMLElement && el.hasAttribute("ui5-table-row");
+			return (el as HTMLElement).hasAttribute?.("ui5-table-row");
 		}) as ITableSuggestionRow | undefined;
 
 		if (clickedRow && this._visibleRows.includes(clickedRow)) {
@@ -529,7 +513,7 @@ class InputTableSuggest extends InputField {
 		// Sync previousValue so the native change event on the following blur does not fire a
 		// second `change` on top of the explicit one below (mirrors base ui5-input on accept).
 		this.previousValue = rowValue;
-		this.open = false;
+		this._open = false;
 
 		if (!isAlreadySelected) {
 			this.fireDecoratorEvent("selection-change", {
@@ -571,7 +555,7 @@ class InputTableSuggest extends InputField {
 	_onkeydown(e: KeyboardEvent) {
 		this._shouldAutocomplete = !this.noTypeahead && !(isBackSpace(e) || isDelete(e) || isEscape(e));
 
-		if (this._useTableSuggestions && this.open) {
+		if (this._useTableSuggestions && this._open) {
 			if (isDown(e)) {
 				e.preventDefault();
 				this._isKeyNavigation = true;
@@ -647,7 +631,11 @@ class InputTableSuggest extends InputField {
 					return;
 				}
 
-				this.open = false;
+				// No row to accept: consume Enter to close the picker so the base handler does not
+				// submit the enclosing form in the same keystroke (mirrors _handleEscape).
+				e.preventDefault();
+				this._open = false;
+				return;
 			}
 		}
 
@@ -717,12 +705,12 @@ class InputTableSuggest extends InputField {
 	}
 
 	_handleEscape() {
-		if (!this._useTableSuggestions || !this.open) {
+		if (!this._useTableSuggestions || !this._open) {
 			return super._handleEscape();
 		}
 
-		this.value = this.typedInValue || this.valueBeforeSelectionStart;
-		this.open = false;
+		this.value = this.typedInValue;
+		this._open = false;
 		this._deselectAllRows();
 		this._matchedTabularRow = undefined;
 		this._rowFocused = false;
@@ -854,7 +842,11 @@ class InputTableSuggest extends InputField {
 	 */
 	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {
 		const popover = this._getTabularPopover();
-		return !!(popover?.contains(toBeFocused) || this.contains(toBeFocused));
+		return !!(
+			popover?.contains(toBeFocused)
+			|| this.contains(toBeFocused)
+			|| this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))
+		);
 	}
 
 	_onfocusout(e: FocusEvent) {
@@ -864,16 +856,32 @@ class InputTableSuggest extends InputField {
 			return;
 		}
 
-		this.open = false;
-		// The native change fired on blur was deferred while the popover was open (see
-		// _handleChange). Now that it is closed, fire the pending `change` for a plain
-		// blur-outside; if a row was selected, previousValue is already synced so this no-ops.
-		this._handleChange();
 		this.focused = false;
-		this.isTyping = false;
-		this.lastConfirmedValue = "";
+
+		this._open = false;
+		// The native change fired on blur was deferred while the popover was open (see
+		// _handleChange). Now that it is closed, fire the pending `change`. When the clear icon
+		// was used, reset the flag first so _handleChange does not suppress the change (mirrors
+		// base InputField/Input). If a row was selected, previousValue is already synced so this
+		// no-ops.
+		if (this.showClearIcon && !this._effectiveShowClearIcon) {
+			this._clearIconClicked = false;
+		}
+		this._handleChange();
+
 		this._rowFocused = false;
 		this._clearPopoverFocusAndSelection();
+
+		if (!this._clearIconClicked) {
+			this.previousValue = "";
+		}
+
+		this.lastConfirmedValue = "";
+		this.isTyping = false;
+
+		if ((this.value !== this.previousValue) && this.showClearIcon) {
+			this._clearIconClicked = false;
+		}
 	}
 
 	_handleChange() {
@@ -881,7 +889,7 @@ class InputTableSuggest extends InputField {
 		// selection (click/Enter) fires the single authoritative `change` via _selectRow, and
 		// a blur outside the popover re-runs this from _onfocusout once the popover is closed.
 		// This mirrors base ui5-input, which defers `change` while its suggestions picker is open.
-		if (this._useTableSuggestions && this.open) {
+		if (this._useTableSuggestions && this._open) {
 			return;
 		}
 
@@ -921,17 +929,16 @@ class InputTableSuggest extends InputField {
 		if (focusedRow) {
 			this._selectRow(focusedRow, false);
 		}
-		this.open = false;
+		this._open = false;
 	}
 
 	_cancelMobileValue() {
 		this.value = this.typedInValue || "";
-		this.open = false;
+		this._open = false;
 		this._deselectAllRows();
 	}
 
 	get styles() {
-		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		const inputWidth = this._inputWidth || 0;
 
 		return {
@@ -940,7 +947,7 @@ class InputTableSuggest extends InputField {
 			},
 			suggestionsPopover: {
 				"min-width": inputWidth ? `${inputWidth}px` : "",
-				"max-width": inputWidth && (inputWidth / remSizeInPx) > 40 ? `${inputWidth}px` : "40rem",
+				"max-width": inputWidth ? `max(${inputWidth}px, 40rem)` : "40rem",
 			},
 			suggestionPopoverHeader: {
 				"display": "inline-block",
