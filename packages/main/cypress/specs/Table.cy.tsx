@@ -1542,7 +1542,7 @@ describe("Table - Interactive Header Cell", () => {
 			cy.focused().should("have.id", "interactiveHeader");
 		});
 
-		it("does not activate or fire header-click when a slotted action is clicked", () => {
+		it("does not set the _active state when a slotted action is clicked", () => {
 			cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
 
 			// clicking the action button must not set the _active state on the header cell
@@ -1554,8 +1554,10 @@ describe("Table - Interactive Header Cell", () => {
 			cy.get("#interactiveHeader").realMouseDown();
 			cy.get("#interactiveHeader").should("have.attr", "_active");
 			cy.get("#interactiveHeader").realMouseUp();
+		});
 
-			// attach stub after _active checks so the mousedown/mouseup above don't affect the count
+		it("does not fire header-click when a slotted action is clicked", () => {
+			cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
 			cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
 
 			// clicking the action button must not fire the header-click event

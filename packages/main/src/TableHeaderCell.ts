@@ -3,7 +3,7 @@ import {
 	eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
-import { toggleAttribute, isFocusedElementInside } from "./TableUtils.js";
+import { toggleAttribute, isFocusedElementInside, setActiveOnPointerDown } from "./TableUtils.js";
 import TableCellBase from "./TableCellBase.js";
 import TableHeaderCellTemplate from "./TableHeaderCellTemplate.js";
 import TableHeaderCellStyles from "./generated/themes/TableHeaderCell.css.js";
@@ -235,9 +235,7 @@ class TableHeaderCell extends TableCellBase {
 			return;
 		}
 
-		if (!await isFocusedElementInside(this, e)) {
-			this._setActive("pointerup");
-		}
+		await setActiveOnPointerDown(this, e);
 	}
 
 	_setActive(deactivationEvent: string) {
