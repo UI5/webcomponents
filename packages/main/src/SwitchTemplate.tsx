@@ -26,6 +26,7 @@ export default function SwitchTemplate(this: Switch) {
 			aria-readonly={this.effectiveAriaReadonly}
 			aria-required={this.required}
 			aria-describedby={this.ariaDescribedBy}
+			aria-description={this.tooltip || undefined}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}

@@ -357,7 +357,14 @@ class Link extends UI5Element implements ITabbable {
 	}
 
 	get ariaDescriptionText() {
-		return this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+
+		// The visual tooltip replaces the native title; announce its text as a
+		// description unless it is already serving as the accessible name.
+		const tooltipText = this.tooltip && this.ariaLabelText !== this.tooltip ? this.tooltip : undefined;
+
+		const parts = [accessibleDescription, tooltipText].filter(part => part);
+		return parts.length ? parts.join(" ") : undefined;
 	}
 
 	get _hasPopup() {

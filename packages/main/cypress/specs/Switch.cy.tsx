@@ -171,6 +171,15 @@ describe("General accesibility attributes", () => {
 			.should("have.attr", "text", gpsLocationDescr);
 	});
 
+	it("Should expose the tooltip text to screen readers via aria-description", () => {
+		cy.mount(<Switch tooltip={gpsLocationDescr} text-on="Yes" text-off="No"></Switch>);
+
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("have.attr", "aria-description", gpsLocationDescr);
+	});
+
 	it("Should not have 'aria-label' attribute when 'text-on' and 'text-off' attributes aren't set", () => {
 		cy.mount(<Switch></Switch>);
 

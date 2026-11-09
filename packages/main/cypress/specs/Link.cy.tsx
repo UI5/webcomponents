@@ -179,6 +179,15 @@ describe("General API", () => {
 			.should("have.attr", "text", "my tooltip");
 	});
 
+	it("exposes the tooltip text to screen readers via aria-description", () => {
+		cy.mount(<Link accessibleName="more info" tooltip="my tooltip">Click me</Link>);
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "aria-description", "my tooltip");
+	});
+
 	it("opens the enhanced tooltip on hover", () => {
 		cy.mount(<Link tooltip="my tooltip">Click me</Link>);
 

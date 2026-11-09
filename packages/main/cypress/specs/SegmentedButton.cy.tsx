@@ -576,6 +576,23 @@ describe("SegmentedButtonItem Accessibility", () => {
             .find("[ui5-tooltip]")
             .should("have.attr", "text", TOOLTIP_TEXT);
     });
+
+    it("exposes a custom tooltip to screen readers via aria-description", () => {
+        const TOOLTIP_TEXT = "This is a disabled item";
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="descItem" tooltip={TOOLTIP_TEXT}>
+                    Short
+                </SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#descItem")
+            .shadow()
+            .find("li")
+            .should("have.attr", "aria-description")
+            .and("contain", TOOLTIP_TEXT);
+    });
 });
 
 describe("SegmentedButtonItem: click event", () => {
