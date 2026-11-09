@@ -49,7 +49,6 @@
 	outline-offset: -0.25rem;
 }
 
-::slotted([ui5-table-row].ui5-input-table-suggest-row--focused:hover),
 ::slotted([ui5-table-row].ui5-input-table-suggest-row--selected:hover) {
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
