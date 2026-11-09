@@ -34,7 +34,7 @@
 }
 
 #highlight-cell + #selection-cell {
-	inset-inline-start: var(--_ui5_table_highlight_cell_width);
+	inset-inline-start: var(--_ui5_table_highlight_width);
 }
 
 ::slotted([ui5-table-cell-base]:first-of-type) {
@@ -127,8 +127,8 @@
 		clip-path: none;
 	}
 
-	#highlight,
-	#navigated {
+	#navigated,
+	::slotted([ui5-table-row-highlight]) {
 		top: 3px;
 	}
 }

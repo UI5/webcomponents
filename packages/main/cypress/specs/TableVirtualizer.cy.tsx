@@ -75,7 +75,7 @@ describe("TableVirtualizer", () => {
 				.should("have.attr", "aria-rowcount", "100")
 				.should("have.css", "overflow-y", "auto")
 				.then($innerTable => window.getComputedStyle($innerTable[0]))
-				.invoke("getPropertyValue", "--row-height")
+				.invoke("getPropertyValue", "--_ui5_table_row-height")
 				.and("equal", "50px");
 
 			cy.get("@innerTable")
@@ -96,7 +96,7 @@ describe("TableVirtualizer", () => {
 
 			cy.get("@innerTable")
 				.then($innerTable => window.getComputedStyle($innerTable[0]))
-				.invoke("getPropertyValue", "--row-height")
+				.invoke("getPropertyValue", "--_ui5_table_row-height")
 				.and("equal", "60px");
 
 			cy.get("@innerTable")

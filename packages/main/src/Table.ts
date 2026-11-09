@@ -483,7 +483,8 @@ class Table extends UI5Element {
 		let alternateIndex = 0;
 		const hasFlexibleColumns = this._hasFlexibleColumns;
 		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
-		this._renderHighlight = this.rows.some(row => !row.isGroupRow() && row._hasHighlight);
+		const headerHighlight = this.headerRow[0]?._highlight;
+		this._renderHighlight = !!headerHighlight;
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
@@ -492,6 +493,10 @@ class Table extends UI5Element {
 				row._renderNavigated = this._renderNavigated;
 				row._renderHighlight = this._renderHighlight;
 				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
+				if (headerHighlight && !row.isHeaderRow()) {
+					const rowHighlight = (row as TableRow)._highlight;
+					rowHighlight && (rowHighlight._design = headerHighlight.design);
+				}
 			} else {
 				row._rowActionCount = 0;
 				row._renderDummyCell = !hasFlexibleColumns && !this._hasPopin;
@@ -666,6 +671,7 @@ class Table extends UI5Element {
 
 	get styles() {
 		const virtualizer = this._getVirtualizer();
+		const headerHighlight = this.headerRow[0]?._highlight;
 		const headerStyleMap: Record<string, string> = {};
 		this.headerRow[0]?.cells.forEach(headerCell => {
 			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
@@ -673,7 +679,8 @@ class Table extends UI5Element {
 		return {
 			table: {
 				"grid-template-columns": this._gridTemplateColumns,
-				"--row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
+				"--_ui5_table_row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
+				"--_ui5_table_highlight_width": headerHighlight ? headerHighlight._width : "0",
 				...headerStyleMap,
 			},
 			spacer: {
@@ -692,8 +699,9 @@ class Table extends UI5Element {
 		const visibleHeaderCells = this.headerRow[0]._visibleCells;
 
 		// Highlight Cell Width
-		if (this._renderHighlight) {
-			widths.push(`var(--_ui5_table_highlight_cell_width)`);
+		const headerHighlight = this.headerRow[0]._highlight;
+		if (headerHighlight) {
+			widths.push(headerHighlight._width);
 		}
 
 		// Selection Cell Width

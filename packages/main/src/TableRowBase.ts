@@ -21,8 +21,10 @@ import type Table from "./Table.js";
 	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
 })
-abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighlight extends HTMLElement = HTMLElement> extends UI5Element {
 	cells!: Array<TCell>;
+
+	highlight!: Array<THighlight>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
@@ -120,6 +122,10 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	get _tableId() {
 		return this._table?._id;
+	}
+
+	get _highlight() {
+		return this.highlight[0];
 	}
 
 	get _tableSelection() {

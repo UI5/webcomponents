@@ -1343,7 +1343,7 @@
 			{
 				"name": "Highlight",
 				"title": "Row Highlight",
-				"description": "Use the `highlight` property on the `ui5-table-row` to display a colored indicator at the start of the row, signaling its status at a glance."
+				"description": "Use the `highlight` property on the `ui5-table-row` to display a colored indicator at the start of the row, which signals its status at a glance."
 			},
 			{
 				"name": "DragAndDrop",
