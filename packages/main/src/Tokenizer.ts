@@ -778,7 +778,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const remToPx = (s: string) => {
 			const raw = s.trim();
 			const n = parseFloat(raw);
-			return isNaN(n) ? 0 : (raw.endsWith("rem") ? n * rootFontSizePx : n);
+			if (Number.isNaN(n)) {
+				return 0;
+			}
+			return raw.endsWith("rem") ? n * rootFontSizePx : n;
 		};
 		const inputMinPx = remToPx(cs.getPropertyValue("--_ui5_input_min_width_tokenizer_available"));
 
