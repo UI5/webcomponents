@@ -77,21 +77,17 @@ describe("Phone mode", () => {
 
         cy.get("@tokenizer")
             .shadow()
-            .find("span")
+            .find(".ui5-tokenizer-more-text")
             .realClick();
 
         cy.get("@tokenizer")
             .shadow()
             .find("[ui5-responsive-popover]")
-            .as("popover");
+            .as("popover")
+            .should("have.attr", "open");
 
         cy.get("@popover")
-            .find(".ui5-responsive-popover-footer")
-            .as("footer");
-
-        cy.get("@footer")
-            .find("[ui5-button]")
-            .eq(1)
+            .find(".ui5-responsive-popover-close-btn")
             .realClick();
 
         cy.get("@tokenizer")
@@ -174,8 +170,7 @@ describe("Phone mode", () => {
             .realClick();
 
         cy.get("@nMoreDialog")
-            .find(".ui5-responsive-popover-footer ui5-button")
-            .eq(0)
+            .find("[data-ui5-tokenizer-dialog-ok-button]")
             .realClick();
 
         cy.get("@tokenDeleteSpy")
@@ -208,8 +203,7 @@ describe("Phone mode", () => {
             .as("nMoreDialog");
 
         cy.get("@nMoreDialog")
-            .find(".ui5-responsive-popover-footer ui5-button")
-            .eq(0)
+            .find("[data-ui5-tokenizer-dialog-ok-button]")
             .realClick();
 
         cy.get("@tokenDeleteSpy")
@@ -251,8 +245,7 @@ describe("Phone mode", () => {
             .realClick();
 
         cy.get("@nMoreDialog")
-            .find(".ui5-responsive-popover-footer ui5-button")
-            .eq(1)
+            .find(".ui5-responsive-popover-close-btn")
             .realClick();
 
         cy.get("@tokenDeleteSpy")

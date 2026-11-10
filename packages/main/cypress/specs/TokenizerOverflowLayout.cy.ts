@@ -65,10 +65,11 @@ describe("calculateLayout – State B (some tokens fit)", () => {
 	});
 
 	it("handles a wide n-more button for a specific count (non-uniform nMoreWidth)", () => {
-		// widths=[50,50,50], gap=5, padding=5, container=200.
-		// K=2: prefix[2]=5+55*2=115; +nMore(1)=120 → 115+120=235 > 200.
-		// K=1: prefix[1]=5+55=60;    +nMore(2)=30  → 60+30=90 ≤ 200.
-		const result = calculateLayout(200, [50, 50, 50], GAP, PADDING, nMore({ 1: 120, 2: 30 }));
+		// widths=[50,50,50], gap=5, padding=5, container=150.
+		// State A: padding(5) + 3*50 + 2*5 = 165 > 150 → not all fit.
+		// K=2: prefix[2]=5+55*2=115; +nMore(1)=120 → 235 > 150.
+		// K=1: prefix[1]=5+55=60;    +nMore(2)=30  → 90 ≤ 150 → fits.
+		const result = calculateLayout(150, [50, 50, 50], GAP, PADDING, nMore({ 1: 120, 2: 30 }));
 		expect(result).to.deep.equal({ state: "some", visibleCount: 1, hiddenCount: 2 });
 	});
 
@@ -111,8 +112,9 @@ describe("calculateLayout – State B (some tokens fit)", () => {
 
 describe("calculateLayout – State C (no tokens fit)", () => {
 	it("returns state=none when container is too narrow for even one token + n-more", () => {
-		// K=1: prefix[1]=5+65=70; +nMore(1)=60 → 130 > 80.
-		const result = calculateLayout(80, [60], GAP, PADDING, nMore({ 1: 60 }));
+		// 1 token of 60px, container=60px. padding(5)+token(60)=65 > 60 → State A fails.
+		// n=1 so State B loop never runs (k starts at n-1=0, condition k≥1 is false). → State C.
+		const result = calculateLayout(60, [60], GAP, PADDING, nMore({ 1: 60 }));
 		expect(result).to.deep.equal({ state: "none", visibleCount: 0, hiddenCount: 1 });
 	});
 
