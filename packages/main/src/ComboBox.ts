@@ -40,7 +40,6 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
-import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import type { IIcon } from "./Icon.js";
 import * as Filters from "./Filters.js";
@@ -1363,7 +1362,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	_highlightItem(item: ComboBoxItem) {
-		item.markupText = generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue);
+		item.markupText = this.filterValue;
 	}
 
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {

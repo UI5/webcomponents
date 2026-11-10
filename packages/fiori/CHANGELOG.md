@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* prevent arbitrary HTML injection via markupText and text properties ([#14218](https://github.com/UI5/webcomponents/issues/14218)) ([d59a0f1](https://github.com/UI5/webcomponents/commit/d59a0f190910f336e00d3a430773af3907ab0380))
+* **ui5-search:** add default aria-describedby value ([#14227](https://github.com/UI5/webcomponents/issues/14227)) ([cf1d3a6](https://github.com/UI5/webcomponents/commit/cf1d3a6d71c03feabc57221ab3c7e4cae2186969)), closes [#14211](https://github.com/UI5/webcomponents/issues/14211)
+* **ui5-search:** correct horizontal spacing between Clear and Search ([#14237](https://github.com/UI5/webcomponents/issues/14237)) ([dd90b1d](https://github.com/UI5/webcomponents/commit/dd90b1d3c94570a312e5722ea38933251879c568))
+* **ui5-search:** fix keyboard focus handling in the suggestions on phone ([#14268](https://github.com/UI5/webcomponents/issues/14268)) ([9f3bbe5](https://github.com/UI5/webcomponents/commit/9f3bbe54bdfdfdb8087bd37ec7353224f3fb8a0b))
+
+
+### Features
+
+* **ui5-shellbar-item:** add tooltip property ([#14199](https://github.com/UI5/webcomponents/issues/14199)) ([1370dde](https://github.com/UI5/webcomponents/commit/1370ddeb7231aab719de0e11fb24c10f2377a964)), closes [#14157](https://github.com/UI5/webcomponents/issues/14157)
+
+
+
+
+
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **ui5-side-navigation:** align indication tag with new spec ([#14200](https://github.com/UI5/webcomponents/issues/14200)) ([1fac660](https://github.com/UI5/webcomponents/commit/1fac6601cd24a7ac3db3b3347eccddb82e10eb62))
+
+
+
+
+
 ## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

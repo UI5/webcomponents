@@ -5,7 +5,7 @@
 	--_ui5_timeline_tlgi_root_horizontal_height: 21.53125rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_timeline_tlgi_root_horizontal_height: 20.90625rem;
 	}

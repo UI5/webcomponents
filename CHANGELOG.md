@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* prevent arbitrary HTML injection via markupText and text properties ([#14218](https://github.com/UI5/webcomponents/issues/14218)) ([d59a0f1](https://github.com/UI5/webcomponents/commit/d59a0f190910f336e00d3a430773af3907ab0380))
+* **ui5-carousel:** navigate on arrow tap on touch devices ([#14229](https://github.com/UI5/webcomponents/issues/14229)) ([0a0de68](https://github.com/UI5/webcomponents/commit/0a0de689d5425a237322e4fcaa5edd9274738ea1)), closes [#14195](https://github.com/UI5/webcomponents/issues/14195)
+* **ui5-li:** prevent navigation arrow from being compressed ([#14225](https://github.com/UI5/webcomponents/issues/14225)) ([b662dca](https://github.com/UI5/webcomponents/commit/b662dca364dc65a7c2ff8f98d354cbc4d7acc432)), closes [#14221](https://github.com/UI5/webcomponents/issues/14221)
+* **ui5-option:** wrap long option text instead of overflowing ([#14264](https://github.com/UI5/webcomponents/issues/14264)) ([6c25f72](https://github.com/UI5/webcomponents/commit/6c25f72cb9331e387ead2204f51a7ff4feb0b6c8))
+* **ui5-popup:** respect preventInitialFocus set after open in same tick ([#14234](https://github.com/UI5/webcomponents/issues/14234)) ([#14258](https://github.com/UI5/webcomponents/issues/14258)) ([3ba4cd5](https://github.com/UI5/webcomponents/commit/3ba4cd53cc3214c5503c7455112be6c5425b26e3))
+* **ui5-search:** add default aria-describedby value ([#14227](https://github.com/UI5/webcomponents/issues/14227)) ([cf1d3a6](https://github.com/UI5/webcomponents/commit/cf1d3a6d71c03feabc57221ab3c7e4cae2186969)), closes [#14211](https://github.com/UI5/webcomponents/issues/14211)
+* **ui5-search:** correct horizontal spacing between Clear and Search ([#14237](https://github.com/UI5/webcomponents/issues/14237)) ([dd90b1d](https://github.com/UI5/webcomponents/commit/dd90b1d3c94570a312e5722ea38933251879c568))
+* **ui5-search:** fix broken sample ([#14226](https://github.com/UI5/webcomponents/issues/14226)) ([6eee805](https://github.com/UI5/webcomponents/commit/6eee8051b20bcab85bfcdc04f95fe548fccfe60b))
+* **ui5-search:** fix keyboard focus handling in the suggestions on phone ([#14268](https://github.com/UI5/webcomponents/issues/14268)) ([9f3bbe5](https://github.com/UI5/webcomponents/commit/9f3bbe54bdfdfdb8087bd37ec7353224f3fb8a0b))
+* **ui5-table:** add keyboard drag and drop support ([#14201](https://github.com/UI5/webcomponents/issues/14201)) ([343d284](https://github.com/UI5/webcomponents/commit/343d284387dd0e41e508d17822b01d06ca17e71c))
+* **ui5-tree:** calculate aria-setsize from items slot instead of dom children ([#14259](https://github.com/UI5/webcomponents/issues/14259)) ([abb4965](https://github.com/UI5/webcomponents/commit/abb4965e30e74b4c22495632b3ac99a33c0275b1)), closes [#14239](https://github.com/UI5/webcomponents/issues/14239)
+
+
+### Features
+
+* **ui5-shellbar-item:** add tooltip property ([#14199](https://github.com/UI5/webcomponents/issues/14199)) ([1370dde](https://github.com/UI5/webcomponents/commit/1370ddeb7231aab719de0e11fb24c10f2377a964)), closes [#14157](https://github.com/UI5/webcomponents/issues/14157)
+* **ui5-table:** add Alt+Enter shortcut for navigation ([#14250](https://github.com/UI5/webcomponents/issues/14250)) ([283d6bf](https://github.com/UI5/webcomponents/commit/283d6bf5a7729a122669548e7755989ae53730f1))
+
+
+
+
+
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **framework:** verify resolved origin matches current origin for relative URLs ([#14213](https://github.com/UI5/webcomponents/issues/14213)) ([0b65b28](https://github.com/UI5/webcomponents/commit/0b65b2875a58a083e100966a14945bc861c22505))
+* **release:** add build step to republish job ([fd229df](https://github.com/UI5/webcomponents/commit/fd229dfb9cd0b1a821f2257d5e3f6306426991cd))
+* **release:** add republish job and disable provenance for all jobs ([f3245f3](https://github.com/UI5/webcomponents/commit/f3245f3053e6a7a4b5c604840909a15062adbdd8))
+* **ui5-calendar:** show correct year range when secondaryCalendarType… ([#14191](https://github.com/UI5/webcomponents/issues/14191)) ([692a645](https://github.com/UI5/webcomponents/commit/692a645344dc0cc5e28e839eceb6a36ce468ad0d)), closes [#14185](https://github.com/UI5/webcomponents/issues/14185)
+* **ui5-side-navigation:** align indication tag with new spec ([#14200](https://github.com/UI5/webcomponents/issues/14200)) ([1fac660](https://github.com/UI5/webcomponents/commit/1fac6601cd24a7ac3db3b3347eccddb82e10eb62))
+* **ui5-slider:** rename exported CSS part "progress" to "progress-bar" ([#14190](https://github.com/UI5/webcomponents/issues/14190)) ([3751d55](https://github.com/UI5/webcomponents/commit/3751d552f9039f28264f8e1f1940efa806d55dc7))
+
+
+### Features
+
+* **date components:** Adjustment of the Placeholder and its Default … ([#14059](https://github.com/UI5/webcomponents/issues/14059)) ([e3a17c3](https://github.com/UI5/webcomponents/commit/e3a17c30c6da1f15b4988da766599f90abadf3f9))
+* **ui5-numeric-input, ui5-step-input:** use extended numeric keyboard and locale-independent formatting on mobile ([#14178](https://github.com/UI5/webcomponents/issues/14178)) ([29fbd3e](https://github.com/UI5/webcomponents/commit/29fbd3ea3d423e9e04fd2739137ad5002a2bc0f4))
+
+
+### Reverts
+
+* Revert "chore(tools): remove postcss workaround for CSS container style queries" (#14203) ([aeaa29a](https://github.com/UI5/webcomponents/commit/aeaa29a82718aaad1fd7d6493f0b0e2fdc4ff670)), closes [#14203](https://github.com/UI5/webcomponents/issues/14203)
+
+
+
+
+
 ## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
 
 

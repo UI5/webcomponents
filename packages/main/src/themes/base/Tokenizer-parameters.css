@@ -5,7 +5,7 @@
 	--_ui5_tokenizer-popover_offset: .3125rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_tokenizer_gap: 0.375em 0.25rem;
 		--_ui5_tokenizer-popover_offset: .1875rem;

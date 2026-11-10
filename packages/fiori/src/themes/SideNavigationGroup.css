@@ -7,9 +7,16 @@
 
 .ui5-sn-item.ui5-sn-item-group {
 	min-height: 2rem;
-	padding-inline-start: var(--_ui5_side_navigation_group_padding);;
+	padding-inline-start: var(--_ui5_side_navigation_group_padding);
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
+}
+
+/* group has no text-tag container: the text fills the row (pushing the toggle icon to the end)
+   and carries the vertical margin that gives the group its height. */
+.ui5-sn-item.ui5-sn-item-group .ui5-sn-item-text {
+	flex: 1;
+	margin-block: var(--_ui5_side_navigation_item_margin);
 }
 
 .ui5-sn-item.ui5-sn-item-group:hover .ui5-sn-item-toggle-icon,

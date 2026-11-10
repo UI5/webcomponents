@@ -4,7 +4,7 @@
 	--_ui5_search_popover_max_height: 39rem;
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_search_item_vertical_padding: 0.5rem;
 	}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Content density</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: var(--sapFontFamily, sans-serif);
+			font-size: var(--sapFontSize, 0.875rem);
+			color: var(--sapTextColor, #333);
+			background-color: var(--sapBackgroundColor, #f5f6f7);
+			padding: 1rem;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		th, td {
+			border: 1px solid var(--sapList_BorderColor, #ccc);
+			padding: 0.75rem 1rem;
+			text-align: left;
+			vertical-align: middle;
+		}
+
+		th {
+			background: var(--sapList_HeaderBackground, #f4f4f4);
+			color: var(--sapList_HeaderTextColor, #333);
+			border-bottom-color: var(--sapList_HeaderBorderColor, #a8b2bd);
+			font-size: 0.8rem;
+			font-weight: 600;
+		}
+
+		td {
+			background: var(--sapList_Background, #fff);
+			color: var(--sapList_TextColor, #333);
+		}
+
+		td.scenario {
+			font-size: 0.8rem;
+			white-space: nowrap;
+		}
+
+		td.placement {
+			font-size: 0.75rem;
+			font-weight: 600;
+			background: var(--sapList_GroupHeaderBackground, #fafafa);
+			color: var(--sapList_GroupHeaderTextColor, #666);
+			border-top-color: var(--sapList_GroupHeaderBorderColor, #a8b2bd);
+			border-bottom-color: var(--sapList_GroupHeaderBorderColor, #a8b2bd);
+		}
+	</style>
+</head>
+
+<body>
+
+	<h2>Content Density — Cozy vs. Compact</h2>
+	<p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">
+		<strong>ui5-multi-input</strong> is used because it nests <code>ui5-input</code> and <code>ui5-tokenizer</code>
+		in its shadow DOM — both have distinct compact styles, making the size difference clearly visible.
+	</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Scenario</th>
+				<th>Cozy (baseline)</th>
+				<th>Compact</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<!-- ── On host ─────────────────────────────────────── -->
+			<tr>
+				<td class="placement" colspan="3">Applied directly on the component host</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="ui5-content-density-compact"</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><ui5-button class="ui5-content-density-compact">Button</ui5-button></td>
+			</tr>
+
+			<tr>
+				<td class="scenario">data-ui5-compact-size</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><ui5-button data-ui5-compact-size>Button</ui5-button></td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="sapUiSizeCompact"</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><ui5-button class="sapUiSizeCompact">Button</ui5-button></td>
+			</tr>
+
+			<!-- ── On wrapping div ─────────────────────────────── -->
+			<tr>
+				<td class="placement" colspan="3">Applied on a wrapping ancestor div</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="ui5-content-density-compact"</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><div class="ui5-content-density-compact"><ui5-button>Button</ui5-button></div></td>
+			</tr>
+
+			<tr>
+				<td class="scenario">data-ui5-compact-size</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><div data-ui5-compact-size><ui5-button>Button</ui5-button></div></td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="sapUiSizeCompact"</td>
+				<td><ui5-button>Button</ui5-button></td>
+				<td><div class="sapUiSizeCompact"><ui5-button>Button</ui5-button></div></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Nested components — ui5-multi-input (contains ui5-input + ui5-tokenizer in shadow DOM)</h2>
+	<p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">
+		Both <code>ui5-input</code> and <code>ui5-tokenizer</code> have distinct compact styles,
+		making the size difference clearly visible through the host component.
+	</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Scenario</th>
+				<th>Cozy (baseline)</th>
+				<th>Compact</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<!-- ── On host ─────────────────────────────────────── -->
+			<tr>
+				<td class="placement" colspan="3">Applied directly on the component host</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="ui5-content-density-compact"</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<ui5-multi-input class="ui5-content-density-compact" style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">data-ui5-compact-size</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<ui5-multi-input data-ui5-compact-size style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="sapUiSizeCompact"</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<ui5-multi-input class="sapUiSizeCompact" style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+			</tr>
+
+			<!-- ── On wrapping div ─────────────────────────────── -->
+			<tr>
+				<td class="placement" colspan="3">Applied on a wrapping ancestor div</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="ui5-content-density-compact"</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<div class="ui5-content-density-compact">
+						<ui5-multi-input style="width:20rem">
+							<ui5-token slot="tokens" text="Token 1"></ui5-token>
+							<ui5-token slot="tokens" text="Token 2"></ui5-token>
+						</ui5-multi-input>
+					</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">data-ui5-compact-size</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<div data-ui5-compact-size>
+						<ui5-multi-input style="width:20rem">
+							<ui5-token slot="tokens" text="Token 1"></ui5-token>
+							<ui5-token slot="tokens" text="Token 2"></ui5-token>
+						</ui5-multi-input>
+					</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="scenario">class="sapUiSizeCompact"</td>
+				<td>
+					<ui5-multi-input style="width:20rem">
+						<ui5-token slot="tokens" text="Token 1"></ui5-token>
+						<ui5-token slot="tokens" text="Token 2"></ui5-token>
+					</ui5-multi-input>
+				</td>
+				<td>
+					<div class="sapUiSizeCompact">
+						<ui5-multi-input style="width:20rem">
+							<ui5-token slot="tokens" text="Token 1"></ui5-token>
+							<ui5-token slot="tokens" text="Token 2"></ui5-token>
+						</ui5-multi-input>
+					</div>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+</body>
+
+</html>

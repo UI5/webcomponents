@@ -1,6 +1,5 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
 import type List from "../List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "../List.js";
 import type ResponsivePopover from "../ResponsivePopover.js";
@@ -478,10 +477,6 @@ class Suggestions {
 		const itemPositionText = Suggestions.i18nBundle.getText(LIST_ITEM_POSITION, this.accInfo.currentPos || 0, this.accInfo.listSize || 0);
 
 		return `${this.accInfo.additionalText} ${itemPositionText}`.trim();
-	}
-
-	hightlightInput(text: string, input: string) {
-		return generateHighlightedMarkup(text, input);
 	}
 
 	get _hasValueState() {
