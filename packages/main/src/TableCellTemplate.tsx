@@ -10,7 +10,10 @@ export default function TableCellTemplate(this: TableCell) {
 					<slot id="popin-content"></slot>
 				</>
 				:
-				<slot></slot>
+				<>
+					{ this._hierarchyState && this._renderHierarchyToggle() }
+					<slot></slot>
+				</>
 			}
 		</>
 	);
