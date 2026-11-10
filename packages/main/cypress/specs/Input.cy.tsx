@@ -2270,6 +2270,18 @@ describe("Input general interaction", () => {
 		cy.get("@onInput").should("have.been.calledTwice");
 	});
 
+	it("Clear icon is exposed as a button with an accessible name", () => {
+		cy.mount(
+			<Input id="clear-input" showClearIcon={true} value="test" />
+		);
+
+		cy.get("#clear-input")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.should("have.attr", "role", "button")
+			.and("have.attr", "aria-label", "Clear");
+	});
+
 	it("Change event is called when value of input is cleared with clear icon and input is focused out", () => {
 		const onChange = cy.spy().as("onChange");
 		const onInput = cy.spy().as("onInput");
