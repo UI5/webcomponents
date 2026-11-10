@@ -108,6 +108,10 @@ class TableNavigation extends TableExtension {
 		this._focusElement(this._gridWalker.getCurrent() as HTMLElement);
 	}
 
+	_getTabbableElements(element: HTMLElement) {
+		return getTabbableElements(element.shadowRoot || element);
+	}
+
 	_handleEnter(e: KeyboardEvent, eventOrigin: HTMLElement) {
 		if (eventOrigin.hasAttribute("ui5-table-cell-base") && !e.altKey) {
 			this._handleF2(e, eventOrigin);
@@ -116,7 +120,7 @@ class TableNavigation extends TableExtension {
 
 	_handleF2(e: KeyboardEvent, eventOrigin: HTMLElement) {
 		if (this._isEventFromCurrentItem(e)) {
-			const firstTabbable = getTabbableElements(eventOrigin)[0];
+			const firstTabbable = this._getTabbableElements(eventOrigin)[0];
 			this._focusElement(firstTabbable);
 		} else {
 			this._setCurrentItem(e, () => this._focusCurrentItem());
@@ -129,13 +133,13 @@ class TableNavigation extends TableExtension {
 			this._gridWalker.setColPos(this._colPosition);
 			let elementToFocus = this._gridWalker.getCurrent() as HTMLElement;
 			if (this._tabPosition > -1) {
-				const tabbables = getTabbableElements(elementToFocus);
+				const tabbables = this._getTabbableElements(elementToFocus);
 				elementToFocus = tabbables[this._tabPosition] || tabbables.pop() || elementToFocus;
 			}
 			this._focusElement(elementToFocus);
 		} else {
 			this._setCurrentItem(e, currentItem => {
-				this._tabPosition = getTabbableElements(currentItem).indexOf(eventOrigin);
+				this._tabPosition = this._getTabbableElements(currentItem).indexOf(eventOrigin);
 				this._colPosition = this._gridWalker.getColPos();
 				this._gridWalker.setColPos(0);
 				this._focusCurrentItem();
@@ -148,7 +152,7 @@ class TableNavigation extends TableExtension {
 		if (this._isEventFromCurrentItem(e)) {
 			this._focusElement(e.shiftKey ? this._table._beforeElement : this._table._afterElement);
 		} else {
-			const tabbables = getTabbableElements(this._table._tableElement);
+			const tabbables = this._getTabbableElements(this._table._tableElement);
 			if (e.shiftKey && tabbables[0] === eventOrigin) {
 				this._focusElement(this._table._beforeElement);
 			}
@@ -179,10 +183,10 @@ class TableNavigation extends TableExtension {
 		}
 
 		this._setCurrentItem(e, currentItem => {
-			this._tabPosition = getTabbableElements(currentItem).indexOf(eventOrigin);
+			this._tabPosition = this._getTabbableElements(currentItem).indexOf(eventOrigin);
 			this._gridWalker.setRowPos(this._gridWalker.getRowPos() + direction);
 			let elementToFocus = this._gridWalker.getCurrent() as HTMLElement;
-			const tabbables = getTabbableElements(elementToFocus);
+			const tabbables = this._getTabbableElements(elementToFocus);
 			elementToFocus = tabbables[this._tabPosition] || tabbables.pop() || elementToFocus;
 			this._focusElement(elementToFocus);
 			e.preventDefault();

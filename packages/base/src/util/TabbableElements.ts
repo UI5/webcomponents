@@ -4,11 +4,11 @@ import isElementTabbable from "./isElementTabbable.js";
  * Returns the tabbable elements within the provided HTMLElement.
  *
  * @public
- * @param { HTMLElement } el the component to operate on (component that slots or contains within its shadow root the items the user navigates among)
+ * @param { HTMLElement | ShadowRoot } el the element or shadow root containing the items the user navigates among
  * @returns { Array<HTMLElement> } the tabbable elements
  */
-const getTabbableElements = (el: HTMLElement): Array<HTMLElement> => {
-	return getTabbables(el.tagName === "SLOT" ? [el] : [...el.children]);
+const getTabbableElements = (el: HTMLElement | ShadowRoot): Array<HTMLElement> => {
+	return getTabbables("tagName" in el && el.tagName === "SLOT" ? [el] : [...el.children]);
 };
 
 /**

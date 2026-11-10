@@ -74,6 +74,7 @@ import TableRow from "./TableRow.js";
 import TableHeaderRow from "./TableHeaderRow.js";
 import TableGroupRow from "./TableGroupRow.js";
 import TableGrowing from "./TableGrowing.js";
+import TableHierarchy from "./TableHierarchy.js";
 import TableSelection from "./TableSelection.js";
 import TableSelectionMulti from "./TableSelectionMulti.js";
 import TableSelectionSingle from "./TableSelectionSingle.js";
