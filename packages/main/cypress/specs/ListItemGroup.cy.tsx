@@ -92,6 +92,67 @@ describe("ListItemGroup Accessibility", () => {
 				expect(ariaDesc ?? "").to.not.match(/sub\s?groups/i);
 			});
 	});
+
+	it("keeps group items as options under a ListBox list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="View settings" accessibleRole="ListBox" selectionMode="SingleStart">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard selected>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		// A role="list" between the listbox and its options would orphan them, so
+		// the group must not render one; the slot wrapper is transparent (role=none).
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		// The header is exposed as role=none (not a heading) under a listbox.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		// The real items keep role=option.
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "option");
+		});
+	});
+
+	it("labels the group and inner list with headerAccessibleName when provided", () => {
+		cy.mount(
+			<List accessibleName="View settings">
+				<ListItemGroup headerText="Sort Order" headerAccessibleName="Sort Order options">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("have.attr", "aria-label", "Sort Order options");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("have.attr", "aria-label", "Sort Order options");
+	});
 });
 
 describe("ListItemGroup Tests", () => {

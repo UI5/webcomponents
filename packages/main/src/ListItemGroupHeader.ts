@@ -28,6 +28,15 @@ const MAX_CHARACTERS_SIZE_S = 100;
  */
 const MAX_CHARACTERS_SIZE_M = 300;
 
+/**
+ * ARIA heading level exposed on the group header when it acts as a heading.
+ * A ui5-list group is a shallow, single-level grouping, so a fixed level is
+ * used rather than computing nesting depth; level 3 matches the heading level
+ * sap.m uses for list group headers.
+ * @private
+ */
+const GROUP_HEADING_ARIA_LEVEL = 3;
+
 // Specific template type for expandable text
 type ExpandableTextTemplate = (this: ListItemGroupHeader, params: ExpandableTextTemplateParams) => JSX.Element;
 
@@ -105,7 +114,7 @@ class ListItemGroupHeader extends ListItemBase {
 	}
 
 	get accAriaLevel(): number | undefined {
-		return this.effectiveAccRole === "heading" ? 3 : undefined;
+		return this.effectiveAccRole === "heading" ? GROUP_HEADING_ARIA_LEVEL : undefined;
 	}
 
 	get groupItem() {

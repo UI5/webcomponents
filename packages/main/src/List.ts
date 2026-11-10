@@ -582,7 +582,6 @@ class List extends UI5Element {
 	_forwardingFocus: boolean;
 	_selectionRequested?: boolean;
 	_groupCount: number;
-	_groupItemCount: number;
 	_endIntersectionObserver?: IntersectionObserver | null;
 	_startIntersectionObserver?: IntersectionObserver | null;
 	_itemNavigation: ItemNavigation;
@@ -616,7 +615,6 @@ class List extends UI5Element {
 		this.handleResizeCallback = this._handleResize.bind(this);
 
 		this._groupCount = 0;
-		this._groupItemCount = 0;
 
 		this.onItemFocusedBound = this.onItemFocused.bind(this);
 		this.onForwardAfterBound = this.onForwardAfter.bind(this);
@@ -918,6 +916,14 @@ class List extends UI5Element {
 
 			(item as ListItem).mediaRange = this.mediaRange;
 		});
+
+		// Push the inherited item role onto groups too, so each group can adapt
+		// its internal accessibility structure to the list's role.
+		this.getSlottedNodes<ListItemBase>("items").forEach(item => {
+			if (isInstanceOfListItemGroup(item)) {
+				item._inheritedAccessibleRole = inheritedItemRole;
+			}
+		});
 	}
 
 	async observeListEnd() {
@@ -1040,15 +1046,12 @@ class List extends UI5Element {
 		const items: ListItemBase[] = [];
 		const slottedItems = this.getSlottedNodes<ListItemBase>("items");
 		let groupCount = 0;
-		let groupItemCount = 0;
 
 		slottedItems.forEach(item => {
 			if (isInstanceOfListItemGroup(item)) {
 				const groupItems = [item.groupHeaderItem, ...item.items.filter(listItem => listItem.assignedSlot)].filter(Boolean);
 				items.push(...groupItems);
 				groupCount++;
-				// subtract group itself for proper group header item count
-				groupItemCount += groupItems.length - 1;
 			} else if (hasListItems(item)) {
 				item.assignedSlot && items.push(...item.listItems);
 			} else {
@@ -1057,7 +1060,6 @@ class List extends UI5Element {
 		});
 
 		this._groupCount = groupCount;
-		this._groupItemCount = groupItemCount;
 
 		return items;
 	}
