@@ -182,7 +182,10 @@ Not a per-component property. A single **magic attribute** written on *any* elem
 
 ```html
 <!-- On a host root -->
-<ui5-button data-ui5-tooltip="Save the document">Save</ui5-button>
+<ui5-button tooltip="Save the document">Save</ui5-button>
+
+<!-- button template -->
+<button data-ui5-tooltip={this.buttonTitle}>
 
 <!-- On an arbitrary element, e.g. a custom icon in a side navigation -->
 <ui5-side-navigation-item text="Dashboard">
@@ -215,8 +218,17 @@ The author never instantiates `<ui5-tooltip>`; the framework scans for `[data-ui
 ### Option C — the `<ui5-tooltip>` component with an `opener` association (current direction)
 
 ```html
-<ui5-button id="save">Save</ui5-button>
-<ui5-tooltip opener="save" text="Save the document"></ui5-tooltip>
+<ui5-button tooltip="Save the document">Save</ui5-button>
+
+<!-- in button template -->
+<ui5-tooltip opener="save" text={this.buttonTitle}></ui5-tooltip>
+```
+
+Scenario 2: Custom App
+```html
+<!-- in custom app div -->
+ <div id="custom"></div>
+ <ui5-tooltip opener="custom" text="App tooltip"></ui5-tooltip>
 ```
 
 One component owns all behavior (gestures, delay, placement, a11y, popover reuse). Components consume it inside their own templates to upgrade their tooltips. This matches **Vaadin's slot model** and the spec.
@@ -232,6 +244,51 @@ One component owns all behavior (gestures, delay, placement, a11y, popover reuse
 
 - Slightly more verbose at the call site than a bare property.
 - Needs the `opener` association concept (already present in the framework and implemented here).
+
+**React usage**
+
+`opener` is typed `HTMLElement | string`, and the two forms behave differently in React.
+
+Prefer the **string id** — it is declarative and correct on first render:
+
+```jsx
+import { Button, Tooltip } from "@ui5/webcomponents-react";
+
+function SaveButton() {
+  return (
+    <>
+      <Button id="save">Save</Button>
+      <Tooltip opener="save" text="Save the document" />
+    </>
+  );
+}
+```
+
+The **HTMLElement** form is a footgun: `ref.current` is `null` on first render, and
+mutating a ref does not trigger a re-render, so `opener` stays stuck at `null`.
+Use a callback ref that stores the node in state so the element's arrival forces a
+re-render:
+
+```jsx
+import { useState } from "react";
+import { Button, Tooltip } from "@ui5/webcomponents-react";
+
+function SaveButton() {
+  // Callback ref → state, so the tooltip re-renders once the node exists.
+  const [opener, setOpener] = useState(null);
+  return (
+    <>
+      <Button ref={setOpener}>Save</Button>
+      <Tooltip opener={opener} text="Save the document" />
+    </>
+  );
+}
+```
+
+Plain `const ref = useRef(null); <Tooltip opener={ref.current} />` does **not** work:
+it reads `null` on the first render and never updates. This is the React mirror of
+the web-component first-render pitfall (`getDomRef()` / `getFocusDomRef()` being
+undefined before the shadow DOM exists).
 
 **Verdict:** recommended primitive. Aligns with the only peer web-component library (Vaadin) and with how UI5 Web Components already associate elements.
 
