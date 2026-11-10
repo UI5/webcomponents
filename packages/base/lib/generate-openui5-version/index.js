@@ -1,12 +1,13 @@
 import fs from "fs/promises";
-import { createRequire } from "module";
 import { pathToFileURL } from "url";
 
-const require = createRequire(import.meta.url);
-
 const generate = async () => {
-	const pkgPath = require.resolve("@openui5/sap.ui.core/package.json");
-	const { version } = JSON.parse(await fs.readFile(pkgPath, "utf-8"));
+	const pkg = JSON.parse(await fs.readFile("package.json", "utf-8"));
+	const version = pkg.devDependencies?.["@openui5/sap.ui.core"];
+
+	if (!version) {
+		throw new Error(`@openui5/sap.ui.core not found in devDependencies of package.json`);
+	}
 
 	const fileContent = `const OpenUI5Version = "${version}";
 export default OpenUI5Version;`;
