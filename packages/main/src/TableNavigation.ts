@@ -109,7 +109,7 @@ class TableNavigation extends TableExtension {
 	}
 
 	_handleEnter(e: KeyboardEvent, eventOrigin: HTMLElement) {
-		if (eventOrigin.hasAttribute("ui5-table-cell-base")) {
+		if (eventOrigin.hasAttribute("ui5-table-cell-base") && !e.altKey) {
 			this._handleF2(e, eventOrigin);
 		}
 	}

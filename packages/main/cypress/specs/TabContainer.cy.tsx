@@ -14,7 +14,7 @@ import "@ui5/webcomponents-icons/dist/menu.js"
 import "@ui5/webcomponents-icons/dist/menu2.js"
 import "@ui5/webcomponents-icons/dist/card.js"
 import "../../test/pages/styles/TabContainer.css"
-import ResponsivePopover from "../../src/ResponsivePopover.js";
+import type ResponsivePopover from "../../src/ResponsivePopover.js";
 
 const tabContainerEndOverflow = <TabContainer id="tabContainerEndOverflow" overflowMode="End">
 	<Tab design="Positive" text="One">
@@ -424,7 +424,9 @@ describe("TabContainer general interaction", () => {
 			cy.get("#tabContainerNestedTabs").shadow().find(".ui5-tc__tabStrip").should("have.attr", "aria-describedby", hiddenTextId);
 		});
 		cy.get("@tab1").should("not.have.attr", "aria-haspopup");
-		cy.get("@tab2").should("not.have.attr", "aria-haspopup");
+		cy.get("@tab2").should("have.attr", "aria-haspopup", "menu");
+		cy.get("@tab2").find("[ui5-icon].ui5-tab-expand-icon")
+			.should("have.prop", "mode", "Decorative");
 		cy.get("@tab3").should("have.attr", "aria-haspopup");
 	});
 
@@ -646,8 +648,8 @@ describe("TabContainer general interaction", () => {
 		cy.mount(nestedTabsContainer)
 
 		cy.get("#tabContainerNestedTabs").as("tabContainer");
-		cy.get("@tabContainer").shadow().find(".ui5-tab-expand-button [ui5-button]").first().as("expandButton");
-		cy.get("@expandButton").should("have.attr", "tooltip", "More");
+		cy.get("@tabContainer").shadow().find(".ui5-tab-expand-button").first().as("expandButton");
+		cy.get("@expandButton").should("have.attr", "title", "More");
 
 		cy.get("@expandButton").click();
 		cy.get("@tabContainer").shadow().find("ui5-responsive-popover").as("popover");
@@ -1077,7 +1079,7 @@ describe("TabContainer general interaction", () => {
 
 		cy.get("@tabContainer").shadow().find("ui5-responsive-popover").as("popover");
 		cy.get("@popover").find("ui5-list").as("list");
-		cy.get<ResponsivePopover>("@popover").ui5PopoverOpened();
+		cy.get<JQuery<ResponsivePopover>>("@popover").ui5PopoverOpened();
 		cy.get("@list").find("ui5-li-custom").eq(3).as("thirdPopoverItem");
 		cy.get("@thirdPopoverItem").should("exist");
 		cy.get("@thirdPopoverItem").should("not.have.prop", "selected", "Third item in the popover is not selected");

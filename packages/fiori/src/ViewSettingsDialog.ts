@@ -572,9 +572,23 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	get _title() {
-		return this.showBackButton
-			? this._filterByTitle
-			: this._dialogTitle;
+		if (this.showBackButton) {
+			return this._filterByTitle;
+		}
+
+		if (!this.hasPagination) {
+			if (this.isModeSort) {
+				return this._sortByLabel;
+			}
+			if (this.isModeFilter) {
+				return this._filterByLabel;
+			}
+			if (this.isModeGroup) {
+				return this._groupByLabel;
+			}
+		}
+
+		return this._dialogTitle;
 	}
 
 	/**

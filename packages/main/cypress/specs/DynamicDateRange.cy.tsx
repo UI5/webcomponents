@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import DynamicDateRange, { IDynamicDateRangeOption } from '../../src/DynamicDateRange.js';
 import Label from "../../src/Label.js";
 import SingleDate from '../../src/dynamic-date-range-options/SingleDate.js';

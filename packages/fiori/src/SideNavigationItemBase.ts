@@ -3,7 +3,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import {
 	isDesktop,
 } from "@ui5/webcomponents-base/dist/Device.js";
-import highlightText from "@ui5/webcomponents-base/dist/util/highlightText.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type SideNavigation from "./SideNavigation.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
@@ -114,15 +113,6 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 
 	get _tooltip() {
 		return this.tooltip || undefined;
-	}
-
-	/**
-	 * Returns the item's text as markup, with the portions matching the
-	 * side navigation's `highlightedText` wrapped in `.ui5-sn-item-highlight`.
-	 * @private
-	 */
-	get _markupText() {
-		return highlightText(this.text, this._highlightedText, "ui5-sn-item-highlight");
 	}
 
 	get hasSubItems() {
