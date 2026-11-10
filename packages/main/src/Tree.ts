@@ -456,7 +456,8 @@ class Tree extends UI5Element {
 		// set level to tree items
 		this.walk((item, level, index) => {
 			const parent = item.parentNode;
-			const ariaSetSize = (parent && parent.children.length) || this.items.length;
+			const parentItems = parent && "items" in parent ? (parent as Tree | TreeItemBase).items : undefined;
+			const ariaSetSize = parentItems ? parentItems.length : this.items.length;
 
 			item.setAttribute("level", level.toString());
 

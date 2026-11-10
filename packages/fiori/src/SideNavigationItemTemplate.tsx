@@ -3,6 +3,7 @@ import navRightArrow from "@ui5/webcomponents-icons/dist/navigation-right-arrow.
 import navDownArrow from "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 import arrowRight from "@ui5/webcomponents-icons/dist/arrow-right.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
+import SideNavigationItemTextTemplate from "./SideNavigationItemTextTemplate.js";
 
 export default function SideNavigationItemTemplate(this: SideNavigationItem) {
 	if (this.sideNavCollapsed) {
@@ -22,38 +23,38 @@ function ItemTemplate(this: SideNavigationItem) {
 	return (
 		<>
 			<EffectiveTag id={this._id}
-						  data-sap-focus-ref
-						  class={`ui5-sn-item ui5-sn-item-level1 ${this._classes}`}
-						  role={this.ariaRole}
-						  onKeyDown={this._onkeydown}
-						  onKeyUp={this._onkeyup}
-						  onClick={this._onclick}
-						  onFocusIn={this._onfocusin}
-						  tabIndex={this.effectiveTabIndex}
-						  aria-current={this._ariaCurrent}
-						  aria-selected={this._ariaSelected}
-						  title={this._tooltip}
-						  aria-disabled={this.effectiveDisabled}
-						  href={this._href}
-						  target={this._target}
-						  aria-haspopup={this._ariaHasPopup}
-						  onFocusOut={this._onfocusout}
-						  onMouseEnter={this._onmouseenter}
-						  onMouseLeave={this._onmouseleave}
-						  aria-checked={this._ariaChecked}
-						  aria-owns={this._groupId}
-						  aria-label={this._ariaLabel}
-						  aria-expanded={this._expanded}
-						  aria-labelledby={this._textId}
-						  aria-describedby={this._describedBy}
+				data-sap-focus-ref
+				class={`ui5-sn-item ui5-sn-item-level1 ${this._classes}`}
+				role={this.ariaRole}
+				onKeyDown={this._onkeydown}
+				onKeyUp={this._onkeyup}
+				onClick={this._onclick}
+				onFocusIn={this._onfocusin}
+				tabIndex={this.effectiveTabIndex}
+				aria-current={this._ariaCurrent}
+				aria-selected={this._ariaSelected}
+				title={this._tooltip}
+				aria-disabled={this.effectiveDisabled}
+				href={this._href}
+				target={this._target}
+				aria-haspopup={this._ariaHasPopup}
+				onFocusOut={this._onfocusout}
+				onMouseEnter={this._onmouseenter}
+				onMouseLeave={this._onmouseleave}
+				aria-checked={this._ariaChecked}
+				aria-owns={this._groupId}
+				aria-label={this._ariaLabel}
+				aria-expanded={this._expanded}
+				aria-labelledby={this._textId}
+				aria-describedby={this._describedBy}
 			>
 				{this.sideNavCollapsed ?
-					<Icon class="ui5-sn-item-icon" name={this.icon}/>
+					<Icon class="ui5-sn-item-icon" name={this.icon} />
 					:
-					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon}/>
+					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon} />
 				}
 				<div class="ui5-sn-item-text-tag-container">
-					<div class="ui5-sn-item-text" id={this._textId} dangerouslySetInnerHTML={{ __html: this._markupText }}></div>
+					{SideNavigationItemTextTemplate(this, this._textId)}
 					{this.hasTag &&
 						<div class="ui5-sn-item-tag-slot" aria-hidden="true">
 							<slot name="tag"></slot>
@@ -63,20 +64,20 @@ function ItemTemplate(this: SideNavigationItem) {
 				{this.sideNavCollapsed ?
 					!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
-						  name={navRightArrow}
+						name={navRightArrow}
 					/>
 					:
 					!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
-						  name={this.expanded ? navDownArrow : navRightArrow}
-						  accessibleName={this._arrowTooltip}
-						  showTooltip={true}
-						  onClick={this._onToggleClick}
+						name={this.expanded ? navDownArrow : navRightArrow}
+						accessibleName={this._arrowTooltip}
+						showTooltip={true}
+						onClick={this._onToggleClick}
 					/>
 				}
 				{this.isExternalLink &&
 					<Icon class="ui5-sn-item-external-link-icon"
-						  name={arrowRight}
+						name={arrowRight}
 					/>
 				}
 			</EffectiveTag>
