@@ -1,10 +1,8 @@
-import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableCell from "./TableCell.js";
 import TableCellBase from "./TableCellBase.js";
 import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
-import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
 
 /**
  * @class
@@ -29,23 +27,6 @@ import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
 	template: TableCellTemplate,
 })
 class InputTableSuggestCell extends TableCell {
-	/**
-	 * Defines the content of the cell.
-	 *
-	 * @public
-	 */
-	@slot({ type: Node, "default": true })
-	declare content: DefaultSlot<Node>;
-
-	/**
-	 * Determines the horizontal alignment of the cell content.
-	 *
-	 * @default undefined
-	 * @public
-	 */
-	@property()
-	declare horizontalAlign?: `${TableCellHorizontalAlign}`;
-
 	/** @private */
 	@property({ type: Boolean })
 	declare merged: boolean;
