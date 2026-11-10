@@ -131,7 +131,7 @@ class Panel extends UI5Element {
 	 * Indicates whether the transition between the expanded and the collapsed state of the component is animated. By default the animation is enabled.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	noAnimation = false;
@@ -159,7 +159,7 @@ class Panel extends UI5Element {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -171,7 +171,7 @@ class Panel extends UI5Element {
 	 * a solid color will be used for its design.
 	 * @default false
 	 * @public
-	 * @since 1.16.0-rc.1
+	 * @since 1.16.0
 	 */
 	@property({ type: Boolean })
 	stickyHeader = false;

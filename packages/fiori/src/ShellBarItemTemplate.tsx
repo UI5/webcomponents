@@ -24,7 +24,8 @@ export default function ShellBarItemTemplate(this: ShellBarItem) {
 			class="ui5-shellbar-action-button"
 			icon={this.icon}
 			design="Transparent"
-			accessibleName={this.text}
+			accessibleName={this.text || this.tooltip}
+			tooltip={this.tooltip}
 			data-ui5-stable={this.stableDomRef}
 			accessibilityAttributes={this.accessibilityAttributes}
 			onClick={this.fireClickEvent}

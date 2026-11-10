@@ -2,7 +2,7 @@
  * Selection behavior of the `ui5-table` selection components.
  *
  * @public
- * @since 2.11
+ * @since 2.11.0
  */
 enum TableSelectionBehavior {
 	/**

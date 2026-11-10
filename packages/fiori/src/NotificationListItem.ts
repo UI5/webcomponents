@@ -127,7 +127,7 @@ const ICON_PER_STATUS_DESIGN = {
  *
  * @constructor
  * @extends NotificationListItemBase
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  * @csspart title-text - Used to style the titleText of the notification list item
  */
@@ -187,7 +187,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* and a `ShowMore/Less` button would be displayed.
 	* @default "None"
 	* @public
-	* @since 1.0.0-rc.15
+	* @since 1.0.0
 	*/
 	@property()
 	wrappingType: `${WrappingType}` = "None";

@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Reverts
+
+* Revert "chore(tools): remove postcss workaround for CSS container style queries" (#14203) ([aeaa29a](https://github.com/UI5/webcomponents/commit/aeaa29a82718aaad1fd7d6493f0b0e2fdc4ff670)), closes [#14203](https://github.com/UI5/webcomponents/issues/14203)
+
+
+
+
+
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
+
+
+### Bug Fixes
+
+* **tools:** enable CEM generation for tsx files ([#14114](https://github.com/UI5/webcomponents/issues/14114)) ([cc73f73](https://github.com/UI5/webcomponents/commit/cc73f736d010fb8494e5ee56f31749e3a9baedc7)), closes [#11145](https://github.com/UI5/webcomponents/issues/11145)
+* **tools:** use correct CSS_VARIABLES_TARGET in auto theme selector ([#14136](https://github.com/UI5/webcomponents/issues/14136)) ([06e6369](https://github.com/UI5/webcomponents/commit/06e6369d1f2fa42b97c02b64a37167d3db42f881))
+
+
+### Features
+
+* **base:** allow components to provide their own slot accessor ([#14128](https://github.com/UI5/webcomponents/issues/14128)) ([2196121](https://github.com/UI5/webcomponents/commit/2196121936bfef06989b4b04be7d07ece415ea9c))
+
+
+
+
+
+## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
 # [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools

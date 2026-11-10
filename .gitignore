@@ -3,6 +3,11 @@
 !packages/create-package/template/.gitignore
 !packages/website/.gitignore
 dist
+# Consumer guidance is generated from each package's public API for npm releases.
+/packages/main/llms.txt
+/packages/fiori/llms.txt
+/packages/ai/llms.txt
+/packages/compat/llms.txt
 **/src/generated
 **/test/test-elements/generated
 .dev-server-port

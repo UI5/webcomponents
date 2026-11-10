@@ -85,6 +85,15 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	@property({ type: Boolean })
 	inPopover = false;
 
+	/**
+	 * The term to highlight in the item's text, propagated from the side navigation's
+	 * `highlightedText` property so that changing it re-renders the affected items.
+	 * @private
+	 * @default undefined
+	 */
+	@property()
+	_highlightedText?: string;
+
 	_sideNavigation!: SideNavigation;
 
 	/**

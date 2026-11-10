@@ -1,4 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -68,7 +69,7 @@ import {
  * `import "@ui5/webcomponents/dist/Slider.js";`
  * @constructor
  * @extends SliderBase
- * @since 1.0.0-rc.11
+ * @since 1.0.0
  * @public
  * @csspart progress-container - Used to style the progress container, the horizontal bar that visually represents the range between the minimum and maximum values, of the `ui5-slider`.
  * @csspart progress-bar - Used to style the progress bar, which shows the progress of the `ui5-slider`.
@@ -350,6 +351,10 @@ class Slider extends SliderBase implements IFormInputElement {
 
 	get tooltip() {
 		return this.getDomRef()?.querySelector<SliderTooltip>("[ui5-slider-tooltip]");
+	}
+
+	focusInnerElement() {
+		this._sliderHandle.focus({ focusVisible: isDesktop() } as FocusOptions);
 	}
 
 	get _sliderHandle() : HTMLElement {

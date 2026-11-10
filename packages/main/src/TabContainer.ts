@@ -154,6 +154,8 @@ interface ITab extends UI5Element {
  * @public
  * @csspart content - Used to style the content of the component
  * @csspart tabstrip - Used to style the tabstrip of the component
+ * @ui5subcomponent Tab
+ * @ui5subcomponent TabSeparator
  */
 @customElement({
 	tag: "ui5-tabcontainer",
@@ -267,7 +269,7 @@ class TabContainer extends UI5Element {
 	 * layout for most scenarios. Set to `Bottom` only when the component is at the
 	 * bottom of the page and you want the tab strip to act as a menu.
 	 * @default "Top"
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @private
 	 */
 	@property()
@@ -336,7 +338,7 @@ class TabContainer extends UI5Element {
 	 * Defines the button which will open the overflow menu. If nothing is provided to this slot,
 	 * the default button will be used.
 	 * @public
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 */
 	@slot()
 	overflowButton!: Slot<IButton>;
@@ -735,7 +737,7 @@ class TabContainer extends UI5Element {
 		e.stopPropagation();
 		e.preventDefault();
 
-		if ((e.target as HTMLElement).hasAttribute("ui5-button")) {
+		if ((e.target as HTMLElement).closest(".ui5-tab-expand-button")) {
 			this._onTabExpandButtonClick(e);
 			return;
 		}
@@ -765,10 +767,11 @@ class TabContainer extends UI5Element {
 			tabInstance.focus();
 		}
 
-		let opener = e.target as HTMLElement;
+		const target = e.target as HTMLElement;
+		let opener = target.closest<HTMLElement>(".ui5-tab-expand-button") ?? target;
 
 		if (e.type === "keydown" && !(e.target as TabInStrip).realTabReference.isSingleClickArea) {
-			opener = (e.target as TabInStrip).querySelector(".ui5-tab-expand-button [ui5-button]")!;
+			opener = (e.target as TabInStrip).querySelector<HTMLElement>(".ui5-tab-expand-button")!;
 		}
 
 		// if clicked between the expand button and the tab

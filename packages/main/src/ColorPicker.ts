@@ -85,7 +85,7 @@ type ColorChannelInput = {
  *
  * `import "@ui5/webcomponents/dist/ColorPicker.js";`
  * @constructor
- * @since 1.0.0-rc.12
+ * @since 1.0.0
  * @extends UI5Element
  * @public
  */
@@ -229,11 +229,18 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	@query(".ui5-color-picker-main-color")
 	_mainColorRef?: HTMLElement;
 
+	@query(".ui5-color-picker-hue-slider")
+	_hueSlider?: Slider;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	async formElementAnchor() {
 		return this.getFocusDomRefAsync();
+	}
+
+	getFocusDomRef() {
+		return this._hueSlider?.getFocusDomRef() ?? super.getFocusDomRef();
 	}
 
 	get formFormattedValue() {

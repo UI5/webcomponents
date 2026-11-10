@@ -1,9 +1,12 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import SideNavigationSubItemTemplate from "./SideNavigationSubItemTemplate.js";
+import { SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT } from "./generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents/dist/Tag.js";
 
 // Styles
@@ -24,7 +27,7 @@ import SideNavigationSubItemCss from "./generated/themes/SideNavigationSubItem.c
  * @extends SideNavigationSelectableItemBase
  * @public
  * @abstract
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-side-navigation-sub-item",
@@ -33,6 +36,9 @@ import SideNavigationSubItemCss from "./generated/themes/SideNavigationSubItem.c
 	styles: SideNavigationSubItemCss,
 })
 class SideNavigationSubItem extends SideNavigationSelectableItemBase {
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
 	/**
 	 * Defines the tag to be displayed.
 	 *
@@ -56,6 +62,18 @@ class SideNavigationSubItem extends SideNavigationSelectableItemBase {
 
 	get hasTag() {
 		return !!this.tag.length;
+	}
+
+	onBeforeRendering() {
+		this._syncTagWrapping();
+	}
+
+	get _tagText() {
+		return this.tag[0]?.textContent?.trim() ?? "";
+	}
+
+	get _tagDescriptionText() {
+		return this.hasTag ? SideNavigationSubItem.i18nBundle.getText(SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT, this._tagText) : undefined;
 	}
 
 	get _textId() {

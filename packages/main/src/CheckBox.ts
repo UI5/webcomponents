@@ -194,7 +194,7 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	* -  If the component is not checked, it will be displayed as not checked regardless value of the indeterminate attribute
 	* @default false
 	* @public
-	* @since 1.0.0-rc.15
+	* @since 1.0.0
 	*/
 	@property({ type: Boolean })
 	indeterminate = false;

@@ -5,7 +5,7 @@ import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewIte
 import { isInstanceOfUserSettingsAppearanceViewItem } from "./UserSettingsAppearanceViewItem.js";
 import type UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
 import { isInstanceOfUserSettingsAppearanceViewGroup } from "./UserSettingsAppearanceViewGroup.js";
-import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 import {
@@ -90,18 +90,18 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		return allItems;
 	}
 
-	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
-		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
+	_handleSelectionChange = (e: CustomEvent<ListSelectionChangeEventDetail>) => {
+		const listItem = e.detail.targetItem as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
 		if (isInstanceOfUserSettingsAppearanceViewItem(listItem)) {
+			// The inner list runs in selectionMode="Single", so it already owns the
+			// item's selected state and provides the accessibility announcement.
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 				item: listItem,
 			});
 
-			if (!eventPrevented) {
-				this._getAllItems().forEach(viewItem => {
-					viewItem.selected = false;
-				});
-				listItem.selected = true;
+			if (eventPrevented) {
+				// Revert the list selection so it stays in sync with the model.
+				e.preventDefault();
 			}
 		}
 	};

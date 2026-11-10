@@ -385,6 +385,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 */
 	_scrollToEndOnExpand = false;
 
+	// Tracks the previous _nMoreCount to detect render-loop oscillation at the
+	// "Show All" boundary (where the n-more text switches between two variants
+	// with different rendered widths, flipping the overflow count each render).
+	_prevNMoreCount = -1;
+
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
 	}
@@ -527,7 +532,21 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const tokensArray = this._tokens;
 		const firstToken = tokensArray[0];
 
-		this._nMoreCount = this.overflownTokens.length;
+		const newCount = this.overflownTokens.length;
+		// Guard against render loops at the "Show All" boundary: when all tokens are
+		// hidden the n-more text switches to a narrower "Show All (N)" string, which
+		// makes one token appear to fit, switching back to the wider "N More" string,
+		// which hides it again — oscillating every render.
+		// The oscillation signature: count would return to exactly the value it held
+		// before the last update (i.e. we've already been here and bounced).
+		const isOscillating = this._nMoreCount === tokensArray.length
+			&& newCount === tokensArray.length - 1
+			&& this._prevNMoreCount === newCount;
+
+		if (newCount !== this._nMoreCount && !isOscillating) {
+			this._prevNMoreCount = this._nMoreCount;
+			this._nMoreCount = newCount;
+		}
 
 		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";

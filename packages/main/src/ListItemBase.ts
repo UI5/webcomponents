@@ -114,7 +114,7 @@ class ListItemBase extends UI5Element implements ITabbable {
 	* **Note:** A disabled `ui5-li` is noninteractive.
 	* @default false
 	* @protected
-	* @since 1.0.0-rc.12
+	* @since 1.0.0
 	*/
 	@property({ type: Boolean })
 	disabled = false;

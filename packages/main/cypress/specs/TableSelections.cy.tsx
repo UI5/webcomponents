@@ -232,6 +232,7 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 			cy.get("@row0").shadow().find("#selection-cell")
 				.should(testConfigEntry.cases.BOXES.row.exists ? "exist" : "not.exist");
 
+			cy.get("@row0").should("have.attr", "ui5-table-row-base");
 			cy.get("@headerRow").shadow().find("#selection-component")
 				.should(testConfigEntry.cases.BOXES.header.checkbox ? "exist" : "not.exist");
 			cy.get("@row0").shadow().find("#selection-component")
@@ -489,5 +490,18 @@ describe("TableSelectionMulti", () => {
 		cy.get("#row2").invoke("remove");
 		cy.get("#row1").invoke("remove");
 		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
+	});
+
+	it("renderRowSelectionCell does not depend on the feature being activated", () => {
+		// On a row's first render the feature may not be activated yet (_table undefined),
+		// so the render methods must read i18n from the passed row, not this._table.
+		cy.get("#row1").then($row => {
+			const row = $row.get(0) as unknown as TableRow;
+			const multi = new TableSelectionMulti();
+			const single = new TableSelectionSingle();
+			expect(() => multi.renderRowSelectionCell(row), "multi row selector").to.not.throw();
+			expect(() => multi.renderHeaderSelectionCell(row), "multi header selector").to.not.throw();
+			expect(() => single.renderRowSelectionCell(row), "single row selector").to.not.throw();
+		});
 	});
 });

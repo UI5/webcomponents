@@ -141,19 +141,7 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	}
 
 	onTableAfterRendering(): void {
-		// Focus the first row after growing, when the growing button is used
-		if (this._shouldFocusRow) {
-			this._shouldFocusRow = false;
-			let focusRow = this._currentLastRow?.nextElementSibling as HTMLElement;
-
-			if (this.hasGrowingComponent()) {
-				focusRow ||= this.getFocusDomRef() as HTMLElement;
-			}
-
-			focusRow ||= this._table?.rows[0] as HTMLElement;
-
-			focusRow?.focus();
-		}
+		this._focusNewlyAddedRow();
 
 		if (this._renderContent !== this.hasGrowingComponent()) {
 			this._invalidate++;
@@ -166,6 +154,8 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	}
 
 	onExitDOM(): void {
+		this._focusNewlyAddedRow();
+
 		this._table = undefined;
 		this._observer?.disconnect();
 		this._observer = undefined;
@@ -185,6 +175,18 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 		}
 
 		return this.mode === `${TableGrowingMode.Button}`;
+	}
+
+	_focusNewlyAddedRow(): void {
+		if (!this._shouldFocusRow) {
+			return;
+		}
+
+		const newlyAddedRow = (this._currentLastRow ? this._currentLastRow.nextElementSibling : this._table?.rows[0]) as HTMLElement | null;
+		if (newlyAddedRow) {
+			this._shouldFocusRow = false;
+			newlyAddedRow.focus();
+		}
 	}
 
 	/**

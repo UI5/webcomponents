@@ -8,6 +8,9 @@ import svgTask from "./svg_validation/task.js";
 const isVisual = process.env.CYPRESS_VISUAL === "true";
 
 export default defineConfig({
+	env: {
+		VISUAL: isVisual,
+	},
 	component: {
 		specPattern: isVisual
 			? "cypress/specs/visuals/**/*.cy.{js,jsx,ts,tsx}"

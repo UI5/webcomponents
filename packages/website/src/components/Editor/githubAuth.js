@@ -1,5 +1,6 @@
 import { fetchAuthUrl, exchangeCodeForToken } from "./githubAPI.js";
 
+const ALLOWED_MESSAGE_ORIGIN = "https://ui5-webc-playground-server.netlify.app";
 const TOKEN_EXPIRY_KEY = 'github_token_expiry';
 const TOKEN_LIFETIME = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -15,8 +16,8 @@ export const auth = async () => {
 	// listen for oauth callback 
 	const authResult = await new Promise((resolve, reject) => {
 		const messageHandler = (event) => {
-			// verify origin for security 
-			if (!event.origin.includes("github.com") && !event.origin.includes("ui5-webc-playground-server.netlify.app")) {
+			// verify origin for security
+			if (event.origin !== ALLOWED_MESSAGE_ORIGIN) {
 				return;
 			}
 

@@ -84,7 +84,7 @@ describe("Event bubbling", () => {
 
 		cy.get("@dialog").invoke("attr", "open", true);
 
-		cy.get<Dialog>("@dialog")
+		cy.get<JQuery<Dialog>>("@dialog")
 			.ui5DialogOpened()
 
 		cy.wait(200);

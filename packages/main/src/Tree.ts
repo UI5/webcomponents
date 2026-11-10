@@ -100,7 +100,9 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
+ * @ui5subcomponent TreeItem
+ * @ui5subcomponent TreeItemCustom
  */
 @customElement({
 	tag: "ui5-tree",
@@ -124,7 +126,7 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
 /**
  * Fired when the mouse cursor enters the tree item borders.
  * @param {HTMLElement} item the hovered item.
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @event("item-mouseover", {
@@ -133,7 +135,7 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
 /**
  * Fired when the mouse cursor leaves the tree item borders.
  * @param {HTMLElement} item the hovered item.
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  */
 @event("item-mouseout", {
@@ -454,7 +456,8 @@ class Tree extends UI5Element {
 		// set level to tree items
 		this.walk((item, level, index) => {
 			const parent = item.parentNode;
-			const ariaSetSize = (parent && parent.children.length) || this.items.length;
+			const parentItems = parent && "items" in parent ? (parent as Tree | TreeItemBase).items : undefined;
+			const ariaSetSize = parentItems ? parentItems.length : this.items.length;
 
 			item.setAttribute("level", level.toString());
 

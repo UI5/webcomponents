@@ -5,6 +5,7 @@ const assetParametersScript = resolve.sync("@ui5/webcomponents-base/lib/generate
 const stylesScript = resolve.sync("@ui5/webcomponents-base/lib/generate-styles/index.js");
 const fontFaceScript = resolve.sync("@ui5/webcomponents-base/lib/css-processors/css-processor-font-face.mjs");
 const versionScript = resolve.sync("@ui5/webcomponents-base/lib/generate-version-info/index.js");
+const openUI5VersionScript = resolve.sync("@ui5/webcomponents-base/lib/generate-openui5-version/index.js");
 const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/index.js");
 const amdToES6 = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/index.js");
 const noRequire = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/no-remaining-require.js");
@@ -25,8 +26,8 @@ const scripts = {
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
 	lint: `ui5nps-script "${LIB}/eslint/eslint.js"`,
-	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
-	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
+	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateOpenUI5Version generateStyles generateFontFace build.jsonImports",
+	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateOpenUI5Version generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
 	integrate: {
 		default: "ui5nps integrate.copy-used-modules integrate.amd-to-es6 integrate.third-party",
@@ -59,6 +60,7 @@ const scripts = {
 	},
 	generateAssetParameters: `ui5nps-script "${assetParametersScript}"`,
 	generateVersionInfo: `ui5nps-script "${versionScript}"`,
+	generateOpenUI5Version: `ui5nps-script "${openUI5VersionScript}"`,
 	generateStyles: `ui5nps-script "${stylesScript}"`,
 	generateFontFace: `ui5nps-script "${fontFaceScript}"`,
 	generateTestTemplates: `node "${LIB}/hbs2ui5/index.js" -d test/test-elements -o test/test-elements/generated/templates`,

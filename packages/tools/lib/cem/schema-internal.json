@@ -523,6 +523,13 @@
         "_ui5abstract": {
           "type": "boolean"
         },
+        "_ui5subcomponents": {
+          "description": "Names of sub-components that belong to this component's documentation group",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "_ui5privacy": {
           "$ref": "#/definitions/Privacy"
         },

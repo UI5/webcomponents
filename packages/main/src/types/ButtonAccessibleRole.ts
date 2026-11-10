@@ -2,7 +2,7 @@
  * Button accessible roles.
  *
  * @public
- * @since 1.23
+ * @since 1.23.0
  */
 enum ButtonAccessibleRole {
 

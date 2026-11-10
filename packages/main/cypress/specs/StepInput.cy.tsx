@@ -1,5 +1,7 @@
 import StepInput from "../../src/StepInput.js";
-import type NumberInput from "../../src/NumberInput.js";
+import type NumericInput from "../../src/NumericInput.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import "../../src/Assets.js";
 
 const decreaseValue = true;
 
@@ -47,7 +49,7 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc")
 			.as("increaseButton");
@@ -75,7 +77,7 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec")
 			.as("decreaseButton");
@@ -169,14 +171,14 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec")
 			.should("not.exist");
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc")
 			.should("not.exist");
@@ -189,17 +191,17 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
-			.should("not.have.class", "ui5-number-input-icon--clickable");
+			.should("not.have.class", "ui5-numeric-input-icon--clickable");
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc [ui5-icon]")
-			.should("not.have.class", "ui5-number-input-icon--clickable");
+			.should("not.have.class", "ui5-numeric-input-icon--clickable");
 	});
 
 	it("should not round value when 'valuePrecision' is set", () => {
@@ -238,7 +240,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -251,9 +253,9 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.should(ni => {
-				expect((ni[0] as NumberInput).value).to.be.lessThan(10);
+				expect((ni[0] as NumericInput).value).to.be.lessThan(10);
 			});
 	});
 
@@ -267,7 +269,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc [ui5-icon]")
 			.as("incBtn")
@@ -280,9 +282,9 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.should(ni => {
-				expect((ni[0] as NumberInput).value).to.be.greaterThan(0);
+				expect((ni[0] as NumericInput).value).to.be.greaterThan(0);
 			});
 	});
 
@@ -299,7 +301,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -331,7 +333,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -365,7 +367,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -393,7 +395,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -416,7 +418,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -453,7 +455,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -478,7 +480,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -491,7 +493,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -519,7 +521,7 @@ describe("StepInput events", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -527,6 +529,18 @@ describe("StepInput events", () => {
 
 		cy.get("@submit")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("StepInput getFocusDomRefAsync", () => {
+	it("getFocusDomRefAsync resolves to the native input immediately after first render", () => {
+		cy.mount(<StepInput />);
+
+		cy.get("[ui5-step-input]").then(async ($el) => {
+			const focusRef = await ($el[0] as StepInput).getFocusDomRefAsync();
+			expect(focusRef).to.exist;
+			expect(focusRef!.tagName.toLowerCase()).to.equal("ui5-input");
+		});
 	});
 });
 
@@ -550,8 +564,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2.34);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2.34);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -572,8 +586,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2.345);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2.345);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -606,8 +620,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -628,8 +642,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(4);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -662,8 +676,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(4);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -684,8 +698,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -697,5 +711,60 @@ describe("Validation inside form", () => {
 
 		cy.get("#stepInput:invalid")
 			.should("not.exist", "StepInput with value lower than max should not have :invalid CSS class");
+	});
+});
+
+describe("StepInput mobile device behaviour", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
+
+	it("should use input type 'number' on mobile", () => {
+		cy.mount(
+			<StepInput></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should("have.prop", "type", "number");
+	});
+
+	it("should use '.' as decimal separator regardless of locale on mobile", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("de");
+			});
+
+		cy.mount(
+			<StepInput value={1.5} valuePrecision={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("1.5");
+			});
+	});
+
+	it("should not use group separator for large numbers on mobile", () => {
+		cy.mount(
+			<StepInput value={12345678}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
+			.should($input => {
+				expect($input.val()).to.equal("12345678");
+			});
 	});
 });

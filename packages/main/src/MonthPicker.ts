@@ -86,7 +86,7 @@ type MonthPickerNavigateEventDetail = {
 })
 /**
  * Fired when the timestamp changes - the user navigates with the keyboard or clicks with the mouse.
- * @since 1.0.0-rc.9
+ * @since 1.0.0
  */
 @event("navigate", {
 	bubbles: true,

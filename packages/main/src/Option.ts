@@ -75,7 +75,7 @@ class Option extends ListItemBase implements IOption {
 	 * Defines the `additionalText`, displayed in the end of the option.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	additionalText?: string;

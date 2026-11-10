@@ -81,7 +81,7 @@ let activeRadio: RadioButton;
 /**
  * Fired when the component checked state changes.
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  */
 @event("change", {
 	bubbles: true,
@@ -134,7 +134,7 @@ class RadioButton extends UI5Element implements IFormInputElement {
 	 * @formEvents change
 	 * @formProperty
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	checked = false;

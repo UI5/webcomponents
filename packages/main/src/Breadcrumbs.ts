@@ -87,7 +87,8 @@ type FocusAdaptor = ITabbable & {
  * @extends UI5Element
  * @implements {IToolbarItemContent}
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
+ * @ui5subcomponent BreadcrumbsItem
  */
 @customElement({
 	tag: "ui5-breadcrumbs",

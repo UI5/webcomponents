@@ -76,7 +76,7 @@
 	--_ui5_tc_overflow_text_color: var(--sapButton_TextColor);
 }
 
-@container style(--ui5_content_density: compact) {
+@ui5-compact-size {
 	:host {
 		--_ui5_tc_header_height: var(--_ui5_tc_item_height);
 	}

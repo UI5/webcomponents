@@ -1309,7 +1309,7 @@ describe("Change event behavior when selecting the same suggestion item", () => 
 		cy.get("[ui5-dialog]")
 			.as("dialog");
 
-		cy.get<Dialog>("@dialog")
+		cy.get<JQuery<Dialog>>("@dialog")
 			.ui5DialogOpened();
 
 		cy.get("@input")
@@ -1326,7 +1326,7 @@ describe("Change event behavior when selecting the same suggestion item", () => 
 			.eq(0)
 			.realClick();
 
-		cy.get<Dialog>("@dialog")
+		cy.get<JQuery<Dialog>>("@dialog")
 			.ui5DialogOpened();
 	});
 });
@@ -2610,6 +2610,64 @@ describe("XSS tests for suggestions", () => {
 			cy.wrap($item[0].shadowRoot.querySelector(".ui5-li-title")).should("have.prop", "innerText", expected[index]);
 		});
 	});
+
+	it("does not execute payload set via markupText JS property", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item" text="Safe Item" />
+			</Input>
+		);
+
+		cy.get("#suggestion-item").then(($item) => {
+			($item[0] as SuggestionItem).markupText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via markup-text HTML attribute", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem text="Safe Item" markup-text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#xss-input").find("ui5-suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property when no highlight is active", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item-text" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("<");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item-text").shadow().find(".ui5-li-title")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
 });
 
 describe("Lazy loading", () => {
@@ -3184,7 +3242,7 @@ describe("Input built-in filtering", () => {
 			.realClick()
 			.realPress("Backspace");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("@input")
@@ -3192,7 +3250,7 @@ describe("Input built-in filtering", () => {
 			.find("input")
 			.realType("G");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("@input")
@@ -3241,7 +3299,7 @@ describe("Input built-in filtering", () => {
 			.realClick()
 			.realPress("Backspace");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("@input")
@@ -3249,7 +3307,7 @@ describe("Input built-in filtering", () => {
 			.find("input")
 			.realType("l");
 
-		cy.get<ResponsivePopover>("@popover")
+		cy.get<JQuery<ResponsivePopover>>("@popover")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("@input")
@@ -3718,6 +3776,20 @@ describe("Input built-in filtering", () => {
 					// Readonly does not dim — opacity var should remain unset.
 					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.equal("");
 				});
+		});
+
+		it("should render the title tooltip from accessibleName when hideTooltip is not set", () => {
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.shadow()
+				.find(".ui5-input-icon-root")
+				.should("have.attr", "title", "Search");
 		});
 	});
 });

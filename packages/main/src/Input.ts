@@ -15,8 +15,6 @@ import type {
 } from "@ui5/webcomponents-base/dist/types.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
 
 import {
 	isPhone,
@@ -206,6 +204,10 @@ type InputSuggestionScrollEventDetail = {
  * @csspart root - Used to style the root DOM element of the Input component
  * @csspart input - Used to style the native input element
  * @csspart clear-icon - Used to style the clear icon, which can be pressed to clear user input text
+ * @ui5subcomponent InputIcon
+ * @ui5subcomponent SuggestionItem
+ * @ui5subcomponent SuggestionItemCustom
+ * @ui5subcomponent SuggestionItemGroup
  */
 @customElement({
 	tag: "ui5-input",
@@ -278,7 +280,7 @@ type InputSuggestionScrollEventDetail = {
  * @param {Integer} scrollTop The current scroll position.
  * @param {HTMLElement} scrollContainer The scroll container.
  * @protected
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @event("suggestion-scroll", {
 	bubbles: true,
@@ -329,7 +331,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * **Note:** takes effect when `showSuggestions` is set to `true`
 	 * @default false
 	 * @private
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	highlight = false;
@@ -358,7 +360,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * Defines whether the component is required.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.3
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	required = false;
@@ -432,7 +434,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 *
 	 * **Note:** This property is not compatible with the ui5-input type InputType.Number. If the ui5-input type is set to Number, the maxlength value is ignored.
 	 * @default undefined
-	 * @since 1.0.0-rc.5
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property({ type: Number })
@@ -442,7 +444,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -451,7 +453,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * Receives id(or many ids) of the elements that label the input.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -619,7 +621,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 *
 	 * **Note:** If the component has `suggestionItems`,
 	 * the `valueStateMessage` would be displayed as part of the same popover, if used on desktop, or dialog - on phone.
-	 * @since 1.0.0-rc.6
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot({
@@ -745,7 +747,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_highlightSuggestionItem(item: SuggestionItem) {
-		item.markupText = this.typedInValue ? this.Suggestions?.hightlightInput((item.text || ""), this.typedInValue) : encodeXML(item.text || "");
+		item.markupText = this.typedInValue;
 	}
 
 	_isGroupItem(item: IInputSuggestionItem) {

@@ -179,7 +179,7 @@ type FCLAccessibilityAttributes = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-flexible-column-layout",

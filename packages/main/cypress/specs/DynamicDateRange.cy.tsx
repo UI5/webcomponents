@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import DynamicDateRange, { IDynamicDateRangeOption } from '../../src/DynamicDateRange.js';
 import Label from "../../src/Label.js";
 import SingleDate from '../../src/dynamic-date-range-options/SingleDate.js';
@@ -348,7 +349,7 @@ describe("DynamicDateRange Last/Next Options", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find("[ui5-input]")
 			.shadow()
@@ -400,7 +401,7 @@ describe("DynamicDateRange Last/Next Options", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find("[ui5-input]")
 			.shadow()
