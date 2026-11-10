@@ -2,7 +2,7 @@ import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-
 import { isEnter, isEnterAlt } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import { toggleAttribute } from "./TableUtils.js";
+import { toggleAttribute, isFocusedElementInside } from "./TableUtils.js";
 import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
@@ -134,11 +134,7 @@ class TableRow extends TableRowBase<TableCell> {
 			return;
 		}
 
-		const composedPath = e.composedPath();
-		composedPath.splice(composedPath.indexOf(this));
-		await new Promise(resolve => setTimeout(resolve)); // wait for the focus to be set
-		const activeElement = getActiveElement() as Element;
-		if (!composedPath.includes(activeElement)) {
+		if (!await isFocusedElementInside(this, e)) {
 			this._setActive("pointerup");
 		}
 	}
