@@ -112,8 +112,6 @@ type InputTableSuggestScrollEventDetail = {
  */
 @customElement({
 	tag: "ui5-input-table-suggest",
-	languageAware: true,
-	formAssociated: true,
 	renderer: jsxRenderer,
 	template: InputTableSuggestTemplate,
 	styles: [InputField.styles, SuggestionsCss, InputTableSuggestStyles],
