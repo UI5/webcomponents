@@ -15,8 +15,6 @@ import type {
 } from "@ui5/webcomponents-base/dist/types.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
 
 import {
 	isPhone,
@@ -749,7 +747,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_highlightSuggestionItem(item: SuggestionItem) {
-		item.markupText = this.typedInValue ? this.Suggestions?.hightlightInput((item.text || ""), this.typedInValue) : encodeXML(item.text || "");
+		item.markupText = this.typedInValue;
 	}
 
 	_isGroupItem(item: IInputSuggestionItem) {

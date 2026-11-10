@@ -327,4 +327,48 @@ describe("Search Field on mobile device", () => {
 			.find<ResponsivePopover>("#ui5-search-list")
 			.should("have.prop", "open", true);
 	});
+
+	it("connects the dialog input and the suggestions list via ArrowDown / ArrowUp", () => {
+		cy.mount(
+			<>
+				<Search showClearIcon={true}>
+					<SearchItem text="Item 1" />
+					<SearchItem text="Item 2" />
+					<SearchItem text="Item 3" />
+				</Search>
+			</>
+		);
+
+		cy.get("[ui5-search]")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		// mobile dialog input is focused on open
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("be.focused");
+
+		// ArrowDown moves focus from the dialog input into the suggestions list
+		cy.realPress("ArrowDown");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("be.focused");
+
+		// ArrowUp from the first item returns focus to the dialog input, not lost
+		cy.realPress("ArrowUp");
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("be.focused");
+	});
 });

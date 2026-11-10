@@ -123,6 +123,35 @@ describe("Initial Focus", () => {
 		cy.get("#token1")
 			.should("be.focused");
 	});
+
+	it("preventInitialFocus is respected when set right after open", () => {
+		cy.mount(
+			<>
+				<Button id="opener">Opener</Button>
+				<Dialog id="dialogId" headerText="Prevent initial focus">
+					<Button id="dialogButton">Close</Button>
+				</Dialog>
+			</>
+		);
+
+		cy.get("#opener").realClick();
+		cy.get("#opener").should("be.focused");
+
+		cy.get<Dialog>("#dialogId").then($dialog => {
+			const dialog = $dialog.get(0);
+			// "open" is applied before "preventInitialFocus" in the same tick (as React does on initial mount)
+			dialog.open = true;
+			dialog.preventInitialFocus = true;
+		});
+
+		cy.get<Dialog>("#dialogId").ui5DialogOpened();
+
+		cy.get("#dialogButton")
+			.should("not.be.focused");
+
+		cy.get("#opener")
+			.should("be.focused");
+	});
 });
 
 describe("Accessibility", () => {
