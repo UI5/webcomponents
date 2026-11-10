@@ -28,7 +28,7 @@ export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest
 				onClose={this._afterClosePicker}
 				open={this._open}
 				opener={this}
-				accessibleName={this.suggestionsText}
+				accessibleName={this._popupLabel}
 			>
 				{this._isPhone &&
 					<div slot="header" class="ui5-responsive-popover-header">
@@ -110,14 +110,12 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 			}}
 			onClick={this._onTableRowClick}
 			onMouseDown={this._onTableRowMouseDown}
-			onMouseUp={this._onTableRowMouseUp}
-			onMouseLeave={this._onTableRowMouseUp}
 			onScroll={this._onTableScroll}
 		>
 			<Table
 				class="ui5-input-table-suggest-table"
 				overflowMode={this._overflowMode}
-				accessibleName={this.suggestionsText}
+				accessibleName={this._popupLabel}
 			>
 				<slot name="headerRow" slot="headerRow"></slot>
 				<slot></slot>

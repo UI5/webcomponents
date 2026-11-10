@@ -22,6 +22,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
 
 import InputField from "./InputField.js";
 import type InputTableSuggestRow from "./InputTableSuggestRow.js";
@@ -39,6 +40,12 @@ import {
 	ROW_ITEM_POSITION,
 	INPUT_SUGGESTIONS_TITLE,
 	INPUT_SUGGESTIONS,
+	INPUT_AVALIABLE_VALUES,
+	INPUT_SUGGESTIONS_ONE_HIT,
+	INPUT_SUGGESTIONS_MORE_HITS,
+	INPUT_SUGGESTIONS_NO_HIT,
+	INPUT_SUGGESTIONS_EXPANDED,
+	INPUT_SUGGESTIONS_COLLAPSED,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -131,9 +138,8 @@ type InputTableSuggestScrollEventDetail = {
 @event("close")
 
 /**
- * Fired when the user navigates with the keyboard and the input value is autocompleted
- * (type-ahead) to the first matching suggestion row.
- * @public
+ * Fired when the value is autocompleted
+ * @private
  */
 @event("type-ahead")
 
@@ -250,12 +256,12 @@ class InputTableSuggest extends InputField {
 	_rowFocused = false;
 
 	/**
-	 * Internal property reflecting whether a suggestion row is pressed (pointer active).
-	 * Used by CSS to hide the input focus outline during a row press and avoid double focus.
+	 * Internal property reflecting whether a value-state-message link holds focus.
+	 * Used by CSS to hide the input focus outline so the input does not also look focused.
 	 * @private
 	 */
 	@property({ type: Boolean })
-	_rowActive = false;
+	_linkFocused = false;
 
 	/**
 	 * Stores the matched row for typeahead
@@ -281,6 +287,17 @@ class InputTableSuggest extends InputField {
 			ariaAutoComplete: base.ariaAutoComplete || (showSuggestions ? "list" as const : undefined),
 			ariaControls: base.ariaControls || (showSuggestions ? this._suggestionsPopoverId : undefined),
 		};
+	}
+
+	get suggestionsTextId() {
+		return this._effectiveShowSuggestions ? "suggestionsText" : "";
+	}
+
+	get ariaDescribedByIds() {
+		return [
+			this.suggestionsTextId,
+			super.ariaDescribedByIds,
+		].filter(Boolean).join(" ");
 	}
 
 	/**
@@ -326,6 +343,10 @@ class InputTableSuggest extends InputField {
 
 		this._isKeyNavigation = false;
 
+		// Typing returns the visual focus to the input, so drop the row-focus state that
+		// suppresses the input's focus ring (see [_row-focused] in InputTableSuggest.css).
+		this._rowFocused = false;
+
 		// On backspace/delete/escape (_shouldAutocomplete is false) clear any row
 		// selection/focus. For forward typing we keep the current selection: the
 		// typeahead re-selects the matching row on re-render, and when the typed value
@@ -333,7 +354,6 @@ class InputTableSuggest extends InputField {
 		// no re-render happens - deselecting here would drop a still-correct selection.
 		if (!this._shouldAutocomplete) {
 			this._clearRowSelection();
-			this._rowFocused = false;
 		}
 	}
 
@@ -511,15 +531,34 @@ class InputTableSuggest extends InputField {
 	}
 
 	_onTableRowMouseDown(e: MouseEvent) {
+		// Keep the real focus on the input: a mousedown inside the popover would otherwise move
+		// DOM focus to the pressed element, and if the pointer is released off a row (e.g. on the
+		// header) no selection runs to restore it, leaving the input focused-looking but untypeable.
+		e.preventDefault();
+
 		const pressedRow = e.composedPath().find(el => {
 			return (el as HTMLElement).hasAttribute?.("ui5-table-row");
 		}) as ITableSuggestionRow | undefined;
 
-		this._rowActive = !!pressedRow && this._visibleRows.includes(pressedRow);
-	}
+		if (!pressedRow || !this._visibleRows.includes(pressedRow) || pressedRow.focused) {
+			return;
+		}
 
-	_onTableRowMouseUp() {
-		this._rowActive = false;
+		// Move the visual focus to the pressed row on mousedown so exactly one row is highlighted
+		// and the input's focus ring stays suppressed; on mouse up the row is already focused, so
+		// no second visual focus appears on the input or another row. Unlike keyboard focus this
+		// does not preview the row value into the input (a press must not alter the typed text or
+		// leave a text selection). Mark key navigation so the reflected _rowFocused re-render does
+		// not run typeahead and wipe the freshly focused row.
+		this._isKeyNavigation = true;
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		pressedRow.focused = true;
+		this._rowFocused = true;
+		this._updateRowClasses();
+		this.fireDecoratorEvent("selection-change", {
+			row: pressedRow,
+		});
 	}
 
 	_click() {
@@ -584,13 +623,14 @@ class InputTableSuggest extends InputField {
 
 	_clearRowSelection() {
 		const hadSelection = this._allRows.some(row => row.selected || row.focused);
+		if (!hadSelection) {
+			return;
+		}
 		this._deselectAllRows();
 		this._matchedTabularRow = undefined;
-		if (hadSelection) {
-			this.fireDecoratorEvent("selection-change", {
-				row: null,
-			});
-		}
+		this.fireDecoratorEvent("selection-change", {
+			row: null,
+		});
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -702,8 +742,7 @@ class InputTableSuggest extends InputField {
 			nextIndex = currentIndex < 0 ? 0 : currentIndex + 1;
 		} else {
 			if (currentIndex <= 0) {
-				this._deselectAllRows();
-				this._matchedTabularRow = undefined;
+				this._clearRowSelection();
 				this._rowFocused = false;
 				this._clearAnnouncement();
 				this.value = this.typedInValue;
@@ -757,12 +796,66 @@ class InputTableSuggest extends InputField {
 		this._deselectAllRows();
 		this._matchedTabularRow = undefined;
 		this._rowFocused = false;
+		this._linkFocused = false;
 		this.isTyping = false;
 		this._clearAnnouncement();
 	}
 
+	_handleCtrlAltF8() {
+		// Moving focus to a value-state-message link: clear any row focus/selection so no row
+		// stays highlighted behind the link and returning to the list starts at the first row.
+		if (this._useTableSuggestions) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+			this._clearAnnouncement();
+		}
+
+		// The input keeps `focused` (so the value-state popover stays open), so flag the link
+		// focus separately to stop the input from also rendering as focused.
+		if (this.linksInAriaValueStateHiddenText.length) {
+			this._linkFocused = true;
+		}
+
+		super._handleCtrlAltF8();
+	}
+
+	_addLinksEventListeners() {
+		const links = this.linksInAriaValueStateHiddenText;
+
+		links.forEach((link, index) => {
+			this._linksListenersArray.push((e: KeyboardEvent) => {
+				attachListeners(e, links, index, {
+					closeValueState: () => {
+						this._open = false;
+						if (this.valueStateOpen) {
+							this.closeValueStatePopover();
+						}
+					},
+					focusInput: () => {
+						this._handleLinkNavigation = false;
+						this._linkFocused = false;
+						this.getInputDOMRef()!.focus();
+					},
+					navigateToItem: () => {
+						this._handleLinkNavigation = false;
+						if (this._open) {
+							this._linkFocused = false;
+							// Mark as keyboard navigation so the re-render triggered by the row
+							// preview value does not run typeahead and wipe the row focus.
+							this._isKeyNavigation = true;
+							this.getInputDOMRef()!.focus();
+							this._focusRowAtIndex(0);
+						}
+					},
+					isPopoverOpen: () => this._open,
+				});
+			});
+			link.addEventListener("keydown", this._linksListenersArray[index]);
+		});
+	}
+
 	_clearPopoverFocusAndSelection() {
-		this._rowActive = false;
 		this._deselectAllRows();
 	}
 
@@ -914,6 +1007,7 @@ class InputTableSuggest extends InputField {
 		this._handleChange();
 
 		this._rowFocused = false;
+		this._linkFocused = false;
 		this._clearPopoverFocusAndSelection();
 
 		if (!this._clearIconClicked) {
@@ -950,6 +1044,30 @@ class InputTableSuggest extends InputField {
 		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS);
 	}
 
+	get _popupLabel() {
+		return InputField.i18nBundle.getText(INPUT_AVALIABLE_VALUES);
+	}
+
+	get availableSuggestionsCount() {
+		if (this._effectiveShowSuggestions && (this.value || this._open)) {
+			const itemsCount = this._visibleRows.length;
+			const stateText = this._open ? InputField.i18nBundle.getText(INPUT_SUGGESTIONS_EXPANDED) : InputField.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED);
+
+			switch (itemsCount) {
+			case 0:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT)} ${stateText}`;
+
+			case 1:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT)} ${stateText}`;
+
+			default:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, itemsCount)} ${stateText}`;
+			}
+		}
+
+		return this._effectiveShowSuggestions ? InputField.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED) : undefined;
+	}
+
 	get _suggestionsOkButtonText() {
 		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
 	}
@@ -966,6 +1084,7 @@ class InputTableSuggest extends InputField {
 		this.fireDecoratorEvent("close");
 		this._deselectAllRows();
 		this._rowFocused = false;
+		this._linkFocused = false;
 	}
 
 	_confirmMobileValue() {

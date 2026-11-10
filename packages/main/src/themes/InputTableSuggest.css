@@ -1,16 +1,14 @@
-:host([focused]:not([_row-focused])) .ui5-input-focusable-element::after {
+:host([focused]:not([_row-focused]):not([_link-focused])) .ui5-input-focusable-element::after {
 	content: var(--ui5_input_focus_pseudo_element_content);
 }
 
-:host([focused][_row-focused]) .ui5-input-focusable-element::after {
+:host([focused][_row-focused]) .ui5-input-focusable-element::after,
+:host([focused][_link-focused]) .ui5-input-focusable-element::after {
 	content: none;
 }
 
-:host([focused][_row-active]) .ui5-input-focusable-element::after {
-	content: none;
-}
-
-:host([focused][_row-focused]) {
+:host([focused][_row-focused]),
+:host([focused][_link-focused]) {
 	border-color: var(--sapField_BorderColor);
 	background-color: var(--sapField_Background);
 }
@@ -20,8 +18,19 @@
 	box-shadow: var(--sapField_Hover_Shadow);
 }
 
+/* Make the suggestions wrapper the scroll container: the popover content part is bounded by the
+   popover's computed max-height, so a flex column lets the wrapper fill it and scroll its rows
+   (this is what fires the suggestion-scroll event); otherwise the wrapper grows to fit all rows
+   and the popover's own content part scrolls instead. */
+.ui5-suggestions-popover::part(content) {
+	display: flex;
+	flex-direction: column;
+}
+
 .ui5-input-table-suggest-wrapper {
 	width: 100%;
+	flex: 1 1 auto;
+	min-height: 0;
 	overflow: auto;
 }
 
@@ -43,8 +52,7 @@
 	box-shadow: inset 0 calc(-1 * var(--sapList_BorderWidth)) 0 0 var(--sapList_SelectionBorderColor);
 }
 
-::slotted([ui5-table-row].ui5-input-table-suggest-row--focused),
-::slotted([ui5-table-row]:active) {
+::slotted([ui5-table-row].ui5-input-table-suggest-row--focused) {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: -0.25rem;
 }
