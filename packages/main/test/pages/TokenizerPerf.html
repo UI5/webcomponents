@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tokenizer — Performance Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily, sans-serif);
+			padding: 1rem 2rem;
+			background: var(--sapBackgroundColor, #f5f6f7);
+		}
+		h2 {
+			margin: 2rem 0 0.25rem;
+			font-size: 1rem;
+			font-weight: 600;
+			color: var(--sapTextColor, #333);
+		}
+		.desc {
+			font-size: 0.875rem;
+			color: var(--sapContent_LabelColor, #666);
+			margin: 0 0 0.5rem;
+		}
+		.row {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+			flex-wrap: wrap;
+			margin-bottom: 0.5rem;
+		}
+		ui5-multi-combobox {
+			width: 600px;
+			max-width: 100%;
+		}
+		.wide { width: 900px; }
+		.narrow { width: 300px; }
+		hr { margin: 2rem 0; border: none; border-top: 1px solid var(--sapSeparatorColor, #ddd); }
+	</style>
+</head>
+
+<body>
+
+	<h1 style="font-size:1.25rem;margin-bottom:0">Tokenizer — Performance Test Page</h1>
+	<p class="desc">
+		Use this page to measure tokenizer layout cost across branches.<br>
+		Open DevTools → Performance → record while resizing the window or pressing the buttons below.
+	</p>
+
+	<hr>
+
+	<!-- ── 1. Massive selection (resize stress test) ───────────────────── -->
+	<h2>1. 1 200 items — 50 selected (resize stress test)</h2>
+	<p class="desc">
+		Resize the browser window. On <strong>main</strong>: every resize triggers O(N) DOM reads.
+		On <strong>refactored</strong>: token widths are cached; resize costs one getBoundingClientRect().
+	</p>
+	<ui5-multi-combobox id="mcb-1200" placeholder="Search 1 200 items…" class="wide" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 2. All tokens selected ("N Items" path) ─────────────────────── -->
+	<h2>2. 200 items — all selected ("N Items" button)</h2>
+	<p class="desc">
+		Tests the state where no single token fits and the component collapses to "N Items".
+		Resize to see layout recalculation cost.
+	</p>
+	<ui5-multi-combobox id="mcb-all-selected" placeholder="All selected…" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 3. Variable-width tokens ────────────────────────────────────── -->
+	<h2>3. Mixed token widths — 30 selected</h2>
+	<p class="desc">
+		Tokens vary from 2 to 40 characters. Tests whether the layout engine correctly picks the
+		break-point when token widths differ significantly.
+	</p>
+	<ui5-multi-combobox id="mcb-mixed" placeholder="Mixed widths…" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 4. Three MCBs on screen simultaneously ──────────────────────── -->
+	<h2>4. Three MCBs simultaneously (combined layout pressure)</h2>
+	<p class="desc">
+		All three MCBs resize together. Tests whether multiple simultaneous tokenizers each pay the
+		full O(N) layout cost (main) vs. O(1) cache hit (refactored).
+	</p>
+	<div class="row">
+		<ui5-multi-combobox id="mcb-multi-a" placeholder="300 items…" class="narrow"></ui5-multi-combobox>
+		<ui5-multi-combobox id="mcb-multi-b" placeholder="300 items…" class="narrow"></ui5-multi-combobox>
+		<ui5-multi-combobox id="mcb-multi-c" placeholder="300 items…" class="narrow"></ui5-multi-combobox>
+	</div>
+
+	<hr>
+
+	<!-- ── 5. Dynamic add / remove tokens ──────────────────────────────── -->
+	<h2>5. Dynamic selection — add / remove tokens programmatically</h2>
+	<p class="desc">
+		Clicking the buttons below selects/deselects items in bulk.
+		Tests how fast the tokenizer recalculates layout when the token set changes.
+	</p>
+	<div class="row">
+		<ui5-button id="btn-select-100">Select 100</ui5-button>
+		<ui5-button id="btn-deselect-all">Deselect all</ui5-button>
+		<ui5-button id="btn-select-50-long">Select 50 long tokens</ui5-button>
+		<ui5-button id="btn-toggle">Toggle all</ui5-button>
+	</div>
+	<ui5-multi-combobox id="mcb-dynamic" placeholder="Dynamic…" class="wide" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 6. Narrow container — many overflowing tokens ───────────────── -->
+	<h2>6. Narrow container (300 px) — many tokens overflow</h2>
+	<p class="desc">
+		A small MCB with 20 tokens selected forces the nMore calculation to run many binary search
+		iterations. Resize between narrow and wide to stress the layout switching.
+	</p>
+	<ui5-multi-combobox id="mcb-narrow" placeholder="Narrow…" class="narrow" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 7. Standalone tokenizer — dynamic add / remove ─────────────── -->
+	<h2>7. Standalone tokenizer — dynamic add / remove tokens</h2>
+	<p class="desc">
+		Exercises the layout-on-mutation path: each add/remove must recompute overflow correctly
+		without knowing about MCB/MI.  Mirrors the <code>Tokenizer.cy.tsx</code> "updates layout
+		when a token is added" test case.
+	</p>
+	<div class="row" style="margin-bottom:0.5rem">
+		<ui5-button id="btn-add-short">Add short token</ui5-button>
+		<ui5-button id="btn-add-long">Add long token</ui5-button>
+		<ui5-button id="btn-remove-last">Remove last</ui5-button>
+	</div>
+	<ui5-tokenizer id="standalone-dynamic" style="width:300px">
+		<ui5-token text="Alpha"></ui5-token>
+		<ui5-token text="Beta"></ui5-token>
+	</ui5-tokenizer>
+
+<script>
+// ── Helpers ────────────────────────────────────────────────────────────────
+function populateMcb(id, { count, selectedCount, textFn }) {
+	const mcb = document.getElementById(id);
+	const frag = document.createDocumentFragment();
+	for (let i = 1; i <= count; i++) {
+		const item = document.createElement("ui5-mcb-item");
+		const text = textFn ? textFn(i) : "Item " + i;
+		item.setAttribute("text", text);
+		if (i <= selectedCount) item.setAttribute("selected", "");
+		frag.appendChild(item);
+	}
+	mcb.appendChild(frag);
+}
+
+// 1. 1 200 items, 50 selected
+populateMcb("mcb-1200", { count: 1200, selectedCount: 50 });
+
+// 2. 200 items all selected
+populateMcb("mcb-all-selected", { count: 200, selectedCount: 200 });
+
+// 3. Mixed widths — alternating short / long text
+populateMcb("mcb-mixed", {
+	count: 500,
+	selectedCount: 30,
+	textFn: i => {
+		const words = ["Hi", "Hello", "Compact", "Condensed", "Cosy", "Longest word in the whole universe",
+			"Short", "Medium length text", "A", "Tiny"];
+		return words[i % words.length] + " " + i;
+	},
+});
+
+// 4. Three concurrent MCBs, 15 each selected
+["mcb-multi-a", "mcb-multi-b", "mcb-multi-c"].forEach(id =>
+	populateMcb(id, { count: 300, selectedCount: 15 })
+);
+
+// 5. Dynamic MCB — 500 items initially unselected
+populateMcb("mcb-dynamic", { count: 500, selectedCount: 0 });
+
+document.getElementById("btn-select-100").addEventListener("click", () => {
+	const items = document.getElementById("mcb-dynamic").querySelectorAll("ui5-mcb-item");
+	items.forEach((item, i) => { if (i < 100) item.setAttribute("selected", ""); });
+});
+document.getElementById("btn-deselect-all").addEventListener("click", () => {
+	document.getElementById("mcb-dynamic").querySelectorAll("ui5-mcb-item")
+		.forEach(item => item.removeAttribute("selected"));
+});
+document.getElementById("btn-select-50-long").addEventListener("click", () => {
+	const items = [...document.getElementById("mcb-dynamic").querySelectorAll("ui5-mcb-item")];
+	items.forEach((item, i) => {
+		item.removeAttribute("selected");
+		if (i < 50) {
+			item.setAttribute("text", "Very long token text number " + (i + 1));
+			item.setAttribute("selected", "");
+		}
+	});
+});
+document.getElementById("btn-toggle").addEventListener("click", () => {
+	document.getElementById("mcb-dynamic").querySelectorAll("ui5-mcb-item").forEach(item => {
+		if (item.hasAttribute("selected")) item.removeAttribute("selected");
+		else item.setAttribute("selected", "");
+	});
+});
+
+// 6. Narrow MCB, 20 selected
+populateMcb("mcb-narrow", { count: 60, selectedCount: 20 });
+
+// 7. Standalone tokenizer — dynamic add / remove
+let tokenCounter = 0;
+const standaloneTokenizer = document.getElementById("standalone-dynamic");
+
+document.getElementById("btn-add-short").addEventListener("click", () => {
+	const t = document.createElement("ui5-token");
+	t.setAttribute("text", "Token " + (++tokenCounter));
+	standaloneTokenizer.appendChild(t);
+});
+
+document.getElementById("btn-add-long").addEventListener("click", () => {
+	const t = document.createElement("ui5-token");
+	t.setAttribute("text", "Very long token text number " + (++tokenCounter));
+	standaloneTokenizer.appendChild(t);
+});
+
+document.getElementById("btn-remove-last").addEventListener("click", () => {
+	const tokens = standaloneTokenizer.querySelectorAll("ui5-token");
+	if (tokens.length) tokens[tokens.length - 1].remove();
+});
+</script>
+
+</body>
+</html>

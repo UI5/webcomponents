@@ -15,9 +15,65 @@
 	</script>
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 	<link rel="stylesheet" type="text/css" href="./styles/Tokenizer.css">
+	<style>
+		.controls-bar {
+			position: sticky;
+			top: 0;
+			z-index: 100;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 16px;
+			align-items: center;
+			padding: 10px 16px;
+			background: var(--sapPageHeader_Background, #fff);
+			border-bottom: 1px solid var(--sapPageHeader_BorderColor, #ccc);
+		}
+		.controls-bar label {
+			font-family: var(--sapFontFamily, sans-serif);
+			font-size: var(--sapFontSmallSize, 12px);
+			font-weight: bold;
+			color: var(--sapContent_LabelColor, #6a6d70);
+			white-space: nowrap;
+		}
+		.controls-bar .control-group {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+	</style>
 </head>
 
 <body>
+	<div class="controls-bar">
+		<div class="control-group">
+			<label>Theme</label>
+			<ui5-segmented-button id="top-theme-switch">
+				<ui5-segmented-button-item data-theme="sap_horizon" selected>Morning</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-theme="sap_horizon_dark">Evening</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-theme="sap_horizon_hcb">HCB</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-theme="sap_horizon_hcw">HCW</ui5-segmented-button-item>
+			</ui5-segmented-button>
+		</div>
+		<div class="control-group">
+			<label>Language</label>
+			<ui5-segmented-button id="lang-switch">
+				<ui5-segmented-button-item data-lang="en" selected>EN</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-lang="de">DE</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-lang="fr">FR</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-lang="ar">AR</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-lang="zh_CN">ZH</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-lang="ko">KO</ui5-segmented-button-item>
+			</ui5-segmented-button>
+		</div>
+		<div class="control-group">
+			<label>Density</label>
+			<ui5-segmented-button id="density-switch">
+				<ui5-segmented-button-item data-density="cozy" selected>Cozy</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-density="compact">Compact</ui5-segmented-button-item>
+			</ui5-segmented-button>
+		</div>
+	</div>
+
 	<div class="wrapper">
 		<h1 class="sample-container-title">Expanded tokenizer</h1>
 		<div>
@@ -40,7 +96,7 @@
 
 		<h1 class="sample-container-title">Tokenizer with n-more items</h1>
 		<div class="tokenizer-container">
-			<ui5-tokenizer id="nmore-tokenizer">
+			<ui5-tokenizer id="nmore-tokenizer" style="width: 300px;">
 				<ui5-token text="Andora"></ui5-token>
 				<ui5-token text="Bulgaria"></ui5-token>
 				<ui5-token text="Canada"></ui5-token>
@@ -178,6 +234,24 @@
 	</div>
 
 	<script>
+		const cfg = () => window["sap-ui-webcomponents-bundle"].configuration;
+
+		document.getElementById("top-theme-switch").addEventListener("ui5-selection-change", e => {
+			cfg().setTheme(e.detail.selectedItems[0].dataset.theme);
+			// keep the existing bottom theme switch in sync
+			document.querySelectorAll("#theme-switch ui5-segmented-button-item").forEach(item => {
+				item.selected = item.getAttribute("data-ui5-theme-name") === e.detail.selectedItems[0].dataset.theme;
+			});
+		});
+
+		document.getElementById("lang-switch").addEventListener("ui5-selection-change", e => {
+			cfg().setLanguage(e.detail.selectedItems[0].dataset.lang);
+		});
+
+		document.getElementById("density-switch").addEventListener("ui5-selection-change", e => {
+			document.body.classList.toggle("sapUiSizeCompact", e.detail.selectedItems[0].dataset.density === "compact");
+		});
+
 		const deleteTokenizer = document.getElementById("delete-tokenizer");
 		let tokensToShowMoreItemsPress = [];
 		const deletedTokensLabel = document.getElementById("deletedTokensLabel");

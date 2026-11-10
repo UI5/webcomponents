@@ -1891,6 +1891,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.tokenizerAvailable = this._getSelectedItems().length > 0;
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
+		if (this._tokenizer) {
+			// Set the CSS variable on the tokenizer element so it's available in the shadow DOM
+			// (mirrors the same pattern used in MultiInput.ts)
+			this._tokenizer.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
+		}
+
 		if (!input || !value) {
 			this._getItems().forEach(item => {
 				if (isInstanceOfMultiComboBoxItem(item)) {
@@ -1929,6 +1935,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		// force resize of the tokenizer on invalidation
 		this._tokenizer._handleResize();
 		this._tokenizer.preventInitialFocus = true;
+
+		// When the user types, the clear icon appears and shrinks the tokenizer container.
+		// Scroll to the end so the input cursor area stays visible.
+		if (this._tokenizer.expanded && this.value) {
+			this._tokenizer.scrollToEnd();
+		}
 
 		if (this.open && !isPhone()) {
 			this._tokenizer._scrollToEndOnExpand = true;

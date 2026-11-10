@@ -8,6 +8,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { calculateLayout } from "./TokenizerOverflowLayout.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
@@ -379,19 +380,31 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_deletedDialogItems!: Token[];
 	_lastFocusedToken: Token | null = null;
 	_isFocusSetInternally: boolean = false;
-	/**
-	 * Scroll to end when tokenizer is expanded
-	 * @private
-	 */
+	/** Scroll to end when tokenizer is expanded */
 	_scrollToEndOnExpand = false;
 
-	// Tracks the previous _nMoreCount to detect render-loop oscillation at the
-	// "Show All" boundary (where the n-more text switches between two variants
-	// with different rendered widths, flipping the overflow count each render).
-	_prevNMoreCount = -1;
+	// ─── Measurement caches ────────────────────────────────────────────────────
+	// Keyed by token._id → measured pixel width (content-box, no margins).
+	// Invalidated when tokens are added/removed or a token's text changes.
+	_tokenWidthCache = new Map<string, number>();
+	// Keyed by hidden-token count → measured pixel width of the "+N more" span.
+	// Invalidated when the locale changes (languageAware fires a re-render).
+	_nMoreWidthCache = new Map<number, number>();
+	// Cached gap and padding values.  Re-read whenever the cache is fully cleared.
+	_cachedGap = 0;
+	_cachedPaddingStart = 0;
+	// Token identity/text snapshots from the last measurement pass.
+	// Used to detect additions, removals, and text changes.
+	_cachedTokenIds: string[] = [];
+	_cachedTokenTexts: string[] = [];
+	// Pre-measured indicator widths indexed by digit class (0=1-digit, 1=2-digit, 2=3-digit, 3=4-digit).
+	// A zero value means "not yet measured". Filled lazily on the first layout call via
+	// _measureIndicatorWidths() and kept until onExitDOM or locale change.
+	_indicatorWidths: number[] = [0, 0, 0, 0];
 
 	_handleResize() {
-		this._nMoreCount = this.overflownTokens.length;
+		// Only the container width changed; token widths and indicator widths are unaffected.
+		this._computeAndApplyLayout();
 	}
 
 	get formFormattedValue(): FormData | null {
@@ -466,6 +479,13 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._resizeHandler);
+		this._tokenWidthCache.clear();
+		this._nMoreWidthCache.clear();
+		this._cachedTokenIds = [];
+		this._cachedTokenTexts = [];
+		this._cachedGap = 0;
+		this._cachedPaddingStart = 0;
+		this._indicatorWidths = [0, 0, 0, 0];
 	}
 
 	_handleNMoreClick() {
@@ -532,21 +552,32 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const tokensArray = this._tokens;
 		const firstToken = tokensArray[0];
 
-		const newCount = this.overflownTokens.length;
-		// Guard against render loops at the "Show All" boundary: when all tokens are
-		// hidden the n-more text switches to a narrower "Show All (N)" string, which
-		// makes one token appear to fit, switching back to the wider "N More" string,
-		// which hides it again — oscillating every render.
-		// The oscillation signature: count would return to exactly the value it held
-		// before the last update (i.e. we've already been here and bounced).
-		const isOscillating = this._nMoreCount === tokensArray.length
-			&& newCount === tokensArray.length - 1
-			&& this._prevNMoreCount === newCount;
+		// Detect changes that require remeasuring token widths:
+		// additions, removals, or text changes (invalidateOnChildChange covers text).
+		const currentIds = tokensArray.map(t => t._id);
+		const currentTexts = tokensArray.map(t => t.text ?? "");
+		const tokenSetChanged = currentIds.length !== this._cachedTokenIds.length
+			|| currentIds.some((id, i) => id !== this._cachedTokenIds[i]);
 
-		if (newCount !== this._nMoreCount && !isOscillating) {
-			this._prevNMoreCount = this._nMoreCount;
-			this._nMoreCount = newCount;
+		if (tokenSetChanged) {
+			this._tokenWidthCache.clear();
+			// nMore text switches between "+N more" and "N Items" based on total count,
+			// so the cache must be invalidated whenever the token set changes.
+			this._nMoreWidthCache.clear();
+			this._cachedTokenIds = currentIds;
+			this._cachedTokenTexts = currentTexts;
+		} else {
+			// Same token set — check for individual text changes and drop only
+			// the affected cache entries so they get re-measured.
+			currentTexts.forEach((text, i) => {
+				if (text !== this._cachedTokenTexts[i]) {
+					this._tokenWidthCache.delete(tokensArray[i]._id);
+				}
+			});
+			this._cachedTokenTexts = currentTexts;
 		}
+
+		this._computeAndApplyLayout();
 
 		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
@@ -562,19 +593,305 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		this._scrollToEndIfNeeded();
 
-		// Only reset _tokenDeleting if no token is currently marked for deletion
-		// This prevents resetting the flag before the actual deletion logic executes
 		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
-
 		if (!hasTokenToBeDeleted) {
 			this._tokenDeleting = false;
 		}
 
-		// Update lastVisibleToken after rendering is complete to avoid render loops
 		renderFinished().then(() => {
 			this._updateLastVisibleTokenAttribute();
 		});
 	}
+
+	// ─── Layout computation ───────────────────────────────────────────────────
+
+	/**
+	 * Orchestrates measurement and layout calculation.
+	 *
+	 * In collapsed (non-expanded) mode, reads token widths from the cache or
+	 * from the live DOM, measures n-more button widths via the hidden measurement
+	 * span, calls the pure calculateLayout function, and applies the result by
+	 * setting token.overflows and _nMoreCount.
+	 *
+	 * In expanded mode all tokens are shown; the method is a no-op.
+	 */
+	_computeAndApplyLayout() {
+		if (!this.contentDom) {
+			return;
+		}
+
+		// When expanded or multi-line, all tokens must be visible so the user can
+		// scroll through them.  Make sure any previously-hidden tokens are shown,
+		// clear the n-more count, and skip the overflow calculation.
+		if (this.expanded || this.multiLine) {
+			this._tokens.forEach(t => {
+				if (t.overflows) {
+					t.overflows = false;
+					t.style.removeProperty("display");
+				}
+				t.style.removeProperty("margin-inline-end");
+			});
+			if (this._nMoreCount !== 0) {
+				this._nMoreCount = 0;
+			}
+			return;
+		}
+
+		const tokensArray = this._tokens;
+
+		if (tokensArray.length === 0) {
+			this._nMoreCount = 0;
+			return;
+		}
+
+		// ── Step 1: identify uncached tokens and temporarily un-hide them ──────
+		// Tokens with overflows=true have display:none; getBoundingClientRect
+		// would return zero width for them.  Only reset the ones we actually need
+		// to measure (no cache hit) to minimise token re-renders.
+		// The inline style is cleared too so measurement sees the real token width.
+		const uncachedTokens = tokensArray.filter(t => !this._tokenWidthCache.has(t._id));
+		uncachedTokens.forEach(t => {
+			if (t.overflows) {
+				t.overflows = false;
+				t.style.removeProperty("display");
+			}
+		});
+
+		// ── Step 2: batch-read token widths ────────────────────────────────────
+		if (uncachedTokens.length > 0) {
+			const rects = uncachedTokens.map(t => t.getBoundingClientRect());
+
+			// Derive gap from actual rendered positions of the first two adjacent
+			// tokens.  This avoids relying on getComputedStyle which can return 0
+			// when theme CSS variables haven't resolved on the first call.
+			if (this._cachedGap === 0 && uncachedTokens.length >= 2) {
+				const i0 = tokensArray.indexOf(uncachedTokens[0]);
+				const i1 = tokensArray.indexOf(uncachedTokens[1]);
+				if (i1 === i0 + 1 && rects[0].width > 0 && rects[1].width > 0) {
+					const dir = getComputedStyle(this.contentDom).direction;
+					const gap = dir === "rtl"
+						? rects[0].left - rects[1].right
+						: rects[1].left - rects[0].right;
+					this._cachedGap = Math.max(0, gap);
+				}
+			}
+
+			uncachedTokens.forEach((t, i) => {
+				// Only cache non-zero widths.  A zero width means the element hasn't
+				// rendered yet (e.g. shadow stylesheet not applied); keeping it uncached
+				// forces a re-measurement on the next call.
+				if (rects[i].width > 0) {
+					this._tokenWidthCache.set(t._id, rects[i].width);
+				}
+			});
+		}
+
+		// If we still have uncached tokens (all zero-width), defer until next
+		// resize/render cycle — do not poison the state with wrong measurements.
+		const allCached = tokensArray.every(t => this._tokenWidthCache.has(t._id));
+		if (!allCached) {
+			// Some token shadow DOMs haven't painted yet (getBoundingClientRect() returns 0).
+			// Schedule a retry once the current render batch settles so every token has its
+			// real pixel width.  This covers standalone usage where no parent component
+			// triggers a follow-up render.
+			renderFinished().then(() => this._computeAndApplyLayout()); // intentionally floating — fire-and-forget retry
+			return;
+		}
+
+		const tokenWidths = tokensArray.map(t => this._tokenWidthCache.get(t._id)!);
+
+		// ── Step 3: read padding (re-read only when cache is fresh) ────────────
+		if (this._cachedPaddingStart === 0) {
+			this._cachedPaddingStart = parseFloat(getComputedStyle(this.contentDom).paddingInlineStart) || 0;
+		}
+
+		const containerWidth = this._computeContainerWidth();
+
+		// ── Step 4: n-more button width via pre-measured digit-class table ─────
+		const getNMoreWidth = (hidden: number) => this._getIndicatorWidth(hidden);
+
+		// ── Step 5: pure layout calculation ────────────────────────────────────
+		const layout = calculateLayout(
+			containerWidth,
+			tokenWidths,
+			this._cachedGap,
+			this._cachedPaddingStart,
+			getNMoreWidth,
+		);
+
+		// ── Step 6: apply overflow flags (guard no-op writes) ──────────────────
+		// Inline style is set/cleared SYNCHRONOUSLY so the transition state (overflow
+		// tokens still in DOM but not yet hidden by their async component re-render)
+		// is never painted.  This prevents .ui5-tokenizer--content from being
+		// flex-shrunk in MultiComboBox (which has a constrained max-width) and
+		// clips visible tokens through its overflow:hidden.
+		//
+		// When there IS overflow (nMore shown) the last visible token's trailing
+		// margin is zeroed synchronously so the nMore button follows immediately.
+		// In state "all" (no overflow) the natural margin is restored — it becomes
+		// the visual gap between the last token and the input cursor; the trailing
+		// gap is at most one gap-width wider than the container, which .ui5-tokenizer-root's
+		// overflow:hidden clips invisibly (only empty space, never token content).
+		const lastVisibleIdx = layout.visibleCount - 1;
+		tokensArray.forEach((t, i) => {
+			const shouldOverflow = i >= layout.visibleCount;
+			if (t.overflows !== shouldOverflow) {
+				t.overflows = shouldOverflow;
+				if (shouldOverflow) {
+					t.style.setProperty("display", "none");
+				} else {
+					t.style.removeProperty("display");
+				}
+			}
+			if (!shouldOverflow) {
+				if (i === lastVisibleIdx && layout.hiddenCount > 0) {
+					// Overflow present: zero last token's gap so nMore follows immediately.
+					t.style.setProperty("margin-inline-end", "0");
+				} else {
+					// No overflow or not last: restore natural gap from CSS.
+					t.style.removeProperty("margin-inline-end");
+				}
+			}
+		});
+
+		// ── Step 7: update _nMoreCount only if changed ──────────────────────────
+		if (layout.hiddenCount !== this._nMoreCount) {
+			this._nMoreCount = layout.hiddenCount;
+		}
+	}
+
+	/**
+	 * Returns the pixel width available to the tokenizer.
+	 *
+	 * Inside MultiInput/MultiComboBox the tokenizer's own getBoundingClientRect() shrinks
+	 * after each layout cycle (content gets narrower as tokens are hidden), causing
+	 * calculateLayout to hide progressively more tokens on every re-render.
+	 * Instead we mirror the CSS max-width formula using the parent element's width.
+	 *
+	 * We detect "inside an input component" by checking whether the tokenizer has the
+	 * class set by MultiComboBox or MultiInput.  That class is applied only when the
+	 * tokenizer is slotted inside those components, never for standalone usage.
+	 *
+	 * A CSS max-width read was tried (`getComputedStyle(this).maxWidth`) but is unreliable:
+	 * when MCB/MI have no explicit width (inline-block auto-sizing), the calc(100% - …)
+	 * percentage cannot resolve and the browser returns "none", falling back to the
+	 * shrinking BRC and recreating the feedback loop.
+	 *
+	 * For standalone usage falls back to the host's own bounding rect.
+	 */
+	_computeContainerWidth(): number {
+		const parentEl = this.parentElement;
+		const parentWidth = parentEl ? parentEl.getBoundingClientRect().width : 0;
+
+		// Detect MCB/MI context via the CSS class each parent assigns to the tokenizer.
+		// Standalone tokenizers never have this class.
+		const isInsideInput = this.classList.contains("ui5-multi-combobox-tokenizer")
+			|| this.classList.contains("ui5-multi-input-tokenizer");
+
+		if (!isInsideInput || parentWidth === 0) {
+			return this.getBoundingClientRect().width;
+		}
+
+		const cs = getComputedStyle(this);
+		const rootFontSizePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+		const remToPx = (s: string) => {
+			const raw = s.trim();
+			const n = parseFloat(raw);
+			if (Number.isNaN(n)) {
+				return 0;
+			}
+			return raw.endsWith("rem") ? n * rootFontSizePx : n;
+		};
+		const inputMinPx = remToPx(cs.getPropertyValue("--_ui5_input_min_width_tokenizer_available"));
+		const iconsCountRaw = cs.getPropertyValue("--_ui5-input-icons-count").trim();
+		const iconsCount = parseInt(iconsCountRaw) || 0;
+		// Compact mode sets --_ui5_input_icon_min_width to "var(--_ui5_input_compact_min_width)";
+		// resolve one level of var() if needed.
+		const iconMinRaw = cs.getPropertyValue("--_ui5_input_icon_min_width");
+		const iconMinPx = iconMinRaw.trim().startsWith("var(")
+			? remToPx(cs.getPropertyValue(iconMinRaw.trim().slice(4, -1).trim()))
+			: remToPx(iconMinRaw);
+
+		return Math.max(0, parentWidth - inputMinPx - iconsCount * iconMinPx);
+	}
+
+	/**
+	 * Returns the pixel width of the n-more / N-Items button for a given hidden count.
+	 * Includes the button's margin-inline-start so the caller gets the total reserved space.
+	 * Results are cached in _nMoreWidthCache; the cache is cleared each render cycle.
+	 */
+	_measureNMoreWidth(hidden: number, totalCount: number): number {
+		if (this._nMoreWidthCache.has(hidden)) {
+			return this._nMoreWidthCache.get(hidden)!;
+		}
+		const measureSpan = this._measureSpan;
+		if (!measureSpan) {
+			return 0;
+		}
+		measureSpan.textContent = this._getNMoreTextForCount(hidden, totalCount);
+		const margin = parseFloat(getComputedStyle(measureSpan).marginInlineStart) || this._cachedGap;
+		const w = measureSpan.getBoundingClientRect().width + margin;
+		this._nMoreWidthCache.set(hidden, w);
+		return w;
+	}
+
+	/**
+	 * Returns the text that would appear in the "+N more" / "N Items" button
+	 * for a given number of hidden tokens, without touching the live DOM.
+	 */
+	_getNMoreTextForCount(hiddenCount: number, totalCount: number): string {
+		const hasVisible = hiddenCount < totalCount;
+		if (hasVisible) {
+			return Tokenizer.i18nBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS, hiddenCount);
+		}
+		return Tokenizer.i18nBundle.getText(TOKENIZER_SHOW_ALL_ITEMS, hiddenCount);
+	}
+
+	/**
+	 * Pre-measures the indicator button width for all four digit classes in exactly 8
+	 * getBoundingClientRect() calls (2 per class: "+N more" and "N Items" variant).
+	 * Results are stored in _indicatorWidths and reused for all subsequent layout passes.
+	 */
+	_measureIndicatorWidths(): void {
+		const span = this._measureSpan;
+		if (!span) {
+			return;
+		}
+		const margin = parseFloat(getComputedStyle(span).marginInlineStart) || this._cachedGap;
+		// Widest representative for each digit class (1-, 2-, 3-, 4-digit).
+		// SAP 72 uses tabular figures so all digits have equal width, making this
+		// exact; using the largest number is a safe upper-bound for other fonts.
+		const classRepresentatives = [9, 99, 999, 9999];
+		for (let idx = 0; idx < 4; idx++) {
+			const n = classRepresentatives[idx];
+			// "+N more" (some tokens visible: hiddenCount < totalCount)
+			span.textContent = this._getNMoreTextForCount(n, n + 1);
+			const nMoreW = span.getBoundingClientRect().width;
+			// "N Items" (all tokens hidden: hiddenCount === totalCount)
+			span.textContent = this._getNMoreTextForCount(n, n);
+			const nItemsW = span.getBoundingClientRect().width;
+			this._indicatorWidths[idx] = Math.max(nMoreW, nItemsW) + margin;
+		}
+		span.textContent = "";
+	}
+
+	/**
+	 * Returns the reserved pixel width for the indicator button when `hiddenCount` tokens
+	 * are hidden. Digit-class lookup — O(1) after the one-time measurement of 4 widths.
+	 */
+	_getIndicatorWidth(hiddenCount: number): number {
+		if (this._indicatorWidths[0] === 0) {
+			this._measureIndicatorWidths();
+		}
+		const idx = Math.min(Math.floor(Math.log10(Math.max(hiddenCount, 1))), 3);
+		return this._indicatorWidths[idx];
+	}
+
+	get _measureSpan(): HTMLElement | null {
+		return this.shadowRoot?.querySelector<HTMLElement>(".ui5-tokenizer--measure-nmore") ?? null;
+	}
+
+	// ─────────────────────────────────────────────────────────────────────────
 
 	/**
 	 * Updates the lastVisibleToken property on tokens.
@@ -588,6 +905,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
 
 		tokensArray.forEach(token => {
+			// Only mark the last visible token when there IS overflow (nMore shown).
+			// In state "all" the token keeps its natural margin-inline-end as the
+			// visual gap between the last token and the input cursor.
 			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
 		});
 	}
@@ -879,8 +1199,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		if (isLeft(e) || isRight(e) || isUp(e) || isDown(e)) {
 			e.preventDefault();
-			const nextTokenIdx = this._calcNextTokenIndex(this._tokens.find(token => token.focused)!, tokens, (isRight(e) || isDown(e)));
-			this._scrollToToken(tokens[nextTokenIdx]);
 		}
 	}
 
@@ -1054,6 +1372,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this.open = false;
 		this.expanded = true;
 		this._addTokenToNavigation(e.target as Token);
+		this._scrollToToken(target);
 	}
 
 	_addTokenToNavigation(token: Token) {
@@ -1097,7 +1416,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
  	 * Otherwise, the focus defaults to the first visible token.
  	 */
 	getFocusDomRef(): HTMLElement | undefined {
-		if (this._lastFocusedToken && !this.overflownTokens.includes(this._lastFocusedToken)) {
+		if (this._lastFocusedToken && !this._lastFocusedToken.overflows) {
 			this._itemNav._currentIndex = this.tokens.indexOf(this._lastFocusedToken);
 			this._isFocusSetInternally = true;
 			this.tokens[0].forcedTabIndex = "-1";
@@ -1189,8 +1508,8 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @protected
 	 */
 	scrollToStart() {
-		if (this._scrollEnablement?.scrollContainer) {
-			this._scrollEnablement?.scrollTo(0, 0);
+		if (this.contentDom) {
+			this.contentDom.scrollLeft = 0;
 		}
 	}
 
@@ -1200,26 +1519,23 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @protected
 	 */
 	scrollToEnd() {
-		const expandedTokenizerScrollWidth = this.contentDom && (this.effectiveDir !== "rtl" ? this.contentDom.scrollWidth : -this.contentDom.scrollWidth);
-		if (this._scrollEnablement?.scrollContainer) {
-			this._scrollEnablement?.scrollTo(expandedTokenizerScrollWidth, 0, 5, 10);
+		const contentDom = this.contentDom;
+		if (contentDom) {
+			contentDom.scrollLeft = this.effectiveDir !== "rtl" ? contentDom.scrollWidth : -contentDom.scrollWidth;
 		}
 	}
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
-	 * For the last token, if its width is more than the needed space, scroll to the end without offset
+	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends.
+	 * For the last token, scrolls to the end without offset.
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
-		if (!this.contentDom) {
+		const contentDom = this.contentDom;
+		if (!contentDom) {
 			return;
 		}
-
-		const tokenRect = token.getBoundingClientRect();
-		const tokenContainerRect = this.contentDom.getBoundingClientRect();
-		const oneSideBorderAndPaddingOffset = 5;
 
 		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
 		if (isLastToken) {
@@ -1227,10 +1543,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
-		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
+		const tokenRect = token.getBoundingClientRect();
+		const containerRect = contentDom.getBoundingClientRect();
+		const offset = 5;
+
+		if (tokenRect.left < containerRect.left) {
+			contentDom.scrollLeft -= containerRect.left - tokenRect.left + offset;
+		} else if (tokenRect.right > containerRect.right) {
+			contentDom.scrollLeft += tokenRect.right - containerRect.right + offset;
 		}
 	}
 
@@ -1254,12 +1574,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (!this._nMoreCount) {
 			return;
 		}
-
-		if (this._getVisibleTokens().length) {
-			return Tokenizer.i18nBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS, this._nMoreCount);
-		}
-
-		return Tokenizer.i18nBundle.getText(TOKENIZER_SHOW_ALL_ITEMS, this._nMoreCount);
+		return this._getNMoreTextForCount(this._nMoreCount, this._tokens.length);
 	}
 
 	get _clearAllText() {
@@ -1267,7 +1582,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get showNMore() {
-		return !this.expanded && !!this.overflownTokens.length;
+		return !this.expanded && this._nMoreCount > 0;
 	}
 
 	get contentDom() {
@@ -1307,54 +1622,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
+	/**
+	 * Returns the tokens that are currently hidden due to overflow.
+	 * This is a read-only derived view; overflow state is managed by _computeAndApplyLayout.
+	 */
 	get overflownTokens() {
-		if (!this.contentDom) {
-			return [];
-		}
-
-		const tokensArray = this._tokens;
-
-		// Reset overflow to measure all tokens
-		tokensArray.forEach(token => {
-			token.overflows = false;
-		});
-
-		const parentRect = this.contentDom.getBoundingClientRect();
-		const parentEnd = Number(parentRect.right.toFixed(2));
-		const parentStart = Number(parentRect.left.toFixed(2));
-
-		// Measure "n more" width
-		let nMoreWidth = 0;
-		const nMoreElement = this.moreLink;
-		if (nMoreElement) {
-			nMoreWidth = nMoreElement.getBoundingClientRect().width;
-		}
-
-		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
-		let firstOverflowIndex = -1;
-
-		tokensArray.forEach((token, index) => {
-			const tokenRect = token.getBoundingClientRect();
-			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const tokenStart = Number(tokenRect.left.toFixed(2));
-
-			const isLastToken = index === tokensArray.length - 1;
-
-			// For the last token, check if it fits without "n more"
-			// For other tokens, check if token + "n more" fits together
-			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
-
-			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
-
-			if (tokenOverflows && firstOverflowIndex === -1) {
-				firstOverflowIndex = index;
-			}
-
-			// Mark this and all subsequent tokens as overflow
-			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
-		});
-
-		return tokensArray.filter(token => token.overflows);
+		return this._tokens.filter(t => t.overflows);
 	}
 
 	get _isPhone() {

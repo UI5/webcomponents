@@ -1,16 +1,12 @@
 .wrapper {
-	display: flex;
-	flex-direction: column;
-
+	display: block;
 	padding: 24px;
 	box-sizing: border-box;
 	border: 1px solid red;
-	width: 840px;
 }
 
 .col {
 	display: flex;
-	width: 560px;
 	justify-content: flex-start;
 	align-items: center;
 	padding: 8px;
@@ -31,10 +27,6 @@ ui5-tokenizer#expanded-tokenizer {
 
 ui5-tokenizer#nmore-tokenizer {
 	width: 100%;
-}
-
-.tokenizer-container {
-	width: 300px;
 }
 
 .wrapper {
