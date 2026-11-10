@@ -1,5 +1,6 @@
 import Tooltip from "../../src/Tooltip.js";
 import Button from "../../src/Button.js";
+import Switch from "../../src/Switch.js";
 
 describe("Tooltip", () => {
 	it("renders its text into the popover content", () => {
@@ -180,6 +181,34 @@ describe("Tooltip", () => {
 		cy.wait(600);
 		cy.get("#tt").should($el => {
 			expect(($el[0] as Tooltip).isOpen()).to.equal(false);
+		});
+	});
+
+	it("docks against an opener living in the host shadow root (not top-left)", () => {
+		// Inner-component case: the tooltip and its opener live in the host's
+		// shadow root. The popover must dock against the opener instead of
+		// collapsing to the viewport origin (0,0).
+		cy.mount(
+			<div style={{ padding: "200px" }}>
+				<Switch id="sw" tooltip="switch tip"></Switch>
+			</div>
+		);
+
+		cy.get("#sw").realHover();
+		cy.get("#sw").shadow().find("[ui5-tooltip]").should($tt => {
+			expect(($tt[0] as Tooltip).isOpen()).to.equal(true);
+		});
+
+		cy.get("#sw").then($host => {
+			const sr = $host[0].shadowRoot!;
+			const pop = sr.querySelector("[ui5-tooltip]")!.shadowRoot!.querySelector("[ui5-popover]") as HTMLElement;
+			const opener = sr.querySelector("[class*='switch-root']") as HTMLElement;
+			const popRect = pop.getBoundingClientRect();
+			const opRect = opener.getBoundingClientRect();
+
+			expect(popRect.top, "popover is not pinned to the top edge").to.be.greaterThan(0);
+			expect(popRect.right).to.be.greaterThan(opRect.left - 50);
+			expect(popRect.left).to.be.lessThan(opRect.right + 50);
 		});
 	});
 });
