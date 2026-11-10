@@ -964,62 +964,67 @@ describe("Table - Navigated Rows", () => {
 });
 
 describe("Table - Interactive Rows", () => {
-	it("fires the row-click event", () => {
+	beforeEach(() => {
 		cy.mount(
-			<Table id="table1">
+			<Table id="table11">
 				<TableSelectionMulti id="selection" selected="1 2" slot="features"></TableSelectionMulti>
 				<TableHeaderRow id="headerRow" slot="headerRow">
 					<TableHeaderCell>ColumnA</TableHeaderCell>
 					<TableHeaderCell>ColumnB</TableHeaderCell>
 				</TableHeaderRow>
-				<TableRow id="row1" rowKey="1">
+				<TableRow id="row11" rowKey="1">
 					<TableCell><Label>Cell A</Label></TableCell>
 					<TableCell><Button>Cell B</Button></TableCell>
 				</TableRow>
-				<TableRow id="row2" rowKey="2" interactive={true}>
+				<TableRow id="row12" rowKey="2" interactive={true}>
 					<TableCell><Label>Cell A</Label></TableCell>
 					<TableCell><Button>Cell B</Button></TableCell>
 				</TableRow>
 			</Table>
 		);
+		cy.get("#table11").invoke("on", "row-click", cy.stub().as("rowClickHandler"));
+	});
 
-		cy.get("#table1").invoke("on", "row-click", cy.stub().as("rowClickHandler"));
-		cy.get("#row1").realClick();
+	it("does not fire row-click for non-interactive rows", () => {
+		cy.get("#row11").realClick();
 		cy.get("@rowClickHandler").should("not.have.been.called");
-		cy.get("#row1").realPress("Enter");
+		cy.get("#row11").realPress("Enter");
 		cy.get("@rowClickHandler").should("not.have.been.called");
+	});
 
-		cy.get("#row2").realMouseDown();
-		cy.get("#row2").should("have.attr", "_active");
-		cy.get("#row1").realMouseUp();
-		cy.get("#row2").should("not.have.attr", "_active");
+	it("applies and removes _active state on mousedown/mouseup", () => {
+		cy.get("#row12").realMouseDown();
+		cy.get("#row12").should("have.attr", "_active");
+		cy.get("#row11").realMouseUp();
+		cy.get("#row12").should("not.have.attr", "_active");
+	});
 
-		cy.get("#row2").realClick();
+	it("fires row-click on click, Enter, and child element click", () => {
+		cy.get("#row12").realClick();
 		cy.get("@rowClickHandler").invoke("getCall", 0).its("args.0.detail.row").as("clickedRow");
-		cy.get("@clickedRow").should("have.attr", "id", "row2");
-		cy.get("#row2").realPress("Enter");
+		cy.get("@clickedRow").should("have.attr", "id", "row12");
+		cy.get("#row12").realPress("Enter");
 		cy.get("@rowClickHandler").should("have.been.calledTwice");
-
-		cy.get("#row2").find("ui5-label").realClick();
+		cy.get("#row12").find("ui5-label").realClick();
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
+	});
 
-		cy.get("#row2").find("ui5-button").as("row2button");
+	it("does not activate row or fire row-click when interacting with a child button", () => {
+		cy.get("#row12").find("ui5-button").as("row2button");
 		cy.get("@row2button").realMouseDown();
-		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("#row12").should("not.have.attr", "_active");
 		cy.get("@row2button").realMouseUp();
-		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("#row12").should("not.have.attr", "_active");
 		cy.get("@row2button").invoke("on", "click", cy.stub().as("buttonClickHandler"));
 		cy.get("@row2button").realClick();
 		cy.get("@buttonClickHandler").should("have.been.calledOnce");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
-
+		cy.get("@rowClickHandler").should("not.have.been.called");
 		cy.get("@row2button").realPress("Enter");
 		cy.get("@buttonClickHandler").should("have.been.calledTwice");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
-
+		cy.get("@rowClickHandler").should("not.have.been.called");
 		cy.get("@row2button").realPress("Space");
 		cy.get("@buttonClickHandler").should("have.been.calledThrice");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
+		cy.get("@rowClickHandler").should("not.have.been.called");
 	});
 });
 
