@@ -1936,6 +1936,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._tokenizer._handleResize();
 		this._tokenizer.preventInitialFocus = true;
 
+		// When the user types, the clear icon appears and shrinks the tokenizer container.
+		// Scroll to the end so the input cursor area stays visible.
+		if (this._tokenizer.expanded && this.value) {
+			this._tokenizer.scrollToEnd();
+		}
+
 		if (this.open && !isPhone()) {
 			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;

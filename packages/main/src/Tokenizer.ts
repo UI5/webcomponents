@@ -690,6 +690,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		// resize/render cycle — do not poison the state with wrong measurements.
 		const allCached = tokensArray.every(t => this._tokenWidthCache.has(t._id));
 		if (!allCached) {
+			// Some token shadow DOMs haven't painted yet (getBoundingClientRect() returns 0).
+			// Schedule a retry once the current render batch settles so every token has its
+			// real pixel width.  This covers standalone usage where no parent component
+			// triggers a follow-up render.
+			renderFinished().then(() => this._computeAndApplyLayout()); // intentionally floating — fire-and-forget retry
 			return;
 		}
 
@@ -763,15 +768,29 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * calculateLayout to hide progressively more tokens on every re-render.
 	 * Instead we mirror the CSS max-width formula using the parent element's width.
 	 *
-	 * We detect "inside an input component" by checking whether
-	 * --_ui5_input_min_width_tokenizer_available is set — that variable is only defined
-	 * in the MultiInput/MultiComboBox :host scope, not in standalone Tokenizer CSS.
+	 * We detect "inside an input component" by checking whether the tokenizer has the
+	 * class set by MultiComboBox or MultiInput.  That class is applied only when the
+	 * tokenizer is slotted inside those components, never for standalone usage.
+	 *
+	 * A CSS max-width read was tried (`getComputedStyle(this).maxWidth`) but is unreliable:
+	 * when MCB/MI have no explicit width (inline-block auto-sizing), the calc(100% - …)
+	 * percentage cannot resolve and the browser returns "none", falling back to the
+	 * shrinking BRC and recreating the feedback loop.
 	 *
 	 * For standalone usage falls back to the host's own bounding rect.
 	 */
 	_computeContainerWidth(): number {
 		const parentEl = this.parentElement;
 		const parentWidth = parentEl ? parentEl.getBoundingClientRect().width : 0;
+
+		// Detect MCB/MI context via the CSS class each parent assigns to the tokenizer.
+		// Standalone tokenizers never have this class.
+		const isInsideInput = this.classList.contains("ui5-multi-combobox-tokenizer")
+			|| this.classList.contains("ui5-multi-input-tokenizer");
+
+		if (!isInsideInput || parentWidth === 0) {
+			return this.getBoundingClientRect().width;
+		}
 
 		const cs = getComputedStyle(this);
 		const rootFontSizePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
@@ -784,14 +803,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			return raw.endsWith("rem") ? n * rootFontSizePx : n;
 		};
 		const inputMinPx = remToPx(cs.getPropertyValue("--_ui5_input_min_width_tokenizer_available"));
-
-		// inputMinPx > 0 means the variable is defined → we're inside MultiInput/MultiComboBox.
-		// Use the parent-based formula from the very first render so the container width is
-		// always the CSS-computed max-width, not the tokenizer's own (shrinking) width.
-		if (inputMinPx === 0 || parentWidth === 0) {
-			return this.getBoundingClientRect().width;
-		}
-
 		const iconsCountRaw = cs.getPropertyValue("--_ui5-input-icons-count").trim();
 		const iconsCount = parseInt(iconsCountRaw) || 0;
 		// Compact mode sets --_ui5_input_icon_min_width to "var(--_ui5_input_compact_min_width)";
@@ -1188,8 +1199,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		if (isLeft(e) || isRight(e) || isUp(e) || isDown(e)) {
 			e.preventDefault();
-			const nextTokenIdx = this._calcNextTokenIndex(this._tokens.find(token => token.focused)!, tokens, (isRight(e) || isDown(e)));
-			this._scrollToToken(tokens[nextTokenIdx]);
 		}
 	}
 
@@ -1363,6 +1372,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this.open = false;
 		this.expanded = true;
 		this._addTokenToNavigation(e.target as Token);
+		this._scrollToToken(target);
 	}
 
 	_addTokenToNavigation(token: Token) {
@@ -1498,8 +1508,8 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @protected
 	 */
 	scrollToStart() {
-		if (this._scrollEnablement?.scrollContainer) {
-			this._scrollEnablement?.scrollTo(0, 0);
+		if (this.contentDom) {
+			this.contentDom.scrollLeft = 0;
 		}
 	}
 
@@ -1509,26 +1519,23 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @protected
 	 */
 	scrollToEnd() {
-		const expandedTokenizerScrollWidth = this.contentDom && (this.effectiveDir !== "rtl" ? this.contentDom.scrollWidth : -this.contentDom.scrollWidth);
-		if (this._scrollEnablement?.scrollContainer) {
-			this._scrollEnablement?.scrollTo(expandedTokenizerScrollWidth, 0, 5, 10);
+		const contentDom = this.contentDom;
+		if (contentDom) {
+			contentDom.scrollLeft = this.effectiveDir !== "rtl" ? contentDom.scrollWidth : -contentDom.scrollWidth;
 		}
 	}
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
-	 * For the last token, if its width is more than the needed space, scroll to the end without offset
+	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends.
+	 * For the last token, scrolls to the end without offset.
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
-		if (!this.contentDom) {
+		const contentDom = this.contentDom;
+		if (!contentDom) {
 			return;
 		}
-
-		const tokenRect = token.getBoundingClientRect();
-		const tokenContainerRect = this.contentDom.getBoundingClientRect();
-		const oneSideBorderAndPaddingOffset = 5;
 
 		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
 		if (isLastToken) {
@@ -1536,10 +1543,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
-		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
+		const tokenRect = token.getBoundingClientRect();
+		const containerRect = contentDom.getBoundingClientRect();
+		const offset = 5;
+
+		if (tokenRect.left < containerRect.left) {
+			contentDom.scrollLeft -= containerRect.left - tokenRect.left + offset;
+		} else if (tokenRect.right > containerRect.right) {
+			contentDom.scrollLeft += tokenRect.right - containerRect.right + offset;
 		}
 	}
 

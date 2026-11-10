@@ -5,6 +5,7 @@
 	box-sizing: border-box;
 	border: none;
 	height: 2.25rem;
+	width: 100%;
 }
 
 :host([multi-line]) {
@@ -61,7 +62,6 @@
 :host([expanded]) .ui5-tokenizer--content {
 	display: inline-flex;
 	white-space: nowrap;
-	overflow: hidden;
 }
 
 .ui5-tokenizer--content {
@@ -147,4 +147,6 @@
 	pointer-events: none;
 	user-select: none;
 	margin: 0;
+	font-size: var(--sapFontSize);
+	font-weight: normal;
 }

@@ -50,7 +50,7 @@ export default function TokenizerTemplate(this: Tokenizer) {
 			    visible layout, causes scrollbars, or intercepts pointer events. */}
 			<span
 				aria-hidden="true"
-				class="ui5-tokenizer-more-text ui5-tokenizer--measure-nmore"
+				class="ui5-tokenizer--measure-nmore"
 				part="n-more-text"
 			></span>
 

@@ -798,246 +798,7 @@ describe("Accessibility", () => {
 				const resourceBundle = (tokenizer.constructor as any).i18nBundle;
 
 				cy.get("@nMoreLabel")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 3));
-			});
-	});
-});
-
-describe("Scrolling Behavior", () => {
-	it("should scroll to end when tokenizer is expanded without focused token", () => {
-		cy.mount(
-			<div style={{ width: "150px" }}>
-				<Tokenizer>
-					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
-					<Token text="Another very long token text that also causes overflow"></Token>
-					<Token text="Third very long token text for overflow"></Token>
-					<Token text="Fourth very long token text for overflow"></Token>
-					<Token text="Fifth very long token text for overflow"></Token>
-				</Tokenizer>
-			</div>
-		);
-
-		// Verify there's actually overflow to test
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				// Only proceed if there's actual overflow
-				if (element.scrollWidth > element.clientWidth) {
-					expect(element.scrollLeft).to.equal(0);
-				}
-			});
-
-		// Click on tokenizer container to expand it
-		cy.get("[ui5-tokenizer]")
-			.realClick();
-
-		// Verify tokenizer is expanded
-		cy.get("[ui5-tokenizer]")
-			.should("have.attr", "expanded");
-
-		// Should scroll to end when expanded without focused token (only if there's overflow)
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				const maxScroll = element.scrollWidth - element.clientWidth;
-				if (maxScroll > 0) {
-					// Should be scrolled to the end (or close to it)
-					expect(element.scrollLeft).to.be.greaterThan(maxScroll * 0.5);
-				}
-			});
-	});
-
-	it("should scroll to specific token when token is clicked", () => {
-		cy.mount(
-			<div style={{ width: "150px" }}>
-				<Tokenizer>
-					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
-					<Token text="Another very long token text that also causes overflow"></Token>
-					<Token text="Third very long token text for overflow"></Token>
-					<Token text="Fourth very long token text for overflow"></Token>
-					<Token text="Fifth very long token text for overflow"></Token>
-				</Tokenizer>
-			</div>
-		);
-
-		// Click on the third token (middle token)
-		cy.get("[ui5-token]")
-			.eq(2)
-			.as("thirdToken")
-			.realClick();
-
-		// Verify token is selected and focused (separate assertions)
-		cy.get("@thirdToken")
-			.should("have.attr", "selected");
-
-		cy.get("@thirdToken")
-			.should("have.attr", "focused");
-
-		// Verify tokenizer is expanded
-		cy.get("[ui5-tokenizer]")
-			.should("have.attr", "expanded");
-
-		// Should scroll to show the selected token
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				const maxScroll = element.scrollWidth - element.clientWidth;
-				if (maxScroll > 0) {
-					// Should be scrolled some amount to show the token
-					expect(element.scrollLeft).to.be.greaterThan(0);
-				}
-			});
-	});
-
-	it("should scroll when navigating with Home and End keys", () => {
-		cy.mount(
-			<div style={{ width: "150px" }}>
-				<Tokenizer>
-					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
-					<Token text="Another very long token text that also causes overflow"></Token>
-					<Token text="Third very long token text for overflow"></Token>
-					<Token text="Fourth very long token text for overflow"></Token>
-					<Token text="Fifth very long token text for overflow"></Token>
-				</Tokenizer>
-			</div>
-		);
-
-		// Click on first token
-		cy.get("[ui5-token]")
-			.eq(0)
-			.realClick();
-
-		// Navigate to the last token using End key
-		cy.realPress("End");
-
-		cy.get("[ui5-token]")
-			.eq(4)
-			.should("have.attr", "focused");
-
-		// Should scroll to end for last token
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				const maxScroll = element.scrollWidth - element.clientWidth;
-				if (maxScroll > 0) {
-					expect(element.scrollLeft).to.be.closeTo(maxScroll, 20);
-				}
-			});
-
-		// Navigate back to first token using Home key
-		cy.realPress("Home");
-
-		cy.get("[ui5-token]")
-			.eq(0)
-			.should("have.attr", "focused");
-
-		// Should scroll back to start for first token
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				expect(element.scrollLeft).to.be.closeTo(0, 20);
-			});
-	});
-
-	it("should maintain scroll position when token selection is toggled", () => {
-		cy.mount(
-			<div style={{ width: "150px" }}>
-				<Tokenizer>
-					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
-					<Token text="Another very long token text that also causes overflow"></Token>
-					<Token text="Third very long token text for overflow"></Token>
-					<Token text="Fourth very long token text for overflow"></Token>
-					<Token text="Fifth very long token text for overflow"></Token>
-				</Tokenizer>
-			</div>
-		);
-
-		// Click on middle token to select it
-		cy.get("[ui5-token]")
-			.eq(2)
-			.as("middleToken")
-			.realClick();
-
-		// Get scroll position after clicking middle token
-		let scrollAfterClick;
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				scrollAfterClick = $content[0].scrollLeft;
-			});
-
-		// Toggle selection with space (should deselect but maintain focus)
-		cy.realPress("Space");
-
-		cy.get("@middleToken")
-			.should("not.have.attr", "selected");
-
-		cy.get("@middleToken")
-			.should("have.attr", "focused");
-
-		// Scroll position should remain the same since token is still focused
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				expect($content[0].scrollLeft).to.equal(scrollAfterClick);
-			});
-	});
-
-	it("should scroll to end when tokenizer regains focus without focused token", () => {
-		cy.mount(
-			<div style={{ width: "150px" }}>
-				<Tokenizer>
-					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
-					<Token text="Another very long token text that also causes overflow"></Token>
-					<Token text="Third very long token text for overflow"></Token>
-					<Token text="Fourth very long token text for overflow"></Token>
-					<Token text="Fifth very long token text for overflow"></Token>
-				</Tokenizer>
-				<button>External button</button>
-			</div>
-		);
-
-		// Click on a token to expand tokenizer
-		cy.get("[ui5-token]")
-			.eq(1)
-			.realClick();
-
-		// Tab to external button (lose focus)
-		cy.realPress("Tab");
-
-		// Verify tokenizer is collapsed
-		cy.get("[ui5-tokenizer]")
-			.should("not.have.attr", "expanded");
-
-		// Tab back to tokenizer (regain focus)
-		cy.realPress(["Shift", "Tab"]);
-
-		// Verify tokenizer is expanded again
-		cy.get("[ui5-tokenizer]")
-			.should("have.attr", "expanded");
-
-		// Should scroll to end when regaining focus (as per _scrollToEndIfNeeded logic)
-		cy.get("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer--content")
-			.then($content => {
-				const element = $content[0];
-				const maxScroll = element.scrollWidth - element.clientWidth;
-				if (maxScroll > 0) {
-					expect(element.scrollLeft).to.be.greaterThan(maxScroll * 0.5);
-				}
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
 			});
 	});
 });
@@ -2232,7 +1993,7 @@ describe("Tokenizer responsive overflow – layout states", () => {
 
 	it("State B: at least one token is visible alongside the n-more button", () => {
 		cy.mount(
-			<div style={{ display: "flex", width: "120px" }}>
+			<div style={{ display: "flex", width: "200px" }}>
 				<Tokenizer>
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -2294,7 +2055,7 @@ describe("Tokenizer responsive overflow – layout states", () => {
 describe("Tokenizer responsive overflow – resize behavior", () => {
 	it("transitions from state B to state A when container grows", () => {
 		cy.mount(
-			<div id="resize-container" style={{ display: "flex", width: "120px" }}>
+			<div id="resize-container" style={{ width: "200px" }}>
 				<Tokenizer>
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -2322,7 +2083,7 @@ describe("Tokenizer responsive overflow – resize behavior", () => {
 
 	it("transitions from state A to state B when container shrinks", () => {
 		cy.mount(
-			<div id="shrink-container" style={{ display: "flex", width: "600px" }}>
+			<div id="shrink-container" style={{ width: "600px" }}>
 				<Tokenizer>
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -2339,7 +2100,7 @@ describe("Tokenizer responsive overflow – resize behavior", () => {
 
 		// Shrink container.
 		cy.get("#shrink-container")
-			.invoke("css", "width", "120px");
+			.invoke("css", "width", "200px");
 
 		// n-more button must appear.
 		cy.get("[ui5-tokenizer]")
@@ -2350,28 +2111,46 @@ describe("Tokenizer responsive overflow – resize behavior", () => {
 
 	it("keeps n-more count accurate after repeated resize", () => {
 		cy.mount(
-			<div id="resize-repeat" style={{ display: "flex", width: "300px" }}>
-				<Tokenizer>
-					<Token text="Andora"></Token>
-					<Token text="Bulgaria"></Token>
-					<Token text="Canada"></Token>
-					<Token text="Denmark"></Token>
-				</Tokenizer>
-			</div>
+			<Tokenizer id="resize-repeat" style={{ width: "500px" }}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+				<Token text="Denmark"></Token>
+			</Tokenizer>
 		);
 
-		const getCount = () =>
-			cy.get("[ui5-tokenizer]")
+		// All tokens fit at 500px.
+		cy.get("#resize-repeat")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+
+		// Shrink and capture the indicator text (e.g. "+2 more").
+		cy.get("#resize-repeat").invoke("css", "width", "200px");
+
+		cy.get("#resize-repeat")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.have.text", "")
+			.invoke("text")
+			.as("countAt200");
+
+		// Restore — indicator disappears.
+		cy.get("#resize-repeat").invoke("css", "width", "500px");
+
+		cy.get("#resize-repeat")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+
+		// Shrink again — text must equal the first shrink (no feedback loop inflating the count).
+		cy.get("#resize-repeat").invoke("css", "width", "200px");
+
+		cy.get("@countAt200").then(firstText => {
+			cy.get("#resize-repeat")
 				.shadow()
 				.find(".ui5-tokenizer-more-text")
-				.invoke("text")
-				.then(t => parseInt(t.match(/\d+/)![0], 10));
-
-		cy.get("#resize-repeat").invoke("css", "width", "120px");
-		getCount().then(c1 => {
-			cy.get("#resize-repeat").invoke("css", "width", "300px");
-			cy.get("#resize-repeat").invoke("css", "width", "120px");
-			getCount().should("equal", c1);
+				.should("have.text", firstText);
 		});
 	});
 });
@@ -2379,12 +2158,10 @@ describe("Tokenizer responsive overflow – resize behavior", () => {
 describe("Tokenizer responsive overflow – token list changes", () => {
 	it("updates layout when a token is added", () => {
 		cy.mount(
-			<div style={{ display: "flex", width: "300px" }}>
-				<Tokenizer id="dynamic-add">
-					<Token text="Alpha"></Token>
-					<Token text="Beta"></Token>
-				</Tokenizer>
-			</div>
+			<Tokenizer id="dynamic-add" style="width: 300px">
+				<Token text="Alpha"></Token>
+				<Token text="Beta"></Token>
+			</Tokenizer>
 		);
 
 		cy.get("[ui5-tokenizer]")

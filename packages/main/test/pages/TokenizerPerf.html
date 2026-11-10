@@ -56,7 +56,7 @@
 		Resize the browser window. On <strong>main</strong>: every resize triggers O(N) DOM reads.
 		On <strong>refactored</strong>: token widths are cached; resize costs one getBoundingClientRect().
 	</p>
-	<ui5-multi-combobox id="mcb-1200" placeholder="Search 1 200 items…" class="wide"></ui5-multi-combobox>
+	<ui5-multi-combobox id="mcb-1200" placeholder="Search 1 200 items…" class="wide" show-clear-icon></ui5-multi-combobox>
 
 	<hr>
 
@@ -66,7 +66,7 @@
 		Tests the state where no single token fits and the component collapses to "N Items".
 		Resize to see layout recalculation cost.
 	</p>
-	<ui5-multi-combobox id="mcb-all-selected" placeholder="All selected…"></ui5-multi-combobox>
+	<ui5-multi-combobox id="mcb-all-selected" placeholder="All selected…" show-clear-icon></ui5-multi-combobox>
 
 	<hr>
 
@@ -76,7 +76,7 @@
 		Tokens vary from 2 to 40 characters. Tests whether the layout engine correctly picks the
 		break-point when token widths differ significantly.
 	</p>
-	<ui5-multi-combobox id="mcb-mixed" placeholder="Mixed widths…"></ui5-multi-combobox>
+	<ui5-multi-combobox id="mcb-mixed" placeholder="Mixed widths…" show-clear-icon></ui5-multi-combobox>
 
 	<hr>
 
@@ -106,7 +106,7 @@
 		<ui5-button id="btn-select-50-long">Select 50 long tokens</ui5-button>
 		<ui5-button id="btn-toggle">Toggle all</ui5-button>
 	</div>
-	<ui5-multi-combobox id="mcb-dynamic" placeholder="Dynamic…" class="wide"></ui5-multi-combobox>
+	<ui5-multi-combobox id="mcb-dynamic" placeholder="Dynamic…" class="wide" show-clear-icon></ui5-multi-combobox>
 
 	<hr>
 
@@ -116,7 +116,26 @@
 		A small MCB with 20 tokens selected forces the nMore calculation to run many binary search
 		iterations. Resize between narrow and wide to stress the layout switching.
 	</p>
-	<ui5-multi-combobox id="mcb-narrow" placeholder="Narrow…" class="narrow"></ui5-multi-combobox>
+	<ui5-multi-combobox id="mcb-narrow" placeholder="Narrow…" class="narrow" show-clear-icon></ui5-multi-combobox>
+
+	<hr>
+
+	<!-- ── 7. Standalone tokenizer — dynamic add / remove ─────────────── -->
+	<h2>7. Standalone tokenizer — dynamic add / remove tokens</h2>
+	<p class="desc">
+		Exercises the layout-on-mutation path: each add/remove must recompute overflow correctly
+		without knowing about MCB/MI.  Mirrors the <code>Tokenizer.cy.tsx</code> "updates layout
+		when a token is added" test case.
+	</p>
+	<div class="row" style="margin-bottom:0.5rem">
+		<ui5-button id="btn-add-short">Add short token</ui5-button>
+		<ui5-button id="btn-add-long">Add long token</ui5-button>
+		<ui5-button id="btn-remove-last">Remove last</ui5-button>
+	</div>
+	<ui5-tokenizer id="standalone-dynamic" style="width:300px">
+		<ui5-token text="Alpha"></ui5-token>
+		<ui5-token text="Beta"></ui5-token>
+	</ui5-tokenizer>
 
 <script>
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -185,6 +204,27 @@ document.getElementById("btn-toggle").addEventListener("click", () => {
 
 // 6. Narrow MCB, 20 selected
 populateMcb("mcb-narrow", { count: 60, selectedCount: 20 });
+
+// 7. Standalone tokenizer — dynamic add / remove
+let tokenCounter = 0;
+const standaloneTokenizer = document.getElementById("standalone-dynamic");
+
+document.getElementById("btn-add-short").addEventListener("click", () => {
+	const t = document.createElement("ui5-token");
+	t.setAttribute("text", "Token " + (++tokenCounter));
+	standaloneTokenizer.appendChild(t);
+});
+
+document.getElementById("btn-add-long").addEventListener("click", () => {
+	const t = document.createElement("ui5-token");
+	t.setAttribute("text", "Very long token text number " + (++tokenCounter));
+	standaloneTokenizer.appendChild(t);
+});
+
+document.getElementById("btn-remove-last").addEventListener("click", () => {
+	const tokens = standaloneTokenizer.querySelectorAll("ui5-token");
+	if (tokens.length) tokens[tokens.length - 1].remove();
+});
 </script>
 
 </body>
