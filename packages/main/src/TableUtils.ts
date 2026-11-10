@@ -29,22 +29,6 @@ const isFocusedElementInside = async (element: HTMLElement, event: Event): Promi
 	return composedPath.slice(0, composedPath.indexOf(element)).includes(getActiveElement() as Element);
 };
 
-const setActiveOnPointerDown = async (element: HTMLElement, event: PointerEvent): Promise<void> => {
-	let pointerUp = false;
-	const onPointerUp = () => {
-		pointerUp = true;
-		element.removeAttribute("_active");
-	};
-	document.addEventListener("pointerup", onPointerUp, { once: true });
-
-	// Activate only if focus did not move into nested interactive content and the pointer is still down.
-	if (!await isFocusedElementInside(element, event) && !pointerUp) {
-		element.toggleAttribute("_active", true);
-	} else {
-		document.removeEventListener("pointerup", onPointerUp);
-	}
-};
-
 const findVerticalScrollContainer = (element: HTMLElement, requireOverflow = false): HTMLElement => {
 	while (element) {
 		const { overflowY } = window.getComputedStyle(element);
@@ -162,7 +146,6 @@ export {
 	findRowInPath,
 	findRowBaseInPath,
 	isFocusedElementInside,
-	setActiveOnPointerDown,
 	findVerticalScrollContainer,
 	computeAxisScrollDelta,
 	isFeature,
