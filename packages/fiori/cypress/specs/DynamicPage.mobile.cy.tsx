@@ -202,4 +202,37 @@ describe("DynamicPage Mobile Behaviour", () => {
       .find(".ui5-dynamic-page-header-action-pin")
       .should("not.exist");
   });
+
+  it("renders the sticky subheader in the mobile snapped-title layout", () => {
+    cy.mount(
+      <DynamicPage style={{ height: PAGE_HEIGHT }}>
+        <DynamicPageTitle slot="titleArea">
+          <div slot="heading">Page Title</div>
+          <div slot="snappedTitleOnMobile">Mobile Snapped Title</div>
+        </DynamicPageTitle>
+        <DynamicPageHeader slot="headerArea">
+          <div>Header Content</div>
+        </DynamicPageHeader>
+        <div slot="stickySubheaderArea" data-testid="mobile-subheader">Sticky Subheader Content</div>
+        <div style={{ height: "1000px" }}>
+          Page content with enough height to enable scrolling
+        </div>
+      </DynamicPage>
+    );
+
+    cy.get("[ui5-dynamic-page]")
+      .invoke("prop", "headerSnapped", true);
+
+    // Confirm the snapped-title mobile layout actually engaged before asserting the
+    // subheader renders within it — otherwise the test would pass in the expanded layout too.
+    cy.get("[ui5-dynamic-page]")
+      .should("have.prop", "headerSnapped", true);
+
+    cy.get("[ui5-dynamic-page]")
+      .shadow()
+      .find(".ui5-dynamic-page-sticky-subheader")
+      .should("exist");
+
+    cy.get("[data-testid='mobile-subheader']").should("be.visible");
+  });
 });

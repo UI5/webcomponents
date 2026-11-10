@@ -1,0 +1,36 @@
+.text {
+    display: inline-block;
+    font-size: var(--sapFontSize);
+    font-family: var(--sapFontFamily);
+    color: var(--sapTextColor);
+    line-height: normal;
+    margin: 0;
+}
+
+.product-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.product-info-cell {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.availability {
+    font-size: 1.2rem;
+    color: var(--sapPositiveTextColor);
+}
+
+.snapped-title-heading {
+    display: flex;
+    align-items: center;
+}
+
+.snapped-title-heading [ui5-title] {
+    font-family: var(--sapObjectHeader_Title_FontFamily);
+    color: var(--sapObjectHeader_Title_TextColor);
+    font-size: var(--sapObjectHeader_Title_SnappedFontSize);
+}

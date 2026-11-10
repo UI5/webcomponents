@@ -37,6 +37,12 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 					{headerActions.call(this)}
 				</div>
 
+				{this.hasStickySubheader &&
+					<div class="ui5-dynamic-page-sticky-subheader">
+						<slot name="stickySubheaderArea"></slot>
+					</div>
+				}
+
 				<div
 					part="content"
 					class="ui5-dynamic-page-content"
