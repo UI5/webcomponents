@@ -23,7 +23,7 @@ enum Highlight {
 	Critical = "Critical",
 
 	/**
-	 * Indicates a negative or erroneous state (for example, rejected or failed).
+	 * Indicates a negative or error state (for example, rejected or failed).
 	 * @public
 	 */
 	Negative = "Negative",

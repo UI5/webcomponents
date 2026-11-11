@@ -18,11 +18,12 @@ export default function TableRowHighlightTemplate(this: TableRowHighlight) {
 	return (
 		<>
 			<div id="highlight" part="highlight"></div>
-			{ showIcon && <Icon id="highlight-icon"
-				name={icon}
-				accessibleName={this._accessibleText}
-				showTooltip={!!this._accessibleText}
-			/> }
+			{ showIcon && <div id="highlight-tooltip" title={this._accessibleText}>
+				<Icon id="highlight-icon"
+					name={icon}
+					accessibleName={this._accessibleText}
+				/>
+			</div> }
 		</>
 	);
 }
