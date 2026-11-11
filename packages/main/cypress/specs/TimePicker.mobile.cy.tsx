@@ -349,3 +349,50 @@ describe("TimePicker on desktop - no view toggle", () => {
 			.should("not.exist");
 	});
 });
+
+describe("TimePicker at high zoom (viewport < 300 px)", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+		cy.viewport(299, 800);
+	});
+
+	it("shows inputs view automatically at high zoom", () => {
+		cy.mount(<TimePicker format-pattern="HH:mm:ss" value="09:02:59"></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerAssertInputsView();
+	});
+
+	it("hides the mode toggle button at high zoom", () => {
+		cy.mount(<TimePicker format-pattern="HH:mm:ss" value="09:02:59"></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[id$='-mode-toggle']")
+			.should("not.exist");
+	});
+
+	it("shows AM/PM SegmentedButton at high zoom with 12-hour format", () => {
+		cy.mount(<TimePicker format-pattern="hh:mm:ss a" value="09:02:59 AM"></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.shadow()
+			.find("[ui5-segmented-button]")
+			.should("exist");
+	});
+});

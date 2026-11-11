@@ -104,3 +104,19 @@
 .ui5-dt-picker-content--phone .ui5-dt-time {
 	min-width: var(--_ui5_datetime_timeview_phonemode_width);
 }
+
+/* High-zoom time inputs: host needs a definite width so flex-basis:100% on the AM/PM cell resolves
+   against a known size and wraps to its own row (percentage flex-basis resolves to 'auto' on
+   indefinite-width containers, which collapses the cell to 2.875rem and hides the SegmentedButton).
+   width:20rem with box-sizing:border-box (inherited via .ui5-dt-time) gives content-box = 18rem,
+   matching the TimePicker setup (20rem popup, 1rem padding each side → 18rem content).
+   3-class selector beats the 2-class phone rule above. Must come after phone rules. */
+.ui5-dt-picker-content--phone.ui5-dt-picker-content--highzoom.ui5-dt-picker-content {
+	min-width: 0;
+	height: auto;
+}
+
+.ui5-dt-picker-content--phone.ui5-dt-picker-content--highzoom [ui5-time-selection-inputs] {
+	width: 20rem;
+	min-width: 0;
+}

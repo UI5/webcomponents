@@ -1,5 +1,7 @@
 import { isDesktop, isPhone, isTablet } from "@ui5/webcomponents-base/dist/Device.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -86,6 +88,7 @@ type TimePickerChangeEventDetail = TimePickerChangeInputEventDetail;
 type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
 
 const DEFAULT_ISO_FORMAT = "HH:mm:ss";
+const HIGH_ZOOM_BREAKPOINT = 300; // px — viewport width below which numeric inputs replace clocks
 
 /**
  * @class
@@ -380,11 +383,39 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	_useInputs = false;
 
 	/**
+	 * True when the viewport is narrower than the high-zoom breakpoint (< 300 px).
+	 * Forces numeric inputs to replace the clock view and hides the toggle button.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
 	 * Used by the getISOFormat method to avoid creating a new DateFormat instance on each call.
 	 * @private
 	 */
 	_isoFormatInstance?: DateFormat;
+
+	_handleResizeBound: ResizeObserverCallback;
+
+	constructor() {
+		super();
+		this._handleResizeBound = this._handleResize.bind(this);
+	}
+
+	onEnterDOM() {
+		ResizeHandler.register(document.body, this._handleResizeBound);
+		this._handleResize(); // sync on first attach
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(document.body, this._handleResizeBound);
+	}
+
+	_handleResize() {
+		this._highZoom = document.body.offsetWidth < HIGH_ZOOM_BREAKPOINT;
+	}
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -538,6 +569,15 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	/**
+	 * Returns true when numeric inputs should be displayed — either because the user toggled
+	 * to keyboard mode or because the viewport is at high zoom (< 300 px).
+	 * @private
+	 */
+	get _effectiveUseInputs() {
+		return this._highZoom || this._useInputs;
+	}
+
+	/**
 	 * Toggles between clock view and keyboard input view in the mobile picker dialog.
 	 * @private
 	 */
@@ -644,7 +684,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		if (!this.showHeader) {
 			return;
 		}
-		if (this._useInputs) {
+		if (this._effectiveUseInputs) {
 			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-time-sel"]`)?.focus();
 		} else {
 			this.shadowRoot?.querySelector<HTMLElement>(`[id="${this._id}-mode-toggle"]`)?.focus();
