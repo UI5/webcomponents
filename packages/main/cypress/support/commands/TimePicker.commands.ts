@@ -80,6 +80,34 @@ Cypress.Commands.add("ui5TimePickerGetSubmitButton", { prevSubject: true }, subj
 		.find("#submit");
 });
 
+Cypress.Commands.add("ui5TimePickerAssertClocksView", { prevSubject: true }, (subject) => {
+	cy.wrap(subject)
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.find("[ui5-time-selection-clocks]")
+		.should("exist");
+
+	cy.wrap(subject)
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.find("[ui5-time-selection-inputs]")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("ui5TimePickerAssertInputsView", { prevSubject: true }, (subject) => {
+	cy.wrap(subject)
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.find("[ui5-time-selection-inputs]")
+		.should("exist");
+
+	cy.wrap(subject)
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.find("[ui5-time-selection-clocks]")
+		.should("not.exist");
+});
+
 Cypress.Commands.add("ui5TimePickerTypeTime", { prevSubject: true }, (subject: string, time) => {
 	cy.wrap(subject)
 		.as("timePicker");
@@ -112,6 +140,8 @@ declare global {
 			ui5TimePickerGetSubmitButton(
 				this: Chainable<JQuery<TimePicker>>
 			): Chainable<JQuery<Button>>;
+			ui5TimePickerAssertClocksView(): Chainable<void>;
+			ui5TimePickerAssertInputsView(): Chainable<void>;
 			ui5TimePickerTypeTime(
 				this: Chainable<JQuery<TimePicker>>,
 				time: string
