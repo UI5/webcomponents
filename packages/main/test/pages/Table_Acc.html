@@ -70,7 +70,7 @@
                 <ui5-option data-mode="None" selected>No highlight</ui5-option>
                 <ui5-option data-mode="Simple">Simple</ui5-option>
                 <ui5-option data-mode="Extended">Extended</ui5-option>
-                <ui5-option data-mode="Custom">Custom icons</ui5-option>
+                <ui5-option data-mode="Custom">Custom Icons &amp; Texts</ui5-option>
             </ui5-select>
         </ui5-toolbar-item>
     </ui5-toolbar>
@@ -391,6 +391,7 @@
 
         const HIGHLIGHT_VALUES = ["Positive", "Critical", "Negative", "Information"];
         const CUSTOM_ICONS = ["employee", "money-bills", "lead", "pharmacy"];
+        const CUSTOM_TEXTS = ["Employee approved", "Payment pending", "Lead rejected", "Pharmacy information available"];
 
         const highlightSelect = document.getElementById("highlightSelect");
         highlightSelect.addEventListener("change", (e) => {
@@ -414,6 +415,7 @@
                 rowHighlight.type = HIGHLIGHT_VALUES[index % HIGHLIGHT_VALUES.length];
                 if (mode === "Custom") {
                     rowHighlight.icon = CUSTOM_ICONS[index % CUSTOM_ICONS.length];
+                    rowHighlight.text = CUSTOM_TEXTS[index % CUSTOM_TEXTS.length];
                 }
                 row.appendChild(rowHighlight);
             });

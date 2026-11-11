@@ -980,7 +980,9 @@ describe("Table Row - Highlight", () => {
 		// highlighted row paints the bar; a row without the element reserves the column but paints nothing
 		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight").should($bar => {
 			expect(getComputedStyle($bar[0]).backgroundColor).to.not.equal(TRANSPARENT);
+			expect($bar[0].getBoundingClientRect().width).to.equal(6);
 		});
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip").should("not.exist");
 		cy.get("#row2").find("[ui5-table-row-highlight]").should("not.exist");
 		cy.get("#row2").shadow().find("#highlight-cell").should("exist");
 		// the column is reserved by header presence, not by any row being highlighted (virtualization-jump guard)
@@ -1015,10 +1017,30 @@ describe("Table Row - Highlight", () => {
 		// table fans the design down and a default icon is derived from the type
 		cy.get("#row1").find("[ui5-table-row-highlight]").should("have.prop", "_design", "Extended");
 		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon").should("have.attr", "name", "error");
-		// the icon exposes the text as a tooltip
 		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon")
 			.should("have.attr", "accessible-name", "Out of stock")
-			.and("have.attr", "show-tooltip");
+			.and("not.have.attr", "show-tooltip");
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon")
+			.should("not.have.css", "cursor", "help");
+		cy.get("#row1").shadow().find("#highlight-cell").should("have.css", "width", "32px");
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight").should("have.css", "width", "2px");
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip")
+			.should($tooltip => {
+				expect($tooltip).to.have.attr("title", "Out of stock");
+				expect(getComputedStyle($tooltip[0]).cursor).to.not.equal("help");
+				const cell = $tooltip[0].getBoundingClientRect();
+				const icon = $tooltip[0].querySelector("[ui5-icon]")!.getBoundingClientRect();
+				expect(cell.width).to.equal(32);
+				expect(icon.x + icon.width / 2).to.equal(cell.x + cell.width / 2);
+				expect(icon.y + icon.height / 2).to.equal(cell.y + cell.height / 2);
+			});
+
+		cy.get("#table1").invoke("attr", "dir", "rtl");
+		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip").should($tooltip => {
+			const cell = $tooltip[0].getBoundingClientRect();
+			const icon = $tooltip[0].querySelector("[ui5-icon]")!.getBoundingClientRect();
+			expect(icon.x + icon.width / 2).to.equal(cell.x + cell.width / 2);
+		});
 		// the extended column uses the wider track
 		cy.get("#table1").shadow().find("#table").should($table => {
 			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_extended_width)");

@@ -122,7 +122,7 @@ class TableRow extends TableRowBase<TableCell, TableRowHighlight> {
 	/**
 	 * Defines the highlight indicator of the row.
 	 *
-	 * **Note:** The highlight is only rendered when the `ui5-table-header-row` contains a `ui5-table-header-row-highlight`.
+	 * **Note:** The highlight is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-highlight`.
 	 *
 	 * @since 2.30.0
 	 * @public

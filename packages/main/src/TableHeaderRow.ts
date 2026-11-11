@@ -64,7 +64,7 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowHighlig
 
 	/**
 	 * Defines the highlight configuration of the table.
-	 * Its presence reservesthe highlight column and enables the `ui5-table-row-highlight` of the rows to be rendered.
+	 * Its presence reserves the highlight column and enables the `ui5-table-row-highlight` of the rows to be rendered.
 	 *
 	 * **Note:** Use `ui5-table-header-row-highlight` for the intended design.
 	 *

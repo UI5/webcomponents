@@ -51,7 +51,7 @@ class TableRowHighlight extends UI5Element {
 	 * Defines the highlight state of the row.
 	 *
 	 * A colored indicator is rendered at the start of the row to signal its status.
-	 * Semantic values (`Positive`, `Critical`, `Negative`, `Information`) alsoprovides a built-in screen-reader announcement.
+	 * Semantic values (`Positive`, `Critical`, `Negative`, `Information`) also provide a built-in screen-reader announcement.
 	 *
 	 * @default "None"
 	 * @public
@@ -60,9 +60,10 @@ class TableRowHighlight extends UI5Element {
 	type: `${Highlight}` = "None";
 
 	/**
-	 * Defines the text alternative for the highlight indicator.
+	 * Defines the text alternative announced by assistive technologies for the highlight indicator.
 	 *
-	 * When set, it overrides the default announcement derived from the `type` value.
+	 * If set, it overrides the default announcement derived from the `type` value.
+	 * In the extended design, this text is also shown as a tooltip over the entire highlight cell.
 	 * Use it to provide a more specific description of the row's status (for example, "Out of stock" instead of "Error").
 	 *
 	 * @default undefined
