@@ -964,62 +964,67 @@ describe("Table - Navigated Rows", () => {
 });
 
 describe("Table - Interactive Rows", () => {
-	it("fires the row-click event", () => {
+	beforeEach(() => {
 		cy.mount(
-			<Table id="table1">
+			<Table id="table11">
 				<TableSelectionMulti id="selection" selected="1 2" slot="features"></TableSelectionMulti>
 				<TableHeaderRow id="headerRow" slot="headerRow">
 					<TableHeaderCell>ColumnA</TableHeaderCell>
 					<TableHeaderCell>ColumnB</TableHeaderCell>
 				</TableHeaderRow>
-				<TableRow id="row1" rowKey="1">
+				<TableRow id="row11" rowKey="1">
 					<TableCell><Label>Cell A</Label></TableCell>
 					<TableCell><Button>Cell B</Button></TableCell>
 				</TableRow>
-				<TableRow id="row2" rowKey="2" interactive={true}>
+				<TableRow id="row12" rowKey="2" interactive={true}>
 					<TableCell><Label>Cell A</Label></TableCell>
 					<TableCell><Button>Cell B</Button></TableCell>
 				</TableRow>
 			</Table>
 		);
+		cy.get("#table11").invoke("on", "row-click", cy.stub().as("rowClickHandler"));
+	});
 
-		cy.get("#table1").invoke("on", "row-click", cy.stub().as("rowClickHandler"));
-		cy.get("#row1").realClick();
+	it("does not fire row-click for non-interactive rows", () => {
+		cy.get("#row11").realClick();
 		cy.get("@rowClickHandler").should("not.have.been.called");
-		cy.get("#row1").realPress("Enter");
+		cy.get("#row11").realPress("Enter");
 		cy.get("@rowClickHandler").should("not.have.been.called");
+	});
 
-		cy.get("#row2").realMouseDown();
-		cy.get("#row2").should("have.attr", "_active");
-		cy.get("#row1").realMouseUp();
-		cy.get("#row2").should("not.have.attr", "_active");
+	it("applies and removes _active state on mousedown/mouseup", () => {
+		cy.get("#row12").realMouseDown();
+		cy.get("#row12").should("have.attr", "_active");
+		cy.get("#row11").realMouseUp();
+		cy.get("#row12").should("not.have.attr", "_active");
+	});
 
-		cy.get("#row2").realClick();
+	it("fires row-click on click, Enter, and child element click", () => {
+		cy.get("#row12").realClick();
 		cy.get("@rowClickHandler").invoke("getCall", 0).its("args.0.detail.row").as("clickedRow");
-		cy.get("@clickedRow").should("have.attr", "id", "row2");
-		cy.get("#row2").realPress("Enter");
+		cy.get("@clickedRow").should("have.attr", "id", "row12");
+		cy.get("#row12").realPress("Enter");
 		cy.get("@rowClickHandler").should("have.been.calledTwice");
-
-		cy.get("#row2").find("ui5-label").realClick();
+		cy.get("#row12").find("ui5-label").realClick();
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
+	});
 
-		cy.get("#row2").find("ui5-button").as("row2button");
+	it("does not activate row or fire row-click when interacting with a child button", () => {
+		cy.get("#row12").find("ui5-button").as("row2button");
 		cy.get("@row2button").realMouseDown();
-		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("#row12").should("not.have.attr", "_active");
 		cy.get("@row2button").realMouseUp();
-		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("#row12").should("not.have.attr", "_active");
 		cy.get("@row2button").invoke("on", "click", cy.stub().as("buttonClickHandler"));
 		cy.get("@row2button").realClick();
 		cy.get("@buttonClickHandler").should("have.been.calledOnce");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
-
+		cy.get("@rowClickHandler").should("not.have.been.called");
 		cy.get("@row2button").realPress("Enter");
 		cy.get("@buttonClickHandler").should("have.been.calledTwice");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
-
+		cy.get("@rowClickHandler").should("not.have.been.called");
 		cy.get("@row2button").realPress("Space");
 		cy.get("@buttonClickHandler").should("have.been.calledThrice");
-		cy.get("@rowClickHandler").should("have.been.calledThrice");
+		cy.get("@rowClickHandler").should("not.have.been.called");
 	});
 });
 
@@ -1459,6 +1464,114 @@ describe("Table - Slot forwarding", () => {
 
 		cy.get<TableSlotForwarder>("@wrapper").should($el => {
 			expect($el[0].table.rows.map(row => row.rowKey)).to.deep.equal(["1", "2"]);
+		});
+	});
+});
+
+describe("Table - Interactive Header Cell", () => {
+	beforeEach(() => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="plainHeader" minWidth="200px">Column A</TableHeaderCell>
+					<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+						<Label>Column B</Label>
+					</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell>Cell A</TableCell>
+					<TableCell>Cell B</TableCell>
+				</TableRow>
+			</Table>
+		);
+	});
+
+	it("fires the header-click event on click, Enter, Space only when interactive", () => {
+		cy.get("#plainHeader").invoke("on", "header-click", cy.stub().as("plainClick"));
+		cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+		// non-interactive header does not fire the header-click event
+		cy.get("#plainHeader").realClick();
+		cy.get("@plainClick").should("not.have.been.called");
+
+		cy.get("#interactiveHeader").realClick();
+		cy.get("@headerClick").should("have.been.calledOnce");
+
+		// click on slotted content still fires the header-click
+		cy.get("#interactiveHeader").find("ui5-label").realClick();
+		cy.get("@headerClick").should("have.been.calledTwice");
+
+		// keyboard: Enter and Space
+		cy.get("#interactiveHeader").realPress("Enter");
+		cy.get("@headerClick").should("have.been.calledThrice");
+		cy.get("#interactiveHeader").realPress("Space");
+		cy.get("@headerClick").should("have.callCount", 4);
+	});
+
+	it("sets the _active attribute while clicked", () => {
+		cy.get("#interactiveHeader").realMouseDown();
+		cy.get("#interactiveHeader").should("have.attr", "_active");
+		cy.get("#interactiveHeader").realMouseUp();
+		cy.get("#interactiveHeader").should("not.have.attr", "_active");
+	});
+
+	describe("with a slotted action", () => {
+		beforeEach(() => {
+			cy.mount(
+				<Table id="table">
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell id="interactiveHeader" minWidth="200px" interactive={true}>
+							<Label>Column B</Label>
+							<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
+						</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow>
+						<TableCell>Cell B</TableCell>
+					</TableRow>
+				</Table>
+			);
+		});
+
+		it("keeps focus on the interactive header on Enter instead of moving it to a slotted action", () => {
+			cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+			// click
+			cy.get("#interactiveHeader").realClick();
+			cy.focused().should("have.id", "interactiveHeader");
+			cy.get("@headerClick").should("have.been.calledOnce");
+			cy.focused().should("have.id", "interactiveHeader");
+
+			// Enter fires the event again, but focus must stay on the header cell and not move to the slotted action button
+			cy.get("#interactiveHeader").realPress("Enter");
+			cy.get("@headerClick").should("have.been.calledTwice");
+			cy.focused().should("have.id", "interactiveHeader");
+		});
+
+		it("does not set the _active state when a slotted action is clicked", () => {
+			cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
+
+			// clicking the action button must not set the _active state on the header cell
+			cy.get("@actionButton").realMouseDown();
+			cy.get("#interactiveHeader").should("not.have.attr", "_active");
+			cy.get("@actionButton").realMouseUp();
+
+			// clicking the header cell itself still sets the _active state
+			cy.get("#interactiveHeader").realMouseDown();
+			cy.get("#interactiveHeader").should("have.attr", "_active");
+			cy.get("#interactiveHeader").realMouseUp();
+		});
+
+		it("does not fire header-click when a slotted action is clicked", () => {
+			cy.get("#interactiveHeader").find("ui5-table-header-cell-action-ai").shadow().find("ui5-button").as("actionButton");
+			cy.get("#interactiveHeader").invoke("on", "header-click", cy.stub().as("headerClick"));
+
+			// clicking the action button must not fire the header-click event
+			cy.get("@actionButton").realClick();
+			cy.get("@headerClick").should("not.have.been.called");
+
+			// clicking the header cell itself still fires the event
+			cy.get("#interactiveHeader").realClick();
+			cy.get("@headerClick").should("have.been.calledOnce");
 		});
 	});
 });

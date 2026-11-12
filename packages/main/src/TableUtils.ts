@@ -1,4 +1,5 @@
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowBase from "./TableRowBase.js";
@@ -19,6 +20,13 @@ const findRowInPath = (composedPath: Array<EventTarget>) => {
 
 const findRowBaseInPath = (composedPath: Array<EventTarget>) => {
 	return composedPath.find((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-row-base")) as TableRowBase | undefined;
+};
+
+// Checks whether the currently focused element is nested interactive content inside the given element
+const isFocusedElementInside = async (element: HTMLElement, event: Event): Promise<boolean> => {
+	const composedPath = event.composedPath();
+	await new Promise(resolve => setTimeout(resolve)); // wait for the focus to be set
+	return composedPath.slice(0, composedPath.indexOf(element)).includes(getActiveElement() as Element);
 };
 
 const findVerticalScrollContainer = (element: HTMLElement, requireOverflow = false): HTMLElement => {
@@ -137,6 +145,7 @@ export {
 	isHeaderSelectionCell,
 	findRowInPath,
 	findRowBaseInPath,
+	isFocusedElementInside,
 	findVerticalScrollContainer,
 	computeAxisScrollDelta,
 	isFeature,

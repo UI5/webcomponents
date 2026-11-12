@@ -119,13 +119,27 @@ describe("Rendering and interaction", () => {
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
-			.find(".ui5-nl-aside")
+			.find(".ui5-nl-side")
 			.should("exist");
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
 			.find(".ui5-nl-content")
 			.should("exist");
+	});
+
+	it("renders the side content container as a div (not an aside)", () => {
+		cy.mount(<Sample />);
+
+		cy.get("[ui5-navigation-layout]")
+			.shadow()
+			.find(".ui5-nl-side")
+			.should("match", "div");
+
+		cy.get("[ui5-navigation-layout]")
+			.shadow()
+			.find("aside")
+			.should("not.exist");
 	});
 
 	it("tests collapsing", () => {
@@ -197,7 +211,7 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
-			.find(".ui5-nl-aside")
+			.find(".ui5-nl-side")
 			.should("not.be.visible");
 	});
 
@@ -209,7 +223,7 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
-			.find(".ui5-nl-aside")
+			.find(".ui5-nl-side")
 			.should("be.visible");
 
 		cy.get("[ui5-navigation-layout]")
@@ -217,7 +231,7 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
-			.find(".ui5-nl-aside")
+			.find(".ui5-nl-side")
 			.should("not.be.visible");
 	});
 
@@ -226,7 +240,7 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
-			.find(".ui5-nl-aside")
+			.find(".ui5-nl-side")
 			.should("be.visible");
 	});
 
