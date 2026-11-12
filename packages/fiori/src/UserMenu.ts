@@ -477,7 +477,14 @@ class UserMenu extends UI5Element {
 			return;
 		}
 
-		const shouldOpenMenu = this._isRtl ? isLeft(e) : isRight(e);
+		// The handler is attached to the top-level list, but keydown events bubble up
+		// from the sub-menu popovers as well, so items on every nesting level are handled here.
+		const isEndContentNavigation = isRight(e) || isLeft(e);
+		const shouldOpenMenu = this.isRtl ? isLeft(e) : isRight(e);
+
+		if (isEndContentNavigation) {
+			item._navigateToEndContent(isLeft(e));
+		}
 
 		if (shouldOpenMenu) {
 			this._closeOtherSubMenus(item);
@@ -605,7 +612,7 @@ class UserMenu extends UI5Element {
 		}
 	}
 
-	get _isRtl() {
+	get isRtl() {
 		return this.effectiveDir === "rtl";
 	}
 

@@ -1936,6 +1936,27 @@ describe("Keyboard navigation", () => {
 			.find("[ui5-responsive-popover]")
 			.should("have.attr", "open");
 	});
+
+	it("moves focus to the item's endContent with ArrowRight", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuItem text="Settings" data-id="settings">
+						<Button id="endContentBtn" slot="endContent" design="Transparent">Edit</Button>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]")
+			.find("[ui5-user-menu-item][text='Settings']")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("#endContentBtn")
+			.should("be.focused");
+	});
 });
 
 
