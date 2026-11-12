@@ -126,4 +126,79 @@ describe("ShellBarBranding", () => {
 			cy.get("@brandingClick")
 				.should("have.been.calledTwice");
 		});
+
+	describe("Empty branding", () => {
+		it("renders nothing when it has neither logo nor title text", () => {
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding"></ShellBarBranding>
+				</ShellBar>
+			);
+
+			cy.get("#shellbarBranding")
+				.should("have.attr", "_empty");
+
+			cy.get("#shellbarBranding")
+				.should("not.be.visible");
+		});
+
+		it("is not rendered as a focusable branding area in the shellbar", () => {
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding"></ShellBarBranding>
+				</ShellBar>
+			);
+
+			cy.get("#shellbar")
+				.shadow()
+				.find(".ui5-shellbar-branding-area")
+				.should("not.exist");
+		});
+
+		it("stays visible and focusable when only a logo is present", () => {
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding">
+						<img id="logoOnly" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+					</ShellBarBranding>
+				</ShellBar>
+			);
+
+			cy.get("#shellbarBranding")
+				.should("not.have.attr", "_empty");
+
+			cy.get("#shellbarBranding")
+				.should("be.visible");
+
+			cy.get("#shellbarBranding")
+				.shadow()
+				.find("a")
+				.should("have.attr", "tabIndex", "0");
+		});
+
+		it("becomes visible when title text is added at runtime", () => {
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding"></ShellBarBranding>
+				</ShellBar>
+			);
+
+			cy.get("#shellbarBranding").should("have.attr", "_empty");
+
+			cy.get("#shellbarBranding").then($b => {
+				$b.get(0).textContent = "Added Later";
+			});
+
+			cy.get("#shellbarBranding")
+				.should("not.have.attr", "_empty");
+
+			cy.get("#shellbarBranding")
+				.should("be.visible");
+
+			cy.get("#shellbar")
+				.shadow()
+				.find(".ui5-shellbar-branding-area")
+				.should("exist");
+		});
+	});
 });
