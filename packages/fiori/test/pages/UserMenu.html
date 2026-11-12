@@ -100,6 +100,19 @@
 		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
 	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="sys-help" text="Help" data-id="help">
+		<ui5-user-menu-item icon="document" text="Documentation" data-id="documentation">
+			<ui5-user-menu-item icon="document" text="Doc 1" data-id="doc-1"></ui5-user-menu-item>
+			<ui5-user-menu-item icon="document" text="Doc 2" data-id="doc-2">
+				<ui5-user-menu-item icon="document" text="Doc 2.1" data-id="doc-2-1"></ui5-user-menu-item>
+				<ui5-user-menu-item icon="document" text="Doc 2.2" data-id="doc-2-2" disabled>
+					<ui5-user-menu-item icon="document" text="Doc 2.2.1" data-id="doc-2-2-1"></ui5-user-menu-item>
+				</ui5-user-menu-item>
+			</ui5-user-menu-item>
+		</ui5-user-menu-item>
+		<ui5-user-menu-item icon="question-mark" text="FAQ" data-id="faq"></ui5-user-menu-item>
+		<ui5-user-menu-item icon="feedback" text="Contact Support" data-id="contact-support"></ui5-user-menu-item>
+	</ui5-user-menu-item>
 	<ui5-user-menu-item icon="official-service" text="Legal Information">
 	</ui5-user-menu-item>
 	<div slot="footer"></div>
@@ -219,6 +232,30 @@
 				break;
 			case "account-action2":
 				console.log("Product-specific account action 2");
+				break;
+			case "documentation":
+				console.log("Documentation");
+				break;
+			case "doc-1":
+				console.log("Doc 1");
+				break;
+			case "doc-2":
+				console.log("Doc 2");
+				break;
+			case "doc-2-1":
+				console.log("Doc 2.1");
+				break;
+			case "doc-2-2":
+				console.log("Doc 2.2");
+				break;
+			case "doc-2-2-1":
+				console.log("Doc 2.2.1");
+				break;
+			case "faq":
+				console.log("FAQ");
+				break;
+			case "contact-support":
+				console.log("Contact Support");
 				break;
 			default:
 				console.log("Default");

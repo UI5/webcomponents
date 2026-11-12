@@ -16,6 +16,7 @@ import type { PopupScrollEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
 import { isPhone, isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { isRight, isLeft } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
@@ -461,7 +462,31 @@ class UserMenu extends UI5Element {
 		}
 
 		item.getFocusDomRef()?.focus();
-		this._startOpenTimeout(item);
+
+		if (item._popover) {
+			this._startOpenTimeout(item);
+		} else {
+			clearTimeout(this._timeout);
+			this._closeOtherSubMenus(item);
+		}
+	}
+
+	_itemKeyDown(e: KeyboardEvent) {
+		const item = e.target as UserMenuItem;
+		if (!isInstanceOfMenuItem(item)) {
+			return;
+		}
+
+		const shouldOpenMenu = this._isRtl ? isLeft(e) : isRight(e);
+
+		if (shouldOpenMenu) {
+			this._closeOtherSubMenus(item);
+			this._openItemSubMenu(item);
+		}
+	}
+
+	_itemMouseLeave() {
+		clearTimeout(this._timeout);
 	}
 
 	_startOpenTimeout(item: UserMenuItem) {
@@ -499,6 +524,7 @@ class UserMenu extends UI5Element {
 	}
 
 	_closeUserMenu() {
+		clearTimeout(this._timeout);
 		this.open = false;
 	}
 
@@ -577,6 +603,10 @@ class UserMenu extends UI5Element {
 		if (ref) {
 			ref.associatedAccount = this;
 		}
+	}
+
+	get _isRtl() {
+		return this.effectiveDir === "rtl";
 	}
 
 	get _menuItems() {
