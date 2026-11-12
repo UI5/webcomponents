@@ -24,7 +24,6 @@ import type { IButton } from "./Button.js";
 import {
 	DELETE,
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
-	ARIA_LABEL_LIST_ITEM_RADIO_BUTTON,
 	LIST_ITEM_ACTIVE,
 	LIST_ITEM_SELECTED,
 	LIST_ITEM_NOT_SELECTED,
@@ -56,7 +55,6 @@ type AccInfo = {
 	ariaExpanded?: boolean;
 	ariaLevel?: number;
 	ariaLabel: string;
-	ariaLabelRadioButton: string;
 	ariaSelectedText?: string;
 	ariaHaspopup?: `${AriaHasPopup}`;
 	posinset?: number;
@@ -528,7 +526,6 @@ abstract class ListItem extends ListItemBase {
 			ariaExpanded: undefined,
 			ariaLevel: undefined,
 			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
-			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON),
 			ariaSelected: this._ariaSelected,
 			ariaSelectedText: this.ariaSelectedText,
 			ariaHaspopup: this.accessibilityAttributes.hasPopup,
