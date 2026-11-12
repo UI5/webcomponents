@@ -33,3 +33,17 @@
 #popin-header {
 	display: contents;
 }
+
+:host([_hierarchy-state]) {
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+#hierarchy-toggle[data-leaf],
+#hierarchy-toggle[data-hidden] {
+	visibility: hidden;
+}
+
+#hierarchy-toggle[data-hidden] [ui5-button] {
+	position: absolute;
+}

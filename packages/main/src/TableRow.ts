@@ -8,6 +8,7 @@ import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
 import type TableCell from "./TableCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
+import type TableHierarchyNodeState from "./types/TableHierarchyNodeState.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -91,6 +92,31 @@ class TableRow extends TableRowBase<TableCell> {
 	position?: number;
 
 	/**
+	 * Defines the hierarchy state of the row when the `ui5-table-hierarchy` feature is used.
+	 *
+	 * The feature updates this property after an accepted user expand/collapse action and fires the `toggle` event.
+	 * The application is responsible for adding or removing child rows.
+	 *
+	 * @default "Leaf"
+	 * @since 2.29.0
+	 * @public
+	 */
+	@property()
+	hierarchyState: `${TableHierarchyNodeState}` = "Leaf";
+
+	/**
+	 * Defines the 1-based hierarchy level of the row when the `ui5-table-hierarchy` feature is used.
+	 *
+	 * The value must be a positive integer. Invalid values are treated as `1` by the hierarchy feature.
+	 *
+	 * @default 1
+	 * @since 2.29.0
+	 * @public
+	 */
+	@property({ type: Number })
+	hierarchyLevel = 1;
+
+	/**
 	 * Defines the interactive state of the row.
 	 *
 	 * @default false
@@ -127,6 +153,23 @@ class TableRow extends TableRowBase<TableCell> {
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
+		this._updateHierarchy();
+	}
+
+	_updateHierarchy() {
+		const hierarchy = this._tableHierarchy;
+		const state = hierarchy?.getState(this);
+		const level = hierarchy?.getLevel(this) ?? 0;
+		toggleAttribute(this, "aria-level", !!hierarchy, `${level}`);
+		toggleAttribute(this, "aria-expanded", !!state && state !== "Leaf", `${state === "Expanded"}`);
+
+		const firstVisibleCell = this._firstVisibleCell;
+		this.cells.forEach(cell => {
+			const isHierarchyCell = !!hierarchy && cell === firstVisibleCell;
+			cell._hierarchyState = isHierarchyCell ? state : undefined;
+			cell._hierarchyLevel = isHierarchyCell ? level : 0;
+			cell._hierarchyHideExpandCollapseIcons = isHierarchyCell && hierarchy.hideExpandCollapseIcons;
+		});
 	}
 
 	async _onpointerdown(e: PointerEvent) {
@@ -173,6 +216,10 @@ class TableRow extends TableRowBase<TableCell> {
 
 	get _isInteractive() {
 		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
+	}
+
+	get _tableHierarchy() {
+		return this.isGroupRow() ? undefined : this._table?._getHierarchy();
 	}
 
 	get _navigationAction() {

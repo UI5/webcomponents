@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Table Hierarchy (Tree Table) TestPage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		.toolbar {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: 0.5rem;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="toolbar">
+		<ui5-title level="H3">Table Hierarchy</ui5-title>
+		<ui5-button id="toggleFeature">Remove Hierarchy Feature</ui5-button>
+		<ui5-checkbox id="hideIcons" text="Hide Expand/Collapse Icons"></ui5-checkbox>
+		<ui5-button id="expandAll">Expand All</ui5-button>
+		<ui5-button id="collapseAll">Collapse All</ui5-button>
+		<ui5-label id="lastEvent"></ui5-label>
+	</div>
+
+	<ui5-table id="table" accessible-name="Organization" overflow-mode="Popin" row-action-count="1">
+		<ui5-table-hierarchy id="hierarchy" slot="features"></ui5-table-hierarchy>
+		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
+		<ui5-table-growing id="growing" slot="features" mode="Button" text="Load More"></ui5-table-growing>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="nameCol" min-width="300px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell id="roleCol" min-width="200px">Role</ui5-table-header-cell>
+			<ui5-table-header-cell id="locationCol" min-width="150px">Location</ui5-table-header-cell>
+			<ui5-table-header-cell id="nodeIdCol" min-width="200px">Node ID</ui5-table-header-cell>
+			<ui5-table-header-cell id="typeCol" min-width="200px">Type</ui5-table-header-cell>
+			<ui5-table-header-cell id="directReportsCol" min-width="150px">Direct Reports</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+
+	<script>
+		const table = document.getElementById("table");
+		const lastEvent = document.getElementById("lastEvent");
+		const toggleFeatureBtn = document.getElementById("toggleFeature");
+		const growing = document.getElementById("growing");
+		let hierarchy = document.getElementById("hierarchy");
+		let loadedBatches = 0;
+
+		const tree = [
+			{ id: "board", name: "Executive Board", role: "Board", location: "Walldorf", expanded: true, children: [
+				{ id: "dev", name: "Development", role: "Unit", location: "Walldorf", expanded: true, children: [
+					{ id: "dev-ui", name: "UI Team", role: "Team", location: "Sofia", expanded: false, children: [
+						{ id: "e1", name: "Alice Smith", role: "Developer", location: "Sofia" },
+						{ id: "e2", name: "Bob Miller", role: "Developer", location: "Sofia" },
+					] },
+					{ id: "dev-core", name: "Core Team", role: "Team", location: "Walldorf", expanded: false, children: [
+						{ id: "e3", name: "Carol Jones", role: "Architect", location: "Walldorf" },
+					] },
+					{ id: "e4", name: "Dave Brown", role: "Unit Lead", location: "Walldorf" },
+				] },
+				{ id: "sales", name: "Sales", role: "Unit", location: "Paris", expanded: false, children: [
+					{ id: "e5", name: "Eve Martin", role: "Account Executive", location: "Paris" },
+					{ id: "e6", name: "Frank Moreau", role: "Account Executive", location: "Lyon" },
+				] },
+			] },
+			{ id: "e7", name: "Grace Lee", role: "Assistant", location: "Walldorf" },
+		];
+
+		const growingBatches = [
+			[
+				{ id: "support", name: "Customer Support", role: "Unit", location: "Berlin", expanded: true, children: [
+					{ id: "support-emea", name: "EMEA Team", role: "Team", location: "Berlin", expanded: false, children: [
+						{ id: "e8", name: "Hannah Weber", role: "Support Engineer", location: "Berlin" },
+						{ id: "e9", name: "Ivan Petrov", role: "Support Engineer", location: "Sofia" },
+					] },
+					{ id: "e10", name: "Julia Fischer", role: "Unit Lead", location: "Berlin" },
+				] },
+			],
+			[
+				{ id: "hr", name: "Human Resources", role: "Unit", location: "Walldorf", expanded: true, children: [
+					{ id: "hr-recruiting", name: "Recruiting Team", role: "Team", location: "Paris", expanded: false, children: [
+						{ id: "e11", name: "Karim Bernard", role: "Recruiter", location: "Paris" },
+					] },
+					{ id: "e12", name: "Laura Koch", role: "Unit Lead", location: "Walldorf" },
+				] },
+			],
+		];
+
+		const nodesById = new Map();
+		function index(nodes, level, parent) {
+			nodes.forEach(node => {
+				node.level = level;
+				node.parent = parent;
+				nodesById.set(node.id, node);
+				node.children && index(node.children, level + 1, node);
+			});
+		}
+		index(tree, 1);
+
+		function createRow(node) {
+			const row = document.createElement("ui5-table-row");
+			row.setAttribute("row-key", node.id);
+			row.hierarchyLevel = node.level;
+			row.hierarchyState = node.children ? (node.expanded ? "Expanded" : "Collapsed") : "Leaf";
+
+			[node.name, node.role, node.location, node.id, node.children ? "Organization" : "Employee", String(node.children?.length ?? 0)].forEach(text => {
+				const cell = document.createElement("ui5-table-cell");
+				const label = document.createElement("ui5-label");
+				label.textContent = text;
+				cell.append(label);
+				row.append(cell);
+			});
+
+			const action = document.createElement("ui5-table-row-action");
+			action.setAttribute("slot", "actions");
+			action.setAttribute("icon", "add");
+			action.setAttribute("text", "Add");
+			row.append(action);
+			return row;
+		}
+
+		// Returns the rows of all visible descendants of the given nodes
+		function createVisibleRows(nodes) {
+			return nodes.flatMap(node => {
+				const row = createRow(node);
+				return node.children && node.expanded ? [row, ...createVisibleRows(node.children)] : [row];
+			});
+		}
+
+		function renderAll() {
+			table.rows.forEach(row => row.remove());
+			table.append(...createVisibleRows(tree));
+		}
+
+		function removeDescendantRows(row) {
+			const level = row.hierarchyLevel;
+			let next = row.nextElementSibling;
+			while (next && next.hasAttribute("ui5-table-row") && next.hierarchyLevel > level) {
+				const toRemove = next;
+				next = next.nextElementSibling;
+				toRemove.remove();
+			}
+		}
+
+		function onToggle(e) {
+			const { row, expanded } = e.detail;
+			const node = nodesById.get(row.rowKey);
+			lastEvent.textContent = `toggle: ${node.name} -> ${expanded ? "expanded" : "collapsed"}`;
+
+			node.expanded = expanded;
+			if (expanded) {
+				row.after(...createVisibleRows(node.children));
+			} else {
+				removeDescendantRows(row);
+			}
+		}
+
+		function setAllExpanded(expanded) {
+			nodesById.forEach(node => node.children && (node.expanded = expanded));
+			renderAll();
+		}
+
+		hierarchy.addEventListener("toggle", onToggle);
+
+		growing.addEventListener("load-more", () => {
+			const batch = growingBatches[loadedBatches];
+			if (!batch) {
+				return;
+			}
+
+			index(batch, 1);
+			tree.push(...batch);
+			table.append(...createVisibleRows(batch));
+			loadedBatches++;
+			lastEvent.textContent = `load-more: batch ${loadedBatches} of ${growingBatches.length}`;
+			if (loadedBatches === growingBatches.length) {
+				growing.remove();
+			}
+		});
+
+		toggleFeatureBtn.addEventListener("click", () => {
+			if (hierarchy) {
+				hierarchy.remove();
+				hierarchy = null;
+				toggleFeatureBtn.textContent = "Add Hierarchy Feature";
+			} else {
+				hierarchy = document.createElement("ui5-table-hierarchy");
+				hierarchy.id = "hierarchy";
+				hierarchy.setAttribute("slot", "features");
+				hierarchy.hideExpandCollapseIcons = document.getElementById("hideIcons").checked;
+				hierarchy.addEventListener("toggle", onToggle);
+				table.prepend(hierarchy);
+				toggleFeatureBtn.textContent = "Remove Hierarchy Feature";
+			}
+		});
+
+		document.getElementById("hideIcons").addEventListener("change", e => {
+			if (hierarchy) {
+				hierarchy.hideExpandCollapseIcons = e.target.checked;
+			}
+		});
+
+		document.getElementById("expandAll").addEventListener("click", () => setAllExpanded(true));
+		document.getElementById("collapseAll").addEventListener("click", () => setAllExpanded(false));
+
+		// The bundle is a module and loads after this script, so wait until the table is upgraded
+		Promise.all([
+			customElements.whenDefined("ui5-table"),
+			customElements.whenDefined("ui5-table-row"),
+			customElements.whenDefined("ui5-table-hierarchy"),
+		]).then(renderAll);
+	</script>
+</body>
+
+</html>

@@ -28,10 +28,12 @@ import type TableSelectionBase from "./TableSelectionBase.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type TableVirtualizer from "./TableVirtualizer.js";
 import type TableGrowing from "./TableGrowing.js";
+import type TableHierarchy from "./TableHierarchy.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	TABLE_NO_DATA,
 } from "./generated/i18n/i18n-defaults.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
 
 /**
  * Interface for components that can be slotted inside the `features` slot of the `ui5-table`.
@@ -120,6 +122,7 @@ type TableRowActionClickEventDetail = {
  * * [TableSelectionSingle](../TableSelectionSingle) - adds single-selection capabilities to the table
  * * [TableGrowing](../TableGrowing) - provides growing capabilities to load more data
  * * [TableVirtualizer](../TableVirtualizer) - adds virtualization capabilities to the table
+ * * [TableHierarchy](../TableHierarchy) - (experimental) displays hierarchical data in the table
  *
  * ### Keyboard Handling
  *
@@ -192,6 +195,7 @@ type TableRowActionClickEventDetail = {
  * @ui5subcomponent TableHeaderCell
  * @ui5subcomponent TableHeaderCellActionAI
  * @ui5subcomponent TableHeaderRow
+ * @ui5subcomponent TableHierarchy
  * @ui5subcomponent TableRow
  * @ui5subcomponent TableRowAction
  * @ui5subcomponent TableRowActionNavigation
@@ -528,6 +532,10 @@ class Table extends UI5Element {
 		return this._findFeature<TableGrowing>("TableGrowing");
 	}
 
+	_getHierarchy(): TableHierarchy | undefined {
+		return this._findFeature<TableHierarchy>("TableHierarchy");
+	}
+
 	_onEvent(e: Event) {
 		const composedPath = e.composedPath();
 		const eventOrigin = composedPath[0] as HTMLElement;
@@ -743,6 +751,10 @@ class Table extends UI5Element {
 
 	get _effectiveNoDataText() {
 		return this.noDataText || Table.i18nBundle.getText(TABLE_NO_DATA);
+	}
+
+	get _ariaRole(): AriaRole {
+		return this._getHierarchy()?.getAriaRoleForTable() || "grid";
 	}
 
 	get _ariaLabel() {

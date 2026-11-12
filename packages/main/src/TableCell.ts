@@ -6,6 +6,7 @@ import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
 import type TableRow from "./TableRow.js";
 import type Table from "./Table.js";
+import type TableHierarchyNodeState from "./types/TableHierarchyNodeState.js";
 import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -45,6 +46,28 @@ class TableCell extends TableCellBase {
 	@property({ type: Boolean })
 	merged = false;
 
+	/**
+	 * The hierarchy state of the cell, set by the row when the `ui5-table-hierarchy` feature is used
+	 * and the cell is the first visible cell of the row.
+	 * @private
+	 */
+	@property()
+	_hierarchyState?: `${TableHierarchyNodeState}`;
+
+	/**
+	 * The hierarchy level of the row, used for the indentation of the hierarchy cell.
+	 * @private
+	 */
+	@property({ type: Number, noAttribute: true })
+	_hierarchyLevel = 0;
+
+	/**
+	 * Whether the hierarchy icons are hidden and disabled.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_hierarchyHideExpandCollapseIcons = false;
+
 	@query("#popin-header")
 	_popinHeader?: HTMLElement;
 
@@ -66,6 +89,11 @@ class TableCell extends TableCellBase {
 		if (ref && !ref.hasChildNodes()) {
 			ref.replaceChildren(...this._popinHeaderNodes);
 		}
+	}
+
+	_renderHierarchyToggle() {
+		const row = this.parentElement as TableRow | null;
+		return row?._tableHierarchy?.renderToggle(this);
 	}
 
 	get _headerCell() {
