@@ -658,7 +658,7 @@
 		});
 
 		shellbar.addEventListener('ui5-content-item-visibility-change', (e) => {
-			console.log('Content visibility changed:', e.detail.items.length, 'items hidden');
+			console.log('Content visibility changed:', e.detail.items.length, 'items hidden,', e.detail.revealedItems.length, 'items revealed');
 		});
 
 		shellbar.addEventListener('ui5-search-field-toggle', (e) => {
