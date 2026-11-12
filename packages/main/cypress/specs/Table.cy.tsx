@@ -9,8 +9,8 @@ import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
 import Input from "../../src/Input.js";
 import TableRowAction from "../../src/TableRowAction.js";
-import TableRowHighlight from "../../src/TableRowHighlight.js";
-import TableHeaderRowHighlight from "../../src/TableHeaderRowHighlight.js";
+import TableRowStatus from "../../src/TableRowStatus.js";
+import TableHeaderRowStatus from "../../src/TableHeaderRowStatus.js";
 import TableGroupRow from "../../src/TableGroupRow.js";
 import Bar from "../../src/Bar.js";
 import Title from "../../src/Title.js";
@@ -958,17 +958,52 @@ describe("Table - Navigated Rows", () => {
 	});
 });
 
-describe("Table Row - Highlight", () => {
+describe("Table Row - Status", () => {
+	it("renders no status by default and supports setting and clearing the value", () => {
+		cy.mount(
+			<Table>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowStatus slot="status" design="Extended" />
+					<TableHeaderCell>Column A</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableRowStatus id="status" slot="status" text="Custom status" icon="information" />
+					<TableCell>Cell A</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get<TableRowStatus>("#status").should($status => {
+			expect($status[0].value).to.equal(undefined);
+			expect($status[0]._accessibleText).to.equal(undefined);
+		});
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-icon").should("not.exist");
+
+		cy.get("#status").invoke("prop", "value", "Positive");
+		cy.get("#status").shadow().find("#status").should("not.have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-icon").should("have.attr", "name", "information");
+		cy.get("#status").shadow().find("#status-tooltip").should("have.attr", "title", "Custom status");
+
+		cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
+		cy.get<TableRowStatus>("#status").should($status => {
+			expect($status[0]._accessibleText).to.equal(undefined);
+		});
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");
+	});
+
 	it("reserves the column from the header element and renders the bar per row", () => {
 		cy.mount(
 			<Table id="table1">
 				<TableHeaderRow slot="headerRow">
-					<TableHeaderRowHighlight slot="highlight" />
+					<TableHeaderRowStatus slot="status" />
 					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
 				</TableHeaderRow>
 				<TableGroupRow id="group1">Group A</TableGroupRow>
 				<TableRow id="row1">
-					<TableRowHighlight slot="highlight" type="Negative" />
+					<TableRowStatus slot="status" value="Negative" />
 					<TableCell><Label>Cell A</Label></TableCell>
 				</TableRow>
 				<TableRow id="row2">
@@ -977,26 +1012,26 @@ describe("Table Row - Highlight", () => {
 			</Table>
 		);
 
-		// highlighted row paints the bar; a row without the element reserves the column but paints nothing
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight").should($bar => {
+		// row with a status paints the bar; a row without the element reserves the column but paints nothing
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status").should($bar => {
 			expect(getComputedStyle($bar[0]).backgroundColor).to.not.equal(TRANSPARENT);
 			expect($bar[0].getBoundingClientRect().width).to.equal(6);
 		});
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip").should("not.exist");
-		cy.get("#row2").find("[ui5-table-row-highlight]").should("not.exist");
-		cy.get("#row2").shadow().find("#highlight-cell").should("exist");
-		// the column is reserved by header presence, not by any row being highlighted (virtualization-jump guard)
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip").should("not.exist");
+		cy.get("#row2").find("[ui5-table-row-status]").should("not.exist");
+		cy.get("#row2").shadow().find("#status-cell").should("exist");
+		// the column is reserved by header presence, not by any row having a status (virtualization-jump guard)
 		cy.get("#table1").shadow().find("#table").should($table => {
-			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_width)");
+			expect($table[0].style.gridTemplateColumns).to.include("table_status_cell_width)");
 		});
-		// group rows never get a highlight cell
-		cy.get("#group1").shadow().find("#highlight-cell").should("not.exist");
+		// group rows never get a status cell
+		cy.get("#group1").shadow().find("#status-cell").should("not.exist");
 
 		// removing the header element removes the whole column
-		cy.get("[ui5-table-header-row-highlight]").then($el => $el[0].remove());
-		cy.get("#row1").shadow().find("#highlight-cell").should("not.exist");
+		cy.get("[ui5-table-header-row-status]").then($el => $el[0].remove());
+		cy.get("#row1").shadow().find("#status-cell").should("not.exist");
 		cy.get("#table1").shadow().find("#table").should($table => {
-			expect($table[0].style.gridTemplateColumns).to.not.include("table_highlight_cell_width)");
+			expect($table[0].style.gridTemplateColumns).to.not.include("table_status_cell_width)");
 		});
 	});
 
@@ -1004,27 +1039,27 @@ describe("Table Row - Highlight", () => {
 		cy.mount(
 			<Table id="table1">
 				<TableHeaderRow slot="headerRow">
-					<TableHeaderRowHighlight slot="highlight" design="Extended" />
+					<TableHeaderRowStatus slot="status" design="Extended" />
 					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow id="row1">
-					<TableRowHighlight slot="highlight" type="Negative" text="Out of stock" />
+					<TableRowStatus slot="status" value="Negative" text="Out of stock" />
 					<TableCell><Label>Cell A</Label></TableCell>
 				</TableRow>
 			</Table>
 		);
 
-		// table fans the design down and a default icon is derived from the type
-		cy.get("#row1").find("[ui5-table-row-highlight]").should("have.prop", "_design", "Extended");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon").should("have.attr", "name", "error");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon")
+		// table fans the design down and a default icon is derived from the value
+		cy.get("#row1").find("[ui5-table-row-status]").should("have.prop", "_design", "Extended");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon").should("have.attr", "name", "error");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon")
 			.should("have.attr", "accessible-name", "Out of stock")
 			.and("not.have.attr", "show-tooltip");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-icon")
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon")
 			.should("not.have.css", "cursor", "help");
-		cy.get("#row1").shadow().find("#highlight-cell").should("have.css", "width", "32px");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight").should("have.css", "width", "2px");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip")
+		cy.get("#row1").shadow().find("#status-cell").should("have.css", "width", "32px");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status").should("have.css", "width", "2px");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip")
 			.should($tooltip => {
 				expect($tooltip).to.have.attr("title", "Out of stock");
 				expect(getComputedStyle($tooltip[0]).cursor).to.not.equal("help");
@@ -1036,14 +1071,14 @@ describe("Table Row - Highlight", () => {
 			});
 
 		cy.get("#table1").invoke("attr", "dir", "rtl");
-		cy.get("#row1").find("[ui5-table-row-highlight]").shadow().find("#highlight-tooltip").should($tooltip => {
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip").should($tooltip => {
 			const cell = $tooltip[0].getBoundingClientRect();
 			const icon = $tooltip[0].querySelector("[ui5-icon]")!.getBoundingClientRect();
 			expect(icon.x + icon.width / 2).to.equal(cell.x + cell.width / 2);
 		});
 		// the extended column uses the wider track
 		cy.get("#table1").shadow().find("#table").should($table => {
-			expect($table[0].style.gridTemplateColumns).to.include("table_highlight_cell_extended_width)");
+			expect($table[0].style.gridTemplateColumns).to.include("table_status_cell_extended_width)");
 		});
 	});
 });

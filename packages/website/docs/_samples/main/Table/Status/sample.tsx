@@ -3,18 +3,18 @@ import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
-import TableHeaderRowHighlightClass from "@ui5/webcomponents/dist/TableHeaderRowHighlight.js";
+import TableHeaderRowStatusClass from "@ui5/webcomponents/dist/TableHeaderRowStatus.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
-import TableRowHighlightClass from "@ui5/webcomponents/dist/TableRowHighlight.js";
+import TableRowStatusClass from "@ui5/webcomponents/dist/TableRowStatus.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
 const Table = createReactComponent(TableClass);
 const TableCell = createReactComponent(TableCellClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
-const TableHeaderRowHighlight = createReactComponent(TableHeaderRowHighlightClass);
+const TableHeaderRowStatus = createReactComponent(TableHeaderRowStatusClass);
 const TableRow = createReactComponent(TableRowClass);
-const TableRowHighlight = createReactComponent(TableRowHighlightClass);
+const TableRowStatus = createReactComponent(TableRowStatusClass);
 const Text = createReactComponent(TextClass);
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
     <Table id="table">
       {/* playground-fold */}
       <TableHeaderRow slot="headerRow">
-        <TableHeaderRowHighlight slot="highlight" />
+        <TableHeaderRowStatus slot="status" />
         <TableHeaderCell id="productCol">
           <span>Product</span>
         </TableHeaderCell>
@@ -38,7 +38,7 @@ function App() {
       </TableHeaderRow>
       {/* playground-fold-end */}
       <TableRow>
-        <TableRowHighlight slot="highlight" type="Positive" text="In stock" />
+        <TableRowStatus slot="status" value="Positive" text="In stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 15</b>
@@ -59,7 +59,7 @@ function App() {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableRowHighlight slot="highlight" type="Critical" text="Low stock" />
+        <TableRowStatus slot="status" value="Critical" text="Low stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 17</b>
@@ -80,7 +80,7 @@ function App() {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableRowHighlight slot="highlight" type="None" />
+        <TableRowStatus slot="status" />
         <TableCell>
           <Text>
             <b>Notebook Professional 17</b>
@@ -101,7 +101,7 @@ function App() {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableRowHighlight slot="highlight" type="Negative" text="Out of stock" />
+        <TableRowStatus slot="status" value="Negative" text="Out of stock" />
         <TableCell>
           <Text>
             <b>Notebook Basic 18</b>
@@ -122,7 +122,7 @@ function App() {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableRowHighlight slot="highlight" type="Information" text="Newly added" />
+        <TableRowStatus slot="status" value="Information" text="Newly added" />
         <TableCell>
           <Text>
             <b>Notebook Professional 15</b>

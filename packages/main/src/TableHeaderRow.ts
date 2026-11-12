@@ -3,7 +3,7 @@ import TableRowBase from "./TableRowBase.js";
 import TableHeaderRowTemplate from "./TableHeaderRowTemplate.js";
 import TableHeaderRowStyles from "./generated/themes/TableHeaderRow.css.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
-import type TableHeaderRowHighlight from "./TableHeaderRowHighlight.js";
+import type TableHeaderRowStatus from "./TableHeaderRowStatus.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	TABLE_SELECTION,
@@ -43,7 +43,7 @@ import {
  *
  * @public
  */
-class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowHighlight> {
+class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowStatus> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -63,10 +63,10 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowHighlig
 	cells!: DefaultSlot<TableHeaderCell>;
 
 	/**
-	 * Defines the highlight configuration of the table.
-	 * Its presence reserves the highlight column and enables the `ui5-table-row-highlight` of the rows to be rendered.
+	 * Defines the status configuration of the table.
+	 * Its presence reserves the status column and enables the `ui5-table-row-status` of the rows to be rendered.
 	 *
-	 * **Note:** Use `ui5-table-header-row-highlight` for the intended design.
+	 * **Note:** Use `ui5-table-header-row-status` for the intended design.
 	 *
 	 * @since 2.30.0
 	 * @public
@@ -78,7 +78,7 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowHighlig
 			slots: false,
 		},
 	})
-	highlight!: Slot<TableHeaderRowHighlight>;
+	status!: Slot<TableHeaderRowStatus>;
 
 	/**
 	 * Sticks the `ui5-table-header-row` to the top of a table.

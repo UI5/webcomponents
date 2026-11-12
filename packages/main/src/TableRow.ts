@@ -11,7 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type TableRowHighlight from "./TableRowHighlight.js";
+import type TableRowStatus from "./TableRowStatus.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -37,7 +37,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase<TableCell, TableRowHighlight> {
+class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -120,15 +120,15 @@ class TableRow extends TableRowBase<TableCell, TableRowHighlight> {
 	movable = false;
 
 	/**
-	 * Defines the highlight indicator of the row.
+	 * Defines the status indicator of the row.
 	 *
-	 * **Note:** The highlight is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-highlight`.
+	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
 	 *
 	 * @since 2.30.0
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	highlight!: Slot<TableRowHighlight>;
+	status!: Slot<TableRowStatus>;
 
 	@query("#popin-cell")
 	_popinCell?: TableCell;

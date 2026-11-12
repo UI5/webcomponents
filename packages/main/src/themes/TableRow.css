@@ -25,7 +25,7 @@
 
 	#actions-cell,
 	#navigated-cell,
-	#highlight-cell,
+	#status-cell,
 	#selection-cell {
 		clip-path: inset(0px 0px 1px 0px); /* selection bottom border should not overlap with sticky cells */
 	}
@@ -79,7 +79,7 @@
 }
 
 :host([_has-popin]) {
-	#highlight-cell,
+	#status-cell,
 	#navigated-cell {
 		grid-row: span 2;
 	}
@@ -94,14 +94,14 @@
 
 :host([tabindex]:focus) {
 	#navigated,
-	::slotted([ui5-table-row-highlight]) {
+	::slotted([ui5-table-row-status]) {
 		bottom: 3px;
 		top: 2px;
 	}
 	#navigated {
 		inset-inline-start: -3px;
 	}
-	::slotted([ui5-table-row-highlight]) {
+	::slotted([ui5-table-row-status]) {
 		inset-inline-start: 4px;
 	}
 }
@@ -110,12 +110,12 @@
 	grid-column-end: -2;
 }
 
-#highlight-cell ~ #popin-cell,
+#status-cell ~ #popin-cell,
 #selection-cell ~ #popin-cell {
 	grid-column-start: 2;
 }
 
-#highlight-cell ~ #selection-cell ~ #popin-cell {
+#status-cell ~ #selection-cell ~ #popin-cell {
 	grid-column-start: 3;
 }
 

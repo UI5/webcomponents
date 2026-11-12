@@ -6,8 +6,8 @@ import TableCell from "../../src/TableCell.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
 import TableRowAction from "../../src/TableRowAction.js";
 import TableRowActionNavigation from "../../src/TableRowActionNavigation.js";
-import TableRowHighlight from "../../src/TableRowHighlight.js";
-import TableHeaderRowHighlight from "../../src/TableHeaderRowHighlight.js";
+import TableRowStatus from "../../src/TableRowStatus.js";
+import TableHeaderRowStatus from "../../src/TableHeaderRowStatus.js";
 import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
 import Button from "../../src/Button.js";
@@ -224,7 +224,7 @@ describe("Row Custom Announcement - Less details", () => {
 			<Table id="table0" overflowMode="Popin" rowActionCount={2} >
 				<TableSelectionMulti id="selection" slot="features" selected="Row1"></TableSelectionMulti>
 				<TableHeaderRow slot="headerRow">
-					<TableHeaderRowHighlight slot="highlight" />
+					<TableHeaderRowStatus slot="status" />
 					<TableHeaderCell minWidth="300px" sort-indicator="Ascending">
 						<Label id="Header1Label" required>H1</Label>
 						<div style={{ display: "none" }}>H1DisplayNone</div>
@@ -241,7 +241,7 @@ describe("Row Custom Announcement - Less details", () => {
 					</TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow rowKey="Row1" navigated interactive>
-					<TableRowHighlight slot="highlight" id="row1-highlight" type="None" />
+					<TableRowStatus slot="status" id="row1-status" />
 					<TableCell>R1C1</TableCell>
 					<TableCell>
 						<input value="R1C2" />
@@ -315,14 +315,14 @@ describe("Row Custom Announcement - Less details", () => {
 		cy.focused().should("have.attr", "aria-rowindex", "2")
 					.should("have.attr", "role", "row");
 
-		cy.get("#row1-highlight").invoke("prop", "type", "Negative");
+		cy.get("#row1-status").invoke("prop", "value", "Negative");
 		checkAnnouncement(NEGATIVE, true);
 
-		cy.get("#row1-highlight").invoke("prop", "text", "Custom highlight");
-		checkAnnouncement("Custom highlight", true);
+		cy.get("#row1-status").invoke("prop", "text", "Custom status");
+		checkAnnouncement("Custom status", true);
 
-		cy.get("#row1-highlight").invoke("prop", "type", "None");
-		checkAnnouncement("Custom highlight", true, "not.contain");
+		cy.get<TableRowStatus>("#row1-status").then($status => { $status[0].value = undefined; });
+		checkAnnouncement("Custom status", true, "not.contain");
 
 		cy.get("#selection").invoke("attr", "selected", "");
 		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE}`, true);
