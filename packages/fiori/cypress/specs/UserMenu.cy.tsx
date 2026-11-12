@@ -1804,3 +1804,138 @@ describe("UserMenuItem", () => {
 		});
 	});
 });
+
+function UserMenuKeyboardSample() {
+	return (
+		<>
+			<Button id="openUserMenuBtn">Open User Menu</Button>
+			<UserMenu open={true} opener="openUserMenuBtn">
+				<UserMenuItem text="Help" data-id="help">
+					<UserMenuItem text="Documentation" data-id="documentation">
+						<UserMenuItem text="Doc 1" data-id="doc-1"></UserMenuItem>
+						<UserMenuItem text="Doc 2" data-id="doc-2"></UserMenuItem>
+					</UserMenuItem>
+					<UserMenuItem text="FAQ" data-id="faq"></UserMenuItem>
+				</UserMenuItem>
+			</UserMenu>
+		</>
+	);
+}
+
+describe("Keyboard navigation", () => {
+	beforeEach(() => {
+		cy.mount(<UserMenuKeyboardSample />);
+
+		cy.get("[ui5-user-menu]")
+			.find("[ui5-user-menu-item][text='Help']")
+			.as("parentItem");
+	});
+
+	it("opens a top-level item's submenu with ArrowRight and moves focus into it", () => {
+		cy.get("@parentItem")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@parentItem")
+			.find("[ui5-user-menu-item][text='Documentation']")
+			.should("be.focused");
+	});
+
+	it("opens a nested submenu with ArrowRight", () => {
+		cy.get("@parentItem")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("[ui5-user-menu-item][text='Documentation']")
+			.as("nestedItem")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("@nestedItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("[ui5-user-menu-item][text='Doc 1']")
+			.should("be.focused");
+	});
+
+	it("closes a submenu with ArrowLeft and returns focus to the parent", () => {
+		cy.get("@parentItem")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("submenuPopover")
+			.should("have.attr", "open");
+
+		cy.get("[ui5-user-menu-item][text='Documentation']")
+			.should("be.focused")
+			.realPress("ArrowLeft");
+
+		cy.get("@submenuPopover")
+			.should("not.have.attr", "open");
+
+		cy.get("@parentItem")
+			.should("be.focused");
+	});
+
+	it("does not open the submenu of a disabled item with ArrowRight", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuItem text="Enabled" data-id="enabled"></UserMenuItem>
+					<UserMenuItem text="Help" data-id="help" disabled>
+						<UserMenuItem text="Documentation" data-id="documentation"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]")
+			.find("[ui5-user-menu-item][text='Enabled']")
+			.should("be.focused")
+			.realPress("ArrowRight");
+
+		cy.get("[ui5-user-menu]")
+			.find("[ui5-user-menu-item][text='Help']")
+			.shadow()
+			.find("[ui5-responsive-popover][open]")
+			.should("not.exist");
+	});
+
+	it("opens a submenu with ArrowLeft in RTL", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" dir="rtl">
+					<UserMenuItem text="Help" data-id="help">
+						<UserMenuItem text="Documentation" data-id="documentation"></UserMenuItem>
+						<UserMenuItem text="FAQ" data-id="faq"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]")
+			.find("[ui5-user-menu-item][text='Help']")
+			.as("rtlParentItem")
+			.should("be.focused")
+			.realPress("ArrowLeft");
+
+		cy.get("@rtlParentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+	});
+});
+
+
