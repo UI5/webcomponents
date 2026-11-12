@@ -60,18 +60,44 @@ const getOpenedPopups = () => {
 	return [...OpenedPopupsRegistry.openedRegistry];
 };
 
+// True while the registry has just closed a non-native popup on Escape. A
+// native <dialog> beneath it still gets its own "cancel" as the key's default
+// action, so Dialog._onCancel checks this flag to avoid closing too.
+let escapeHandledByRegistry = false;
+
+const wasEscapeHandledByRegistry = () => escapeHandledByRegistry;
+
+const resetEscapeHandledByRegistry = () => {
+	escapeHandledByRegistry = false;
+};
+
 const _keydownListener = (event: KeyboardEvent) => {
 	if (!OpenedPopupsRegistry.openedRegistry.length) {
 		return;
 	}
 
 	if (isEscape(event) && !isEventMarked(event)) {
+		// Start each Escape clean; only set below when we actually consume it.
+		escapeHandledByRegistry = false;
+
 		const topmostPopup = OpenedPopupsRegistry.openedRegistry[OpenedPopupsRegistry.openedRegistry.length - 1].instance;
 
 		if (openUI5Support && topmostPopup !== openUI5Support.getTopmostPopup()) {
+			// An OpenUI5 popup sits above the WebC stack and owns this Escape;
+			// a native dialog beneath it must not close.
+			escapeHandledByRegistry = true;
 			return;
 		}
 
+		// Native <dialog> popups handle Escape via their own "cancel" event.
+		if (topmostPopup._useNativeDialog) {
+			return;
+		}
+
+		// A non-native popup is topmost: close it here. If a native <dialog> is
+		// open beneath it, record that this Escape is spoken for so the dialog's
+		// "cancel" handler does not close the dialog too.
+		escapeHandledByRegistry = true;
 		event.stopImmediatePropagation();
 		topmostPopup.closePopup(true);
 	}
@@ -101,4 +127,10 @@ const _updateTopModalPopup = () => {
 	}
 };
 
-export { addOpenedPopup, removeOpenedPopup, getOpenedPopups };
+export {
+	addOpenedPopup,
+	removeOpenedPopup,
+	getOpenedPopups,
+	wasEscapeHandledByRegistry,
+	resetEscapeHandledByRegistry,
+};

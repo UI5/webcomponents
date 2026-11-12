@@ -22,7 +22,9 @@ describe("View settings dialog - confirm event", () => {
 		cy.get("@vsd")
 			.shadow()
 			.find("[ui5-dialog]")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 
 		// There should be 4 list items in the dialog - Ascending, Descending, Name, Position
 		cy.get("@vsd")
@@ -64,7 +66,9 @@ describe("View settings dialog - confirm event", () => {
 		cy.get("@vsd")
 			.shadow()
 			.find("[ui5-dialog]")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 
 		// Click the RADIO BUTTON of the 3th item (Name) instead of the text this time
 		cy.get("@vsd")
@@ -110,7 +114,9 @@ describe("View settings dialog - confirm event", () => {
 			.invoke("prop", "open", true)
 			.shadow()
 			.find("[ui5-dialog]")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 
 		// There should be 2 list items in the dialog - Filter 1 and Filter 2
 		cy.get("@vsd")

@@ -19,7 +19,9 @@ describe("ResponsivePopover mobile general interaction", () => {
 		cy.get("[ui5-responsive-popover]")
 			.shadow()
 			.find("[ui5-dialog]")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 	});
 
 	it("tests showing of the dialog on phone", () => {
@@ -28,7 +30,9 @@ describe("ResponsivePopover mobile general interaction", () => {
 		cy.get("[ui5-responsive-popover]")
 			.shadow()
 			.find("[ui5-dialog]")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 
 		cy.get("[ui5-responsive-popover]")
 			.should("not.be.visible");
