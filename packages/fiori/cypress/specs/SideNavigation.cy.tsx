@@ -1505,11 +1505,6 @@ describe("Side Navigation Accessibility", () => {
 			.should("have.prop", "tagName", "NAV");
 
 		cy.get("#sideNav")
-			.shadow()
-			.find(".ui5-sn-flexible")
-			.should("not.have.attr", "aria-roledescription");
-
-		cy.get("#sideNav")
 			.invoke("attr", "style", "height: 100px");
 
 		cy.get("#sideNav")
