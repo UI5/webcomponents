@@ -1,6 +1,68 @@
 # AGENTS.md - AI Coding Assistant Guide
 
-This file provides guidance for AI coding assistants (Claude, Copilot, Cursor, etc.) when working with this repository.
+This file provides guidance for AI coding assistants (Claude, Copilot, Cursor, Gemini, Codex, etc.) when working with this repository.
+
+## Knowledge Base — read this first
+
+Detailed conventions, guardrails, and good/bad examples live in the **AI Knowledge Base** at
+`ai-knowledge-base/`. It is the authority on how to write code here — for bug fixes, features,
+refactoring, reviews, and tests alike. Load it **on demand**, not up front: it has a routing table
+that points you to the reference files your task needs.
+
+**Read [`ai-knowledge-base/INDEX.md`](./ai-knowledge-base/INDEX.md) before you edit code whenever any of these is true:**
+
+- You add, change, review, or test a `.ts`, `.tsx`, or `.css` file under `packages/`.
+- You write or debug a Cypress spec.
+- The task names a `ui5-*` component, a property, slot, event, design token, or ARIA attribute.
+
+Then open **only** the reference files its routing table names for the areas your task touches — do not
+read every file. If your work is purely conversational, a docs-only edit, or a question that touches no
+component code, you do not need it.
+
+**Non-negotiables** — these apply to every code task, whether or not you open the knowledge base:
+
+1. Never run the full test suite. Run one spec: `yarn test:cypress:single cypress/specs/<Component>.cy.tsx`.
+2. Enum properties are declared as `` `${X}` `` with a string-literal default. Import the enum with `import type` unless the code reads its members (`X.Value`).
+3. Select by attribute, never by tag name: `[ui5-button]` in CSS, in `querySelector`, and in specs.
+4. No `instanceof` against a UI5 class. Use `createInstanceChecker` with a duck-typing marker.
+5. `@query` refs exist to call methods like `.focus()`. Set child state through the template instead.
+6. Public booleans default to `false`. Invert the name when the feature is on by default.
+7. Events use `event-strict.js`, a typed `eventDetails` entry, and `fireDecoratorEvent` — never `fireEvent`.
+8. Make the smallest change that solves the problem. No opportunistic cleanup, no drive-by refactors.
+
+**By file type** — the rules that matter most, and the reference in `ai-knowledge-base/references/` to read
+when the task goes beyond them:
+
+- **Component code** (`packages/*/src/**/*.ts`, `.tsx`) — `core-rules.md`, plus `api-design.md` when the
+  change touches a property, slot, event, or public method.
+  - Private `@property` fields get `noAttribute: true` unless a CSS selector reads the attribute. State that
+    nothing renders is a plain field, not a `@property`.
+  - Strict decorators only: `decorators/slot-strict.js` and `decorators/event-strict.js`.
+  - Register external listeners (`ResizeHandler`, `document`, `window`) in `onEnterDOM` and deregister them
+    in `onExitDOM` with the same bound reference.
+  - Bubbled handlers that resolve a child component use `e.composedPath()[0]`, not `e.target`.
+  - Children never reach for their parent (`this.parentElement`, `this.closest(`): the child fires, the parent listens.
+  - Relative imports end in `.js`, every icon is imported explicitly, and keyboard checks use the `Keys.js`
+    predicates (`isEnter(e)`).
+- **CSS** (`packages/*/src/**/*.css`) — `theming-and-css.md`.
+  - Never hard-code a color or a font. Use `--sap*` tokens; add a `--_ui5_<component>_*` parameter in a
+    `-parameters.css` file only when a value differs per theme.
+  - Logical properties only: `margin-inline-start`, `inset-inline-start`, `text-align: start` — never
+    `margin-left`, `left:`, or `text-align: left`.
+  - Style persistent state from reflected attributes (`:host([open])`), not classes.
+  - Anything marked `part="..."` is public API: document it with `@csspart`; renaming it is a breaking change.
+  - `rem` for sizing; `px` only for hairline borders and small offsets. An `@ui5-compact-size` block
+    works only inside a `-parameters.css` file; in component CSS it never applies.
+- **Translatable text** (`packages/*/src/i18n/messagebundle.properties`) — `i18n.md`.
+  - Every user-visible or screen-reader-audible string is a key — ARIA labels, announcements, and tooltips included.
+  - Every new key carries an annotation comment: `#XACT:` for ARIA text, `#XFLD:` for a label, `#XTOL:` for a tooltip.
+  - Names are `SCREAMING_SNAKE_CASE` prefixed with the component name. Reuse the shared unprefixed keys
+    (`DELETE`, `ACC_STATE_REQUIRED`), and never point at another component's key.
+  - Placeholders are positional (`{0}`, `{1}`); plurals are separate keys. Add keys only to `messagebundle.properties`.
+- **Cypress specs** (`packages/*/cypress/**`) — `commands-and-debugging.md`, plus `performance.md` when a
+  spec passes locally and fails in CI.
+  - Assert translated text against the bundle (`getText(...)` or `.defaultText`), never an English literal.
+  - To wait for a render, use `cy.waitRenderFinished()`; `cy.mount` and the real-event commands already wait.
 
 ## Project Overview
 
@@ -23,67 +85,25 @@ packages/
 └── website/    # Documentation website
 ```
 
+Website samples have their own guide: [`packages/website/AGENTS.md`](./packages/website/AGENTS.md).
+
 ## Essential Commands
 
-### Root Level (Always run from repo root)
+From the repo root:
+
 ```bash
-yarn start       # Start dev server with watch mode (recommended for development)
-yarn build       # Full production build
-yarn lint        # Lint all packages
+yarn start      # dev server; also runs `yarn generate` in watch mode
+yarn generate   # compiles .css and .properties into src/generated — needed once on a clean checkout
+yarn ts         # TypeScript type-check
+yarn lint       # lint all packages
+yarn build      # full production build
 ```
 
-### Package Level (Run from specific package folder)
-```bash
-cd packages/main
-yarn test:cypress:single cypress/specs/Button.cy.tsx  # Single test file
-```
+Tests run from a package folder (`packages/main`, `packages/fiori`, …), one spec at a time. They read `.ts` files directly, so `yarn ts` is not needed first. Isolate a failing case with `it.only(...)`, then
+remove `.only` and rerun the whole spec before committing.
 
-### Documentation Website
-```bash
-cd packages/website
-yarn start  # Starts Docusaurus on http://localhost:3000
-```
-
-### Build & Test Flow
-
-**Build steps** (always run from root folder):
-1. `yarn generate` - Generates `.ts` files (in `src/generated`) from `.css` and `.properties` files. Run once on clean state, or when these files change. The dev server runs this in watch mode automatically.
-2. `yarn ts` - TypeScript compilation, populates `dist/` with `.js` and `.d.ts` files. Use to check for TypeScript errors.
-
-**Test steps** (run from package folder):
-```bash
-cd packages/main  # or fiori, etc.
-yarn test:cypress:single cypress/specs/<Component>.cy.tsx
-```
-
-Tests consume `.ts` files directly and detect TypeScript errors - no need to run `yarn ts` first.
-
-**Running a single test case:**
-When fixing a failing test, use `.only` to run just that case:
-```tsx
-it.only("should set correct tooltip", () => {  // Add .only
-```
-Remove `.only` before committing and run the full test file for final verification.
-
-**Dev server:** When running, the dev server executes `yarn generate` in watch mode. This won't interfere with running other commands.
-
-**Important:** Never run all tests locally. Only run tests for the component being modified.
-
-## Component Development
-
-For detailed component architecture, development rules, and testing patterns, see [`packages/base/AGENTS.md`](./packages/base/AGENTS.md).
-
-### Quick Reference
-
-| Rule | Bad | Good |
-|------|-----|------|
-| Enum imports | `import Enum from "..."` | `import type Enum from "..."` |
-| Enum types | `prop: Enum` | `prop: \`${Enum}\`` |
-| Enum values | `Enum.Value` | `"Value"` |
-| DOM queries | `querySelector("ui5-tag")` | `querySelector("[ui5-tag]")` |
-| CSS selectors | `ui5-tag { }` | `[ui5-tag] { }` |
-| Type checks | `instanceof Component` | `isInstanceOfComponent(el)` |
-| DOM mutation | `this._ref.value = x` | Template: `<Comp value={x} />` |
+Docs website: `cd packages/website && yarn start` (Docusaurus on http://localhost:3000). More commands and
+debugging steps: [`ai-knowledge-base/references/commands-and-debugging.md`](./ai-knowledge-base/references/commands-and-debugging.md).
 
 ## Commit Message Format
 
@@ -108,77 +128,6 @@ navigating with the tab key.
 
 Fixes #42
 ```
-
-## Website Samples
-
-Component samples for the documentation website follow this structure:
-
-```
-packages/website/docs/_samples/
-├── main/           # For @ui5/webcomponents
-│   └── Button/
-│       └── Basic/
-│           ├── sample.html   # HTML with component usage
-│           ├── main.js       # JS imports
-│           ├── main.css      # Optional CSS
-│           └── Basic.md      # Markdown wrapper
-└── fiori/          # For @ui5/webcomponents-fiori
-    └── ShellBar/
-        └── Basic/
-            └── ...
-```
-
-### Sample Files
-
-**`sample.html`** - Component usage wrapped in HTML boilerplate:
-```html
-<!-- playground-fold -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample</title>
-</head>
-<body style="background-color: var(--sapBackgroundColor)">
-<!-- playground-fold-end -->
-
-    <ui5-button>Press</ui5-button>
-    <ui5-button icon="sap-icon://edit">Edit</ui5-button>
-
-<!-- playground-fold -->
-    <script type="module" src="main.js"></script>
-</body>
-</html>
-<!-- playground-fold-end -->
-```
-
-**`main.js`** - Required imports for the sample:
-```javascript
-import "@ui5/webcomponents/dist/Button.js";
-import "@ui5/webcomponents-icons/dist/edit.js";
-```
-
-**`<SampleName>.md`** - Wrapper that loads the sample into the Editor:
-```markdown
-import html from '!!raw-loader!./sample.html';
-import js from '!!raw-loader!./main.js';
-
-<Editor html={html} js={js} />
-```
-
-If the sample has CSS, include it:
-```markdown
-import html from '!!raw-loader!./sample.html';
-import js from '!!raw-loader!./main.js';
-import css from '!!raw-loader!./main.css';
-
-<Editor html={html} js={js} css={css} />
-```
-
-### Playground Fold Comments
-
-Use `<!-- playground-fold -->` and `<!-- playground-fold-end -->` to hide boilerplate code in the interactive playground. Only the component usage (between fold comments) is shown to users.
 
 ## GitHub Actions & Release
 
