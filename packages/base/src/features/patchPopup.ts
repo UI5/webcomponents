@@ -40,6 +40,7 @@ type OpenUI5Popup = {
 };
 
 type OpenUI5PopupClass = {
+	useNativePopover: boolean | undefined,
 	prototype: OpenUI5Popup
 };
 
@@ -64,6 +65,8 @@ const AllOpenedPopupsRegistry = getSharedResource<{ openedRegistry: Array<PopupI
 const addOpenedPopup = (popupInfo: PopupInfo) => {
 	AllOpenedPopupsRegistry.openedRegistry.push(popupInfo);
 };
+
+let openUI5UsesNativePopover = false;
 
 const removeOpenedPopup = (popup: object) => {
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
@@ -112,7 +115,7 @@ const getPopupContentElement = (popup: OpenUI5Popup): HTMLElement | null => {
 
 const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 	const openingInitiated = ["OPENING", "OPEN"].includes(popup.getOpenState());
-	if (!openingInitiated || !isNativePopoverOpen()) {
+	if (!openingInitiated || !isNativePopoverOpen() || openUI5UsesNativePopover) {
 		return;
 	}
 
@@ -136,6 +139,10 @@ const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 };
 
 const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
+	if (openUI5UsesNativePopover) {
+		return;
+	}
+
 	const domRef = getPopupContentElement(popup);
 
 	if (!domRef) {
@@ -165,7 +172,7 @@ const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 };
 
 const fixTopmostOpenUI5Popup = () => {
-	if (!isNativePopoverOpen()) {
+	if (!isNativePopoverOpen() || openUI5UsesNativePopover) {
 		return;
 	}
 
@@ -261,10 +268,15 @@ const createGlobalStyles = () => {
 };
 
 const patchPopup = (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass) => {
-	insertOpenUI5PopupStyles();
+	openUI5UsesNativePopover = !!Popup.useNativePopover;
+
+	if (!openUI5UsesNativePopover) {
+		insertOpenUI5PopupStyles();
+		createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
+	}
+
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
-	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
 	patchDialog(Dialog); // Dialog.prototype.onsapescape
 };
