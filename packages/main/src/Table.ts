@@ -289,7 +289,7 @@ class Table extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 		invalidateOnChildChange: {
-			properties: ["navigated", "position", "highlight"],
+			properties: ["navigated", "position", "status"],
 			slots: false,
 		},
 	})
@@ -424,7 +424,7 @@ class Table extends UI5Element {
 	_renderNavigated = false;
 
 	@property({ type: Boolean, noAttribute: true })
-	_renderHighlight = false;
+	_renderStatus = false;
 
 	@query("[ui5-drop-indicator]")
 	dropIndicatorDOM!: DropIndicator;
@@ -483,25 +483,25 @@ class Table extends UI5Element {
 		let alternateIndex = 0;
 		const hasFlexibleColumns = this._hasFlexibleColumns;
 		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
-		const headerHighlight = this.headerRow[0]?._highlight;
-		this._renderHighlight = !!headerHighlight;
+		const headerStatus = this.headerRow[0]?._status;
+		this._renderStatus = !!headerStatus;
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
 				row._rowActionCount = rowActionCount;
 				row._renderDummyCell = !hasFlexibleColumns;
 				row._renderNavigated = this._renderNavigated;
-				row._renderHighlight = this._renderHighlight;
+				row._renderStatus = this._renderStatus;
 				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
-				if (headerHighlight && !row.isHeaderRow()) {
-					const rowHighlight = (row as TableRow)._highlight;
-					rowHighlight && (rowHighlight._design = headerHighlight.design);
+				if (headerStatus && !row.isHeaderRow()) {
+					const rowStatus = (row as TableRow)._status;
+					rowStatus && (rowStatus._design = headerStatus.design);
 				}
 			} else {
 				row._rowActionCount = 0;
 				row._renderDummyCell = !hasFlexibleColumns && !this._hasPopin;
 				row._renderNavigated = false;
-				row._renderHighlight = false;
+				row._renderStatus = false;
 				row._alternate = false;
 				alternateIndex = 1;
 			}
@@ -671,7 +671,7 @@ class Table extends UI5Element {
 
 	get styles() {
 		const virtualizer = this._getVirtualizer();
-		const headerHighlight = this.headerRow[0]?._highlight;
+		const headerStatus = this.headerRow[0]?._status;
 		const headerStyleMap: Record<string, string> = {};
 		this.headerRow[0]?.cells.forEach(headerCell => {
 			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
@@ -680,7 +680,7 @@ class Table extends UI5Element {
 			table: {
 				"grid-template-columns": this._gridTemplateColumns,
 				"--_ui5_table_row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
-				"--_ui5_table_highlight_width": headerHighlight ? headerHighlight._width : "0",
+				"--_ui5_table_status_width": headerStatus ? headerStatus._width : "0",
 				...headerStyleMap,
 			},
 			spacer: {
@@ -698,10 +698,10 @@ class Table extends UI5Element {
 		const widths = [];
 		const visibleHeaderCells = this.headerRow[0]._visibleCells;
 
-		// Highlight Cell Width
-		const headerHighlight = this.headerRow[0]._highlight;
-		if (headerHighlight) {
-			widths.push(headerHighlight._width);
+		// Status Cell Width
+		const headerStatus = this.headerRow[0]._status;
+		if (headerStatus) {
+			widths.push(headerStatus._width);
 		}
 
 		// Selection Cell Width

@@ -1341,9 +1341,9 @@
 				"description": "Make a column header clickable by setting the `interactive` property of the `ui5-table-header-cell`. Clicking the header fires the `header-click` event, which can be used, for example, to open a column menu with sorting options. Set the `sortIndicator` property to display the sort direction icon in the header, and set the `aria-haspopup` attribute to announce the type of popup (`menu` or `dialog`) to assistive technologies."
 			},
 			{
-				"name": "Highlight",
-				"title": "Row Highlight",
-				"description": "Use the `highlight` property on the `ui5-table-row` to display a colored indicator at the start of the row, which signals its status at a glance."
+				"name": "Status",
+				"title": "Row Status",
+				"description": "Place a `ui5-table-header-row-status` in the `status` slot of the `ui5-table-header-row` to reserve the status column. Then place a `ui5-table-row-status` in each data row's `status` slot to display a colored indicator at the start of the row. The `value` property uses the `RowStatus` enum: `Positive`, `Critical`, `Negative`, or `Information`. Its default is `undefined`, which renders no indicator or announcement. Set `text` to provide a more specific screen-reader announcement."
 			},
 			{
 				"name": "DragAndDrop",

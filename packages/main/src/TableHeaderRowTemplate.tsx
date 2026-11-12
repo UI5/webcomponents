@@ -4,8 +4,8 @@ import type TableHeaderRow from "./TableHeaderRow.js";
 export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColIndex: number = 1) {
 	return (
 		<>
-			{ this._renderHighlight &&
-				<TableHeaderCell id="highlight-cell"
+			{ this._renderStatus &&
+				<TableHeaderCell id="status-cell"
 					data-excluded-from-navigation
 					aria-hidden={true}
 					role="none"

@@ -5,13 +5,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 	const OverflowButton = this._overflowButtonComponent;
 	return (
 		<>
-			{ this._renderHighlight &&
-				<TableCell id="highlight-cell"
+			{ this._renderStatus &&
+				<TableCell id="status-cell"
 					data-excluded-from-navigation
 					aria-hidden={true}
 					role="none"
 				>
-					{ this._highlight && <slot name="highlight"></slot> }
+					{ this._status && <slot name="status"></slot> }
 				</TableCell>
 			}
 

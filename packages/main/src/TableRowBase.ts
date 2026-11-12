@@ -21,10 +21,10 @@ import type Table from "./Table.js";
 	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
 })
-abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighlight extends HTMLElement = HTMLElement> extends UI5Element {
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, TStatus extends HTMLElement = HTMLElement> extends UI5Element {
 	cells!: Array<TCell>;
 
-	highlight!: Array<THighlight>;
+	status!: Array<TStatus>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
@@ -36,7 +36,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighli
 	_renderNavigated = false;
 
 	@property({ type: Boolean, noAttribute: true })
-	_renderHighlight = false;
+	_renderStatus = false;
 
 	@property({ type: Boolean, noAttribute: true })
 	_alternate = false;
@@ -53,8 +53,8 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighli
 	@query("#navigated-cell")
 	_navigatedCell?: HTMLElement;
 
-	@query("#highlight-cell")
-	_highlightCell?: HTMLElement;
+	@query("#status-cell")
+	_statusCell?: HTMLElement;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -124,8 +124,8 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighli
 		return this._table?._id;
 	}
 
-	get _highlight() {
-		return this.highlight[0];
+	get _status() {
+		return this.status[0];
 	}
 
 	get _tableSelection() {
@@ -165,7 +165,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase, THighli
 	}
 
 	get _stickyCells() {
-		return [this._highlightCell, this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
+		return [this._statusCell, this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
 	}
 }
 

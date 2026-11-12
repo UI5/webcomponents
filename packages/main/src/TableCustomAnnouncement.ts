@@ -98,9 +98,9 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(groupDescription);
 		}
 
-		if (row._renderHighlight) {
-			const highlightText = row._highlight?._accessibleText;
-			highlightText && descriptions.push(highlightText);
+		if (row._renderStatus) {
+			const statusText = row._status?._accessibleText;
+			statusText && descriptions.push(statusText);
 		}
 
 		if (row._isSelected) {
