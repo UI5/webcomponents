@@ -132,6 +132,8 @@ import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import TabSeparatorClass from "@ui5/webcomponents/dist/TabSeparator.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
+import TableHeaderRowStatusClass from "@ui5/webcomponents/dist/TableHeaderRowStatus.js";
+import TableRowStatusClass from "@ui5/webcomponents/dist/TableRowStatus.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -309,7 +311,7 @@ const ComponentClasses: Record<string, any> = {
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
   StepInputClass, NumericInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
-  TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
+  TableRowClass, TableRowStatusClass, TableHeaderRowStatusClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,
   ToolbarSelectOptionClass, SegmentedButtonClass, SegmentedButtonItemClass, ComboBoxClass,
   ComboBoxItemClass, ComboBoxItemGroupClass, MultiComboBoxClass, MultiComboBoxItemClass,
