@@ -452,7 +452,10 @@ class Input extends InputField implements SuggestionComponent {
 
 	_onkeydown(e: KeyboardEvent) {
 		this._isKeyNavigation = true;
-		this._shouldAutocomplete = !this.noTypeahead && !(isBackSpace(e) || isDelete(e) || isEscape(e));
+		// isBackSpace/isDelete are false when a modifier is held (e.g. Ctrl/Cmd+Backspace),
+		// but those still delete content, so match the key directly to suppress typeahead.
+		const isDeletion = isBackSpace(e) || isDelete(e) || e.key === "Backspace" || e.key === "Delete";
+		this._shouldAutocomplete = !this.noTypeahead && !(isDeletion || isEscape(e));
 
 		if (isEnter(e)) {
 			const isValueUnchanged = this.previousValue === this.getInputDOMRefSync()!.value;
@@ -609,10 +612,9 @@ class Input extends InputField implements SuggestionComponent {
 			this.open = false;
 		}
 
-		// On mobile, keydown fires on the phone input inside ResponsivePopover, not on this component,
-		// so _shouldAutocomplete is never set. Enable it here unless explicitly disabled.
-		if (this._isPhone && this._shouldAutocomplete === undefined) {
-			this._shouldAutocomplete = !this.noTypeahead;
+		if (this._isPhone) {
+			const isDeletion = eventType.startsWith("delete") || eventType === "historyUndo";
+			this._shouldAutocomplete = !this.noTypeahead && !isDeletion;
 		}
 	}
 

@@ -584,6 +584,32 @@ describe("InputTableSuggest - Typeahead", () => {
 			.should("have.prop", "selected", false);
 	});
 
+	it("does not re-autocomplete when deleting with a modifier (Ctrl/Cmd+Backspace)", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("jo");
+		cy.get("@input").should("have.value", "john");
+
+		cy.realPress(["Control", "Backspace"]);
+		cy.get("@input").should("have.value", "jo");
+	});
+
 	it("keeps the row selected when the typed value matches a row exactly", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>

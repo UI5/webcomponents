@@ -632,7 +632,10 @@ class InputTableSuggest extends InputField {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._shouldAutocomplete = !this.noTypeahead && !(isBackSpace(e) || isDelete(e) || isEscape(e));
+		// isBackSpace/isDelete are false when a modifier is held (e.g. Ctrl/Cmd+Backspace),
+		// but those still delete content, so match the key directly to suppress typeahead.
+		const isDeletion = isBackSpace(e) || isDelete(e) || e.key === "Backspace" || e.key === "Delete";
+		this._shouldAutocomplete = !this.noTypeahead && !(isDeletion || isEscape(e));
 
 		if (this._useTableSuggestions && this._open) {
 			if (isDown(e)) {
