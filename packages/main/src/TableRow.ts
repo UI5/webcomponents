@@ -71,6 +71,17 @@ class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	actions!: Slot<TableRowActionBase>;
 
 	/**
+	 * Defines the status indicator of the row.
+	 *
+	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
+	 *
+	 * @since 2.29.0
+	 * @public
+	 */
+	@slot({ type: HTMLElement })
+	status!: Slot<TableRowStatus>;
+
+	/**
 	 * Unique identifier of the row.
 	 *
 	 * **Note:** For selection features to work properly, this property is mandatory, and its value must not contain spaces.
@@ -118,17 +129,6 @@ class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	 */
 	@property({ type: Boolean })
 	movable = false;
-
-	/**
-	 * Defines the status indicator of the row.
-	 *
-	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
-	 *
-	 * @since 2.29.0
-	 * @public
-	 */
-	@slot({ type: HTMLElement })
-	status!: Slot<TableRowStatus>;
 
 	@query("#popin-cell")
 	_popinCell?: TableCell;

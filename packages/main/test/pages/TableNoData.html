@@ -40,6 +40,7 @@
 	</div>
 	<ui5-table id="table2">
 		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-row-status slot="status"></ui5-table-header-row-status>
 			<ui5-table-header-cell width="40%">Product</ui5-table-header-cell>
 		</ui5-table-header-row>
 		<div slot="noData">
@@ -48,14 +49,17 @@
 	</ui5-table>
 
 	<script>
-		const highlights = ["Negative", "Critical", "Positive", "Information"];
+		const statuses = ["Negative", "Critical", "Positive", "Information"];
 		let rowCount2 = 0;
 		const table2 = document.getElementById("table2");
 
 		document.getElementById("addRow2").addEventListener("click", () => {
 			rowCount2++;
 			const row = document.createElement("ui5-table-row");
-			row.setAttribute("highlight", highlights[(rowCount2 - 1) % highlights.length]);
+			const status = document.createElement("ui5-table-row-status");
+			status.slot = "status";
+			status.value = statuses[(rowCount2 - 1) % statuses.length];
+			row.appendChild(status);
 			const cell = document.createElement("ui5-table-cell");
 			const text = document.createElement("ui5-text");
 			text.textContent = "Product " + rowCount2;
@@ -80,6 +84,7 @@
 	</div>
 	<ui5-table id="table3">
 		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-row-status slot="status"></ui5-table-header-row-status>
 			<ui5-table-header-cell width="200px">Product</ui5-table-header-cell>
 			<ui5-table-header-cell width="200px">Supplier</ui5-table-header-cell>
 			<ui5-table-header-cell width="200px">Price</ui5-table-header-cell>
@@ -93,7 +98,10 @@
 		document.getElementById("addRow3").addEventListener("click", () => {
 			rowCount3++;
 			const row = document.createElement("ui5-table-row");
-			row.setAttribute("highlight", highlights[(rowCount3 - 1) % highlights.length]);
+			const status = document.createElement("ui5-table-row-status");
+			status.slot = "status";
+			status.value = statuses[(rowCount3 - 1) % statuses.length];
+			row.appendChild(status);
 			["Product " + rowCount3, "Supplier " + rowCount3, rowCount3 * 100 + " EUR"].forEach(value => {
 				const cell = document.createElement("ui5-table-cell");
 				const text = document.createElement("ui5-text");
@@ -121,6 +129,7 @@
 	<ui5-table id="table4" overflow-mode="Popin" row-action-count="3">
 		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
 		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-row-status slot="status"></ui5-table-header-row-status>
 			<ui5-table-header-cell width="250px">Product</ui5-table-header-cell>
 			<ui5-table-header-cell width="250px">Supplier</ui5-table-header-cell>
 			<ui5-table-header-cell width="250px">Dimensions</ui5-table-header-cell>
@@ -138,7 +147,10 @@
 		document.getElementById("addRow4").addEventListener("click", () => {
 			rowCount4++;
 			const row = document.createElement("ui5-table-row");
-			row.setAttribute("highlight", highlights[(rowCount4 - 1) % highlights.length]);
+			const status = document.createElement("ui5-table-row-status");
+			status.slot = "status";
+			status.value = statuses[(rowCount4 - 1) % statuses.length];
+			row.appendChild(status);
 			["Product " + rowCount4, "Supplier " + rowCount4, "30 x 18 x 3 cm", rowCount4 * 100 + " EUR"].forEach(value => {
 				const cell = document.createElement("ui5-table-cell");
 				const text = document.createElement("ui5-text");

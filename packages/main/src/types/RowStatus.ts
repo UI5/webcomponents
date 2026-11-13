@@ -1,6 +1,7 @@
 /**
  * Defines the semantic status of a table row.
  *
+ * @since 2.29.0
  * @public
  */
 enum RowStatus {
