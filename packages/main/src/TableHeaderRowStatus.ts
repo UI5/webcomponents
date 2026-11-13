@@ -17,7 +17,7 @@ import type RowStatusDesign from "./types/RowStatusDesign.js";
  *
  * @constructor
  * @extends UI5Element
- * @since 2.30.0
+ * @since 2.29.0
  * @public
  */
 @customElement({

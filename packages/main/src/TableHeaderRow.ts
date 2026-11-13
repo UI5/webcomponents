@@ -68,7 +68,7 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowStatus>
 	 *
 	 * **Note:** Use `ui5-table-header-row-status` for the intended design.
 	 *
-	 * @since 2.30.0
+	 * @since 2.29.0
 	 * @public
 	 */
 	@slot({

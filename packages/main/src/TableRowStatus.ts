@@ -37,7 +37,7 @@ const STATUS_TEXTS: Record<`${RowStatus}`, I18nText> = {
  *
  * @constructor
  * @extends UI5Element
- * @since 2.30.0
+ * @since 2.29.0
  * @public
  */
 @customElement({
