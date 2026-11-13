@@ -1373,7 +1373,7 @@
 			{
 				"name": "Status",
 				"title": "Row Status",
-				"description": "Place a `ui5-table-row-status` in the row's `status` slot to display a semantic status indicator. Add a `ui5-table-header-row-status` to the header row's `status` slot to enable the status column."
+				"description": "Place a `ui5-table-row-status` in the row's `status` slot to display a semantic status indicator. Add a `ui5-table-header-row-status` to the header row's `status` slot to reserve and enable the status column; the header status component does not display an indicator itself. Use `value` to choose `Positive`, `Critical`, `Negative`, or `Information`. Each value provides a built-in screen-reader announcement; set `text` for a more specific description, such as \"In stock\". The default value is `undefined`, which renders no indicator."
 			}
 		]
 	},
@@ -1382,8 +1382,7 @@
 		"samples": [
 			{
 				"name": "Status",
-				"title": "Semantic Row Status",
-				"description": "Use `value` to display a `Positive`, `Critical`, `Negative`, or `Information` status. Each value provides a built-in screen-reader announcement; use `text` for a more specific description, such as \"In stock\". The default value is `undefined`, which renders no indicator. Place the component in a `ui5-table-row`'s `status` slot and add a `ui5-table-header-row-status` to the header row's `status` slot."
+				"title": "Semantic Row Status"
 			}
 		]
 	},
@@ -1392,8 +1391,7 @@
 		"samples": [
 			{
 				"name": "Status",
-				"title": "Enable the Status Column",
-				"description": "Place a `ui5-table-header-row-status` in the `status` slot of `ui5-table-header-row` to reserve the status column. Its presence enables the `ui5-table-row-status` indicators in the data rows; it does not display a status indicator itself."
+				"title": "Enable the Status Column"
 			}
 		]
 	},

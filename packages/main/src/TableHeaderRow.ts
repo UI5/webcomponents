@@ -66,8 +66,6 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowStatus>
 	 * Defines the status configuration of the table.
 	 * Its presence reserves the status column and enables the `ui5-table-row-status` of the rows to be rendered.
 	 *
-	 * **Note:** Use `ui5-table-header-row-status` for the intended design.
-	 *
 	 * @since 2.29.0
 	 * @public
 	 */
