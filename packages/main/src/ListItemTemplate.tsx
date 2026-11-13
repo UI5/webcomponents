@@ -121,8 +121,8 @@ function selectionElement(this: ListItem) {
 		return (
 			<RadioButton
 				part="radio"
+				aria-hidden={true}
 				disabled={this.isInactive}
-				accessibleName={this._accInfo.ariaLabelRadioButton}
 				tabindex={-1}
 				id={`${this._id}-singleSelectionElement`}
 				class="ui5-li-singlesel-radiobtn"
