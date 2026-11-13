@@ -917,8 +917,7 @@ class List extends UI5Element {
 			(item as ListItem).mediaRange = this.mediaRange;
 		});
 
-		// Push the inherited item role onto groups too, so each group can adapt
-		// its internal accessibility structure to the list's role.
+		// Propagate the inherited item role to groups so each adapts its structure.
 		this.getSlottedNodes<ListItemBase>("items").forEach(item => {
 			if (isInstanceOfListItemGroup(item)) {
 				item._inheritedAccessibleRole = inheritedItemRole;

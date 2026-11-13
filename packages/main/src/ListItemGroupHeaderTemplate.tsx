@@ -12,8 +12,8 @@ export default function ListItemGroupHeaderTemplate(this: ListItemGroupHeader) {
 				"ui5-ghli-root": true,
 				...this.classes.main,
 			}}
-			aria-label={this.ariaLabelText}
-			aria-roledescription={this.groupHeaderText}
+			aria-label={this.accAriaLabel}
+			aria-roledescription={this.accAriaRoleDescription}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 		>

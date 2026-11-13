@@ -153,6 +153,139 @@ describe("ListItemGroup Accessibility", () => {
 			.find("[role='list']")
 			.should("have.attr", "aria-label", "Sort Order options");
 	});
+
+	it("keeps group items as menuitems under a Menu list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="Menu" accessibleRole="Menu">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "menuitem");
+		});
+	});
+
+	it("keeps group items as treeitems under a Tree list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="Tree" accessibleRole="Tree">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "treeitem");
+		});
+	});
+
+	it("does not expose unnamed group/list wrappers for a group without a header", () => {
+		cy.mount(
+			<List accessibleName="Plain">
+				<ListItemGroup>
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "listitem");
+		});
+	});
+
+	it("drops ignored aria-roledescription/aria-label from a role=none group header", () => {
+		cy.mount(
+			<List accessibleName="View settings" accessibleRole="ListBox">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard selected>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		// role=none is presentational; it stays focusable but drops ignored naming attrs.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-roledescription");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-label");
+	});
 });
 
 describe("ListItemGroup Tests", () => {

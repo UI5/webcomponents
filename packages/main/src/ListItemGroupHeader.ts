@@ -29,10 +29,8 @@ const MAX_CHARACTERS_SIZE_S = 100;
 const MAX_CHARACTERS_SIZE_M = 300;
 
 /**
- * ARIA heading level exposed on the group header when it acts as a heading.
- * A ui5-list group is a shallow, single-level grouping, so a fixed level is
- * used rather than computing nesting depth; level 3 matches the heading level
- * sap.m uses for list group headers.
+ * ARIA heading level for the group header. A list group is a shallow,
+ * single-level grouping, so a fixed level is used; 3 matches sap.m.
  * @private
  */
 const GROUP_HEADING_ARIA_LEVEL = 3;
@@ -115,6 +113,21 @@ class ListItemGroupHeader extends ListItemBase {
 
 	get accAriaLevel(): number | undefined {
 		return this.effectiveAccRole === "heading" ? GROUP_HEADING_ARIA_LEVEL : undefined;
+	}
+
+	// Presentational (role="none") under listbox/menu/tree. ARIA ignores naming
+	// attributes there, so the template omits aria-label/aria-roledescription.
+	// The header stays focusable, as it is still a navigable item.
+	get isPresentational(): boolean {
+		return this.effectiveAccRole === "none";
+	}
+
+	get accAriaLabel(): string | undefined {
+		return this.isPresentational ? undefined : this.ariaLabelText;
+	}
+
+	get accAriaRoleDescription(): string | undefined {
+		return this.isPresentational ? undefined : this.groupHeaderText;
 	}
 
 	get groupItem() {

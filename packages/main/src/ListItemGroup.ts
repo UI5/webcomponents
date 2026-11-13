@@ -152,20 +152,29 @@ class ListItemGroup extends ListItemGroupBase {
 	}
 
 	/**
-	 * The label used for the group wrapper and the inner item list.
-	 * Prefers the explicit `headerAccessibleName` over the visible `headerText`.
+	 * The label for the group wrapper and the inner item list.
+	 * Prefers `headerAccessibleName` over the visible `headerText`.
 	 */
 	get groupLabel(): string | undefined {
 		return this.headerAccessibleName || this.headerText;
 	}
 
 	/**
-	 * Whether the parent list exposes its items as listbox options. In that case
-	 * the group must not insert an intervening `role="list"` or expose the header
-	 * as a heading, as either would detach the options from the listbox's set.
+	 * Whether the parent list uses the default `list` role. The parent sets
+	 * `_inheritedAccessibleRole` only for the non-default roles (option/menuitem/
+	 * treeitem), so an unset value identifies the default list role.
 	 */
-	get isListBox(): boolean {
-		return this._inheritedAccessibleRole === "option";
+	get isDefaultListRole(): boolean {
+		return !this._inheritedAccessibleRole;
+	}
+
+	/**
+	 * Whether to expose the labelled grouping wrapper. A group without a header
+	 * has no accessible name, so it is left transparent rather than exposing an
+	 * unnamed `group`/`list`.
+	 */
+	get exposeGroupRole(): boolean {
+		return this.hasHeader;
 	}
 
 	get dropIndicatorDOM(): DropIndicator | null {
