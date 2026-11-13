@@ -104,7 +104,11 @@ class ShellBarSearch extends Search {
 	}
 
 	getSearchButtonDomRef(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>(".ui5-shell-search-field-button") ?? null;
+		if (this.collapsed) {
+			return this.shadowRoot?.querySelector<HTMLElement>(".ui5-shell-search-field-button") ?? null;
+		}
+		// When expanded there is no toggle button - the search input is the focusable target.
+		return this.nativeInput ?? null;
 	}
 
 	_onfocusin() {
