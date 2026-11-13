@@ -4329,3 +4329,79 @@ describe("List - Navigation arrow", () => {
 			});
 	});
 });
+
+describe("List - Single-select RadioButton accessibility", () => {
+	it("inner RadioButton is hidden from assistive technologies", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard>Ascending</ListItemStandard>
+				<ListItemStandard>Descending</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-radio-button]")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("inner RadioButton has no accessible-name when hidden", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard>Ascending</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-radio-button]")
+			.should("not.have.attr", "accessible-name");
+	});
+
+	it("outer list item exposes role=radio with correct label", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard>Ascending</ListItemStandard>
+				<ListItemStandard>Descending</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "radio")
+			.should("have.attr", "aria-checked", "false");
+	});
+
+	it("outer list item aria-checked reflects selected state", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard selected>Ascending</ListItemStandard>
+				<ListItemStandard>Descending</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-checked", "true");
+
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-checked", "false");
+	});
+
+	it("RadioButton is NOT hidden in multi-select mode", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard>Ascending</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-checkbox]")
+			.should("not.have.attr", "aria-hidden");
+	});
+});
