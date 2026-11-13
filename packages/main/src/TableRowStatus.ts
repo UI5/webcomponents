@@ -52,7 +52,7 @@ class TableRowStatus extends UI5Element {
 	 *
 	 * A colored indicator is rendered at the start of the row to signal its status.
 	 * Semantic values (`Positive`, `Critical`, `Negative`, `Information`) also provide a built-in screen-reader announcement.
-	 * If no value is set, no indicator or announcement is rendered.
+	 * If neither `value` nor `colorScheme` is set, no status indicator is rendered.
 	 *
 	 * @default undefined
 	 * @public
@@ -74,8 +74,27 @@ class TableRowStatus extends UI5Element {
 	text?: string;
 
 	/**
+	 * Defines the color scheme of the status indicator using the indication color palette.
+	 *
+	 * Available options are strings from `"1"` to `"10"`.
+	 *
+	 * **Note:** The `value` property takes precedence over `colorScheme`.
+	 * If `value` is set, its semantic colors apply and `colorScheme` is ignored.
+	 *
+	 * Color schemes have no built-in semantic announcement or default icon.
+	 * Provide descriptive `text` for assistive technologies. In the extended design,
+	 * this text is also shown as a tooltip, and a custom `icon` can be supplied.
+	 *
+	 * @default undefined
+	 * @private
+	 */
+	@property()
+	colorScheme?: string;
+
+	/**
 	 * Defines the icon of the status indicator, rendered only in the extended design.
-	 * Defaults to an icon derived from the `value`.
+	 * Defaults to an icon derived from the `value`. For statuses defined only by `colorScheme`,
+	 * no default icon is provided; supply an `icon` and descriptive `text`.
 	 *
 	 * @default undefined
 	 * @private
@@ -83,12 +102,6 @@ class TableRowStatus extends UI5Element {
 	@property()
 	icon?: string;
 
-	/**
-	 * Defines the rendering design, set by the table from the `ui5-table-header-row-status`.
-	 *
-	 * @default "Simple"
-	 * @private
-	 */
 	@property()
 	_design: `${RowStatusDesign}` = "Simple";
 
@@ -96,9 +109,13 @@ class TableRowStatus extends UI5Element {
 	static i18nBundle: I18nBundle;
 
 	get _accessibleText() {
-		return (this.value !== undefined)
-			? this.text ?? TableRowStatus.i18nBundle.getText(STATUS_TEXTS[this.value])
-			: undefined;
+		if (this.value) {
+			return this.text ?? TableRowStatus.i18nBundle.getText(STATUS_TEXTS[this.value]);
+		}
+		if (this.colorScheme) {
+			return this.text;
+		}
+		return undefined;
 	}
 }
 

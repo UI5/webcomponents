@@ -15,15 +15,16 @@ const DEFAULT_ICONS: Record<`${RowStatus}`, string> = {
 
 export default function TableRowStatusTemplate(this: TableRowStatus) {
 	const icon = this.icon || (this.value && DEFAULT_ICONS[this.value]);
-	const showIcon = this._design === "Extended" && this.value !== undefined && icon;
+	const hasStatus = this.value != null || this.colorScheme != null;
+	const renderTooltip = hasStatus && this._design === "Extended";
 	return (
 		<>
 			<div id="status" part="status"></div>
-			{ showIcon && <div id="status-tooltip" title={this._accessibleText}>
-				<Icon id="status-icon"
+			{ renderTooltip && <div id="status-tooltip" title={this._accessibleText}>
+				{ icon && <Icon id="status-icon"
 					name={icon}
 					accessibleName={this._accessibleText}
-				/>
+				/> }
 			</div> }
 		</>
 	);

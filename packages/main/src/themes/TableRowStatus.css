@@ -7,8 +7,60 @@
 	overflow: visible;
 }
 
+:host(:not([value])[color-scheme="1"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_1);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_1b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_1b_Background);
+}
+:host(:not([value])[color-scheme="2"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_2);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_2b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_2b_Background);
+}
+:host(:not([value])[color-scheme="3"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_3);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_3b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_3b_Background);
+}
+:host(:not([value])[color-scheme="4"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_4);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_4b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_4b_Background);
+}
+:host(:not([value])[color-scheme="5"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_5);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_5b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_5b_Background);
+}
+:host(:not([value])[color-scheme="6"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_6);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_6b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_6b_Background);
+}
+:host(:not([value])[color-scheme="7"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_7);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_7b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_7b_Background);
+}
+:host(:not([value])[color-scheme="8"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_8);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_8b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_8b_Background);
+}
+:host(:not([value])[color-scheme="9"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_9);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_9b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_9b_Background);
+}
+:host(:not([value])[color-scheme="10"]) {
+	--_ui5_table_status_bar_color: var(--sapIndicationColor_10);
+	--_ui5_table_status_icon_color: var(--sapIndicationColor_10b_TextColor);
+	--_ui5_table_status_background: var(--sapIndicationColor_10b_Background);
+}
+
 :host([_design="Extended"]) {
 	width: var(--_ui5_table_status_cell_extended_width);
+	background: var(--_ui5_table_status_background);
 }
 
 :host([_design="Extended"][value="Negative"]) { background: var(--sapErrorBackground); }
@@ -22,6 +74,7 @@
 	bottom: 0;
 	inset-inline-start: 0;
 	width: calc(var(--_ui5_table_status_cell_width) - 1px);
+	background: var(--_ui5_table_status_bar_color);
 
 	:host([_design="Extended"]) & { width: 0.125rem; }
 
@@ -42,6 +95,7 @@
 #status-icon {
 	width: 1rem;
 	height: 1rem;
+	color: var(--_ui5_table_status_icon_color);
 
 	:host([value="Negative"]) & { color: var(--sapNegativeColor); }
 	:host([value="Critical"]) & { color: var(--sapCriticalColor); }
