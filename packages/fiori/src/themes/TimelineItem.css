@@ -174,11 +174,11 @@
 	margin-left: 0;
 }
 
-:host([layout="Vertical"][first-item-in-timeline]) .ui5-tli-bubble {
+:host([layout="Vertical"][first-item-in-timeline]) {
 	margin-block-start: calc(-1 * var(--_ui5_TimelineItem_bubble_border_top));
 }
 
-:host([layout="Vertical"][last-item]) .ui5-tli-bubble {
+:host([layout="Vertical"][last-item]) {
 	margin-block-end: calc(-1 * var(--_ui5_TimelineItem_bubble_border_bottom));
 }
 
