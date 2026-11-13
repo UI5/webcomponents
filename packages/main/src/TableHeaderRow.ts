@@ -3,14 +3,14 @@ import TableRowBase from "./TableRowBase.js";
 import TableHeaderRowTemplate from "./TableHeaderRowTemplate.js";
 import TableHeaderRowStyles from "./generated/themes/TableHeaderRow.css.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
+import type TableHeaderRowStatus from "./TableHeaderRowStatus.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	TABLE_SELECTION,
 	TABLE_ROW_POPIN,
 	TABLE_ROW_ACTIONS,
 	TABLE_COLUMN_HEADER_ROW,
 } from "./generated/i18n/i18n-defaults.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-
 /**
  * @class
  *
@@ -43,7 +43,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  *
  * @public
  */
-class TableHeaderRow extends TableRowBase<TableHeaderCell> {
+class TableHeaderRow extends TableRowBase<TableHeaderCell, TableHeaderRowStatus> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -61,6 +61,22 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 		individualSlots: true,
 	})
 	cells!: DefaultSlot<TableHeaderCell>;
+
+	/**
+	 * Defines the status configuration of the table.
+	 * Its presence reserves the status column and enables the `ui5-table-row-status` of the rows to be rendered.
+	 *
+	 * @since 2.29.0
+	 * @public
+	 */
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: {
+			properties: ["design"],
+			slots: false,
+		},
+	})
+	status!: Slot<TableHeaderRowStatus>;
 
 	/**
 	 * Sticks the `ui5-table-header-row` to the top of a table.

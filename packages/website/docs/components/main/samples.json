@@ -1369,6 +1369,29 @@
 				"name": "DragAndDrop",
 				"title": "Movable Rows",
 				"description": "Adding the `movable` property enables the `ui5-table-row` for drag and drop operations."
+			},
+			{
+				"name": "Status",
+				"title": "Row Status",
+				"description": "Place a `ui5-table-row-status` in the row's `status` slot to display a semantic status indicator. Add a `ui5-table-header-row-status` to the header row's `status` slot to reserve and enable the status column; the header status component does not display an indicator itself. Use `value` to choose `Positive`, `Critical`, `Negative`, or `Information`. Each value provides a built-in screen-reader announcement; set `text` for a more specific description, such as \"In stock\". The default value is `undefined`, which renders no indicator."
+			}
+		]
+	},
+	"TableRowStatus": {
+		"samplesFrom": "Table",
+		"samples": [
+			{
+				"name": "Status",
+				"title": "Semantic Row Status"
+			}
+		]
+	},
+	"TableHeaderRowStatus": {
+		"samplesFrom": "Table",
+		"samples": [
+			{
+				"name": "Status",
+				"title": "Enable the Status Column"
 			}
 		]
 	},

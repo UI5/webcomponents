@@ -6,6 +6,8 @@ import TableCell from "../../src/TableCell.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
 import TableRowAction from "../../src/TableRowAction.js";
 import TableRowActionNavigation from "../../src/TableRowActionNavigation.js";
+import TableRowStatus from "../../src/TableRowStatus.js";
+import TableHeaderRowStatus from "../../src/TableHeaderRowStatus.js";
 import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
 import Button from "../../src/Button.js";
@@ -34,6 +36,7 @@ const {
 	TABLE_ROW_SELECTED: { defaultText: SELECTED },
 	TABLE_ROW_NAVIGATED: { defaultText: NAVIGATED },
 	TABLE_ROW_ACTIVE: { defaultText: ACTIVE },
+	TABLE_ROW_HIGHLIGHT_NEGATIVE: { defaultText: NEGATIVE },
 } = Translations;
 
 describe("Cell Custom Announcement - More details", () => {
@@ -221,6 +224,7 @@ describe("Row Custom Announcement - Less details", () => {
 			<Table id="table0" overflowMode="Popin" rowActionCount={2} >
 				<TableSelectionMulti id="selection" slot="features" selected="Row1"></TableSelectionMulti>
 				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowStatus slot="status" />
 					<TableHeaderCell minWidth="300px" sort-indicator="Ascending">
 						<Label id="Header1Label" required>H1</Label>
 						<div style={{ display: "none" }}>H1DisplayNone</div>
@@ -237,6 +241,7 @@ describe("Row Custom Announcement - Less details", () => {
 					</TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow rowKey="Row1" navigated interactive>
+					<TableRowStatus slot="status" id="row1-status" />
 					<TableCell>R1C1</TableCell>
 					<TableCell>
 						<input value="R1C2" />
@@ -285,7 +290,7 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 	});
 
-	function checkAnnouncement(expectedText: string, focusAgain = false, check: "contains" | "equal" = "contains") {
+	function checkAnnouncement(expectedText: string, focusAgain = false, check: "contains" | "equal" | "not.contain" = "contains") {
 		focusAgain && cy.focused().then($el => {
 			if ($el.attr("ui5-table-header-row") !== undefined) {
 				cy.realPress("ArrowDown");
@@ -297,7 +302,8 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 
 		cy.get("body").then($body => {
-			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+			const announcement = expect($body.find("#ui5-invisible-text").text());
+			check === "not.contain" ? announcement.to.not.contain(expectedText) : announcement[check](expectedText);
 		});
 	}
 
@@ -308,6 +314,21 @@ describe("Row Custom Announcement - Less details", () => {
 		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
 		cy.focused().should("have.attr", "aria-rowindex", "2")
 					.should("have.attr", "role", "row");
+
+		cy.get("#row1-status").invoke("prop", "value", "Negative");
+		checkAnnouncement(NEGATIVE, true);
+
+		cy.get("#row1-status").invoke("prop", "text", "Custom status");
+		checkAnnouncement("Custom status", true);
+
+		cy.get<TableRowStatus>("#row1-status").then($status => { $status[0].value = undefined; });
+		checkAnnouncement("Custom status", true, "not.contain");
+
+		cy.get("#row1-status").invoke("attr", "color-scheme", "3");
+		checkAnnouncement("Custom status", true);
+		checkAnnouncement(NEGATIVE, true, "not.contain");
+		cy.get("#row1-status").invoke("removeAttr", "color-scheme");
+		checkAnnouncement("Custom status", true, "not.contain");
 
 		cy.get("#selection").invoke("attr", "selected", "");
 		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE}`, true);

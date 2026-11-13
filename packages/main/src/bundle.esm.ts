@@ -80,6 +80,8 @@ import TableSelectionSingle from "./TableSelectionSingle.js";
 import TableVirtualizer from "./TableVirtualizer.js";
 import TableRowAction from "./TableRowAction.js";
 import TableRowActionNavigation from "./TableRowActionNavigation.js";
+import TableRowStatus from "./TableRowStatus.js";
+import TableHeaderRowStatus from "./TableHeaderRowStatus.js";
 import Icon from "./Icon.js";
 import Input from "./Input.js";
 import InputIcon from "./InputIcon.js";

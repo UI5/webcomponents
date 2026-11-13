@@ -98,6 +98,11 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(groupDescription);
 		}
 
+		if (row._renderStatus) {
+			const statusText = row._status?._accessibleText;
+			statusText && descriptions.push(statusText);
+		}
+
 		if (row._isSelected) {
 			descriptions.push(this.i18nBundle.getText(TABLE_ROW_SELECTED));
 		}
