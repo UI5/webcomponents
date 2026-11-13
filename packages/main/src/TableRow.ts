@@ -124,7 +124,7 @@ class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	 *
 	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
 	 *
-	 * @since 2.30.0
+	 * @since 2.29.0
 	 * @public
 	 */
 	@slot({ type: HTMLElement })

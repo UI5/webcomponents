@@ -36,7 +36,11 @@ const buildSamplesContent = (samples) => {
 
 	if (basicSample) {
 		const importName = basicSample.name.replace(/[^a-zA-Z0-9]/g, "_");
-		content += `\n## Basic Sample\n<${importName} />\n`;
+		content += "\n## Basic Sample\n";
+		if (basicSample.description) {
+			content += `${basicSample.description}\n\n`;
+		}
+		content += `<${importName} />\n`;
 	}
 
 	content += "\n<%COMPONENT_METADATA%>";
