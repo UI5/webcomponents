@@ -9,6 +9,9 @@ custom Cypress commands in this repository, follow the project's Cypress testing
 skill:
 
 - **Primary guidance:** [`skills/cypress/SKILL.md`](../../skills/cypress/SKILL.md)
+- **Quick reference:** [`skills/cypress/references/QUICK-REFERENCE.md`](../../skills/cypress/references/QUICK-REFERENCE.md)
+- **Writing specs:** [`skills/cypress/references/WRITING-SPECS.md`](../../skills/cypress/references/WRITING-SPECS.md)
+- **Complete examples:** [`skills/cypress/references/EXAMPLES.md`](../../skills/cypress/references/EXAMPLES.md)
 - **Custom commands:** [`skills/cypress/references/COMMANDS.md`](../../skills/cypress/references/COMMANDS.md)
 - **Reviewing existing specs:** [`skills/cypress/references/REVIEWING.md`](../../skills/cypress/references/REVIEWING.md)
 - **Debugging flaky or failing tests:** [`skills/cypress/references/DEBUGGING.md`](../../skills/cypress/references/DEBUGGING.md)

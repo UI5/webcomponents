@@ -11,4 +11,4 @@ Full conventions live in `skills/cypress/SKILL.md`. For quick answers without lo
 | Complete working examples | [`skills/cypress/references/EXAMPLES.md`](../../skills/cypress/references/EXAMPLES.md) |
 | Custom commands | [`skills/cypress/references/COMMANDS.md`](../../skills/cypress/references/COMMANDS.md) |
 | Reviewing an existing spec | [`skills/cypress/references/REVIEWING.md`](../../skills/cypress/references/REVIEWING.md) |
-| Flaky or failing test | [`skills/cypress/references/FLAKY-TESTS.md`](../../skills/cypress/references/DEBUGGING.md) |
+| Flaky or failing test | [`skills/cypress/references/DEBUGGING.md`](../../skills/cypress/references/DEBUGGING.md) |

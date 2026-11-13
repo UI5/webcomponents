@@ -227,6 +227,7 @@ describe("Dialog", () => {
 			.should("not.have.attr", "open");
 	});
 });
+```
 
 ---
 
