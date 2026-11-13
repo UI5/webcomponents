@@ -7,15 +7,24 @@
     <title>Accessibility Test Page for Table</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
-    <meta charset="utf-8">
-
     <script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
     <style>
+        #productsTable [ui5-table-cell]:first-child [ui5-link],
+        #productsTable [ui5-table-cell]:first-child [ui5-rating-indicator],
+        #productsTable [ui5-table-cell]:first-child [ui5-tag] {
+            display: block;
+        }
+
         .no-data-slot {
             padding: 2rem;
             line-height: 2rem;
             text-align: center;
+        }
+
+        .no-data-slot [ui5-button] {
+            display: block;
+            margin-inline: auto;
         }
     </style>
 </head>
@@ -70,9 +79,11 @@
                 <ui5-option data-mode="None" selected>No Status</ui5-option>
                 <ui5-option data-mode="Simple">Simple</ui5-option>
                 <ui5-option data-mode="SimpleCustomText">Simple - Custom Text</ui5-option>
+                <ui5-option data-mode="SimpleColorScheme">Simple - ColorScheme</ui5-option>
                 <ui5-option data-mode="Extended">Extended</ui5-option>
                 <ui5-option data-mode="CustomText">Extended - Custom Text</ui5-option>
                 <ui5-option data-mode="Custom">Extended - Custom Icon &amp; Text</ui5-option>
+                <ui5-option data-mode="ExtendedColorScheme">Extended - ColorScheme</ui5-option>
             </ui5-select>
         </ui5-toolbar-item>
     </ui5-toolbar>
@@ -247,33 +258,24 @@
             });
         });
 
-        // Selection mode change handler
         const table = document.getElementById("productsTable");
+        const getRows = () => Array.from(table.querySelectorAll("ui5-table-row"));
+        const initialRowKeys = new Set(Array.from(table.querySelectorAll("ui5-table-row"), row => row.getAttribute("row-key")));
 
         const selectionModeSelect = document.getElementById("selectionModeSelect");
         selectionModeSelect.addEventListener("change", (e) => {
-            let selection = document.getElementById("selection");
-            if (selection) {
-                selection.remove();
-            }
+            document.getElementById("selection")?.remove();
             const value = e.detail.selectedToolbarOption?.textContent;
-            if (value === "Single") {
-                selection = document.createElement("ui5-table-selection-single");
-                selection.setAttribute("id", "selection");
-                selection.setAttribute("slot", "features");
-                table.insertBefore(selection, table.firstChild);
-            } else if (value === "Multi") {
-                selection = document.createElement("ui5-table-selection-multi");
-                selection.setAttribute("id", "selection");
-                selection.setAttribute("slot", "features");
-                table.insertBefore(selection, table.firstChild);
-            } else if (value === "Multi ClearAll") {
-                selection = document.createElement("ui5-table-selection-multi");
-                selection.setAttribute("id", "selection");
-                selection.setAttribute("slot", "features");
-                selection.setAttribute("header-selector", "ClearAll");
-                table.insertBefore(selection, table.firstChild);
+            if (value === "None") {
+                return;
             }
+            const selection = document.createElement(value === "Single" ? "ui5-table-selection-single" : "ui5-table-selection-multi");
+            selection.id = "selection";
+            selection.slot = "features";
+            if (value === "Multi ClearAll") {
+                selection.setAttribute("header-selector", "ClearAll");
+            }
+            table.prepend(selection);
         });
 
         const overflowSelect = document.getElementById("overflowModeSelect");
@@ -285,21 +287,17 @@
         let rows = [];
         showDataSelect.addEventListener("change", (e) => {
             const value = e.detail.selectedToolbarOption?.textContent;
-            if (value != "Show Data") {
+            if (value !== "Show Data") {
                 if (rows.length === 0) {
-                    rows = Array.from(table.querySelectorAll("ui5-table-row"));
+                    rows = getRows();
                 }
-                table.querySelectorAll("ui5-table-row").forEach(row => {
-                    table.removeChild(row);
-                });
+                getRows().forEach(row => row.remove());
             } else {
-
-                rows.forEach(row => {
-                    table.appendChild(row);
-                });
+                table.append(...rows);
                 rows = [];
             }
 
+            table.querySelector("[slot='noData']")?.remove();
             if (value === "No Data with Slot") {
                 const noDataSlot = document.createElement("div");
                 noDataSlot.setAttribute("slot", "noData");
@@ -310,40 +308,35 @@
                     <ui5-button id="addDataButton">Change Table Settings</ui5-button>
                 `;
                 table.appendChild(noDataSlot);
-            } else {
-                const noDataSlot = table.querySelector("[slot='noData']");
-                if (noDataSlot) {
-                    table.removeChild(noDataSlot);
-                }
             }
         });
 
-        let growing = document.getElementById("growing");
+        const additionalProducts = [
+            { name: 'Portable SSD 1TB', id: 'PS-1001', supplier: 'StoreFast', category: 'Storage', stock: 'In Stock', price: 129.00, weight: 0.05 },
+            { name: 'Mechanical Keyboard RGB', id: 'KB-3045', supplier: 'KeyMaster Ltd.', category: 'Input Devices', stock: 'Out of Stock', price: 129.99, weight: 1.20 },
+            { name: 'Action Camera 4K', id: 'AC-8840', supplier: 'AdventureCam', category: 'Cameras', stock: 'Low Stock', price: 199.00, weight: 0.18 },
+            { name: 'Noise-Cancelling Headphones', id: 'HP-7890', supplier: 'SoundWave Audio', category: 'Audio Equipment', stock: 'In Stock', price: 199.99, weight: 0.32 },
+            { name: '27" LED Monitor', id: 'MN-2707', supplier: 'ViewPlus', category: 'Monitors', stock: 'Low Stock', price: 219.00, weight: 4.20 },
+            { name: 'Smartwatch Series 5', id: 'SW-5004', supplier: 'WristTech', category: 'Wearables', stock: 'Out of Stock', price: 249.99, weight: 0.04 },
+            { name: 'Graphics Tablet Pro', id: 'GT-3308', supplier: 'DrawMaster', category: 'Peripherals', stock: 'In Stock', price: 349.00, weight: 1.10 },
+            { name: 'Drone Mini X', id: 'DR-9910', supplier: 'AeroTech', category: 'Drones', stock: 'Out of Stock', price: 429.00, weight: 0.95 },
+            { name: 'UltraSlim Laptop 13"', id: 'UL-1301', supplier: 'SlimTech', category: 'Laptops', stock: 'In Stock', price: 799.00, weight: 1.25 },
+            { name: 'Gaming Laptop Pro', id: 'GL-5502', supplier: 'GameForge', category: 'Laptops', stock: 'Low Stock', price: 1499.00, weight: 2.90 }
+        ];
+
+        const growing = document.getElementById("growing");
         const MAX_GROW = 3;
         let counter = 0;
-        growing.addEventListener("load-more", (e) => {
+        growing.addEventListener("load-more", () => {
             table.loading = true;
             table.disabled = true;
 
-            const additionalProducts = [
-                { name: 'Portable SSD 1TB', id: 'PS-1001', supplier: 'StoreFast', category: 'Storage', stock: 'In Stock', textColor: '#126d2c', price: 129.00, weight: 0.05 },
-                { name: 'Mechanical Keyboard RGB', id: 'KB-3045', supplier: 'KeyMaster Ltd.', category: 'Input Devices', stock: 'Out of Stock', textColor: '#d30505', price: 129.99, weight: 1.20 },
-                { name: 'Action Camera 4K', id: 'AC-8840', supplier: 'AdventureCam', category: 'Cameras', stock: 'Low Stock', textColor: '#b14e03', price: 199.00, weight: 0.18 },
-                { name: 'Noise-Cancelling Headphones', id: 'HP-7890', supplier: 'SoundWave Audio', category: 'Audio Equipment', stock: 'In Stock', textColor: '#126d2c', price: 199.99, weight: 0.32 },
-                { name: '27" LED Monitor', id: 'MN-2707', supplier: 'ViewPlus', category: 'Monitors', stock: 'Low Stock', textColor: '#b14e03', price: 219.00, weight: 4.20 },
-                { name: 'Smartwatch Series 5', id: 'SW-5004', supplier: 'WristTech', category: 'Wearables', stock: 'Out of Stock', textColor: '#d30505', price: 249.99, weight: 0.04 },
-                { name: 'Graphics Tablet Pro', id: 'GT-3308', supplier: 'DrawMaster', category: 'Peripherals', stock: 'In Stock', textColor: '#126d2c', price: 349.00, weight: 1.10 },
-                { name: 'Drone Mini X', id: 'DR-9910', supplier: 'AeroTech', category: 'Drones', stock: 'Out of Stock', textColor: '#d30505', price: 429.00, weight: 0.95 },
-                { name: 'UltraSlim Laptop 13"', id: 'UL-1301', supplier: 'SlimTech', category: 'Laptops', stock: 'In Stock', textColor: '#126d2c', price: 799.00, weight: 1.25 },
-                { name: 'Gaming Laptop Pro', id: 'GL-5502', supplier: 'GameForge', category: 'Laptops', stock: 'Low Stock', textColor: '#b14e03', price: 1499.00, weight: 2.90 }
-            ];
 
             const startIndex = table.rows.length;
 
             for (let i = 0; i < additionalProducts.length; i++) {
                 const p = additionalProducts[i];
                 const newRow = document.createElement("ui5-table-row");
-                // ensure unique row-key
                 newRow.setAttribute("row-key", `row${startIndex + i + 1}`);
                 newRow.setAttribute("interactive", "");
                 newRow.innerHTML = `
@@ -376,18 +369,11 @@
 
         const growingModeSelect = document.getElementById("growingModeSelect");
         growingModeSelect.addEventListener("change", (e) => {
-            table.querySelectorAll("ui5-table-row").forEach(row => {
-                if (!(["row1", "row2", "row3", "row4", "row5", "row6", "row7", "row8", "row9", "row10"].includes(row.rowKey))) {
-                    table.removeChild(row);
-                }
-            });
+            getRows().filter(row => !initialRowKeys.has(row.getAttribute("row-key"))).forEach(row => row.remove());
             counter = 0;
 
-            if (table.querySelector("ui5-table-growing")) {
-                table.removeChild(growing);
-            }
-
-            table.insertBefore(growing, table.firstChild);
+            growing.remove();
+            table.prepend(growing);
             growing.mode = e.detail.selectedToolbarOption?.textContent;
         });
 
@@ -397,7 +383,7 @@
 
         const statusSelect = document.getElementById("statusSelect");
         statusSelect.addEventListener("change", (e) => {
-            const mode = e.detail.selectedOption.dataset.mode;
+            const { mode } = e.detail.selectedOption.dataset;
             const headerRow = table.querySelector("ui5-table-header-row");
             headerRow.querySelector("[ui5-table-header-row-status]")?.remove();
             table.querySelectorAll("[ui5-table-row] [ui5-table-row-status]").forEach(el => el.remove());
@@ -408,14 +394,19 @@
 
             const headerStatus = document.createElement("ui5-table-header-row-status");
             headerStatus.slot = "status";
-            headerStatus.design = mode === "Simple" || mode === "SimpleCustomText" ? "Simple" : "Extended";
+            headerStatus.design = mode.startsWith("Simple") ? "Simple" : "Extended";
             headerRow.appendChild(headerStatus);
 
-            table.querySelectorAll("ui5-table-row").forEach((row, index) => {
+            getRows().forEach((row, index) => {
                 const rowStatus = document.createElement("ui5-table-row-status");
                 rowStatus.slot = "status";
-                rowStatus.value = STATUS_VALUES[index % STATUS_VALUES.length];
-                if (mode === "Custom") {
+                if (mode.endsWith("ColorScheme")) {
+                    rowStatus.colorScheme = `${index % 10 + 1}`;
+                    rowStatus.text = `Custom status ${rowStatus.colorScheme}`;
+                } else {
+                    rowStatus.value = STATUS_VALUES[index % STATUS_VALUES.length];
+                }
+                if (mode === "Custom" || mode === "ExtendedColorScheme") {
                     rowStatus.icon = CUSTOM_ICONS[index % CUSTOM_ICONS.length];
                 }
                 if (mode === "Custom" || mode === "CustomText" || mode === "SimpleCustomText") {

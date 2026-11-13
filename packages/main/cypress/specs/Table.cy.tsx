@@ -975,6 +975,7 @@ describe("Table Row - Status", () => {
 
 		cy.get<TableRowStatus>("#status").should($status => {
 			expect($status[0].value).to.equal(undefined);
+			expect($status[0].colorScheme).to.equal(undefined);
 			expect($status[0]._accessibleText).to.equal(undefined);
 		});
 		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
@@ -989,6 +990,72 @@ describe("Table Row - Status", () => {
 		cy.get<TableRowStatus>("#status").should($status => {
 			expect($status[0]._accessibleText).to.equal(undefined);
 		});
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");
+	});
+
+	it("uses indication colors in simple and extended designs with semantic value precedence", () => {
+		cy.mount(
+			<>
+				<Table>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderRowStatus id="status-header" slot="status" />
+						<TableHeaderCell>Column A</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow>
+						<TableRowStatus id="status" slot="status" text="Custom status" />
+						<TableCell>Cell A</TableCell>
+					</TableRow>
+				</Table>
+				<div id="palette" />
+				<TableRowStatus id="semantic" value="Negative" icon="information" _design="Extended" />
+			</>
+		);
+
+		const checkColors = (reference: string, extended: boolean) => {
+			cy.get("#status").should($status => {
+				const status = $status[0];
+				const palette = status.ownerDocument.querySelector(reference)!;
+				const barColor = palette.shadowRoot
+					? getComputedStyle(palette.shadowRoot.querySelector("#status")!).backgroundColor
+					: getComputedStyle(palette).borderTopColor;
+				const background = getComputedStyle(palette).backgroundColor;
+				const icon = status.shadowRoot!.querySelector("#status-icon");
+				if (icon) {
+					const referenceIcon = palette.shadowRoot?.querySelector("#status-icon");
+					expect(getComputedStyle(icon).color).to.equal(getComputedStyle(referenceIcon || palette).color);
+				}
+				const context = `scheme ${status.getAttribute("color-scheme")} / ${reference}`;
+				expect(getComputedStyle(status.shadowRoot!.querySelector("#status")!).backgroundColor, context).to.equal(barColor);
+				expect(getComputedStyle(status).backgroundColor).to.equal(extended ? background : TRANSPARENT);
+			});
+		};
+
+		cy.get("#status-header").invoke("prop", "design", "Extended");
+		cy.get("#status").invoke("attr", "color-scheme", "1");
+		cy.get("#status").shadow().find("#status-icon").should("not.exist");
+		cy.get("#status").invoke("prop", "icon", "information");
+
+		["Simple", "Extended"].forEach(design => {
+			cy.get("#status-header").invoke("prop", "design", design);
+			const schemeCount = design === "Extended" ? 10 : 1;
+			for (let scheme = 1; scheme <= schemeCount; scheme++) {
+				const palette = `--sapIndicationColor_${scheme}`;
+				cy.get("#status").invoke("attr", "color-scheme", `${scheme}`);
+				cy.get("#palette").invoke("attr", "style", `background: var(${palette}b_Background); border-color: var(${palette}); color: var(${palette}b_TextColor)`);
+				checkColors("#palette", design === "Extended");
+			}
+		});
+
+		cy.get("#status").shadow().find("#status-icon").should("have.attr", "name", "information");
+		cy.get("#status").shadow().find("#status-tooltip").should("have.attr", "title", "Custom status");
+
+		cy.get("#status").invoke("prop", "value", "Negative");
+		checkColors("#semantic", true);
+		cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
+		checkColors("#palette", true);
+		cy.get("#status").invoke("removeAttr", "color-scheme");
 		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
 		cy.get("#status").should("have.css", "background-color", TRANSPARENT);
 		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");

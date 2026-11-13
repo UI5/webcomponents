@@ -324,6 +324,12 @@ describe("Row Custom Announcement - Less details", () => {
 		cy.get<TableRowStatus>("#row1-status").then($status => { $status[0].value = undefined; });
 		checkAnnouncement("Custom status", true, "not.contain");
 
+		cy.get("#row1-status").invoke("attr", "color-scheme", "3");
+		checkAnnouncement("Custom status", true);
+		checkAnnouncement(NEGATIVE, true, "not.contain");
+		cy.get("#row1-status").invoke("removeAttr", "color-scheme");
+		checkAnnouncement("Custom status", true, "not.contain");
+
 		cy.get("#selection").invoke("attr", "selected", "");
 		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE}`, true);
 
