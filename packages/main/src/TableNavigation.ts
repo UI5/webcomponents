@@ -109,7 +109,7 @@ class TableNavigation extends TableExtension {
 	}
 
 	_handleEnter(e: KeyboardEvent, eventOrigin: HTMLElement) {
-		if (eventOrigin.hasAttribute("ui5-table-cell-base") && !e.altKey) {
+		if (eventOrigin.hasAttribute("ui5-table-cell-base") && !e.altKey && !eventOrigin.hasAttribute("interactive")) {
 			this._handleF2(e, eventOrigin);
 		}
 	}
@@ -279,7 +279,9 @@ class TableNavigation extends TableExtension {
 			this._lastFocusedItem = undefined;
 		} else if (navigationItem) {
 			this._gridWalker.setCurrent(navigationItem);
-			this._gridWalker.setColPos(0);
+			if (navigationItem.hasAttribute("ui5-table-cell-base") && !navigationItem.hasAttribute("interactive")) {
+				this._gridWalker.setColPos(0);
+			}
 			this._focusCurrentItem();
 		}
 	}

@@ -1,6 +1,7 @@
 import { attachLanguageChange } from "../locale/languageChange.js";
 import getLocale from "../locale/getLocale.js";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "../generated/AssetParameters.js";
+import OpenUI5Version from "../generated/OpenUI5Version.js";
 import { getFeature } from "../FeaturesRegistry.js";
 import type OpenUI5Support from "../features/OpenUI5Support.js";
 
@@ -152,7 +153,7 @@ const registerLocaleDataLoader = (localeId: string, loader: LocaleDataLoader) =>
 registerLocaleDataLoader("en", async () => {
 	console.warn(`[LocaleData] Falling back to loading "en" locale data from CDN.`, /* eslint-disable-line */
 		`For production usage, please configure locale data loading via the "Assets.js" module of the webcomponents package you are using.`); /* eslint-disable-line */
-	const cldrContent = await fetch(`https://cdn.jsdelivr.net/npm/@openui5/sap.ui.core@1.120.17/src/sap/ui/core/cldr/en.json`);
+	const cldrContent = await fetch(`https://cdn.jsdelivr.net/npm/@openui5/sap.ui.core@${OpenUI5Version}/src/sap/ui/core/cldr/en.json`);
 	return cldrContent.json() as Promise<CLDRData>;
 });
 

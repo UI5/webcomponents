@@ -19,11 +19,12 @@ const getSamples = (packageName) => {
 	return samplesCache.get(packageName);
 };
 
-const buildSamplesImports = (packageName, componentName, samples, samplesPrefix) => {
+const buildSamplesImports = (packageName, componentName, samples, samplesPrefix, samplesFrom) => {
 	return samples
 		.map(s => {
 			const importName = s.name.replace(/[^a-zA-Z0-9]/g, "_");
-			return `import ${importName} from "${samplesPrefix}_samples/${packageName}/${componentName}/${s.name}/${s.name}.md";`;
+			const folder = s.samplesFrom || samplesFrom || componentName;
+			return `import ${importName} from "${samplesPrefix}_samples/${packageName}/${folder}/${s.name}/${s.name}.md";`;
 		})
 		.join("\n");
 };
@@ -58,14 +59,16 @@ const buildSamplesContent = (samples) => {
 
 const buildParentMdx = (packageName, componentName, samplesPrefix) => {
 	const allSamples = getSamples(packageName);
-	const componentSamples = allSamples[componentName]?.samples;
+	const componentEntry = allSamples[componentName];
+	const componentSamples = componentEntry?.samples;
+	const samplesFrom = componentEntry?.samplesFrom;
 
 	const slugLine = packageName === "main" ? `---\nslug: /components/${componentName}/\n---\n\n` : "";
 
 	let fileContent = slugLine;
 
 	if (componentSamples?.length) {
-		fileContent += buildSamplesImports(packageName, componentName, componentSamples, samplesPrefix);
+		fileContent += buildSamplesImports(packageName, componentName, componentSamples, samplesPrefix, samplesFrom);
 		fileContent += "\n\n<%COMPONENT_OVERVIEW%>\n";
 		fileContent += buildSamplesContent(componentSamples);
 	} else {
@@ -126,7 +129,7 @@ const generateComponents = () => {
 					const subDeclaration = findDeclaration({ package: packageFullName, name: subName });
 					if (!subDeclaration) return;
 
-					const subMdx = buildSubcomponentMdx(packageName, subName);
+					const subMdx = buildParentMdx(packageName, subName, "../../../");
 					const subContent = parseComponentDeclaration(subDeclaration, subMdx);
 					fs.writeFileSync(path.join(folderPath, `${subName}.mdx`), subContent);
 				});
