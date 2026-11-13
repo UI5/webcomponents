@@ -317,6 +317,34 @@ describe("Typeahead", () => {
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").realType("A");
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").should("have.value", "Albania");
 	});
+
+	it("Should re-apply typeahead after deleting the autocompleted value and typing again", () => {
+		cy.mount(
+			<Input id="input-contains-typeahead" showSuggestions={true} filter="Contains">
+				<SuggestionItem text="Gold" />
+				<SuggestionItem text="Orange" />
+			</Input>
+		);
+
+		cy.get("#input-contains-typeahead").realClick();
+		cy.get("#input-contains-typeahead")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.as("popover")
+		.ui5ResponsivePopoverOpened();
+
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").should("be.focused");
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").realType("g");
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").should("have.value", "gold");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").should("have.value", "g");
+
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").realType("o");
+		cy.get("#input-contains-typeahead").shadow().find(".ui5-input-inner-phone").should("have.value", "gold");
+	});
 });
 
 describe("Clear icon", () => {

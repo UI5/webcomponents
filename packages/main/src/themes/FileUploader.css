@@ -1,6 +1,5 @@
-@import "./FormComponents.css";
+@import "./InputField.css";
 @import "./Input.css";
-@import "./InputIcon.css";
 @import "./ValueStateVariables.css";
 
 :host {
@@ -158,7 +157,7 @@
 :host([value-state="Critical"][focused]:not([opened]):not([readonly])) .ui5-file-uploader-display-elements,
 :host([value-state="Information"]:not([readonly]):not([focused]):hover) .ui5-file-uploader-display-elements,
 :host([value-state="Information"]:not([readonly])[focused][opened]:hover) .ui5-file-uploader-display-elements,
-:host([value-state="Information"][focused]:not([opened]):not([readonly])) .ui5-file-uploader-display-elements{
+:host([value-state="Information"][focused]:not([opened]):not([readonly])) .ui5-file-uploader-display-elements {
 	background-color: var(--sapField_Hover_Background);
 }
 

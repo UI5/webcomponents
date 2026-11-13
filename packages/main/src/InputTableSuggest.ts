@@ -1,0 +1,1132 @@
+import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
+import {
+	isUp,
+	isDown,
+	isEnter,
+	isBackSpace,
+	isDelete,
+	isEscape,
+	isHome,
+	isEnd,
+	isPageUp,
+	isPageDown,
+	isTabNext,
+	isTabPrevious,
+} from "@ui5/webcomponents-base/dist/Keys.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
+
+import InputField from "./InputField.js";
+import type InputTableSuggestRow from "./InputTableSuggestRow.js";
+import type InputTableSuggestHeaderRow from "./InputTableSuggestHeaderRow.js";
+import type TableHeaderCell from "./TableHeaderCell.js";
+import type TableCell from "./TableCell.js";
+import type ResponsivePopover from "./ResponsivePopover.js";
+import type TableOverflowMode from "./types/TableOverflowMode.js";
+
+import InputTableSuggestTemplate from "./InputTableSuggestTemplate.js";
+import InputTableSuggestStyles from "./generated/themes/InputTableSuggest.css.js";
+import SuggestionsCss from "./generated/themes/Suggestions.css.js";
+
+import {
+	ROW_ITEM_POSITION,
+	INPUT_SUGGESTIONS_TITLE,
+	INPUT_SUGGESTIONS,
+	INPUT_AVALIABLE_VALUES,
+	INPUT_SUGGESTIONS_ONE_HIT,
+	INPUT_SUGGESTIONS_MORE_HITS,
+	INPUT_SUGGESTIONS_NO_HIT,
+	INPUT_SUGGESTIONS_EXPANDED,
+	INPUT_SUGGESTIONS_COLLAPSED,
+	INPUT_SUGGESTIONS_OK_BUTTON,
+	INPUT_SUGGESTIONS_CANCEL_BUTTON,
+} from "./generated/i18n/i18n-defaults.js";
+
+/**
+ * Interface for tabular suggestion row items
+ * @public
+ */
+interface ITableSuggestionRow extends UI5Element {
+	cells: TableCell[];
+	selected?: boolean;
+	focused?: boolean;
+	interactive?: boolean;
+}
+
+type InputTableSuggestSelectionChangeEventDetail = {
+	row: ITableSuggestionRow | null;
+}
+
+type InputTableSuggestScrollEventDetail = {
+	scrollTop: number;
+	scrollContainer: HTMLElement;
+}
+
+/**
+ * @class
+ * ### Overview
+ *
+ * The `ui5-input-table-suggest` component is an input field with tabular suggestion support.
+ * It displays suggestions in a table format with multiple columns, allowing users to
+ * see more information about each suggestion before selecting it.
+ *
+ * This component supports:
+ * - Multiple columns via the `headerRow` slot
+ * - Tabular rows via the default (`rows`) slot
+ * - Automatic popin mode for responsive behavior
+ *
+ * ### Usage
+ *
+ * Use this component when:
+ * - Users need to see additional information in columns for each suggestion
+ * - A simple text-based suggestion list is not sufficient
+ * - You want to display data in a tabular format
+ *
+ * ### Structure
+ *
+ * This component uses its own tabular suggestion mechanism instead of the standard
+ * `showSuggestions` / `suggestionItems` from ui5-input. The tabular suggestions
+ * are defined via:
+ * - `headerRow`: Table header cells defining the columns
+ * - `rows` (default slot): Table rows with cells containing the suggestion data
+ *
+ * **Note:** Autocomplete (typeahead) is based on the first column of suggestion rows only.
+ *
+ *
+ * ### ES6 Module Import
+ *
+ * `import "@ui5/webcomponents/dist/InputTableSuggest.js";`
+ *
+ * @constructor
+ * @extends InputField
+ * @public
+ * @experimental
+ */
+@customElement({
+	tag: "ui5-input-table-suggest",
+	renderer: jsxRenderer,
+	template: InputTableSuggestTemplate,
+	styles: [InputField.styles, SuggestionsCss, InputTableSuggestStyles],
+})
+/**
+ * Fired when a suggestion row is highlighted during navigation or selected by the user.
+ * @param {HTMLElement | null} row The highlighted or selected suggestion row.
+ * @public
+ */
+@event("selection-change", { bubbles: true })
+
+/**
+ * Fired when the suggestions picker is opened.
+ * @public
+ */
+@event("open", { bubbles: true })
+
+/**
+ * Fired when the suggestions picker is closed.
+ * @public
+ */
+@event("close")
+
+/**
+ * Fired when the value is autocompleted
+ * @private
+ */
+@event("type-ahead")
+
+/**
+ * Fired when the user scrolls the suggestions picker.
+ * @param {Integer} scrollTop The current scroll position.
+ * @param {HTMLElement} scrollContainer The scroll container.
+ * @public
+ */
+@event("suggestion-scroll", { bubbles: true })
+
+class InputTableSuggest extends InputField {
+	eventDetails!: InputField["eventDetails"] & {
+		"selection-change": InputTableSuggestSelectionChangeEventDetail,
+		"open": void,
+		"close": void,
+		"type-ahead": void,
+		"suggestion-scroll": InputTableSuggestScrollEventDetail,
+	}
+
+	/**
+	 * Defines whether the suggestions picker is open.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_open = false;
+
+	/**
+	 * Defines whether suggestions should be shown.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showSuggestions = false;
+
+	/**
+	 * Defines whether the typeahead feature is disabled.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	noTypeahead = false;
+
+	/**
+	 * The typed-in value before suggestion selection.
+	 * @private
+	 */
+	typedInValue = "";
+
+	/**
+	 * Whether autocomplete should run on next render.
+	 * @private
+	 */
+	_shouldAutocomplete?: boolean;
+
+	/**
+	 * Whether text selection should be performed.
+	 * @private
+	 */
+	_performTextSelection?: boolean;
+
+	/**
+	 * Whether key navigation is in progress.
+	 * @private
+	 */
+	_isKeyNavigation?: boolean;
+
+	/**
+	 * Defines the columns for the tabular suggestions.
+	 * Use a single `ui5-input-table-suggest-header-row` component with
+	 * `ui5-input-table-suggest-header-cell` children to define the columns.
+	 *
+	 * **Note:** This is a single-element slot. Provide exactly one `ui5-input-table-suggest-header-row`.
+	 *
+	 * @public
+	 */
+	@slot({ type: HTMLElement })
+	headerRow!: Slot<InputTableSuggestHeaderRow>;
+
+	/**
+	 * Defines the rows for the tabular suggestions.
+	 * Use the `ui5-input-table-suggest-row` component with `ui5-input-table-suggest-cell`
+	 * children to define each suggestion row.
+	 *
+	 * **Note:** The cells in each row should correspond to the columns defined in the `headerRow`.
+	 *
+	 * @public
+	 */
+	@slot({ type: HTMLElement, "default": true })
+	rows!: DefaultSlot<InputTableSuggestRow>;
+
+	/**
+	 * Defines the overflow behavior of the suggestion table.
+	 * @default "Popin"
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_overflowMode: `${TableOverflowMode}` = "Popin";
+
+	/**
+	 * Internal property to track if table suggestions are being used
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_useTableSuggestions = false;
+
+	/**
+	 * Internal property reflecting whether a suggestion row has focus.
+	 * Used by CSS to hide input focus outline during row navigation.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_rowFocused = false;
+
+	/**
+	 * Internal property reflecting whether a value-state-message link holds focus.
+	 * Used by CSS to hide the input focus outline so the input does not also look focused.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_linkFocused = false;
+
+	/**
+	 * Stores the matched row for typeahead
+	 * @private
+	 */
+	_matchedTabularRow?: ITableSuggestionRow;
+
+	get _effectiveShowSuggestions() {
+		return this.showSuggestions && this._useTableSuggestions;
+	}
+
+	get _suggestionsPopoverId() {
+		return `${this._id}-popover`;
+	}
+
+	get accInfo() {
+		const base = super.accInfo;
+		const showSuggestions = this._effectiveShowSuggestions;
+
+		return {
+			...base,
+			ariaHasPopup: base.ariaHasPopup || (showSuggestions ? "dialog" : undefined),
+			ariaAutoComplete: base.ariaAutoComplete || (showSuggestions ? "list" as const : undefined),
+			ariaControls: base.ariaControls || (showSuggestions ? this._suggestionsPopoverId : undefined),
+		};
+	}
+
+	get suggestionsTextId() {
+		return this._effectiveShowSuggestions ? "suggestionsText" : "";
+	}
+
+	get ariaDescribedByIds() {
+		return [
+			this.suggestionsTextId,
+			super.ariaDescribedByIds,
+		].filter(Boolean).join(" ");
+	}
+
+	/**
+	 * The header cells of the app-provided `ui5-table-header-row`. Read straight from the
+	 * light DOM so the value is available synchronously, before the header row's own slots
+	 * have been processed.
+	 *
+	 * @private
+	 */
+	get _columns(): TableHeaderCell[] {
+		const headerRow = this.headerRow[0];
+
+		if (!headerRow) {
+			return [];
+		}
+
+		return Array.from(headerRow.querySelectorAll<TableHeaderCell>(":scope > [ui5-table-header-cell]"));
+	}
+
+	get _allRows(): ITableSuggestionRow[] {
+		return this.rows as unknown as ITableSuggestionRow[];
+	}
+
+	get _visibleRows(): ITableSuggestionRow[] {
+		return this._allRows.filter(row => !(row as UI5Element).hidden);
+	}
+
+	onBeforeRendering() {
+		this._useTableSuggestions = this._columns.length > 0;
+
+		if (this._useTableSuggestions) {
+			this._handleTabularPopoverOpen();
+			this._handleTabularTypeAhead();
+		}
+
+		super.onBeforeRendering();
+	}
+
+	_input(e: CustomEvent | InputEvent, eventType: string) {
+		super._input(e, eventType);
+
+		this.typedInValue = this.value;
+
+		this._isKeyNavigation = false;
+
+		// Typing returns the visual focus to the input, so drop the row-focus state that
+		// suppresses the input's focus ring (see [_row-focused] in InputTableSuggest.css).
+		this._rowFocused = false;
+
+		// On backspace/delete/escape (_shouldAutocomplete is false) clear any row
+		// selection/focus. For forward typing we keep the current selection: the
+		// typeahead re-selects the matching row on re-render, and when the typed value
+		// exactly matches the already-autocompleted row the value does not change, so
+		// no re-render happens - deselecting here would drop a still-correct selection.
+		if (!this._shouldAutocomplete) {
+			this._clearRowSelection();
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_handleTabularPopoverOpen() {
+		if (!this._effectiveShowSuggestions) {
+			return;
+		}
+
+		const hasItems = this._visibleRows.length > 0;
+		const hasValue = !!this.value;
+		const isFocused = this.shadowRoot?.querySelector("input") === getActiveElement();
+		const preventOpenPicker = this.disabled || this.readonly;
+
+		// While navigating rows, the previewed value can be empty (e.g. the first cell
+		// holds a non-text component like an avatar). Don't treat that as "cleared
+		// input" and close the picker mid-navigation.
+		if (preventOpenPicker || (!hasValue && !this._isKeyNavigation)) {
+			this._open = false;
+		} else if (!this._isPhone) {
+			const isTyping = isFocused && this.isTyping;
+			if (isTyping) {
+				// Filtering is the application's responsibility (it hides non-matching
+				// rows). The component does not match internally, so it opens with all
+				// currently provided rows whenever there is something to show.
+				this._open = hasItems;
+			} else {
+				this._open = hasItems && this._open;
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_handleTabularTypeAhead() {
+		// Typeahead is independent of the popover: showSuggestions only controls whether
+		// the suggestions popover opens (handled in _handleTabularPopoverOpen). Autocomplete
+		// and matching-row selection run whenever tabular suggestions are provided.
+		if (!this._useTableSuggestions || this.noTypeahead) {
+			return;
+		}
+
+		const innerInput = this.getInputDOMRefSync();
+		if (!innerInput || !this.value || this._isKeyNavigation) {
+			return;
+		}
+
+		// _shouldAutocomplete is false for backspace/delete/escape. For those we keep
+		// the row deselected (done in _input) and bail out here.
+		if (!this._shouldAutocomplete) {
+			return;
+		}
+
+		const matchingRow = this._getFirstMatchingRow(this.value);
+		if (!matchingRow) {
+			// Forward typing no longer matches any row: clear the previous selection.
+			this._clearRowSelection();
+			return;
+		}
+
+		const autoCompletedChars = innerInput.selectionEnd! - innerInput.selectionStart!;
+
+		// Suffix autocomplete only when there is nothing already autocompleted.
+		if (!isAndroid() && !autoCompletedChars && !this._isComposing) {
+			this._performRowTypeAhead(matchingRow);
+		}
+
+		this._selectMatchingRow(matchingRow);
+	}
+
+	/**
+	 * @private
+	 */
+	_getFirstMatchingRow(current: string): ITableSuggestionRow | undefined {
+		const visibleRows = this._visibleRows;
+		if (!visibleRows.length) {
+			return;
+		}
+
+		const currentLower = current.toLowerCase();
+
+		return visibleRows.find(row => {
+			const firstCellText = this._getRowValue(row).toLowerCase();
+			return firstCellText.startsWith(currentLower);
+		});
+	}
+
+	/**
+	 * @private
+	 */
+	_performRowTypeAhead(row: ITableSuggestionRow) {
+		const suggestionText = this._getRowValue(row);
+		const typedValue = this.typedInValue;
+
+		if (suggestionText.toLowerCase().startsWith(typedValue.toLowerCase())) {
+			this.value = typedValue + suggestionText.substring(typedValue.length);
+		}
+
+		this._performTextSelection = true;
+		this._shouldAutocomplete = false;
+	}
+
+	_selectMatchingRow(row: ITableSuggestionRow) {
+		const selectionChanged = this._matchedTabularRow !== row;
+
+		this._deselectAllRows();
+
+		row.selected = true;
+		this._matchedTabularRow = row;
+		this._updateRowClasses();
+
+		if (selectionChanged) {
+			this.fireDecoratorEvent("selection-change", {
+				row,
+			});
+		}
+	}
+
+	_updateRowClasses() {
+		this._allRows.forEach(row => {
+			row.classList.toggle("ui5-input-table-suggest-row--focused", !!row.focused);
+			row.classList.toggle("ui5-input-table-suggest-row--selected", !!row.selected);
+		});
+	}
+
+	onAfterRendering() {
+		if (!this._useTableSuggestions) {
+			return super.onAfterRendering();
+		}
+
+		if (this._performTextSelection) {
+			if (this.typedInValue.length && this.value.length) {
+				this._adjustSelectionRange();
+			}
+			this.fireDecoratorEvent("type-ahead");
+		}
+		this._performTextSelection = false;
+		this._updateValueStateLinks();
+	}
+
+	/**
+	 * Updates event listeners for links in value state message.
+	 * @private
+	 */
+	_updateValueStateLinks() {
+		const currentLinks = this.linksInAriaValueStateHiddenText;
+		if (!arraysAreEqual(this._valueStateLinks, currentLinks)) {
+			this._removeLinksEventListeners();
+			this._addLinksEventListeners();
+			this._valueStateLinks = currentLinks;
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_adjustSelectionRange() {
+		const innerInput = this.getInputDOMRefSync();
+		if (innerInput && this.typedInValue.length && this.value.length) {
+			innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+		}
+	}
+
+	_onTableRowClick(e: MouseEvent) {
+		const clickedRow = e.composedPath().find(el => {
+			return (el as HTMLElement).hasAttribute?.("ui5-table-row");
+		}) as ITableSuggestionRow | undefined;
+
+		if (clickedRow && this._visibleRows.includes(clickedRow)) {
+			this._selectRow(clickedRow, false);
+		}
+	}
+
+	_onTableRowMouseDown(e: MouseEvent) {
+		// Keep the real focus on the input: a mousedown inside the popover would otherwise move
+		// DOM focus to the pressed element, and if the pointer is released off a row (e.g. on the
+		// header) no selection runs to restore it, leaving the input focused-looking but untypeable.
+		e.preventDefault();
+
+		const pressedRow = e.composedPath().find(el => {
+			return (el as HTMLElement).hasAttribute?.("ui5-table-row");
+		}) as ITableSuggestionRow | undefined;
+
+		if (!pressedRow || !this._visibleRows.includes(pressedRow) || pressedRow.focused) {
+			return;
+		}
+
+		// Move the visual focus to the pressed row on mousedown so exactly one row is highlighted
+		// and the input's focus ring stays suppressed; on mouse up the row is already focused, so
+		// no second visual focus appears on the input or another row. Unlike keyboard focus this
+		// does not preview the row value into the input (a press must not alter the typed text or
+		// leave a text selection). Mark key navigation so the reflected _rowFocused re-render does
+		// not run typeahead and wipe the freshly focused row.
+		this._isKeyNavigation = true;
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		pressedRow.focused = true;
+		this._rowFocused = true;
+		this._updateRowClasses();
+		this.fireDecoratorEvent("selection-change", {
+			row: pressedRow,
+		});
+	}
+
+	_click() {
+		super._click();
+
+		if (this._useTableSuggestions && this._rowFocused) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+			this._clearAnnouncement();
+		}
+	}
+
+	_selectRow(row: ITableSuggestionRow, keyboardUsed: boolean) {
+		const rowValue = this._getRowValue(row);
+		const isAlreadySelected = row.focused || row.selected;
+		this._shouldAutocomplete = false;
+
+		this.value = rowValue;
+		this.typedInValue = rowValue;
+		// Sync previousValue so the native change event on the following blur does not fire a
+		// second `change` on top of the explicit one below (mirrors base ui5-input on accept).
+		this.previousValue = rowValue;
+		this._open = false;
+
+		if (!isAlreadySelected) {
+			this.fireDecoratorEvent("selection-change", {
+				row,
+			});
+		}
+		this.fireDecoratorEvent("change");
+
+		this._deselectAllRows();
+		row.selected = true;
+		this._matchedTabularRow = undefined;
+		this._rowFocused = false;
+		this.isTyping = false;
+		this._updateRowClasses();
+
+		if (!keyboardUsed && !isPhone()) {
+			this.focus();
+		}
+	}
+
+	_getRowValue(row: ITableSuggestionRow): string {
+		const cells = row.cells || [];
+
+		if (cells.length > 0) {
+			return cells[0].textContent?.trim() || "";
+		}
+
+		return "";
+	}
+
+	_deselectAllRows() {
+		this._allRows.forEach(row => {
+			row.selected = false;
+			row.focused = false;
+		});
+		this._updateRowClasses();
+	}
+
+	_clearRowSelection() {
+		const hadSelection = this._allRows.some(row => row.selected || row.focused);
+		if (!hadSelection) {
+			return;
+		}
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		this.fireDecoratorEvent("selection-change", {
+			row: null,
+		});
+	}
+
+	_onkeydown(e: KeyboardEvent) {
+		// isBackSpace/isDelete are false when a modifier is held (e.g. Ctrl/Cmd+Backspace),
+		// but those still delete content, so match the key directly to suppress typeahead.
+		const isDeletion = isBackSpace(e) || isDelete(e) || e.key === "Backspace" || e.key === "Delete";
+		this._shouldAutocomplete = !this.noTypeahead && !(isDeletion || isEscape(e));
+
+		if (this._useTableSuggestions && this._open) {
+			if (isDown(e)) {
+				e.preventDefault();
+				this._isKeyNavigation = true;
+				this._navigateRows(true);
+				return;
+			}
+
+			if (isUp(e)) {
+				e.preventDefault();
+				this._isKeyNavigation = true;
+				this._navigateRows(false);
+				return;
+			}
+
+			if (isHome(e) || isEnd(e) || isPageUp(e) || isPageDown(e)) {
+				const visibleRows = this._visibleRows;
+
+				if (visibleRows.length === 0) {
+					return;
+				}
+
+				e.preventDefault();
+				this._isKeyNavigation = true;
+
+				const lastIndex = visibleRows.length - 1;
+				const currentIndex = visibleRows.findIndex(row => row.focused || row.selected);
+
+				let targetIndex: number;
+				if (isHome(e)) {
+					targetIndex = 0;
+				} else if (isEnd(e)) {
+					targetIndex = lastIndex;
+				} else {
+					const from = currentIndex < 0 ? 0 : currentIndex;
+					targetIndex = isPageDown(e)
+						? Math.min(from + 10, lastIndex)
+						: Math.max(from - 10, 0);
+				}
+
+				this._focusRowAtIndex(targetIndex);
+				return;
+			}
+
+			if (isTabNext(e) || isTabPrevious(e)) {
+				const visibleRows = this._visibleRows;
+				const rowToSelect = visibleRows.find(row => row.focused) || this._matchedTabularRow;
+
+				if (rowToSelect) {
+					// Accept the highlighted row but let the default Tab move focus to the next control.
+					this._selectRow(rowToSelect, true);
+				}
+			}
+
+			if (isEnter(e)) {
+				const visibleRows = this._visibleRows;
+				const focusedRow = visibleRows.find(row => row.focused);
+				const innerInput = this.getInputDOMRefSync();
+
+				let rowToSelect = focusedRow || this._matchedTabularRow;
+
+				if (!rowToSelect) {
+					rowToSelect = visibleRows.find(row => {
+						return this._getRowValue(row).toLowerCase() === this.value.toLowerCase();
+					});
+				}
+
+				if (rowToSelect && innerInput) {
+					const rowValue = this._getRowValue(rowToSelect);
+					innerInput.setSelectionRange(rowValue.length, rowValue.length);
+
+					e.preventDefault();
+					this._selectRow(rowToSelect, true);
+					return;
+				}
+
+				e.preventDefault();
+				this._shouldAutocomplete = false;
+				this.isTyping = false;
+				this._open = false;
+				this.lastConfirmedValue = this.value;
+				this._handleChange();
+				return;
+			}
+		}
+
+		super._onkeydown(e);
+	}
+
+	_navigateRows(forward: boolean) {
+		const visibleRows = this._visibleRows;
+
+		if (visibleRows.length === 0) {
+			return;
+		}
+
+		const currentIndex = visibleRows.findIndex(row => row.focused || row.selected);
+
+		let nextIndex: number;
+		if (forward) {
+			if (currentIndex >= visibleRows.length - 1) {
+				return;
+			}
+			nextIndex = currentIndex < 0 ? 0 : currentIndex + 1;
+		} else {
+			if (currentIndex <= 0) {
+				this._clearRowSelection();
+				this._rowFocused = false;
+				this._clearAnnouncement();
+				this.value = this.typedInValue;
+				return;
+			}
+			nextIndex = currentIndex - 1;
+		}
+
+		this._focusRowAtIndex(nextIndex);
+	}
+
+	/**
+	 * Moves visual focus to the visible row at the given index, previews its value,
+	 * announces it and scrolls it into view. Shared by arrow keys and Home/End/PageUp/PageDown.
+	 *
+	 * @private
+	 */
+	_focusRowAtIndex(index: number) {
+		const visibleRows = this._visibleRows;
+
+		if (index < 0 || index >= visibleRows.length) {
+			return;
+		}
+
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+
+		visibleRows[index].focused = true;
+		this._rowFocused = true;
+		this._updateRowClasses();
+
+		const previewValue = this._getRowValue(visibleRows[index]);
+		this.value = previewValue;
+		this._performTextSelection = true;
+
+		this._announceSelectedRow(index);
+		this._scrollRowIntoView(index);
+
+		this.fireDecoratorEvent("selection-change", {
+			row: visibleRows[index],
+		});
+	}
+
+	_handleEscape() {
+		if (!this._useTableSuggestions || !this._open) {
+			return super._handleEscape();
+		}
+
+		this.value = this.typedInValue;
+		this._open = false;
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		this._rowFocused = false;
+		this._linkFocused = false;
+		this.isTyping = false;
+		this._clearAnnouncement();
+	}
+
+	_handleCtrlAltF8() {
+		// Moving focus to a value-state-message link: clear any row focus/selection so no row
+		// stays highlighted behind the link and returning to the list starts at the first row.
+		if (this._useTableSuggestions) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+			this._clearAnnouncement();
+		}
+
+		// The input keeps `focused` (so the value-state popover stays open), so flag the link
+		// focus separately to stop the input from also rendering as focused.
+		if (this.linksInAriaValueStateHiddenText.length) {
+			this._linkFocused = true;
+		}
+
+		super._handleCtrlAltF8();
+	}
+
+	_addLinksEventListeners() {
+		const links = this.linksInAriaValueStateHiddenText;
+
+		links.forEach((link, index) => {
+			this._linksListenersArray.push((e: KeyboardEvent) => {
+				attachListeners(e, links, index, {
+					closeValueState: () => {
+						this._open = false;
+						if (this.valueStateOpen) {
+							this.closeValueStatePopover();
+						}
+					},
+					focusInput: () => {
+						this._handleLinkNavigation = false;
+						this._linkFocused = false;
+						this.getInputDOMRef()!.focus();
+					},
+					navigateToItem: () => {
+						this._handleLinkNavigation = false;
+						if (this._open) {
+							this._linkFocused = false;
+							// Mark as keyboard navigation so the re-render triggered by the row
+							// preview value does not run typeahead and wipe the row focus.
+							this._isKeyNavigation = true;
+							this.getInputDOMRef()!.focus();
+							this._focusRowAtIndex(0);
+						}
+					},
+					isPopoverOpen: () => this._open,
+				});
+			});
+			link.addEventListener("keydown", this._linksListenersArray[index]);
+		});
+	}
+
+	_clearPopoverFocusAndSelection() {
+		this._deselectAllRows();
+	}
+
+	get _hasTabularSuggestions(): boolean {
+		return this._useTableSuggestions && this._visibleRows.length > 0;
+	}
+
+	get _columnsCount(): number {
+		return this._columns.length;
+	}
+
+	get _isRowFocused(): boolean {
+		return this._useTableSuggestions && this._visibleRows.some(row => row.focused);
+	}
+
+	get _isSuggestionsFocused(): boolean {
+		return this._isRowFocused;
+	}
+
+	/**
+	 * Announces the currently selected row to screen readers using a live region.
+	 * Includes the row position and all column values with their headers.
+	 *
+	 * @private
+	 */
+	_announceSelectedRow(rowIndex: number) {
+		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
+		if (!invisibleText) {
+			return;
+		}
+
+		const row = this._visibleRows[rowIndex];
+		const cells = row.cells || [];
+		const columns = this._columns;
+
+		const positionText = InputField.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
+
+		const cellTexts = cells.map((cell, index) => {
+			const cellValue = cell.textContent?.trim() || "";
+			const columnHeader = columns[index]?.textContent?.trim() || "";
+			return columnHeader ? `${columnHeader}: ${cellValue}` : cellValue;
+		}).join(", ");
+
+		invisibleText.textContent = `${positionText}. ${cellTexts}`;
+	}
+
+	/**
+	 * Clears the announcement text when closing the popover.
+	 *
+	 * @private
+	 */
+	_clearAnnouncement() {
+		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
+		if (invisibleText) {
+			invisibleText.textContent = "";
+		}
+	}
+
+	/**
+	 * Returns the tabular suggestions popover element
+	 *
+	 * @private
+	 */
+	_getTabularPopover() {
+		return this.shadowRoot?.querySelector<ResponsivePopover>(".ui5-suggestions-popover");
+	}
+
+	/**
+	 * Forwards the suggestions scroll as a public `suggestion-scroll` event.
+	 *
+	 * @private
+	 */
+	_onTableScroll(e: Event) {
+		const scrollContainer = e.target as HTMLElement;
+		this.fireDecoratorEvent("suggestion-scroll", {
+			scrollTop: scrollContainer.scrollTop,
+			scrollContainer,
+		});
+	}
+
+	/**
+	 * Scrolls the row at the given index into view within the suggestions popover.
+	 *
+	 * @private
+	 */
+	_scrollRowIntoView(rowIndex: number) {
+		const popover = this._getTabularPopover();
+		if (!popover) {
+			return;
+		}
+
+		const rowElement = this._visibleRows[rowIndex] as unknown as HTMLElement | undefined;
+
+		if (!rowElement) {
+			return;
+		}
+
+		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-input-table-suggest-wrapper");
+		if (!scrollContainer) {
+			return;
+		}
+
+		const containerRect = scrollContainer.getBoundingClientRect();
+		const rowRect = rowElement.getBoundingClientRect();
+
+		const isRowAboveView = rowRect.top < containerRect.top;
+		const isRowBelowView = rowRect.bottom > containerRect.bottom;
+
+		if (isRowAboveView || isRowBelowView) {
+			rowElement.scrollIntoView({
+				behavior: "auto",
+				block: "nearest",
+			});
+		}
+	}
+
+	/**
+	 * Override focusout handler to prevent closing popover when clicking inside it
+	 *
+	 * @private
+	 */
+	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {
+		const popover = this._getTabularPopover();
+		return !!(
+			popover?.contains(toBeFocused)
+			|| this.contains(toBeFocused)
+			|| this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))
+		);
+	}
+
+	_onfocusout(e: FocusEvent) {
+		const toBeFocused = e.relatedTarget as HTMLElement;
+
+		if (this._shouldSkipFocusOut(toBeFocused)) {
+			return;
+		}
+
+		this.focused = false;
+
+		this._open = false;
+		// The native change fired on blur was deferred while the popover was open (see
+		// _handleChange). Now that it is closed, fire the pending `change`. When the clear icon
+		// was used, reset the flag first so _handleChange does not suppress the change (mirrors
+		// base InputField/Input). If a row was selected, previousValue is already synced so this
+		// no-ops.
+		if (this.showClearIcon && !this._effectiveShowClearIcon) {
+			this._clearIconClicked = false;
+		}
+		this._handleChange();
+
+		this._rowFocused = false;
+		this._linkFocused = false;
+		this._clearPopoverFocusAndSelection();
+
+		if (!this._clearIconClicked) {
+			this.previousValue = "";
+		}
+
+		this.lastConfirmedValue = "";
+		this.isTyping = false;
+
+		if ((this.value !== this.previousValue) && this.showClearIcon) {
+			this._clearIconClicked = false;
+		}
+	}
+
+	_handleChange() {
+		// While the popover is open, defer the native change-on-blur: an explicit row
+		// selection (click/Enter) fires the single authoritative `change` via _selectRow, and
+		// a blur outside the popover re-runs this from _onfocusout once the popover is closed.
+		// This mirrors base ui5-input, which defers `change` while its suggestions picker is open.
+		if (this._useTableSuggestions && this._open) {
+			return;
+		}
+
+		super._handleChange();
+	}
+
+	// ======================= Suggestion-specific getters =======================
+
+	get _headerTitleText() {
+		return this._associatedLabelsTexts || InputField.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get suggestionsText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS);
+	}
+
+	get _popupLabel() {
+		return InputField.i18nBundle.getText(INPUT_AVALIABLE_VALUES);
+	}
+
+	get availableSuggestionsCount() {
+		if (this._effectiveShowSuggestions && (this.value || this._open)) {
+			const itemsCount = this._visibleRows.length;
+			const stateText = this._open ? InputField.i18nBundle.getText(INPUT_SUGGESTIONS_EXPANDED) : InputField.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED);
+
+			switch (itemsCount) {
+			case 0:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT)} ${stateText}`;
+
+			case 1:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT)} ${stateText}`;
+
+			default:
+				return `${InputField.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, itemsCount)} ${stateText}`;
+			}
+		}
+
+		return this._effectiveShowSuggestions ? InputField.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED) : undefined;
+	}
+
+	get _suggestionsOkButtonText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
+	}
+
+	get _suggestionsCancelButtonText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS_CANCEL_BUTTON);
+	}
+
+	_afterOpenPicker() {
+		this.fireDecoratorEvent("open");
+	}
+
+	_afterClosePicker() {
+		this.fireDecoratorEvent("close");
+		this._deselectAllRows();
+		this._rowFocused = false;
+		this._linkFocused = false;
+	}
+
+	_confirmMobileValue() {
+		const focusedRow = this._visibleRows.find(row => row.focused);
+		if (focusedRow) {
+			this._selectRow(focusedRow, false);
+		}
+		this._open = false;
+	}
+
+	_cancelMobileValue() {
+		this.value = this.typedInValue || "";
+		this._open = false;
+		this._deselectAllRows();
+	}
+
+	get styles() {
+		const inputWidth = this._inputWidth || 0;
+
+		return {
+			innerInput: {
+				"padding": "",
+			},
+			suggestionsPopover: {
+				"min-width": inputWidth ? `${inputWidth}px` : "",
+				"max-width": inputWidth ? `max(${inputWidth}px, 40rem)` : "40rem",
+			},
+			suggestionPopoverHeader: {
+				"display": "inline-block",
+				"width": "100%",
+				"max-width": "inherit",
+			},
+		};
+	}
+}
+
+InputTableSuggest.define();
+
+export default InputTableSuggest;
+export type {
+	ITableSuggestionRow,
+	InputTableSuggestSelectionChangeEventDetail,
+	InputTableSuggestScrollEventDetail,
+};
