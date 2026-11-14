@@ -1,0 +1,2 @@
+declare const _default: ".ui5-user-settings-notifications-view-content{display:flex;flex-direction:column;gap:.5rem}.ui5-user-settings-notifications-view-list{padding:0;margin:0;--ui5-group-header-listitem-background-color: var(--sapList_Background)}.ui5-user-settings-notifications-view-form{background:var(--sapGroup_ContentBackground);border-bottom:.0625rem solid var(--sapList_BorderColor);overflow:visible}slot[name=additionalContent]::slotted(*){display:block}\n";
+export default _default;

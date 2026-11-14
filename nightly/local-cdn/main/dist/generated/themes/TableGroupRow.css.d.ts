@@ -1,0 +1,2 @@
+declare const _default: ":host{color:var(--sapList_TableGroupHeaderTextColor);background:var(--sapList_TableGroupHeaderBackground);font-weight:700;min-height:2rem}#group-cell{grid-column:1 / -1;padding-inline:var(--_ui5_first_table_cell_horizontal_padding)}:host([_render-dummy-cell]) #group-cell{grid-column:1 / -2}:host(:first-of-type)>[ui5-table-cell][aria-colspan]{border-bottom:var(--sapList_BorderWidth) solid var(--sapList_BorderColor);border-top:none}\n";
+export default _default;

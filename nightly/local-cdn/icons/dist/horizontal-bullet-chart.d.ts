@@ -1,0 +1,8 @@
+declare const getPathData: () => Promise<string>;
+declare const ltr: boolean;
+declare const viewBox: string;
+declare const accData: null
+declare const _default: "horizontal-bullet-chart";
+
+export default _default;
+export { getPathData, ltr, viewBox, accData };

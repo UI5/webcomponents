@@ -1,0 +1,2 @@
+declare const _default: "[ui5-responsive-popover]::part(header),[ui5-responsive-popover]::part(content){padding:0}[ui5-responsive-popover] .ui5-responsive-popover-header{min-height:2rem}[ui5-responsive-popover] .ui5-responsive-popover-header .row{justify-content:left}[ui5-responsive-popover] [ui5-button]{height:100%;min-width:4rem}[ui5-responsive-popover]{margin-top:var(--_ui5_tokenizer-popover_offset);margin-inline-start:calc(-1 * var(--_ui5_tokenizer_padding))}\n";
+export default _default;

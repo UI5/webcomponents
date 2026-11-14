@@ -1,0 +1,2 @@
+declare const _default: ":host(:not([hidden])){display:flex}.ui5-side-navigation-search-field-root{display:flex;width:100%}.ui5-side-navigation-search-field-input{width:100%}\n";
+export default _default;

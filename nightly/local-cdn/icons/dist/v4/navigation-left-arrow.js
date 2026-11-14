@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "navigation-left-arrow";
+const pathData = "M6.75 7.627c-.23.249-.23.487 0 .715l4.906 4.947a.981.981 0 0 1 .313.715c0 .27-.104.498-.313.685a.891.891 0 0 1-.687.311.99.99 0 0 1-.719-.311L4.281 8.684a.948.948 0 0 1-.281-.7.95.95 0 0 1 .281-.7l6-5.973A.99.99 0 0 1 11 1c.27 0 .51.104.719.311a.95.95 0 0 1 .281.7.95.95 0 0 1-.281.7L6.75 7.627Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/navigation-left-arrow";
+export { pathData, ltr, viewBox, accData };

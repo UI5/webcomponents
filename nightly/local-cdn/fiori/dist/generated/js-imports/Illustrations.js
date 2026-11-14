@@ -1,0 +1,88 @@
+// @ts-nocheck
+import { registerIllustrationLoader } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+export const loadIllustration = async (illustrationName) => {
+    const collectionAndPrefix = "fiori/V4/";
+    const cleanIllustrationName = illustrationName.startsWith(collectionAndPrefix) ? illustrationName.replace(collectionAndPrefix, "") : illustrationName;
+    switch (cleanIllustrationName) {
+        case "Achievement": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-achievement" */ "../../illustrations/Achievement.js")).default;
+        case "AddColumn": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-addcolumn" */ "../../illustrations/AddColumn.js")).default;
+        case "AddDimensions": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-adddimensions" */ "../../illustrations/AddDimensions.js")).default;
+        case "AddPeople": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-addpeople" */ "../../illustrations/AddPeople.js")).default;
+        case "AddPeopleToCalendar": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-addpeopletocalendar" */ "../../illustrations/AddPeopleToCalendar.js")).default;
+        case "AddingColumns": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-addingcolumns" */ "../../illustrations/AddingColumns.js")).default;
+        case "BalloonSky": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-balloonsky" */ "../../illustrations/BalloonSky.js")).default;
+        case "BeforeSearch": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-beforesearch" */ "../../illustrations/BeforeSearch.js")).default;
+        case "Connection": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-connection" */ "../../illustrations/Connection.js")).default;
+        case "DragFilesToUpload": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-dragfilestoupload" */ "../../illustrations/DragFilesToUpload.js")).default;
+        case "EmptyCalendar": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-emptycalendar" */ "../../illustrations/EmptyCalendar.js")).default;
+        case "EmptyList": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-emptylist" */ "../../illustrations/EmptyList.js")).default;
+        case "EmptyPlanningCalendar": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-emptyplanningcalendar" */ "../../illustrations/EmptyPlanningCalendar.js")).default;
+        case "ErrorScreen": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-errorscreen" */ "../../illustrations/ErrorScreen.js")).default;
+        case "FilterTable": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-filtertable" */ "../../illustrations/FilterTable.js")).default;
+        case "FilteringColumns": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-filteringcolumns" */ "../../illustrations/FilteringColumns.js")).default;
+        case "GroupTable": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-grouptable" */ "../../illustrations/GroupTable.js")).default;
+        case "GroupingColumns": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-groupingcolumns" */ "../../illustrations/GroupingColumns.js")).default;
+        case "KeyTask": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-keytask" */ "../../illustrations/KeyTask.js")).default;
+        case "NewMail": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-newmail" */ "../../illustrations/NewMail.js")).default;
+        case "NoActivities": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-noactivities" */ "../../illustrations/NoActivities.js")).default;
+        case "NoChartData": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nochartdata" */ "../../illustrations/NoChartData.js")).default;
+        case "NoColumnsSet": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nocolumnsset" */ "../../illustrations/NoColumnsSet.js")).default;
+        case "NoData": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nodata" */ "../../illustrations/NoData.js")).default;
+        case "NoDimensionsSet": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nodimensionsset" */ "../../illustrations/NoDimensionsSet.js")).default;
+        case "NoEntries": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-noentries" */ "../../illustrations/NoEntries.js")).default;
+        case "NoFilterResults": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nofilterresults" */ "../../illustrations/NoFilterResults.js")).default;
+        case "NoMail": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nomail" */ "../../illustrations/NoMail.js")).default;
+        case "NoMail_v1": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nomail_v1" */ "../../illustrations/NoMail_v1.js")).default;
+        case "NoNotifications": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nonotifications" */ "../../illustrations/NoNotifications.js")).default;
+        case "NoSavedItems": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nosaveditems" */ "../../illustrations/NoSavedItems.js")).default;
+        case "NoSavedItems_v1": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nosaveditems_v1" */ "../../illustrations/NoSavedItems_v1.js")).default;
+        case "NoSearchResults": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-nosearchresults" */ "../../illustrations/NoSearchResults.js")).default;
+        case "NoTasks": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-notasks" */ "../../illustrations/NoTasks.js")).default;
+        case "NoTasks_v1": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-notasks_v1" */ "../../illustrations/NoTasks_v1.js")).default;
+        case "PageNotFound": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-pagenotfound" */ "../../illustrations/PageNotFound.js")).default;
+        case "ReceiveAppreciation": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-receiveappreciation" */ "../../illustrations/ReceiveAppreciation.js")).default;
+        case "ReloadScreen": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-reloadscreen" */ "../../illustrations/ReloadScreen.js")).default;
+        case "ResizeColumn": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-resizecolumn" */ "../../illustrations/ResizeColumn.js")).default;
+        case "ResizingColumns": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-resizingcolumns" */ "../../illustrations/ResizingColumns.js")).default;
+        case "SearchEarth": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-searchearth" */ "../../illustrations/SearchEarth.js")).default;
+        case "SearchFolder": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-searchfolder" */ "../../illustrations/SearchFolder.js")).default;
+        case "SignOut": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-signout" */ "../../illustrations/SignOut.js")).default;
+        case "SimpleBalloon": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpleballoon" */ "../../illustrations/SimpleBalloon.js")).default;
+        case "SimpleBell": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplebell" */ "../../illustrations/SimpleBell.js")).default;
+        case "SimpleCalendar": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplecalendar" */ "../../illustrations/SimpleCalendar.js")).default;
+        case "SimpleCheckMark": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplecheckmark" */ "../../illustrations/SimpleCheckMark.js")).default;
+        case "SimpleConnection": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpleconnection" */ "../../illustrations/SimpleConnection.js")).default;
+        case "SimpleEmptyDoc": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpleemptydoc" */ "../../illustrations/SimpleEmptyDoc.js")).default;
+        case "SimpleEmptyList": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpleemptylist" */ "../../illustrations/SimpleEmptyList.js")).default;
+        case "SimpleError": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpleerror" */ "../../illustrations/SimpleError.js")).default;
+        case "SimpleMagnifier": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplemagnifier" */ "../../illustrations/SimpleMagnifier.js")).default;
+        case "SimpleMail": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplemail" */ "../../illustrations/SimpleMail.js")).default;
+        case "SimpleNoSavedItems": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplenosaveditems" */ "../../illustrations/SimpleNoSavedItems.js")).default;
+        case "SimpleNotFoundMagnifier": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplenotfoundmagnifier" */ "../../illustrations/SimpleNotFoundMagnifier.js")).default;
+        case "SimpleReload": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simplereload" */ "../../illustrations/SimpleReload.js")).default;
+        case "SimpleTask": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-simpletask" */ "../../illustrations/SimpleTask.js")).default;
+        case "SleepingBell": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-sleepingbell" */ "../../illustrations/SleepingBell.js")).default;
+        case "SortColumn": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-sortcolumn" */ "../../illustrations/SortColumn.js")).default;
+        case "SortingColumns": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-sortingcolumns" */ "../../illustrations/SortingColumns.js")).default;
+        case "SuccessBalloon": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-successballoon" */ "../../illustrations/SuccessBalloon.js")).default;
+        case "SuccessCheckMark": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-successcheckmark" */ "../../illustrations/SuccessCheckMark.js")).default;
+        case "SuccessHighFive": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-successhighfive" */ "../../illustrations/SuccessHighFive.js")).default;
+        case "SuccessScreen": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-successscreen" */ "../../illustrations/SuccessScreen.js")).default;
+        case "Survey": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-survey" */ "../../illustrations/Survey.js")).default;
+        case "Tent": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-tent" */ "../../illustrations/Tent.js")).default;
+        case "UnableToLoad": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-unabletoload" */ "../../illustrations/UnableToLoad.js")).default;
+        case "UnableToLoadImage": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-unabletoloadimage" */ "../../illustrations/UnableToLoadImage.js")).default;
+        case "UnableToUpload": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-unabletoupload" */ "../../illustrations/UnableToUpload.js")).default;
+        case "UploadCollection": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-uploadcollection" */ "../../illustrations/UploadCollection.js")).default;
+        case "UploadToCloud": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-uploadtocloud" */ "../../illustrations/UploadToCloud.js")).default;
+        case "UserHasSignedUp": return (await import(/* webpackChunkName: "ui5-webcomponents-fiori-userhassignedup" */ "../../illustrations/UserHasSignedUp.js")).default;
+        default:
+            throw new Error("[Illustrations] Illustration not found: " + illustrationName);
+    }
+};
+const loadAndCheck = async (illustrationName) => {
+    const data = await loadIllustration(illustrationName);
+    return data;
+};
+["Achievement", "AddColumn", "AddDimensions", "AddPeople", "AddPeopleToCalendar", "AddingColumns", "BalloonSky", "BeforeSearch", "Connection", "DragFilesToUpload", "EmptyCalendar", "EmptyList", "EmptyPlanningCalendar", "ErrorScreen", "FilterTable", "FilteringColumns", "GroupTable", "GroupingColumns", "KeyTask", "NewMail", "NoActivities", "NoChartData", "NoColumnsSet", "NoData", "NoDimensionsSet", "NoEntries", "NoFilterResults", "NoMail", "NoMail_v1", "NoNotifications", "NoSavedItems", "NoSavedItems_v1", "NoSearchResults", "NoTasks", "NoTasks_v1", "PageNotFound", "ReceiveAppreciation", "ReloadScreen", "ResizeColumn", "ResizingColumns", "SearchEarth", "SearchFolder", "SignOut", "SimpleBalloon", "SimpleBell", "SimpleCalendar", "SimpleCheckMark", "SimpleConnection", "SimpleEmptyDoc", "SimpleEmptyList", "SimpleError", "SimpleMagnifier", "SimpleMail", "SimpleNoSavedItems", "SimpleNotFoundMagnifier", "SimpleReload", "SimpleTask", "SleepingBell", "SortColumn", "SortingColumns", "SuccessBalloon", "SuccessCheckMark", "SuccessHighFive", "SuccessScreen", "Survey", "Tent", "UnableToLoad", "UnableToLoadImage", "UnableToUpload", "UploadCollection", "UploadToCloud", "UserHasSignedUp"].forEach((illustrationName) => registerIllustrationLoader(`fiori/V4/${illustrationName}`, loadAndCheck));
+//# sourceMappingURL=Illustrations.js.map
