@@ -50,7 +50,7 @@ describe("TableRowActions", () => {
 	}
 
 	describe("Rendering", () => {
-		it("tests single row action", () => {
+		it("reserves the action column and forwards row action clicks", () => {
 			mountTable(1, () => <>
 				<TableRow id="addRow">
 					<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
@@ -69,19 +69,11 @@ describe("TableRowActions", () => {
 
 			cy.get("@headerRow").shadow().find("#actions-cell").should("exist");
 			checkTemplateColumn(`${8 + 36 + 8}px`);
-			cy.get("@row1").find("[icon=add]").shadow().find("ui5-button").should("exist");
-			cy.get("@row2").find("[icon=add]").should("have.css", "display", "block");
-			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
-			cy.get("@row4").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
 
-			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
 			cy.get("#addAction").realClick();
-			cy.get("@addActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "addRow");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "addAction");
-			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
 			cy.get("#navigationAction").realClick();
-			cy.get("@navigationActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.row.id").should("equal", "navigationRow");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.action.id").should("equal", "navigationAction");
 
@@ -338,6 +330,50 @@ describe("TableRowActions", () => {
 			cy.get("@row1").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("not.have.been.called");
 		});
+	});
 
+	describe("Action components", () => {
+		beforeEach(() => {
+			cy.mount(
+				<Table rowActionCount={1}>
+					<TableHeaderRow slot="headerRow"></TableHeaderRow>
+					<>
+						<TableRow id="addRow">
+							<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowAction slot="actions" icon={add} text="Add" invisible={true}></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowActionNavigation slot="actions" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+						<TableRow id="navigationRow">
+							<TableRowActionNavigation slot="actions" id="navigationAction" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+					</>
+				</Table>
+			);
+		});
+
+		it("renders the action icon and fires click", () => {
+			cy.get("#addAction").shadow().find("ui5-button").should("exist");
+			cy.get("#addAction").should("have.attr", "icon", "add");
+			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
+			cy.get("#addAction").realClick();
+			cy.get("@addActionClick").should("have.been.calledOnce");
+		});
+
+		it("keeps invisible actions rendered for alignment", () => {
+			cy.get("[ui5-table-row-action][invisible]").should("have.css", "display", "block");
+		});
+
+		it("renders navigation buttons and fires click", () => {
+			cy.get("[ui5-table-row-action-navigation]").each($action => {
+				cy.wrap($action).shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
+			});
+			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
+			cy.get("#navigationAction").realClick();
+			cy.get("@navigationActionClick").should("have.been.calledOnce");
+		});
 	});
 });
