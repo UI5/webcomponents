@@ -47,6 +47,7 @@ import type { InputAccInfo } from "./Input.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import type { TimeSelectionChangeEventDetail } from "./TimePickerInternals.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import { isHighZoom } from "@ui5/webcomponents-base/dist/util/HighZoom.js";
 
 import {
 	TIMEPICKER_SUBMIT_BUTTON,
@@ -88,7 +89,6 @@ type TimePickerChangeEventDetail = TimePickerChangeInputEventDetail;
 type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
 
 const DEFAULT_ISO_FORMAT = "HH:mm:ss";
-const HIGH_ZOOM_BREAKPOINT = 300; // px — viewport width below which numeric inputs replace clocks
 
 /**
  * @class
@@ -414,7 +414,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_handleResize() {
-		this._highZoom = document.body.offsetWidth < HIGH_ZOOM_BREAKPOINT;
+		this._highZoom = isHighZoom();
 	}
 
 	@i18n("@ui5/webcomponents")

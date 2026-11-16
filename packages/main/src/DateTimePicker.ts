@@ -38,6 +38,7 @@ import {
 	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import { isHighZoom } from "@ui5/webcomponents-base/dist/util/HighZoom.js";
 
 // Template
 import DateTimePickerTemplate from "./DateTimePickerTemplate.js";
@@ -51,7 +52,6 @@ import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
-const HIGH_ZOOM_BREAKPOINT = 300; // px — viewport width below which numeric inputs replace clocks
 
 type PreviewValues = {
 	timeSelectionValue?: string,
@@ -412,7 +412,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 			this._phoneMode = toPhoneMode;
 		}
 
-		this._highZoom = documentWidth < HIGH_ZOOM_BREAKPOINT;
+		this._highZoom = isHighZoom();
 	}
 
 	get _submitDisabled() {
@@ -475,7 +475,6 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	_dateTimeSwitchChange(e: CustomEvent<SegmentedButtonSelectionChangeEventDetail>) { // Note: fix when SegmentedButton is implemented in TS
 		const selectedItem = e.detail.selectedItems[0];
 		this._showTimeView = selectedItem.getAttribute("data-ui5-key") === "Time";
-		this._useTimeInputs = false;
 	}
 
 	/**

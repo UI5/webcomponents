@@ -72,7 +72,7 @@ function defaultHeader(this: TimePicker) {
 					id={`${this._id}-mode-toggle`}
 					slot="endContent"
 					design="Transparent"
-					icon={this._effectiveUseInputs ? timeEntryRequest : keyboardAndMouse}
+					icon={this._useInputs ? timeEntryRequest : keyboardAndMouse}
 					tooltip={this._pickerModeToggleLabel}
 					accessibleName={this._pickerModeToggleAccessibleName}
 					accessibleDescription={this._pickerModeToggleAccessibleDesc}

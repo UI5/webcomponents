@@ -352,7 +352,6 @@ describe("TimePicker on desktop - no view toggle", () => {
 
 describe("TimePicker at high zoom (viewport < 300 px)", () => {
 	beforeEach(() => {
-		cy.ui5SimulateDevice("phone");
 		cy.viewport(299, 800);
 	});
 
