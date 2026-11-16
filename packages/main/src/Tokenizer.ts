@@ -1340,9 +1340,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 			const isLastToken = index === tokensArray.length - 1;
 
-			// For the last token, check if it fits without "n more"
-			// For other tokens, check if token + "n more" fits together
-			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+			// When "n more" is rendered as a flex sibling of contentDom, parentRect.right
+			// already excludes nMoreWidth. For the last token, check whether it would fit
+			// if the "n more" indicator were removed (regaining nMoreWidth).
+			const effectiveParentEnd = isLastToken && nMoreWidth
+				? Number((parentRect.right + nMoreWidth).toFixed(2))
+				: parentEnd;
 
 			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
 
