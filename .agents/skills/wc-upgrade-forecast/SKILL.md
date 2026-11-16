@@ -1,25 +1,35 @@
 ---
 name: wc-upgrade-forecast
-description: 'Provide missed-change knowledge for UI5 Web Components upgrade forecasts, especially v1 to v2 migrations.'
+description: 'Provide missed-change knowledge for UI5 Web Components upgrade forecasts across any version range.'
 argument-hint: 'Application path and source/target UI5 Web Components versions'
 user-invocable: true
 ---
 
 # UI5 Web Components Upgrade Forecast Knowledge
 
-Use this skill as supplemental knowledge when forecasting an application upgrade. Keep the result application-specific and use the target release as the source of truth. The patterns below were derived from comparing independent upgrade analyses; do not perform or report a model comparison unless the user explicitly asks for one.
+Use this skill as supplemental knowledge when forecasting an application upgrade across any version range. Keep the result application-specific and use the target release as the source of truth.
+
+## Before analysing: locate the changelog
+
+Check these sources in order for the version range being analysed:
+
+1. **Local CHANGELOG.md** — search from the application directory upward; extract all entries between the source and target versions.
+2. **GitHub releases** — `https://github.com/SAP/ui5-webcomponents/releases` covers every release; fetch the relevant release pages.
+3. **No changelog found** — rely on library knowledge and mark every finding as **inferred**.
+
+Use the changelog as the authoritative list of changes; do not assume a fixed set of breaking changes.
 
 ## Missed-change knowledge
 
-When analyzing an application, explicitly check these surfaces because ordinary migration-guide scans often miss them:
+When analyzing an application, explicitly check these surfaces because ordinary migration-guide scans often miss them regardless of version:
 
-1. **Module renames**: `dist/Badge.js` to `dist/Tag.js`; `dist/StandardListItem.js` to `dist/ListItemStandard.js`. Search imports and filenames separately from HTML tags.
-2. **New required imports**: verify imports for components such as `AvatarBadge.js` and `ShellBarSearch.js` whenever their tags are used.
-3. **Default flips**: check absent attributes whose defaults changed. For example, `ui5-tag` wrapping changed from `None` to `Normal`; add `wrapping-type="None"` when preserving truncation is required.
-4. **Deleted enum values**: verify literal values, not only property names. `ui5-tag design="Set3"` has no v2 equivalent.
-5. **Minor-version thresholds**: record the minimum target minor for newly introduced APIs. Treat a proposed replacement as **Uncertain** when the target is below that threshold.
-6. **False positives**: do not apply ValueState renames to unrelated enums. `ui5-button design="Positive|Negative|Attention"` remains valid.
-7. **String dependencies**: check icon names, asset URLs, CSS parts, slots, events, and dynamically constructed module paths as well as typed APIs.
+1. **Module renames**: search imports and dist filenames separately from HTML tags; a renamed module breaks the import silently until runtime.
+2. **New required imports**: verify that every used custom-element tag has a corresponding import; components extracted into sub-packages often require a new import statement.
+3. **Default flips**: check absent attributes whose defaults changed between versions; the omitted attribute can silently alter behavior.
+4. **Deleted enum values**: verify literal attribute values, not only property names; a removed enum value is a runtime error, not a build error.
+5. **Minor-version thresholds**: record the minimum target minor version required for any replacement API. Mark a proposed replacement **Uncertain** when the target is below that threshold.
+6. **False positives**: confirm that a rename or removal in one component does not incorrectly apply to a similarly-named API in another component.
+7. **String dependencies**: check icon names, asset URLs, CSS parts, slots, event names, and dynamically constructed module paths as well as typed APIs.
 
 ## Evidence and classification
 
