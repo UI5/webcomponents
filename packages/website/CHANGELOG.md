@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* **ui5-search:** fix broken sample ([#14226](https://github.com/UI5/webcomponents/issues/14226)) ([6eee805](https://github.com/UI5/webcomponents/commit/6eee8051b20bcab85bfcdc04f95fe548fccfe60b))
+
+
+
+
+
 # [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
 
 **Note:** Version bump only for package @ui5/webcomponents-website

@@ -1832,6 +1832,58 @@ describe("Focusable items", () => {
 			.should("have.attr", "aria-label", "User Profile Settings");
 	});
 
+	it("Tests that SideNavigationItem drops aria-labelledby when accessibleName is set", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" expanded>
+					<SideNavigationSubItem id="subItem1" text="Profile" accessibleName="User Profile Settings" />
+				</SideNavigationItem>
+				<SideNavigationItem id="item2" text="Settings" expanded>
+					<SideNavigationSubItem id="subItem2" text="Privacy" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		// With accessibleName: the item is labelled by aria-label and aria-labelledby is not rendered
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-labelledby");
+
+		// Without accessibleName: aria-labelledby points at the text element and no aria-label
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-label");
+
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.invoke("attr", "aria-labelledby")
+			.should("not.be.empty")
+			.then(labelledBy => {
+				cy.get("#item2")
+					.shadow()
+					.find(".ui5-sn-item-text")
+					.should("have.attr", "id", labelledBy);
+			});
+
+		// Sub-items are labelled via aria-label when accessibleName is set
+		cy.get("#subItem1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "User Profile Settings");
+
+		cy.get("#subItem2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-label");
+	});
+
 	it("Tests accessibleName for SideNavigationItem in collapsed mode", () => {
 		cy.mount(
 			<SideNavigation collapsed={true}>
@@ -2533,5 +2585,95 @@ describe("Side Navigation search match announcement", () => {
 		cy.get("body")
 			.find(".ui5-invisiblemessage-polite")
 			.should("have.text", "0 matches found");
+	});
+});
+
+describe("Security", () => {
+	it("does not execute payload set via _highlightedText JS property on SideNavigationItem", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="Safe Item"></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").then(($item) => {
+			($item[0] as SideNavigationItem)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationItem when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via _highlightedText JS property on SideNavigationSubItem", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem text="Parent">
+					<SideNavigationSubItem id="subItem1" text="Safe SubItem"></SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1").then(($item) => {
+			($item[0] as SideNavigationSubItem)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#subItem1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe SubItem");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationSubItem when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem text="Parent">
+					<SideNavigationSubItem id="subItem1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via _highlightedText JS property on SideNavigationGroup", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationGroup id="group1" text="Safe Group"></SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1").then(($item) => {
+			($item[0] as SideNavigationGroup)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#group1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe Group");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationGroup when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationGroup id="group1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
 	});
 });

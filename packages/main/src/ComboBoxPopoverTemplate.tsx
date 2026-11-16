@@ -8,7 +8,6 @@ import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
-import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 import type ComboBox from "./ComboBox.js";
 import { LOADING_DELAY } from "./features/ComboBoxLazyLoading.js";
 
@@ -185,11 +184,11 @@ function dialogHeader(this: ComboBox) {
 							return item.items
 								.filter(nestedItem => !!nestedItem)
 								.map(nestedItem =>
-									<SuggestionItem text={nestedItem.text} additionalText={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)} />
+									<SuggestionItem text={nestedItem.text} additionalText={nestedItem.additionalText} markupText={this.filterValue} />
 								);
 						}
 						// For regular items
-						return <SuggestionItem text={item.text} additionalText={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)} />;
+						return <SuggestionItem text={item.text} additionalText={item.additionalText} markupText={this.filterValue} />;
 					})}
 				</Input>
 			</div>

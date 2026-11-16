@@ -32,7 +32,12 @@ import {
 	DATETIME_PATTERN_MISMATCH,
 	DATETIME_RANGEUNDERFLOW,
 	DATETIME_RANGEOVERFLOW,
+	TIMEPICKER_SWITCH_TO_KEYBOARD,
+	TIMEPICKER_SWITCH_TO_CLOCK,
+	TIMEPICKER_ANNOUNCE_KEYBOARD,
+	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 // Template
 import DateTimePickerTemplate from "./DateTimePickerTemplate.js";
@@ -148,6 +153,13 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	_phoneMode = false;
 
 	/**
+	 * True when the user has toggled to keyboard (numeric inputs) mode in the time section of the mobile picker.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_useTimeInputs = false;
+
+	/**
 	 * Selected, but not yet confirmed date/time
 	 * @private
 	 */
@@ -176,6 +188,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	onResponsivePopoverAfterClose() {
 		super.onResponsivePopoverAfterClose();
 		this._showTimeView = false;
+		this._useTimeInputs = false;
 		this._previewValues = {};
 	}
 
@@ -303,6 +316,20 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
+	get showHeader() {
+		return this._phoneView;
+	}
+
+	/**
+	 * @override
+	 */
+	get _headerTitleText() {
+		return this.ariaLabelText;
+	}
+
+	/**
+	 * @override
+	 */
 	get roleDescription() {
 		return DateTimePicker.i18nBundle.getText(DATETIME_DESCRIPTION);
 	}
@@ -402,6 +429,28 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	}
 
 	/**
+	 * Toggles between clock view and keyboard input view in the time section on mobile.
+	 * @private
+	 */
+	_toggleDtpTimeMode() {
+		this._useTimeInputs = !this._useTimeInputs;
+		announce(
+			DateTimePicker.i18nBundle.getText(this._useTimeInputs ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			"Assertive",
+		);
+	}
+
+	get _showTimeViewToggle() {
+		return this._phoneView && this.showTimeView;
+	}
+
+	get _dtpTimeToggleLabel() {
+		return this._useTimeInputs
+			? DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_CLOCK)
+			: DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_KEYBOARD);
+	}
+
+	/**
 	 * Handles the date/time switch available in `phoneMode` to switch
 	 * between the date and time views.
 	 * @param e
@@ -409,6 +458,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	_dateTimeSwitchChange(e: CustomEvent<SegmentedButtonSelectionChangeEventDetail>) { // Note: fix when SegmentedButton is implemented in TS
 		const selectedItem = e.detail.selectedItems[0];
 		this._showTimeView = selectedItem.getAttribute("data-ui5-key") === "Time";
+		this._useTimeInputs = false;
 	}
 
 	/**

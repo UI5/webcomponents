@@ -2,7 +2,7 @@
 /* eslint-disable newline-per-chained-call */
 import Table from "../../src/Table.js";
 import "../../src/TableHeaderCell.js";
-import "../../src/TableCell.js";
+import TableCell from "../../src/TableCell.js";
 import "../../src/Menu.js";
 import "../../src/MenuItem.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
@@ -30,7 +30,7 @@ describe("TableRowActions", () => {
 		cy.get("@table").children("ui5-table-header-row").first().as("headerRow");
 		cy.get("@table").shadow().find("#table").as("innerTable");
 		cy.get("@rows").then($rows => {
-			$rows.each(index => {
+			$rows.each((index: number) => {
 				cy.get("@rows").eq(index).as(`row${index + 1}`);
 			});
 		});
@@ -238,5 +238,106 @@ describe("TableRowActions", () => {
 			cy.get("@menuItems").eq(0).ui5MenuItemPress("Enter");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.icon").should("equal", "edit");
 		});
+	});
+
+	describe("Keyboard Handling", () => {
+		it("Alt+Enter triggers navigation action from row", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+				<TableRow id="noNavRow">
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
+			// Focus the row with navigation action and press Alt+Enter
+			cy.get("@row1").focus();
+			cy.get("@row1").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
+
+			// Focus the row without navigation action and press Alt+Enter - should not fire
+			cy.get("@row2").focus();
+			cy.get("@row2").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter triggers navigation action from cell", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableCell id="navRowCell">Cell</TableCell>
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+				<TableRow id="noNavRow">
+					<TableCell id="noNavRowCell">Cell</TableCell>
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
+			// Focus a cell in the row with navigation action and press Alt+Enter
+			cy.get("#navRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
+			cy.get("#navRowCell").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
+
+			// Focus a cell in the row without navigation action and press Alt+Enter - should not fire
+			cy.get("#noNavRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
+			cy.get("#noNavRowCell").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter does not trigger navigation action from control inside cell", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableCell><input id="cellInput" /></TableCell>
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+			</>
+			);
+
+			// Focus the input inside the cell and press Alt+Enter - should not fire
+			cy.get("#cellInput").focus();
+			cy.get("#cellInput").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter does not trigger invisible navigation action", () => {
+			mountTable(1, () => <>
+				<TableRow id="invisibleNavRow">
+					<TableRowActionNavigation slot="actions" id="invisibleNavAction" interactive={true} invisible={true}></TableRowActionNavigation>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@row1").focus();
+			cy.get("@row1").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("not.have.been.called");
+		});
+
 	});
 });
