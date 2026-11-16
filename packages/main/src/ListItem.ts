@@ -457,7 +457,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get _ariaSelected() {
-		if (this.modeMultiple || this.modeSingleSelect) {
+		if (this.modeMultiple) {
 			return this.selected;
 		}
 
@@ -470,6 +470,9 @@ abstract class ListItem extends ListItemBase {
 		}
 		if (this.accessibleRole) {
 			return this.accessibleRole.toLowerCase() as AriaRole;
+		}
+		if (!this._inheritedAccessibleRole && this.modeSingleSelect) {
+			return "radio" as AriaRole;
 		}
 		return (this._inheritedAccessibleRole || "listitem") as AriaRole;
 	}
@@ -528,6 +531,7 @@ abstract class ListItem extends ListItemBase {
 			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
 			ariaSelected: this._ariaSelected,
 			ariaSelectedText: this.ariaSelectedText,
+			ariaChecked: this.modeSingleSelect ? this.selected : undefined,
 			ariaHaspopup: this.accessibilityAttributes.hasPopup,
 			setsize: this.accessibilityAttributes.ariaSetsize,
 			posinset: this.accessibilityAttributes.ariaPosinset,
