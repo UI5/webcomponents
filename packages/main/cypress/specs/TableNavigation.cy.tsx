@@ -63,16 +63,6 @@ describe("Table - Keyboard Navigation", () => {
 			</>
 		);
 
-		cy.document().then(doc => {
-			const table = doc.getElementById("table0");
-			const input = doc.getElementById("before-table1");
-			table?.addEventListener("ui5-row-click", () => {
-				if (input instanceof HTMLInputElement) {
-					input.valueAsNumber++;
-				}
-			});
-		});
-
 		cy.get("#table0").children("ui5-table-row").as("rows");
 		cy.get("#table0").children("ui5-table-header-row").as("headerRow");
 	});
@@ -230,31 +220,6 @@ describe("Table - Keyboard Navigation", () => {
 			{ element: getCell(1, 2, false), press: ["Shift", "Tab"], condition: "be.focused" },
 			{ element: cy.get("#before-table1"), press: "Tab", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(1), press: "Tab", condition: "be.focused" }
-		]);
-	});
-
-	it("should should work correctly for interactive rows", () => {
-		cy.get("@rows").eq(1).get("#row2-button").as("row2Button");
-		cy.get("#table0").get("#before-table1").as("input");
-		cy.get("@rows").get("#interactive-row").as("row");
-
-		performActions([
-			{ element: cy.get("@row"), click: "left" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "1" },
-			{ element: cy.get("@row"), type: "{enter}" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
-			{ element: cy.get("@rows").get("#notinteractive-row"), click: "left" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
-			{ element: cy.get("@row2Button"), click: "left" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
-			{ element: cy.get("@row2Button"), type: "{enter}" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
-			{ element: cy.get("@row2Button"), press: "F7" },
-			{ element: cy.get("@row"), condition: "be.focused" },
-			{ element: cy.get("@row"), press: "Space" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
-			{ element: cy.get("@row"), type: "{enter}" },
-			{ element: cy.get("@input"), condition: "have.value", conditionValue: "3" }
 		]);
 	});
 });
@@ -639,5 +604,78 @@ describe("Table - Keyboard Navigation with overflowMode=Scroll", () => {
 	it("focused row is not hidden under the sticky header (wrapper scrolls)", () => {
 		cy.mount(<div style="height: 150px; overflow: auto;">{verticalStickyTable}</div>);
 		assertFocusedRowNotHiddenUnderHeader();
+	});
+});
+describe("Table - Keyboard navigation with interactive rows", () => {
+	beforeEach(() => {
+		cy.mount(
+			<>
+				<input id="before-table1" type="number" value="0" />
+				<Table id="table0">
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell>Column A</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow id="interactive-row" interactive>
+						<TableCell><button id="row2-button">Button</button></TableCell>
+					</TableRow>
+					<TableRow id="notinteractive-row"><TableCell>Cell A</TableCell></TableRow>
+				</Table>
+			</>
+		);
+
+		cy.get("#table0").invoke("on", "row-click", () => {
+			const input = document.getElementById("before-table1") as HTMLInputElement;
+			input.valueAsNumber++;
+		});
+		cy.get("#table0").children("[ui5-table-row]").as("rows");
+	});
+
+	function performActions(actions: { element: Cypress.Chainable, click?: string, condition?: string, conditionValue?: string, type?: string, press?: string | string[] }[]) {
+		actions.forEach(action => {
+			if (action.click) {
+				// @ts-ignore
+				action.element.click(action.click);
+			}
+			if (action.condition) {
+				if (action.conditionValue) {
+					// timing issue - without wait the check is failing
+					action.element.wait(0).should(action.condition, action.conditionValue);
+				} else {
+					action.element.wait(0).should(action.condition);
+				}
+			}
+			if (action.type) {
+				action.element.type(action.type);
+			}
+			if (action.press) {
+				// @ts-ignore
+				action.element.realPress(action.press);
+			}
+		});
+	}
+
+	it("activates on click and Enter but not Space or child-button interaction", () => {
+		cy.get("#row2-button").as("row2Button");
+		cy.get("#table0").get("#before-table1").as("input");
+		cy.get("@rows").get("#interactive-row").as("row");
+
+		performActions([
+			{ element: cy.get("@row"), click: "left" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "1" },
+			{ element: cy.get("@row"), type: "{enter}" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
+			{ element: cy.get("@rows").get("#notinteractive-row"), click: "left" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
+			{ element: cy.get("@row2Button"), click: "left" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
+			{ element: cy.get("@row2Button"), type: "{enter}" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
+			{ element: cy.get("@row2Button"), press: "F7" },
+			{ element: cy.get("@row"), condition: "be.focused" },
+			{ element: cy.get("@row"), press: "Space" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "2" },
+			{ element: cy.get("@row"), type: "{enter}" },
+			{ element: cy.get("@input"), condition: "have.value", conditionValue: "3" }
+		]);
 	});
 });
