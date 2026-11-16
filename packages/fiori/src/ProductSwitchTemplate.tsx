@@ -9,7 +9,7 @@ export default function ProductSwitchTemplate(this: ProductSwitch) {
 			class="ui5-product-switch-busy-indicator"
 		>
 			<div
-				role="menu"
+				role="list"
 				class="ui5-product-switch-root"
 				aria-label={this._ariaLabelText}
 				onFocusIn={this._onfocusin}

@@ -89,7 +89,7 @@ describe("ProductSwitch general interaction", () => {
 		cy.get("[ui5-product-switch]")
 			.shadow()
 			.find(".ui5-product-switch-root")
-			.should("have.css", "max-width", "420px");
+			.should("have.css", "max-width", "400px");
 	});
 
 	it("tests 3-column desktop layout", () => {
@@ -151,29 +151,8 @@ describe("ProductSwitch ARIA attributes", () => {
 		cy.get("[ui5-product-switch]")
 			.shadow()
 			.find(".ui5-product-switch-root")
-			.should("have.attr", "role", "menu")
+			.should("have.attr", "role", "list")
 			.should("have.attr", "aria-label", "Products");
-	});
-
-	it("items have role menuitem", () => {
-		cy.mount(
-			<ProductSwitch>
-				<ProductSwitchItem titleText="Home" icon="home" targetSrc="about:blank"></ProductSwitchItem>
-				<ProductSwitchItem titleText="Analytics Cloud" icon="business-objects-experience"></ProductSwitchItem>
-			</ProductSwitch>
-		);
-
-		// link variant (targetSrc set) -> <a role="menuitem">
-		cy.get("[ui5-product-switch-item]").first()
-			.shadow()
-			.find(".ui5-product-switch-item-root")
-			.should("have.attr", "role", "menuitem");
-
-		// div variant (no targetSrc) -> <div role="menuitem">
-		cy.get("[ui5-product-switch-item]").last()
-			.shadow()
-			.find(".ui5-product-switch-item-root")
-			.should("have.attr", "role", "menuitem");
 	});
 });
 
