@@ -7,7 +7,7 @@
 .ui5-product-switch-busy-indicator {
 	display: block;
 	width: 100%;
-	max-width: calc(4 * 11.75rem + 1.5rem);
+	max-width: calc(4 * 11.75rem + 1.5rem + 1.25rem);
 	min-height: 10rem; /* keep a visible busy area while items are still loading (approx. one row + padding) */
 }
 
@@ -16,17 +16,21 @@
 	flex-wrap: wrap;
 	box-sizing: border-box;
 	width: 100%;
-	/* up to 4 columns (item 11.25rem + .5rem margin) + .75rem padding each side */
-	max-width: calc(4 * 11.75rem + 1.5rem);
+	/* up to 4 columns (item 11.25rem + .5rem margin) + .75rem padding each side + reserved scrollbar gutter */
+	max-width: calc(4 * 11.75rem + 1.5rem + 1.25rem);
 	padding: 1.25rem .75rem;
+	/* cap the visible height to 4 rows; the value is measured in JS so it grows with wrapped rows, then scrolls */
+	max-height: var(--_ui5-product-switch-max-height, none);
+	overflow-y: auto;
+	scrollbar-gutter: stable; /* reserve the scrollbar space so it does not change the computed column count */
 }
 
 :host([desktop-columns="3"]) .ui5-product-switch-root {
-	max-width: calc(3 * 11.75rem + 1.5rem); /* up to 3 columns */
+	max-width: calc(3 * 11.75rem + 1.5rem + 1.25rem); /* up to 3 columns */
 }
 
 :host([desktop-columns="2"]) .ui5-product-switch-root {
-	max-width: calc(2 * 11.75rem + 1.5rem); /* up to 2 columns */
+	max-width: calc(2 * 11.75rem + 1.5rem + 1.25rem); /* up to 2 columns */
 }
 
 @media only screen and (max-width: 600px) {
@@ -37,5 +41,7 @@
 		padding: 0;
 		width: 100%;
 		max-width: none;
+		max-height: none;
+		overflow-y: visible;
 	}
 }

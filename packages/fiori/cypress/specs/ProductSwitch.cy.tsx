@@ -89,7 +89,7 @@ describe("ProductSwitch general interaction", () => {
 		cy.get("[ui5-product-switch]")
 			.shadow()
 			.find(".ui5-product-switch-root")
-			.should("have.css", "max-width", "400px");
+			.should("have.css", "max-width", "420px");
 	});
 
 	it("tests 3-column desktop layout", () => {
@@ -309,6 +309,64 @@ describe("ProductSwitchItem text wrapping", () => {
 				const el = $title[0];
 				// nothing is clipped
 				expect(el.scrollHeight).to.equal(el.clientHeight);
+			});
+	});
+});
+
+describe("ProductSwitch row cap", () => {
+	const manyItems = (count: number) => Array.from({ length: count }, (_, i) => (
+		<ProductSwitchItem key={i} titleText={`Item ${i + 1}`} icon="home"></ProductSwitchItem>
+	));
+
+	it("caps the visible height at 4 rows and scrolls beyond", () => {
+		// 20 standard items at 4 columns => 5 rows, so the 5th row must scroll.
+		cy.mount(<ProductSwitch>{manyItems(20)}</ProductSwitch>);
+
+		cy.get("[ui5-product-switch]")
+			.shadow()
+			.find(".ui5-product-switch-root")
+			// 4 rows * (7rem item + .5rem margins) + 2 * 1.25rem padding = 32.5rem = 520px
+			.should("have.css", "max-height", "520px")
+			.then($root => {
+				const el = $root[0];
+				expect(el.scrollHeight).to.be.greaterThan(el.clientHeight);
+			});
+	});
+
+	it("does not cap when there are 4 rows or fewer", () => {
+		// 4 items never exceed 4 rows at any column count, so no cap and no scrollbar.
+		cy.mount(<ProductSwitch>{manyItems(4)}</ProductSwitch>);
+
+		cy.get("[ui5-product-switch]")
+			.shadow()
+			.find(".ui5-product-switch-root")
+			.should("have.css", "max-height", "none")
+			.then($root => {
+				const el = $root[0];
+				expect(el.scrollHeight).to.equal(el.clientHeight);
+			});
+	});
+
+	it("grows the cap to fit wrapped (taller) rows within the first 4 rows", () => {
+		// The first item wraps onto several lines, making row 0 taller than a standard row,
+		// so the 4-row cap must be larger than the 520px standard-row baseline.
+		cy.mount(
+			<ProductSwitch>
+				<ProductSwitchItem
+					titleText="Analytics Cloud toooooo long text that must wrap onto multiple lines"
+					subtitleText="Analytics Cloud again toooooo long subtitle that must also wrap freely"
+					icon="business-objects-experience"
+				></ProductSwitchItem>
+				{manyItems(19)}
+			</ProductSwitch>
+		);
+
+		cy.get("[ui5-product-switch]")
+			.shadow()
+			.find(".ui5-product-switch-root")
+			.then($root => {
+				const maxHeight = parseFloat(getComputedStyle($root[0]).maxHeight);
+				expect(maxHeight).to.be.greaterThan(520);
 			});
 	});
 });
