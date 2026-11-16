@@ -40,7 +40,7 @@ type OpenUI5Popup = {
 };
 
 type OpenUI5PopupClass = {
-	useNativePopover: boolean | undefined,
+	NATIVE_POPOVER_API: boolean | undefined,
 	prototype: OpenUI5Popup
 };
 
@@ -66,7 +66,7 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 	AllOpenedPopupsRegistry.openedRegistry.push(popupInfo);
 };
 
-let openUI5UsesNativePopover = false;
+let openUI5UsesNativePopoverAPI = false;
 
 const removeOpenedPopup = (popup: object) => {
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
@@ -115,7 +115,7 @@ const getPopupContentElement = (popup: OpenUI5Popup): HTMLElement | null => {
 
 const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 	const openingInitiated = ["OPENING", "OPEN"].includes(popup.getOpenState());
-	if (!openingInitiated || !isNativePopoverOpen() || openUI5UsesNativePopover) {
+	if (!openingInitiated || !isNativePopoverOpen() || openUI5UsesNativePopoverAPI) {
 		return;
 	}
 
@@ -139,7 +139,7 @@ const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 };
 
 const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
-	if (openUI5UsesNativePopover) {
+	if (openUI5UsesNativePopoverAPI) {
 		return;
 	}
 
@@ -172,7 +172,7 @@ const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 };
 
 const fixTopmostOpenUI5Popup = () => {
-	if (!isNativePopoverOpen() || openUI5UsesNativePopover) {
+	if (!isNativePopoverOpen() || openUI5UsesNativePopoverAPI) {
 		return;
 	}
 
@@ -268,9 +268,9 @@ const createGlobalStyles = () => {
 };
 
 const patchPopup = (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass) => {
-	openUI5UsesNativePopover = !!Popup.useNativePopover;
+	openUI5UsesNativePopoverAPI = !!Popup.NATIVE_POPOVER_API;
 
-	if (!openUI5UsesNativePopover) {
+	if (!openUI5UsesNativePopoverAPI) {
 		insertOpenUI5PopupStyles();
 		createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	}
