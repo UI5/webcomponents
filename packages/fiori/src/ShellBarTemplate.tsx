@@ -73,6 +73,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 								{/* Start content items */}
 								{this.startContent.map(item => {
 									const itemId = (item as any)._individualSlot as string;
+									const neverHide = this.isNeverHide(itemId);
 									const packedSep = this.getPackedSeparatorInfo(item, true);
 									return (
 										<div
@@ -80,8 +81,9 @@ export default function ShellBarTemplate(this: ShellBar) {
 											id={itemId}
 											class={{
 												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
-												"ui5-shellbar-hidden": this.isHidden(itemId),
+												"ui5-shellbar-hidden": this.isHidden(itemId) && !neverHide,
 											}}
+											data-never-hide={neverHide ? "" : undefined}
 										>
 											{packedSep.shouldPack && (
 												<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
@@ -97,6 +99,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 								{/* End content items */}
 								{this.endContent.map(item => {
 									const itemId = (item as any)._individualSlot as string;
+									const neverHide = this.isNeverHide(itemId);
 									const packedSep = this.getPackedSeparatorInfo(item, false);
 									return (
 										<div
@@ -104,8 +107,9 @@ export default function ShellBarTemplate(this: ShellBar) {
 											id={itemId}
 											class={{
 												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
-												"ui5-shellbar-hidden": this.isHidden(itemId),
+												"ui5-shellbar-hidden": this.isHidden(itemId) && !neverHide,
 											}}
+											data-never-hide={neverHide ? "" : undefined}
 										>
 											<slot name={itemId}></slot>
 											{packedSep.shouldPack && (

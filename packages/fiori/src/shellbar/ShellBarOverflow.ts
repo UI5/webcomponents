@@ -178,14 +178,13 @@ class ShellBarOverflow {
 		}
 
 		const strategy = this.getOverflowStrategy(params.showSearchField);
-		const { hiddenItemsIds } = params;
 
 		return [
 			{
 				id: BrandingIds.Identifier,
 				selector: BrandingSelectors.Identifier,
 				hideOrder: strategy.BRANDING_IDENTIFIER,
-				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Identifier) ? "keepHidden" : "normal",
+				visibilityPolicy: "normal",
 				showInOverflow: true,
 				canShrink: true,
 			},
@@ -193,7 +192,7 @@ class ShellBarOverflow {
 				id: BrandingIds.Logo,
 				selector: BrandingSelectors.Logo,
 				hideOrder: strategy.BRANDING_LOGO,
-				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Logo) ? "keepHidden" : "normal",
+				visibilityPolicy: "normal",
 				showInOverflow: true,
 			},
 		];
@@ -234,7 +233,7 @@ class ShellBarOverflow {
 
 	private buildActions(params: ShellBarOverflowParams): readonly ShellBarHidableItem[] {
 		const {
-			customItems, actions, showSearchField, hiddenItemsIds,
+			customItems, actions, showSearchField,
 		} = params;
 
 		const items: ShellBarHidableItem[] = [];
@@ -246,7 +245,7 @@ class ShellBarOverflow {
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-				visibilityPolicy: hiddenItemsIds.includes(item._id) ? "keepHidden" : "normal",
+				visibilityPolicy: "normal",
 				showInOverflow: true,
 			});
 		});
@@ -259,7 +258,7 @@ class ShellBarOverflow {
 					id: config.id,
 					selector: config.selector,
 					hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-					visibilityPolicy: hiddenItemsIds.includes(config.id) ? "keepHidden" : "normal",
+					visibilityPolicy: "normal",
 					showInOverflow: true,
 				});
 			});

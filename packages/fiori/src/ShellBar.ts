@@ -808,7 +808,9 @@ class ShellBar extends UI5Element {
 		const features = `${this.enabledFeatures.branding ? "b" : ""}${this.enabledFeatures.content ? "c" : ""}${this.enabledFeatures.search ? "s" : ""}`;
 		const showSearch = this.showSearchField ? "1" : "0";
 		const brandingTitle = this.branding[0]?.titleText ?? "";
-		return `${outerWidth}|${features}|${showSearch}|${brandingTitle}|${this._validItems.length}|${contentSig}`;
+		const sep = this.separatorConfig;
+		const sepSig = `${sep.showStartSeparator ? "1" : "0"}${sep.showEndSeparator ? "1" : "0"}`;
+		return `${outerWidth}|${features}|${showSearch}|${brandingTitle}|${this._validItems.length}|${contentSig}|${sepSig}`;
 	}
 
 	private updateOverflow() {
@@ -993,6 +995,10 @@ class ShellBar extends UI5Element {
 
 	isHidden(itemId: string) {
 		return this.hiddenItemsIds.includes(itemId);
+	}
+
+	isNeverHide(itemId: string): boolean {
+		return this.content.some(item => (item as any)._individualSlot === itemId && item.hasAttribute("data-never-hide"));
 	}
 
 	handleOverflowClick() {

@@ -203,6 +203,11 @@ of the search field container in the bar even when the search is in full mode. *
 	align-items: center;
 }
 
+.ui5-shellbar-content-item[data-never-hide] {
+	flex-shrink: 1;
+	min-width: 0;
+}
+
 .ui5-shellbar-spacer {
 	flex-grow: 1;
 	height: 1px;
@@ -368,6 +373,10 @@ slot[name="profile"] {
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
+	/* Spec B4: 0.25rem (4px) gap between logo and title once the title wraps onto its own line
+	   below the logo. row-gap applies only between wrapped flex rows, so side-by-side layout
+	   (B2, the logo's padding-inline-end) is unaffected. */
+	row-gap: 0.25rem;
 	min-height: 2.5rem;
 	/* Hug the content: width follows the widest unbreakable unit (the logo, or the title's
 	   longest word), so once the title wraps below the logo the popover shrinks to the content
