@@ -89,7 +89,7 @@ abstract class TableRowActionBase extends UI5Element {
 			const menuItem = new MenuItemConstructor();
 			menuItem.icon = action._icon;
 			menuItem.text = action._text;
-			menuItem.disabled = !action._isInteractive;
+			menuItem.disabled = !action._isInteractive || action._isDisabled;
 			this._menuItems.set(menuItem, action);
 			return menuItem;
 		});
@@ -103,6 +103,7 @@ abstract class TableRowActionBase extends UI5Element {
 		text: string;
 		icon: string;
 		interactive?: boolean;
+		disabled?: boolean;
 	};
 
 	isFixedAction() {
@@ -114,6 +115,10 @@ abstract class TableRowActionBase extends UI5Element {
 	}
 
 	_fireClickEvent() {
+		if (this._isDisabled) {
+			return;
+		}
+
 		const row = this.parentElement as TableRow;
 		const table = row.parentElement as Table;
 		this.fireDecoratorEvent("click");
@@ -135,6 +140,10 @@ abstract class TableRowActionBase extends UI5Element {
 
 	get _isInteractive() {
 		return this.getRenderInfo().interactive !== false;
+	}
+
+	get _isDisabled() {
+		return this.getRenderInfo().disabled === true;
 	}
 }
 
