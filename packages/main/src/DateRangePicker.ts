@@ -10,7 +10,6 @@ import type DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js"
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
-	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	DATERANGE_VALUE_MISSING,
 	DATERANGE_PATTERN_MISMATCH,
 	DATERANGE_UNDERFLOW,
@@ -66,7 +65,7 @@ const DEFAULT_DELIMITER = "-";
  * - [Shift] + [Ctrl] + [Page Up] - Increments the corresponding year by one
  * @constructor
  * @extends DatePicker
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  */
 @customElement({
@@ -285,9 +284,14 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		if (this.placeholder) {
 			return this.placeholder;
 		}
-
-		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
-		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
+		const delimiter = ` ${this._effectiveDelimiter} `;
+		const placeHolderFormatter = this.getFormat({
+			interval: true,
+			singleIntervalValue: true,
+			intervalDelimiter: delimiter,
+		});
+		// @ts-expect-error getPlaceholderText is a runtime API not exposed in type definitions
+		return placeHolderFormatter.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate()) as string;
 	}
 
 	get _submitDisabled() {

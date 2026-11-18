@@ -17,8 +17,7 @@ const saveVariable = (variable, value, density) => {
  *
  * The plugin scans CSS for `:host` rules that define density-specific custom properties.
  * Variables declared in a root-level `:host` rule are treated as **cozy** values, while
- * variables declared inside `@container style(--ui5_content_density: compact)` `:host` rules
- * are treated as **compact** values.
+ * variables declared inside `@ui5-compact-size` `:host` rules are treated as **compact** values.
  *
  * All discovered variables are merged into a single root `:host` rule. For variables that
  * exist in both modes, the plugin generates a value that uses CSS variable fallbacks to
@@ -35,7 +34,7 @@ const saveVariable = (variable, value, density) => {
  *   --cozy-only-variable: cozy-only-value;
  * }
  *
- * @container style(--ui5_content_density: compact) {
+ * @ui5-compact-size {
  *   :host {
  *     --my-variable: compact-value;
  *     --compact-only-variable: compact-only;
@@ -84,9 +83,9 @@ export default function postcssPlugin() {
                     });
                 }
 
-                // Handle :host rules inside @container (compact)
+                // Handle :host rules inside @ui5-compact-size (compact)
                 if (rule.parent.type === "atrule") {
-                    if (rule.parent.params.replaceAll("\s", "") === 'style(--ui5_content_density: compact)'.replaceAll("\s", "")) {
+                    if (rule.parent.name === "ui5-compact-size") {
                         rule.walkDecls((decl) => {
                             if (decl.prop.startsWith('--')) {
                                 saveVariable(decl.prop, decl.value, 'compact');

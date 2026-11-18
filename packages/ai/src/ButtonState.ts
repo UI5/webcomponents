@@ -16,7 +16,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents/dist/AiButtonState.js";`
+ * `import "@ui5/webcomponents-ai/dist/ButtonState.js";`
  * @constructor
  * @extends UI5Element
  * @abstract

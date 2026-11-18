@@ -34,7 +34,7 @@ import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents-ai/dist/PromptInput.js"`
+ * `import "@ui5/webcomponents-ai/dist/PromptInput.js";`
  * @class
  * @constructor
  * @public

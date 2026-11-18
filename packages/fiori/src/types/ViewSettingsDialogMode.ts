@@ -5,14 +5,14 @@
 enum ViewSettingsDialogMode {
 	/**
 	 * Default type
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 * @public
 	 */
 	Sort = "Sort",
 
 	/**
 	 * Filter type
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 * @public
 	 */
 	Filter = "Filter",

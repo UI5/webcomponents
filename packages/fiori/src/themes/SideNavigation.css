@@ -26,7 +26,6 @@
 	}
 }
 
-
 .ui5-sn-root {
 	height: 100%;
 	display: flex;
@@ -93,4 +92,8 @@
 	min-height: var(--_ui5_side_navigation_navigation_separator_height);
 	background-color: var(--_ui5_side_navigation_navigation_separator_background_color);
 	border-radius: var(--_ui5_side_navigation_navigation_separator_radius);
+}
+
+.ui5-sn-filter-section {
+	padding: 0.5rem 0.5rem 0.25rem 0.5rem;
 }

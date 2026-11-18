@@ -5,7 +5,7 @@ import Title from "../../../src/Title.js";
 
 const openDialog = (id: string) => {
 	cy.get(`[ui5-dialog]#${id}`).invoke("prop", "open", true);
-	cy.get(`[ui5-dialog]#${id}`).ui5DialogOpened();
+	cy.get<Dialog>(`[ui5-dialog]#${id}`).ui5DialogOpened();
 };
 
 describe("Dialog visual", () => {

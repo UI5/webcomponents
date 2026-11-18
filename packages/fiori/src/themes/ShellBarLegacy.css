@@ -6,6 +6,8 @@
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+	padding-block: 0.0625rem;
+	padding-inline: 0.25rem;
 }
 
 .ui5-shellbar-logo-area,
@@ -43,8 +45,6 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 1.875rem;
-	padding-block: 0.0625rem;
-	padding-inline: 0.25rem;
 }
 
 ::slotted([slot="logo"]):active {

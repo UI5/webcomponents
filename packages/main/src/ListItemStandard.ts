@@ -67,7 +67,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * Defines the description displayed right under the item text, if such is present.
 	 * @default undefined
 	 * @public
-	 * @since 0.8.0
+	 * @since 1.0.0
 	 */
 	@property()
 	description?: string;
@@ -97,7 +97,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * Defines the `additionalText`, displayed in the end of the list item.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	additionalText?: string;
@@ -108,7 +108,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * Available options are: `"None"` (by default), `"Positive"`, `"Critical"`, `"Information"` and `"Negative"`.
 	 * @default "None"
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	additionalTextState: `${ValueState}` = "None";
@@ -127,7 +127,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * Note: If not provided a default text alternative will be set, if present.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	declare accessibleName?: string;

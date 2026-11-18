@@ -200,6 +200,7 @@ import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js
 import SideNavigationItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import SideNavigationSubItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
+import SideNavigationSearchFieldClass from "@ui5/webcomponents-fiori/dist/SideNavigationSearchField.js";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
@@ -323,7 +324,7 @@ const ComponentClasses: Record<string, any> = {
   TableHeaderCellActionAIClass, ToolbarItemClass, DateRangeClass,
   // fiori package
   ShellBarClass, ShellBarItemClass, SideNavigationClass, SideNavigationItemClass,
-  SideNavigationSubItemClass, SideNavigationGroupClass, NotificationListClass, NotificationListItemClass,
+  SideNavigationSubItemClass, SideNavigationGroupClass, SideNavigationSearchFieldClass, NotificationListClass, NotificationListItemClass,
   NotificationListGroupItemClass, UploadCollectionClass, UploadCollectionItemClass, WizardClass,
   WizardStepClass, IllustratedMessageClass, TimelineClass, TimelineItemClass, TimelineGroupItemClass,
   PageClass, DynamicPageClass, DynamicPageTitleClass, DynamicPageHeaderClass, DynamicSideContentClass,

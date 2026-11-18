@@ -32,7 +32,7 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	/**
 	 * Defines the additional text of the component.
 	 * @default undefined
-	 * @since 1.0.0-rc.11
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()
@@ -95,7 +95,7 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	 * @since 2.4.0
 	 * @private
 	 */
-	@property()
+	@property({ noAttribute: true })
 	markupText = "";
 }
 

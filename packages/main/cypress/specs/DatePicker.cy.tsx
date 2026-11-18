@@ -998,6 +998,22 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "Delivery date");
 	});
 
+	it("placeholder is based on maxDate when max is in a past year", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" maxDate="2023-08-31" />);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "placeholder", "e.g. Dec 31, 2022");
+	});
+
+	it("placeholder is based on minDate and maxDate in same year and month", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" minDate="2025-04-01" maxDate="2025-04-30" />);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "placeholder", "e.g. Apr 30, 2025");
+	});
+
 	it("placeholder is not set on inner input when value is present", () => {
 		cy.mount(<DatePicker value="Sep 9, 2026" formatPattern="MMM d, y"></DatePicker>);
 
@@ -1589,6 +1605,50 @@ describe("Date Picker Tests", () => {
 
 		cy.get<DatePicker>("@datePicker")
 			.should("have.attr", "value-state", "None");
+	});
+
+	it("selects an in-range day from the max month when clicked from the previous month view", () => {
+		cy.mount(<DatePicker id="datePicker1" maxDate="2026-12-10" value="2026-11-15"></DatePicker>);
+
+		cy.get<DatePicker>("#datePicker1")
+			.as("datePicker");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		const dec4Timestamp = new Date(Date.UTC(2026, 11, 4, 0, 0, 0)).valueOf() / 1000;
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.as("daypicker");
+
+		cy.get("@daypicker")
+			.shadow()
+			.find(`div[data-sap-timestamp=${dec4Timestamp}]`)
+			.realMouseDown();
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-root")
+			.realClick({ x: 0, y: 0 });
+
+		cy.get<DatePicker>("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.attr", "value", "2026-12-04");
 	});
 
 	it("Min and max dates are set, with no format pattern provided, using valid ISO format", () => {

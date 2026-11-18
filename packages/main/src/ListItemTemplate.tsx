@@ -87,7 +87,7 @@ export default function ListItemTemplate(this: ListItem, hooks?: Partial<ListIte
 		)}
 
 		{this.typeNavigation && (
-			<Icon name={slimArrowRightIcon} />
+			<Icon name={slimArrowRightIcon} class="ui5-li-navigation-arrow" />
 		)}
 
 		{this.navigated && (

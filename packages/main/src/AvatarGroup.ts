@@ -142,7 +142,7 @@ type AvatarGroupClickEventDetail = {
  * - [Space] / [Enter] or [Return] - Trigger `ui5-click` event
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.11
+ * @since 1.0.0
  * @public
  */
 
@@ -158,7 +158,7 @@ type AvatarGroupClickEventDetail = {
  * @param {HTMLElement} targetRef The DOM ref of the clicked item.
  * @param {boolean} overflowButtonClicked indicates if the overflow button is clicked
  * @public
- * @since 1.0.0-rc.11
+ * @since 1.0.0
  */
 @event("click")
 
@@ -166,7 +166,7 @@ type AvatarGroupClickEventDetail = {
  * Fired when the count of visible `ui5-avatar` elements in the
  * component has changed
  * @public
- * @since 1.0.0-rc.13
+ * @since 1.0.0
  */
 @event("overflow")
 class AvatarGroup extends UI5Element {
@@ -247,7 +247,7 @@ class AvatarGroup extends UI5Element {
 	 *
 	 * **Note:** If this slot is not used, the component will display the built-in overflow button.
 	 * @public
-	 * @since 1.0.0-rc.13
+	 * @since 1.0.0
 	 */
 	@slot()
 	overflowButton!: Slot<IButton>;

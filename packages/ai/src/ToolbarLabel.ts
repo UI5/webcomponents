@@ -17,7 +17,7 @@ import ToolbarLabelTemplate from "./ToolbarLabelTemplate.js";
  * @constructor
  * @extends ToolbarItem
  * @private
- * @since 1.0.0-rc.1
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-ai-toolbar-label",

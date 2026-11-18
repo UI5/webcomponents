@@ -132,7 +132,8 @@ type ShellBarMenuItemClickEventDetail = {
 };
 
 type ShellBarContentItemVisibilityChangeEventDetail = {
-	items: Array<HTMLElement>
+	items: Array<HTMLElement>,
+	revealedItems: Array<HTMLElement>,
 };
 
 type ShellBarSearchButtonEventDetail = {
@@ -178,7 +179,11 @@ type ShellBarSearchFieldClearEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.8.0
+ * @since 1.0.0
+ * @ui5subcomponent ShellBarBranding
+ * @ui5subcomponent ShellBarItem
+ * @ui5subcomponent ShellBarSearch
+ * @ui5subcomponent ShellBarSpacer
  */
 
 @customElement({
@@ -236,7 +241,7 @@ type ShellBarSearchFieldClearEventDetail = {
 /**
  * Fired, when the logo is activated.
  * @param {HTMLElement} targetRef dom ref of the activated element
- * @since 0.10
+ * @since 1.0.0
  * @public
  */
 @event("logo-click", {
@@ -248,7 +253,7 @@ type ShellBarSearchFieldClearEventDetail = {
  *
  * **Note:** You can prevent closing of overflow popover by calling `event.preventDefault()`.
  * @param {HTMLElement} item DOM ref of the activated list item
- * @since 0.10
+ * @since 1.0.0
  * @public
  */
 @event("menu-item-click", {
@@ -298,7 +303,8 @@ type ShellBarSearchFieldClearEventDetail = {
  * Fired, when an item from the content slot is hidden or shown.
  * **Note:** The `content-item-visibility-change` event is in an experimental state and is a subject to change.
  *
- * @param {Array<HTMLElement>} array of all the items that are hidden
+ * @param {Array<HTMLElement>} items array of all the items that are currently hidden
+ * @param {Array<HTMLElement>} revealedItems array of items that just became visible (were hidden in the previous state)
  * @public
  * @since 2.7.0
  */
@@ -387,7 +393,7 @@ class ShellBar extends UI5Element {
 	 *
 	 * **Note:** We recommend not using the `size` attribute of `ui5-avatar` because
 	 * it should have specific size by design in the context of `ui5-shellbar` profile.
-	 * @since 1.0.0-rc.6
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()
@@ -551,10 +557,7 @@ class ShellBar extends UI5Element {
 	accessibility: ShellBarAccessibility = new ShellBarAccessibility();
 
 	private _searchAdaptor = new ShellBarSearch(this.getSearchDeps());
-	private _searchAdaptorLegacy = new ShellBarSearchLegacy({
-		...this.getSearchDeps(),
-		getDisableSearchCollapse: () => this.disableSearchCollapse,
-	});
+	private _searchAdaptorLegacy = new ShellBarSearchLegacy(this.getSearchDeps());
 
 	/* =================== Legacy Members =================== */
 
@@ -601,7 +604,7 @@ class ShellBar extends UI5Element {
 	/**
 	 * Defines the logo of the `ui5-shellbar`.
 	 * For example, you can use `ui5-avatar` or `img` elements as logo.
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()
@@ -611,7 +614,7 @@ class ShellBar extends UI5Element {
 	 * Defines the items displayed in menu after a click on a start button.
 	 *
 	 * **Note:** You can use the  `<ui5-li></ui5-li>` and its ancestors.
-	 * @since 0.10
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()
@@ -809,8 +812,11 @@ class ShellBar extends UI5Element {
 		const newHiddenContentIds = filterContentIds(newHiddenItemsIds);
 
 		if (!arraysAreEqual(oldHiddenContentIds, newHiddenContentIds)) {
+			const toElement = (id: string) => this.content.find(item => (item as any)._individualSlot as string === id)!;
+			const revealedContentIds = oldHiddenContentIds.filter(id => !newHiddenContentIds.includes(id));
 			this.fireDecoratorEvent("content-item-visibility-change", {
-				items: newHiddenContentIds.map(id => this.content.find(item => (item as any)._individualSlot as string === id)!),
+				items: newHiddenContentIds.map(toElement),
+				revealedItems: revealedContentIds.map(toElement),
 			});
 		}
 	}
@@ -917,6 +923,7 @@ class ShellBar extends UI5Element {
 			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
 			handleSearchButtonClick: () => this.handleSearchButtonClick(),
 			getOverflowed: () => this.overflow.isOverflowing(this.overflowOuter!, this.overflowInner!),
+			getDisableSearchCollapse: () => this.disableSearchCollapse,
 		};
 	}
 
@@ -1131,7 +1138,7 @@ class ShellBar extends UI5Element {
 	 * Returns the `logo` DOM ref.
 	 * @public
 	 * @default null
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	get logoDomRef(): HTMLElement | null {
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="logo"]`);
@@ -1141,7 +1148,7 @@ class ShellBar extends UI5Element {
 	 * Returns the `notifications` icon DOM ref.
 	 * @public
 	 * @default null
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	get notificationsDomRef(): HTMLElement | null {
 		if (this.isHidden(ShellBarActions.Notifications)) {
@@ -1154,7 +1161,7 @@ class ShellBar extends UI5Element {
 	 * Returns the `overflow` icon DOM ref.
 	 * @public
 	 * @default null
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	get overflowDomRef(): HTMLElement | null {
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="overflow"]`);
@@ -1164,7 +1171,7 @@ class ShellBar extends UI5Element {
 	 * Returns the `profile` icon DOM ref.
 	 * @public
 	 * @default null
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	get profileDomRef(): HTMLElement | null {
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="profile"]`);
@@ -1174,7 +1181,7 @@ class ShellBar extends UI5Element {
 	 * Returns the `product-switch` icon DOM ref.
 	 * @public
 	 * @default null
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	get productSwitchDomRef(): HTMLElement | null {
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="product-switch"]`);

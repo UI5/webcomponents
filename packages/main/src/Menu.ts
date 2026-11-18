@@ -115,6 +115,9 @@ type MenuBeforeCloseEventDetail = { escPressed: boolean };
  * @extends UI5Element
  * @since 1.3.0
  * @public
+ * @ui5subcomponent MenuItem
+ * @ui5subcomponent MenuItemGroup
+ * @ui5subcomponent MenuSeparator
  */
 @customElement({
 	tag: "ui5-menu",

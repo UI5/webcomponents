@@ -142,6 +142,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>F2</kbd> - Focuses the first tabbable element in the row
  * * <kbd>F7</kbd> - If focus position is remembered, moves focus to the corresponding focus position row, otherwise to the first tabbable element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on a cell, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Navigates down
@@ -156,6 +157,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>Enter</kbd> - Focuses the first tabbable cell content
  * * <kbd>F7</kbd> - If the focus is on an interactive element inside a row, moves focus to the corresponding row and remembers the focus position of the element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on an interactive cell content, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Move the focus to the interactive element in the same column of the previous row, unless the focused element prevents the default
@@ -184,6 +186,19 @@ type TableRowActionClickEventDetail = {
  * @extends UI5Element
  * @since 2.0.0
  * @public
+ * @ui5subcomponent TableCell
+ * @ui5subcomponent TableGroupRow
+ * @ui5subcomponent TableGrowing
+ * @ui5subcomponent TableHeaderCell
+ * @ui5subcomponent TableHeaderCellActionAI
+ * @ui5subcomponent TableHeaderRow
+ * @ui5subcomponent TableRow
+ * @ui5subcomponent TableRowAction
+ * @ui5subcomponent TableRowActionNavigation
+ * @ui5subcomponent TableSelection
+ * @ui5subcomponent TableSelectionMulti
+ * @ui5subcomponent TableSelectionSingle
+ * @ui5subcomponent TableVirtualizer
  */
 @customElement({
 	tag: "ui5-table",
@@ -278,7 +293,9 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	rows!: DefaultSlot<TableRow>;
+	get rows(): DefaultSlot<TableRow> {
+		return this.getSlottedNodes<TableRow>("rows") as DefaultSlot<TableRow>;
+	}
 
 	/**
 	 * Defines the header row of the component.
@@ -287,8 +304,13 @@ class Table extends UI5Element {
 	 *
 	 * @public
 	 */
-	@slot({ type: HTMLElement, invalidateOnChildChange: { properties: false, slots: true } })
-	headerRow!: Slot<TableHeaderRow>;
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: { properties: false, slots: true },
+	})
+	get headerRow(): Slot<TableHeaderRow> {
+		return this.getSlottedNodes<TableHeaderRow>("headerRow") as Slot<TableHeaderRow>;
+	}
 
 	/**
 	 * Defines the custom visualization if there is no data available.
@@ -383,7 +405,7 @@ class Table extends UI5Element {
 	 * Determines whether the table rows are displayed with alternating background colors.
 	 *
 	 * @default false
-	 * @since 2.17
+	 * @since 2.17.0
 	 * @public
 	 */
 	@property({ type: Boolean })

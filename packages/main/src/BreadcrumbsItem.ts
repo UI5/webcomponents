@@ -23,7 +23,7 @@ type BreadcrumbsItemClickEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  * @abstract
  */
 @customElement("ui5-breadcrumbs-item")

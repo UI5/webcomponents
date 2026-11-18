@@ -15,9 +15,10 @@ on:
           - 'experimental'
           - 'v1'
           - 'cypress-ct'
+          - 'republish'
         default: 'rc'
       new_version:
-        description: 'version (relevant for stable, hotfix, and v1)'  # Updated description
+        description: 'version (relevant for stable, hotfix, v1, and republish)'
         required: false
         default: ''
         type: string
@@ -100,6 +101,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes
 
@@ -329,6 +332,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run:  |
           major_minor=$(echo "${{ github.event.inputs.new_version }}" | cut -d. -f1,2)
           yarn lerna publish from-git --yes --dist-tag "hotfix-${major_minor}"
@@ -374,6 +379,8 @@ jobs:
         run: yarn ci:releasebuild
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes --dist-tag experimental --pre-dist-tag experimental
 
@@ -425,6 +432,8 @@ jobs:
         run: yarn ci:releasebuild
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes --dist-tag "v1"
 
@@ -465,3 +474,47 @@ jobs:
       - name: Publish
         run: npm publish --provenance --access public
         working-directory: packages/cypress-ct-ui5-webc
+
+  # ✅ Job 7: Republish Flow
+  # Publishes packages for an already-tagged version that failed to publish.
+  # Checks out the given tag and runs only the publish step — no version bump,
+  # no build, no GitHub release. Use when a release run failed at Publish.
+  republish:
+    if: ${{ github.event.inputs.release_type == 'republish' && github.event.inputs.new_version != '' }}
+    environment: "npmjs:@ui5/webcomponents"
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_KEY }}
+
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          ref: v${{ github.event.inputs.new_version }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
+        run: |
+          yarn lerna publish from-git --yes

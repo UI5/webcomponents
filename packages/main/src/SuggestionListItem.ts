@@ -24,7 +24,7 @@ class SuggestionListItem extends ListItemStandard {
 	/**
 	 * Defines a description that can contain HTML.
 	 * **Note:** If not specified, the `description` property will be used.
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

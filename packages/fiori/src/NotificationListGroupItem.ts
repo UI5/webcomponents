@@ -65,7 +65,7 @@ type NotificationListGroupItemToggleEventDetail = {
  * `import "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";`
  * @constructor
  * @extends NotificationListItemBase
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  */
 @customElement({

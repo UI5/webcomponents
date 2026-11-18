@@ -94,18 +94,6 @@ describe("API & Events", () => {
 			.should("be.visible");
 	});
 
-	it("tests if draggable=true is set", () => {
-		cy.get("[ui5-table-row]")
-			.should("have.length", 11)
-			.each(($row, index) => {
-				if (index === 10) {
-					cy.wrap($row).should("not.have.attr", "draggable");
-				} else {
-					cy.wrap($row).should("have.attr", "draggable", "true");
-				}
-			});
-	});
-
 	it("tests if events are fired and paramters are as expected", () => {
 		cy.get("[ui5-table]")
 			.then(table => {
@@ -234,3 +222,142 @@ describe("API & Events", () => {
 			.should("have.callCount", 3);
 	});
 });
+
+describe("Keyboard", () => {
+	beforeEach(() => {
+		cy.viewport(1920, 1080);
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnB</span></TableHeaderCell>
+				</TableHeaderRow>
+				{Array.from({ length: 10 }).map((_, index) =>
+					<TableRow rowKey={`${index}`} movable={true}>
+						<TableCell><Label>Cell A</Label></TableCell>
+						<TableCell><Label>Cell B</Label></TableCell>
+					</TableRow>
+				)}
+				<TableRow rowKey="10">
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("[ui5-table]")
+			.should("be.visible");
+	});
+
+	function acceptMoves() {
+		cy.get("ui5-table")
+			.then(table => {
+				// Accept every proposed position so that "move" is always fired.
+				table.get(0).addEventListener("move-over", (e: Event) => e.preventDefault());
+				table.get(0).addEventListener("move-over", cy.stub().as("moveOver"));
+				table.get(0).addEventListener("move", cy.stub().as("move"));
+			});
+	}
+
+	function moveBy(sourceKey: string, press: string | string[]) {
+		cy.get(`ui5-table-row[row-key='${sourceKey}']`).then($row => $row[0].focus());
+		cy.get(`ui5-table-row[row-key='${sourceKey}']`).should("be.focused");
+		cy.realPress(press);
+	}
+
+	it("Ctrl+ArrowDown moves the row after the next one", () => {
+		acceptMoves();
+		cy.get("ui5-table-row[row-key='0']").then($source => {
+			cy.get("ui5-table-row[row-key='1']").then($destination => {
+				moveBy("0", ["Control", "ArrowDown"]);
+
+				cy.get("@moveOver")
+					.should("be.calledWithMatch", {
+						detail: {
+							source: { element: $source[0] },
+							destination: { element: $destination[0], placement: MovePlacement.After },
+						},
+					});
+				cy.get("@move")
+					.should("be.calledWithMatch", {
+						detail: {
+							source: { element: $source[0] },
+							destination: { element: $destination[0], placement: MovePlacement.After },
+						},
+					});
+			});
+		});
+	});
+
+	it("Ctrl+ArrowUp moves the row before the previous one", () => {
+		acceptMoves();
+		cy.get("ui5-table-row[row-key='2']").then($source => {
+			cy.get("ui5-table-row[row-key='1']").then($destination => {
+				moveBy("2", ["Control", "ArrowUp"]);
+
+				cy.get("@move")
+					.should("be.calledWithMatch", {
+						detail: {
+							source: { element: $source[0] },
+							destination: { element: $destination[0], placement: MovePlacement.Before },
+						},
+					});
+			});
+		});
+	});
+
+	it("Ctrl+Home moves the row before the first one", () => {
+		acceptMoves();
+		cy.get("ui5-table-row[row-key='5']").then($source => {
+			cy.get("ui5-table-row[row-key='0']").then($destination => {
+				moveBy("5", ["Control", "Home"]);
+
+				cy.get("@move")
+					.should("be.calledWithMatch", {
+						detail: {
+							source: { element: $source[0] },
+							destination: { element: $destination[0], placement: MovePlacement.Before },
+						},
+					});
+			});
+		});
+	});
+
+	it("Ctrl+End moves the row after the last movable one", () => {
+		acceptMoves();
+		cy.get("ui5-table-row[row-key='5']").then($source => {
+			cy.get("ui5-table-row[row-key='10']").then($destination => {
+				moveBy("5", ["Control", "End"]);
+
+				cy.get("@move")
+					.should("be.calledWithMatch", {
+						detail: {
+							source: { element: $source[0] },
+							destination: { element: $destination[0], placement: MovePlacement.After },
+						},
+					});
+			});
+		});
+	});
+
+	it("does not fire events for a non-movable row", () => {
+		acceptMoves();
+		moveBy("10", ["Control", "ArrowUp"]);
+
+		cy.get("@moveOver").should("not.be.called");
+		cy.get("@move").should("not.be.called");
+	});
+
+	it("does not fire move when move-over is not prevented", () => {
+		cy.get("ui5-table").then(table => {
+			table.get(0).addEventListener("move-over", cy.stub().as("moveOver"));
+			table.get(0).addEventListener("move", cy.stub().as("move"));
+		});
+
+		moveBy("0", ["Control", "ArrowDown"]);
+
+		cy.get("@moveOver").should("be.called");
+		cy.get("@move").should("not.be.called");
+	});
+});
+

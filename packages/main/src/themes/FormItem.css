@@ -24,6 +24,10 @@
 	justify-self: var(--ui5-form-item-label-justify, end);
 }
 
+::slotted([slot="labelContent"]) {
+	text-align: var(--ui5-form-item-label-text-align, right);
+}
+
 .ui5-form-item-content {
 	overflow: hidden;
 	width: 100%;

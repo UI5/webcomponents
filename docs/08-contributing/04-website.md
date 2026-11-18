@@ -19,7 +19,7 @@ and finally open the website in your browser.
 
 # Creating Website Samples
 
-The website app is developed in its own package `packages/website`. Components features or states are demonstrated via samples meant for consumers.
+The website app is developed in its own package `packages/website`. Component features or states are demonstrated via samples meant for consumers.
 The samples are placed in the `/packages/website/docs/_samples` folder.
 
 **For example:** 
@@ -45,9 +45,22 @@ yarn start
 **Note:** In case of issues with the second flow, most likely you need `yarn build` in the root.
 
 
+## How Component Pages Are Generated
+
+Component pages are **automatically generated** from two sources:
+
+1. **The Custom Elements Manifest (CEM)** — the API reference (properties, events, slots, methods) comes from JSDoc comments in the component's TypeScript source. Run `node ../tools/bin/dev.js generateAPI` in the package directory to regenerate the CEM after changing JSDoc.
+
+2. **`samples.json`** — controls which samples appear on a component's page and in what order. Each package has one file at `docs/components/<package>/samples.json`.
+
+The generator runs automatically as part of `yarn start` and `yarn build`.
+
+> **Note:** The old `docs/_components_pages/` directory is obsolete. Component pages are no longer hand-authored there. Any file left in that directory will **block the build** with an error telling you how to migrate.
+
+
 ## Create New Sample
 
-A regular component sample consists of a folder + 3 files (`{sample_name}.md`, `main.js` and `sample.html`) that you need to create. Let's go trough every one of them:
+A regular component sample consists of a folder + 3 files (`{sample_name}.md`, `main.js` and `sample.html`) that you need to create. Let's go through every one of them:
 
 ### The `main.js` file
 
@@ -91,8 +104,7 @@ In the `sample.html` file, we use the web components as in regular HTML page.
 
 ```
 
-
-**Note:** The `playground-fold` comments will fold this part of the code to highlight the important part - the components usage.
+**Note:** The `playground-fold` comments will fold this part of the code to highlight the important part — the component usage.
 
 ### The `{sample_name}.md` file
 
@@ -109,35 +121,31 @@ import js from '!!raw-loader!./main.js';
 
 ## Show the Sample
 
-In the previous step we have created our sample. Now, it's time to show and document it.
+After creating the sample files, register the sample in `docs/components/<package>/samples.json`.
 
+**For example**, to add a new sample `MyFeature` to `Button` in the `main` package, open `docs/components/main/samples.json` and add an entry:
 
-- Open the `packages/website/docs/_components_pages` folder.
-
-- Find your component's `.mdx` file.
-
-**For example:** `packages/website/docs/_components_pages/main/Button.mdx`
-
-- Import the newly created sample.
-
-**For example:** 
-```js
-import MyNewSample from "../../_samples/main/Button/MyNewSample/MyNewSample.md";`
+```json
+"Button": {
+  "samples": [
+    { "name": "Basic" },
+    { "name": "MyFeature", "title": "My Feature", "description": "The Button supports my new feature." }
+  ]
+}
 ```
 
-- Instantiate the sample and add title + description.
+The key fields are:
 
-**For example:**
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | yes | Matches the sample folder name and `.md` file name |
+| `title` | no | Display title shown above the sample (defaults to `name`) |
+| `description` | no | Short description shown between the title and the sample |
 
-```.md
-### My New Sample
-The Button supports several designs to indicate the priority or the nature of the action.
+Then restart the website (`yarn start`) or run `yarn generate-api-reference` to regenerate the pages.
 
-<MyNewSample />
+**Note:** Changes in sample files (`.md`, `.html`, `.js`) are detected and the server reloads. Changes to `samples.json` require a server restart.
 
-```
-
-**Note:** Changes in the sample files (`.md`, `.html`, `.js`) are detected and the server reloads. However, changes in the `.mdx` file are not watched - restart of the server is needed.
 
 ## Conventions 
 
@@ -148,7 +156,7 @@ The Button supports several designs to indicate the priority or the nature of th
 - Regarding the naming, it's best to consult with KM and use existing ones as reference.
 
 ### Sample Title and Description
-The title ("My New Sample") and the description ("The Button..") will be displayed at the top of the sample itself. Adding title and description is recommended -  they help viewers better understand what they are looking at.
+The title and description will be displayed at the top of the sample itself. Adding both is recommended — they help viewers better understand what they are looking at.
 
 
 ### Sample Order
@@ -156,4 +164,4 @@ Add new samples in the "More Samples" section where it best fits among the exist
 
 
 ### The "Basic" Sample
-All components have a sample called "Basic" used as the first sample displayed right-after the component's overview. Don't use "Basic" for other samples.
+All components have a sample called "Basic". The **first entry** in the `samples` array is treated as the Basic sample — it appears before the API reference. All subsequent entries appear in the "More Samples" section. Don't name other samples "Basic".

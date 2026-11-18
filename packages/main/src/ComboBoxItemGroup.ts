@@ -16,7 +16,7 @@ import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
  * @abstract
  * @public
  * @implements {IComboBoxItem}
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  * @csspart header - Used to style the header item of the group
  * @csspart title - Used to style the title of the group header
  */

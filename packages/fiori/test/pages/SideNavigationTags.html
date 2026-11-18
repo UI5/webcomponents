@@ -155,7 +155,7 @@
 						</ui5-side-navigation-item>
 
 						<ui5-side-navigation-item text="Workflows" icon="workflow-tasks">
-							<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon style="max-width: 4rem;">Experimental</ui5-tag>
+							<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Experimental</ui5-tag>
 						</ui5-side-navigation-item>
 
 						<ui5-side-navigation-item text="Data Sources" icon="database">
@@ -179,6 +179,86 @@
 			</div>
 		</div>
 
+		<!-- UI5 Parity: SideNavigationWithTags.htm port -->
+		<div class="test-section">
+			<div class="section-content">
+				<div class="side-nav-wrapper">
+					<ui5-side-navigation id="sn-ui5-tags" accessible-name="UI5 Parity Tags Navigation">
+						<ui5-side-navigation-item text="Overview" icon="home">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>Beta</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Favorites Long Text Favorites Long Text" icon="unfavorite" expanded unselectable>
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>Beta Long Text Beta Long Text Beta Long Text</ui5-tag>
+							<ui5-side-navigation-sub-item text="My Accounts Long Text My Accounts Long Text">
+								<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Active Long Text Active Long Text Active Long Text Active Long Text</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="My Orders">
+								<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Pending</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="No tag"></ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-group text="Product Group" expanded>
+							<ui5-side-navigation-item text="Products" icon="product">
+								<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>New</ui5-tag>
+							</ui5-side-navigation-item>
+							<ui5-side-navigation-item text="Inventory" icon="inventory">
+								<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Updated</ui5-tag>
+							</ui5-side-navigation-item>
+							<ui5-side-navigation-item text="Orders" icon="sales-order"></ui5-side-navigation-item>
+						</ui5-side-navigation-group>
+
+						<ui5-side-navigation-item text="Features" icon="activity-items" expanded>
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>New</ui5-tag>
+							<ui5-side-navigation-sub-item text="Feature A">
+								<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>Beta</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Feature B Long Title Title">
+								<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Deprecated</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Feature C"></ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Documentation Long Text" icon="sys-help">
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>Updated</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Settings" icon="action-settings"></ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Single Item" icon="hint">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>Info</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Analytics" icon="bar-chart">
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Nightly</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Preview" icon="show">
+							<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Experimental</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Reports" icon="document">
+							<ui5-tag slot="tag" design="Set2" color-scheme="10" hide-state-icon>Updated</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Administration" icon="settings" href="https://sap.com" target="_blank" unselectable>
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Long tag Long tag</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<!-- Fixed Items -->
+						<ui5-side-navigation-item slot="fixedItems" text="Support Long Text Support Long Text" icon="phone" href="https://sap.com" target="_blank" unselectable>
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>24/7 Long Text 24/7 Long Text 24/7 Long Text</ui5-tag>
+						</ui5-side-navigation-item>
+						<ui5-side-navigation-item slot="fixedItems" text="Logout" icon="log"></ui5-side-navigation-item>
+					</ui5-side-navigation>
+				</div>
+				<div class="controls-wrapper">
+					<ui5-button id="toggle-sn-ui5-tags">Toggle Collapsed</ui5-button>
+				</div>
+			</div>
+		</div>
+
 		<div class="test-section">
 			<div class="section-content">
 				<div class="side-nav-wrapper">
@@ -194,7 +274,7 @@
 						</ui5-side-navigation-item>
 
 						<ui5-side-navigation-item text="Data Warehouse and ETL Processing Tools" icon="database" expanded>
-							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon wrapping-type="Normal" style="max-width: 4rem;">Alpha Release</ui5-tag>
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon wrapping-type="Normal">Alpha Release</ui5-tag>
 							<ui5-side-navigation-sub-item text="Extract Transform Load Pipeline">
 								<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon wrapping-type="Normal">New Feature</ui5-tag>
 							</ui5-side-navigation-sub-item>
@@ -238,7 +318,12 @@
 			sn.collapsed = !sn.collapsed;
 		});
 
-		['sn-expanded', 'sn-collapsed', 'sn-wrapping'].forEach(id => {
+		document.getElementById('toggle-sn-ui5-tags').addEventListener('click', () => {
+			const sn = document.getElementById('sn-ui5-tags');
+			sn.collapsed = !sn.collapsed;
+		});
+
+		['sn-expanded', 'sn-collapsed', 'sn-wrapping', 'sn-ui5-tags'].forEach(id => {
 			document.getElementById(id).addEventListener('selection-change', (e) => {
 				console.log(`[${id}] Selection changed to:`, e.detail.item.text);
 			});

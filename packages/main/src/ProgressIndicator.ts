@@ -38,7 +38,7 @@ import ProgressIndicatorCss from "./generated/themes/ProgressIndicator.css.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-progress-indicator",

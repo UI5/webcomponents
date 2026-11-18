@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import { getTimezone, setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 import DatePicker from "../../src/DatePicker.js";
 import DateTimePicker from "../../src/DateTimePicker.js";

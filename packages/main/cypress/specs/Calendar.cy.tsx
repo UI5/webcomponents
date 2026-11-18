@@ -1866,6 +1866,34 @@ describe("Day Picker Tests", () => {
 		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
 			.should("have.class", "ui5-dp-item--selected");
 	});
+
+	it("selects trailing next-month day when maxDate is set and click lands off the day cell", () => {
+		const novTimestamp = new Date(Date.UTC(2026, 10, 1, 0, 0, 0)).valueOf() / 1000;
+		const dec4Timestamp = new Date(Date.UTC(2026, 11, 4, 0, 0, 0)).valueOf() / 1000;
+
+		cy.mount(
+			<Calendar id="calendar1" timestamp={novTimestamp} maxDate="2026-12-10"></Calendar>,
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.as("calendar");
+
+		cy.ui5CalendarGetDay("#calendar1", dec4Timestamp.toString())
+			.realMouseDown();
+
+		cy.get("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.as("daypicker");
+
+		cy.get("@daypicker")
+			.shadow()
+			.find(".ui5-dp-root")
+			.realClick({ x: 0, y: 0 });
+
+		cy.ui5CalendarGetDay("#calendar1", dec4Timestamp.toString())
+			.should("have.class", "ui5-dp-item--selected");
+	});
 });
 
 describe("Calendar Global Configuration", () => {

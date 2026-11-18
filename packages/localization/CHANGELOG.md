@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Bug Fixes
+
+* **localization:** use cached timezone ([#14233](https://github.com/UI5/webcomponents/issues/14233)) ([30725de](https://github.com/UI5/webcomponents/commit/30725de8d2e3170a0d742d4e2873c32902a805bd))
+
+
+
+
+
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Bug Fixes
+
+* **localization:** use cached timezone ([#14233](https://github.com/UI5/webcomponents/issues/14233)) ([30725de](https://github.com/UI5/webcomponents/commit/30725de8d2e3170a0d742d4e2873c32902a805bd))
+
+
+
+
+
+# [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [2.29.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.28.1...v2.29.0-rc.0) (2026-10-30)
+
+
+### Features
+
+* **date components:** Adjustment of the Placeholder and its Default … ([#14059](https://github.com/UI5/webcomponents/issues/14059)) ([e3a17c3](https://github.com/UI5/webcomponents/commit/e3a17c30c6da1f15b4988da766599f90abadf3f9))
+
+
+
+
+
+## [2.28.1](https://github.com/UI5/webcomponents/compare/v2.28.0...v2.28.1) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [2.28.0](https://github.com/UI5/webcomponents/compare/v2.28.0-rc.0...v2.28.0) (2026-10-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [2.28.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.1-rc.0...v2.28.0-rc.0) (2026-10-15)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
 ## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization

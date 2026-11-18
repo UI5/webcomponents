@@ -189,8 +189,11 @@ type MultiComboBoxValueStateChangeEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.11.0
+ * @since 1.0.0
  * @csspart token-\{index\} - Used to style each token(where `token-0` corresponds to the first item)
+ * @ui5subcomponent MultiComboBoxItem
+ * @ui5subcomponent MultiComboBoxItemCustom
+ * @ui5subcomponent MultiComboBoxItemGroup
  */
 @customElement({
 	tag: "ui5-multi-combobox",
@@ -388,7 +391,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 * Defines whether the component is required.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.5
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	required = false;
@@ -555,7 +558,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	/**
 	* Defines the icon to be displayed in the component.
 	* @public
-	* @since 1.0.0-rc.9
+	* @since 1.0.0
 	*/
 	@slot()
 	icon!: Slot<IIcon>;
@@ -568,7 +571,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the component is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

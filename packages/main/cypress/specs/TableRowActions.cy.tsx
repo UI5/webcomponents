@@ -2,7 +2,7 @@
 /* eslint-disable newline-per-chained-call */
 import Table from "../../src/Table.js";
 import "../../src/TableHeaderCell.js";
-import "../../src/TableCell.js";
+import TableCell from "../../src/TableCell.js";
 import "../../src/Menu.js";
 import "../../src/MenuItem.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
@@ -30,7 +30,7 @@ describe("TableRowActions", () => {
 		cy.get("@table").children("ui5-table-header-row").first().as("headerRow");
 		cy.get("@table").shadow().find("#table").as("innerTable");
 		cy.get("@rows").then($rows => {
-			$rows.each(index => {
+			$rows.each((index: number) => {
 				cy.get("@rows").eq(index).as(`row${index + 1}`);
 			});
 		});
@@ -50,7 +50,7 @@ describe("TableRowActions", () => {
 	}
 
 	describe("Rendering", () => {
-		it("tests single row action", () => {
+		it("reserves the action column and forwards row action clicks", () => {
 			mountTable(1, () => <>
 				<TableRow id="addRow">
 					<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
@@ -69,19 +69,11 @@ describe("TableRowActions", () => {
 
 			cy.get("@headerRow").shadow().find("#actions-cell").should("exist");
 			checkTemplateColumn(`${8 + 36 + 8}px`);
-			cy.get("@row1").find("[icon=add]").shadow().find("ui5-button").should("exist");
-			cy.get("@row2").find("[icon=add]").should("have.css", "display", "block");
-			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
-			cy.get("@row4").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
 
-			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
 			cy.get("#addAction").realClick();
-			cy.get("@addActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "addRow");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "addAction");
-			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
 			cy.get("#navigationAction").realClick();
-			cy.get("@navigationActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.row.id").should("equal", "navigationRow");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.action.id").should("equal", "navigationAction");
 
@@ -237,6 +229,151 @@ describe("TableRowActions", () => {
 			cy.get("@menuItems").eq(1).should("have.attr", "text", "Delete").and("have.attr", "icon", "delete");
 			cy.get("@menuItems").eq(0).ui5MenuItemPress("Enter");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.icon").should("equal", "edit");
+		});
+	});
+
+	describe("Keyboard Handling", () => {
+		it("Alt+Enter triggers navigation action from row", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+				<TableRow id="noNavRow">
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
+			// Focus the row with navigation action and press Alt+Enter
+			cy.get("@row1").focus();
+			cy.get("@row1").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
+
+			// Focus the row without navigation action and press Alt+Enter - should not fire
+			cy.get("@row2").focus();
+			cy.get("@row2").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter triggers navigation action from cell", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableCell id="navRowCell">Cell</TableCell>
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+				<TableRow id="noNavRow">
+					<TableCell id="noNavRowCell">Cell</TableCell>
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
+			// Focus a cell in the row with navigation action and press Alt+Enter
+			cy.get("#navRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
+			cy.get("#navRowCell").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "navRow");
+			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "navAction");
+			cy.get("@rowClick").should("not.have.been.called");
+
+			// Focus a cell in the row without navigation action and press Alt+Enter - should not fire
+			cy.get("#noNavRowCell").realClick();
+			// Reset the stub after the click event from realClick()
+			cy.get("@rowClick").then(stub => {
+				(stub as sinon.SinonStub).resetHistory();
+			});
+			cy.get("#noNavRowCell").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("have.been.calledOnce"); // still only once
+			cy.get("@rowClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter does not trigger navigation action from control inside cell", () => {
+			mountTable(1, () => <>
+				<TableRow id="navRow">
+					<TableCell><input id="cellInput" /></TableCell>
+					<TableRowActionNavigation slot="actions" id="navAction" interactive={true}></TableRowActionNavigation>
+				</TableRow>
+			</>
+			);
+
+			// Focus the input inside the cell and press Alt+Enter - should not fire
+			cy.get("#cellInput").focus();
+			cy.get("#cellInput").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("not.have.been.called");
+		});
+
+		it("Alt+Enter does not trigger invisible navigation action", () => {
+			mountTable(1, () => <>
+				<TableRow id="invisibleNavRow">
+					<TableRowActionNavigation slot="actions" id="invisibleNavAction" interactive={true} invisible={true}></TableRowActionNavigation>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@row1").focus();
+			cy.get("@row1").realPress(["Alt", "Enter"]);
+			cy.get("@rowActionClick").should("not.have.been.called");
+		});
+	});
+
+	describe("Action components", () => {
+		beforeEach(() => {
+			cy.mount(
+				<Table rowActionCount={1}>
+					<TableHeaderRow slot="headerRow"></TableHeaderRow>
+					<>
+						<TableRow id="addRow">
+							<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowAction slot="actions" icon={add} text="Add" invisible={true}></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowActionNavigation slot="actions" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+						<TableRow id="navigationRow">
+							<TableRowActionNavigation slot="actions" id="navigationAction" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+					</>
+				</Table>
+			);
+		});
+
+		it("renders the action icon and fires click", () => {
+			cy.get("#addAction").shadow().find("ui5-button").should("exist");
+			cy.get("#addAction").should("have.attr", "icon", "add");
+			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
+			cy.get("#addAction").realClick();
+			cy.get("@addActionClick").should("have.been.calledOnce");
+		});
+
+		it("keeps invisible actions rendered for alignment", () => {
+			cy.get("[ui5-table-row-action][invisible]").should("have.css", "display", "block");
+		});
+
+		it("renders navigation buttons and fires click", () => {
+			cy.get("[ui5-table-row-action-navigation]").each($action => {
+				cy.wrap($action).shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
+			});
+			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
+			cy.get("#navigationAction").realClick();
+			cy.get("@navigationActionClick").should("have.been.calledOnce");
 		});
 	});
 });

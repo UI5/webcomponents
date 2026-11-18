@@ -79,7 +79,7 @@ type YearPickerNavigateEventDetail = {
 })
 /**
  * Fired when the timestamp changes - the user navigates with the keyboard or clicks with the mouse.
- * @since 1.0.0-rc.9
+ * @since 1.0.0
  */
 @event("navigate", {
 	bubbles: true,
@@ -160,7 +160,7 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	_buildYears() {
 		const pageSize = this._getPageSize();
 		const oYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
-		const oYearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this.secondaryCalendarType });
+		const oYearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
 
 		const calendarDate = this._calendarDate; // store the value of the expensive getter
 		const minDate = this._minDate; // store the value of the expensive getter

@@ -10,7 +10,7 @@
 	display: flex;
 	flex-direction: column;
 	background-color: var(--sapGroup_ContentBackground);
-    border-radius: 0.75rem;
+	border-radius: 0.75rem;
 }
 
 .ui5-form-header {
@@ -38,12 +38,14 @@
 	height: var(--_ui5-form-group-heading-height);
 	line-height: var(--_ui5-form-group-heading-height);
 	padding-inline-start: 0.25rem;
+	overflow: hidden;
 }
 
 .ui5-form-column {
 	padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    box-sizing: border-box;
+	padding-bottom: 1rem;
+	box-sizing: border-box;
+	min-width: 0;
 }
 
 ::slotted([ui5-form-group]) {

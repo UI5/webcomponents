@@ -9,6 +9,27 @@
 	outline: none;
 }
 
+.ui5-avatar-group-items-xs {
+	--_ui5_avatar_group_focus_border_radius: var(--_ui5_avatar_group_focus_border_radius_xs);
+}
+
+.ui5-avatar-group-items-s {
+	--_ui5_avatar_group_focus_border_radius: var(--_ui5_avatar_group_focus_border_radius_s);
+}
+
+.ui5-avatar-group-items-m {
+	--_ui5_avatar_group_focus_border_radius: var(--_ui5_avatar_group_focus_border_radius_m);
+}
+
+.ui5-avatar-group-items-l {
+	--_ui5_avatar_group_focus_border_radius: var(--_ui5_avatar_group_focus_border_radius_l);
+}
+
+.ui5-avatar-group-items-xl {
+	--_ui5_avatar_group_focus_border_radius: var(--_ui5_avatar_group_focus_border_radius_xl);
+}
+
+
 :host([type="Group"][desktop]) .ui5-avatar-group-items:focus,
 :host([type="Group"]) .ui5-avatar-group-items:focus-visible {
 	outline: var(--_ui5_avatar_outline);
