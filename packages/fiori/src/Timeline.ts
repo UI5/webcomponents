@@ -6,7 +6,6 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isSpace,
 	isEnter,
@@ -297,7 +296,10 @@ class Timeline extends UI5Element {
 
 	async observeTimelineEnd() {
 		if (!this.timeLineEndObserved) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
+
 			this.getIntersectionObserver().observe(this.timelineEndMarker);
 			this.timeLineEndObserved = true;
 		}

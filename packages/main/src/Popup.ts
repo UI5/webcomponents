@@ -1,5 +1,4 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -269,10 +268,11 @@ abstract class Popup extends UI5Element {
 		this.onDesktop = isDesktop();
 	}
 
-	onAfterRendering() {
-		renderFinished().then(() => {
-			this._updateMediaRange();
-		});
+	async onAfterRendering() {
+		if (!await this.waitForRender()) {
+			return;
+		}
+		this._updateMediaRange();
 
 		if (this.open) {
 			this._registerResizeHandler();
@@ -336,7 +336,7 @@ abstract class Popup extends UI5Element {
 		}
 	}
 
-	get open() : boolean {
+	get open(): boolean {
 		return this._open;
 	}
 
@@ -381,9 +381,7 @@ abstract class Popup extends UI5Element {
 		// initial focus, if focused element is statically created
 		await this.applyInitialFocus();
 
-		await renderFinished();
-
-		if (this.isConnected) {
+		if (await this.waitForRender()) {
 			this.fireDecoratorEvent("open");
 		}
 	}
@@ -547,7 +545,7 @@ abstract class Popup extends UI5Element {
 
 		if (this.initialFocus) {
 			element = (this.getRootNode() as Document).getElementById(this.initialFocus)
-			|| document.getElementById(this.initialFocus);
+				|| document.getElementById(this.initialFocus);
 		}
 
 		element = element || await this._getFirstFocusableElement() || this._root; // in case of no focusable content focus the root

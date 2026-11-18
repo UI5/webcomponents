@@ -12,7 +12,6 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
@@ -968,7 +967,11 @@ class ShellBar extends UI5Element {
 			return;
 		}
 		this.showSearchField = expanded;
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this.fireDecoratorEvent("search-field-toggle", { expanded });
 	}
 
@@ -1192,7 +1195,10 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	async getSearchButtonDomRef(): Promise<HTMLElement | null> {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return this.shadowRoot?.querySelector<HTMLElement>(`*[data-ui5-stable="toggle-search"]`) || null;
+		}
+
 		if (this.isSelfCollapsibleSearch) {
 			return (this.search as unknown as ShellBarSearchComponent).getSearchButtonDomRef();
 		}

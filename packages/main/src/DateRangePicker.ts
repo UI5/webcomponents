@@ -1,6 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
@@ -522,7 +521,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		}
 		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
 
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this._dateTimeInput.setCaretPosition(caretPos); // Return the caret to the previous (or the adjusted, if dates flipped) position after rendering
 	}
 

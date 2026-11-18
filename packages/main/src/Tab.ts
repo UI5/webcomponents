@@ -10,7 +10,6 @@ import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNaviga
 import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	TAB_ARIA_DESIGN_POSITIVE,
 	TAB_ARIA_DESIGN_NEGATIVE,
@@ -311,7 +310,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	}
 
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await renderFinished();
+		await this.waitForRender();
 		return super.focus(focusOptions);
 	}
 

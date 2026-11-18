@@ -9,7 +9,6 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import type List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -796,7 +795,11 @@ class ViewSettingsDialog extends UI5Element {
 
 	async _navigateToFilters() {
 		this._filterStepTwo = false;
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		if (this._filterList) {
 			this._filterList.focusFirstItem();
 		}
@@ -808,7 +811,11 @@ class ViewSettingsDialog extends UI5Element {
 			filter.selected = filter.text === e.detail.item.innerText;
 			return filter;
 		});
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		if (this._filterOptions) {
 			const selectedItems = this._filterOptions.getSelectedItems();
 			if (selectedItems.length) {

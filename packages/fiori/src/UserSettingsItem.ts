@@ -7,7 +7,6 @@ import {
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import UserSettingsItemTemplate from "./UserSettingsItemTemplate.js";
 import type UserSettingsView from "./UserSettingsView.js";
 import UserSettingsItemCss from "./generated/themes/UserSettingsItem.css.js";
@@ -234,7 +233,7 @@ class UserSettingsItem extends UI5Element {
 		return this.icon;
 	}
 
-	_handleBackButtonClick() {
+	async _handleBackButtonClick() {
 		if (this._hasSelectedPageView && this._selectedPageView.secondary) {
 			const selectedPageView = this._selectedPageView;
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
@@ -244,17 +243,17 @@ class UserSettingsItem extends UI5Element {
 			if (!eventPrevented) {
 				selectedPageView.selected = false;
 				const primaryView = this.pages?.find(view => !view.secondary && view !== selectedPageView);
-				renderFinished().then(() => {
-					if (!this.isConnected) {
-						return;
-					}
-					const lastItem = (primaryView as any)?._lastNavigatedItem;
-					if (lastItem?.getFocusDomRef) {
-						lastItem.getFocusDomRef()?.focus();
-					} else {
-						this._focusFirstContentElement();
-					}
-				});
+
+				if (!await this.waitForRender()) {
+					return;
+				}
+
+				const lastItem = (primaryView as any)?._lastNavigatedItem;
+				if (lastItem?.getFocusDomRef) {
+					lastItem.getFocusDomRef()?.focus();
+				} else {
+					this._focusFirstContentElement();
+				}
 			}
 		} else {
 			this.fireDecoratorEvent("_collapse");
@@ -302,7 +301,9 @@ class UserSettingsItem extends UI5Element {
 	async _focusFirstContentElementWhenReady() {
 		// The content (and its slotted views) may still be settling after the loading
 		// state clears, so wait for the render to finish before moving the focus.
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this._focusFirstContentElement();
 	}
 

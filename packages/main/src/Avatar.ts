@@ -11,7 +11,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IAvatarGroupItem } from "./AvatarGroup.js";
@@ -411,7 +410,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	async onAfterRendering() {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		if (this.initials && !this.icon) {
 			this._checkInitials();
 		}

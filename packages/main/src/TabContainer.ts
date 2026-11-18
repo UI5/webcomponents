@@ -6,7 +6,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
 import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -876,8 +875,10 @@ class TabContainer extends UI5Element {
 
 		this._onItemSelect(e.detail.item.id.slice(0, -3), e); // strip "-li" from end of id
 		this._closePopover();
-		await renderFinished();
 
+		if (!await this.waitForRender()) {
+			return;
+		}
 		const selectedTopLevel = this._getRootTab(this._selectedTab);
 		selectedTopLevel?.getDomRefInStrip()!.focus();
 	}
@@ -1450,7 +1451,7 @@ class TabContainer extends UI5Element {
 	}
 
 	async _respPopover() {
-		await renderFinished();
+		await this.waitForRender();
 		return this.shadowRoot!.querySelector<ResponsivePopover>(`#${this._id}-overflowMenu`)!;
 	}
 

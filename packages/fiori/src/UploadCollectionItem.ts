@@ -11,7 +11,6 @@ import type Button from "@ui5/webcomponents/dist/Button.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import ListItem from "@ui5/webcomponents/dist/ListItem.js";
 import getFileExtension from "@ui5/webcomponents-base/dist/util/getFileExtension.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
 	isDelete,
@@ -243,13 +242,17 @@ class UploadCollectionItem extends ListItem {
 	}
 
 	async _initInputField() {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 
 		if (this.editInpElement) {
 			this.editInpElement.value = this._fileNameWithoutExtension;
 		}
 
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 
 		const inpFocusDomRef = this.editInpElement?.getFocusDomRef();
 		if (inpFocusDomRef) {
@@ -316,7 +319,10 @@ class UploadCollectionItem extends ListItem {
 		this._editMode = false;
 
 		if (isEscape(e as KeyboardEvent)) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
+
 			this.shadowRoot!.querySelector<Button>(`#${this._id}-editing-button`)!.focus();
 		} else {
 			this._focus();
