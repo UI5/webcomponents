@@ -18,6 +18,18 @@
 		body {
 			background-color: var(--sapBackgroundColor);
 		}
+
+		/*
+			The 4-row cap lives on the popover, not on the ui5-product-switch, so the
+			popover's content part is the single scroll container and a nested scrollbar
+			is impossible. 32.5rem is the height of 4 standard rows (4 * 7.5rem of
+			item + margins, plus 2 * 1.25rem of the product-switch's own padding).
+			If the items wrap to multiple lines, raise this value so 4 wrapped rows fit.
+		*/
+		#productswitch-popover::part(content) {
+			padding: 0;
+			max-height: 32.5rem;
+		}
 	</style>
 </head>
 

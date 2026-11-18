@@ -25,9 +25,6 @@ import {
 // Styles
 import ProductSwitchCss from "./generated/themes/ProductSwitch.css.js";
 
-// The popover shows at most this many rows; anything beyond scrolls.
-const MAX_VISIBLE_ROWS = 4;
-
 /**
  * Interface for components that may be slotted inside `ui5-product-switch` as items
  * @public
@@ -151,11 +148,6 @@ class ProductSwitch extends UI5Element {
 		}
 	}
 
-	onAfterRendering() {
-		// Recompute the row cap after content changes (items added/removed or re-wrapped).
-		this._updateMaxHeight();
-	}
-
 	_handleResize() {
 		const items = this.items;
 		if (!items.length) {
@@ -193,91 +185,6 @@ class ProductSwitch extends UI5Element {
 		const columnsByWidth = Math.floor(availableWidth / itemOuterWidth);
 
 		this._setRowSize(Math.max(1, Math.min(columnsByWidth, maxColumnsByItems)));
-
-		this._updateMaxHeight();
-	}
-
-	/**
-	 * Caps the visible height to `MAX_VISIBLE_ROWS` rows. Rows grow to fit wrapped text,
-	 * so the cap is measured from the first rendered rows rather than assuming a fixed row
-	 * height; anything beyond that scrolls. The result is exposed as a CSS custom property
-	 * consumed by the root's `max-height`.
-	 */
-	_updateMaxHeight() {
-		const items = this.items;
-		const root = this.shadowRoot?.querySelector<HTMLElement>(".ui5-product-switch-root");
-		if (!root || !items.length) {
-			return;
-		}
-
-		const rootStyle = getComputedStyle(root);
-
-		// In the single-column (phone) layout the CSS removes the cap, so there is nothing to compute.
-		if (rootStyle.flexDirection === "column") {
-			this.style.removeProperty("--_ui5-product-switch-max-height");
-			return;
-		}
-
-		const rowSize = this._rowSize;
-		const rowCount = Math.ceil(items.length / rowSize);
-
-		if (rowCount <= MAX_VISIBLE_ROWS) {
-			this.style.removeProperty("--_ui5-product-switch-max-height");
-			return;
-		}
-
-		let maxHeight = parseFloat(rootStyle.paddingTop) + parseFloat(rootStyle.paddingBottom);
-
-		for (let row = 0; row < MAX_VISIBLE_ROWS; row++) {
-			let rowHeight = 0;
-			for (let col = 0; col < rowSize; col++) {
-				const item = items[row * rowSize + col];
-				if (!item) {
-					break;
-				}
-				const itemStyle = getComputedStyle(item);
-				const itemHeight = item.offsetHeight
-					+ parseFloat(itemStyle.marginTop)
-					+ parseFloat(itemStyle.marginBottom);
-				rowHeight = Math.max(rowHeight, itemHeight);
-			}
-			maxHeight += rowHeight;
-		}
-
-		// If a scroll container ancestor (e.g. a Popover) is already constrained to less than
-		// maxHeight, applying our own cap here produces nested scrollbars. Defer to that container.
-		if (this._getScrollAncestorHeight() < maxHeight) {
-			this.style.removeProperty("--_ui5-product-switch-max-height");
-			return;
-		}
-
-		this.style.setProperty("--_ui5-product-switch-max-height", `${maxHeight}px`);
-	}
-
-	// Returns the usable height of the nearest scroll-capable ancestor (e.g. a Popover's
-	// internal popup-content div), or Infinity when there is none. Walks up through shadow
-	// root boundaries via assignedSlot so it can leave the ProductSwitch's own light DOM and
-	// reach the host component's shadow DOM. clientHeight is compared directly rather than
-	// gating on scrollHeight > clientHeight, because whether the ancestor currently overflows
-	// depends on whether our own cap is applied, which would make the result flip per render.
-	_getScrollAncestorHeight(): number {
-		let el: Element | null = this.assignedSlot ?? this.parentElement;
-		while (el) {
-			if (el === document.documentElement || el === document.body) {
-				break;
-			}
-			const style = getComputedStyle(el);
-			if (style.overflowY === "auto" || style.overflowY === "scroll") {
-				return (el as HTMLElement).clientHeight;
-			}
-			if (el.parentElement) {
-				el = el.parentElement;
-			} else {
-				const root = el.getRootNode();
-				el = root instanceof ShadowRoot ? root.host : null;
-			}
-		}
-		return Infinity;
 	}
 
 	handleProductSwitchItemClick(e: MouseEvent) {
