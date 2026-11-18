@@ -50,6 +50,65 @@ describe("TableRowActions", () => {
 	}
 
 	describe("Rendering", () => {
+		it("keeps disabled actions visible and non-interactive inline and in overflow", () => {
+			mountTable(2, () => <TableRow interactive>
+				<TableRowAction slot="actions" id="disabledAction" icon={edit} text="Edit" disabled></TableRowAction>
+				<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+			</TableRow>);
+
+			cy.get("#disabledAction").invoke("on", "click", cy.stub().as("actionClick"));
+			cy.get("@table").invoke("on", "row-click", cy.stub().as("rowClick"));
+			cy.get("#disabledAction").shadow().find("[ui5-button]").as("actionButton")
+				.should("be.visible").and("have.attr", "disabled");
+			cy.get("@actionButton").shadow().find("button").should("be.disabled");
+			cy.get("#disabledAction").then($action => {
+				const width = $action[0].getBoundingClientRect().width;
+				cy.get("@actionButton").realClick();
+				cy.get("@actionButton").trigger("keydown", { key: "Enter", force: true });
+				cy.get("@actionButton").trigger("keyup", { key: "Enter", force: true });
+				cy.get("@actionButton").trigger("keydown", { key: " ", force: true });
+				cy.get("@actionButton").trigger("keyup", { key: " ", force: true });
+				cy.get("@actionClick").should("not.have.been.called");
+				cy.get("@rowActionClick").should("not.have.been.called");
+				cy.get("@rowClick").should("not.have.been.called");
+				cy.wrap(width).as("actionWidth");
+			});
+
+			cy.get("@table").invoke("prop", "rowActionCount", 1);
+			cy.get("@row1").shadow().find("#overflow").as("overflowButton").realClick();
+			cy.get("[ui5-menu-item]").should("have.length", 2);
+			cy.get('[ui5-menu-item][text="Edit"]').as("disabledItem")
+				.should("be.visible").and("have.attr", "disabled");
+			cy.get("@disabledItem").ui5MenuItemClick();
+			cy.get("@disabledItem").then($item => $item[0].focus());
+			cy.get("@disabledItem").should("be.focused").realPress("Enter");
+			cy.get("@actionClick").should("not.have.been.called");
+			cy.get("@rowActionClick").should("not.have.been.called");
+			cy.get("[ui5-menu]").should("have.prop", "open", true);
+			cy.realPress("Escape");
+			cy.get("[ui5-menu]").should("not.have.attr", "open");
+
+			cy.get("#disabledAction").invoke("prop", "disabled", false);
+			cy.get("@overflowButton").realClick();
+			cy.get('[ui5-menu-item][text="Edit"]').should("not.have.attr", "disabled");
+			cy.get('[ui5-menu-item][text="Edit"]').ui5MenuItemClick();
+			cy.get("@actionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("[ui5-menu]").should("not.have.attr", "open");
+			cy.get("[ui5-menu]").invoke("remove");
+
+			cy.get("@table").invoke("prop", "rowActionCount", 2);
+			cy.get("@actionButton").should("not.have.attr", "disabled");
+			cy.get("@actionWidth").then(width => {
+				cy.get("#disabledAction").should($action => {
+					expect($action[0].getBoundingClientRect().width).to.equal(width);
+				});
+			});
+			cy.get("@actionButton").realClick();
+			cy.get("@actionClick").should("have.been.calledTwice");
+			cy.get("@rowActionClick").should("have.been.calledTwice");
+		});
+
 		it("reserves the action column and forwards row action clicks", () => {
 			mountTable(1, () => <>
 				<TableRow id="addRow">
