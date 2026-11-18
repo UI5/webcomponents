@@ -1,0 +1,8 @@
+description = "Apply the UI5 Web Components AI knowledge base to the current task or diff"
+prompt = """
+Read `ai-knowledge-base/INDEX.md` and open only the reference files its routing table names for the areas
+the task touches — do not read every file. When reviewing a diff, check it against
+`ai-knowledge-base/references/core-rules.md` (Reviewing a diff) before reporting.
+
+Task: {{args}}
+"""
