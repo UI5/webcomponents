@@ -80,6 +80,12 @@ class ToolbarItemBase extends UI5Element {
 		return ref ? [ref] : [];
 	}
 
+	/**
+	 * Focus entry point when toolbar navigates into this item.
+	 * Override in complex items (e.g., Breadcrumbs) to handle direction-aware entry.
+	 * @private
+	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	focusForToolbarNavigation(isForward: boolean) {
 		this.focus();
 	}
