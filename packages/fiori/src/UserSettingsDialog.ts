@@ -14,6 +14,8 @@ import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
@@ -252,8 +254,27 @@ class UserSettingsDialog extends UI5Element {
 	@property({ type: String })
 	_mediaRange?: any;
 
+	_handleResizeBound: ResizeObserverCallback;
+
+	constructor() {
+		super();
+		this._handleResizeBound = this._handleResize.bind(this);
+	}
+
 	onEnterDOM() {
 		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
+		ResizeHandler.register(document.body, this._handleResizeBound);
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(document.body, this._handleResizeBound);
+	}
+
+	_handleResize() {
+		this._mediaRange = MediaRange.getCurrentRange(MediaRange.RANGESETS.RANGE_4STEPS);
+		if (!this._showSettingWithNavigation) {
+			this._collapsed = false;
+		}
 	}
 
 	onBeforeRendering() {

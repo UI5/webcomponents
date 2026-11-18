@@ -19,12 +19,17 @@
 }
 
 .ui5-user-settings-item-collapse-btn {
+	display: none;
 	position: absolute;
 	inset-inline-start: 1rem;
 }
 
+.ui5-user-settings-item-header--with-back .ui5-user-settings-item-collapse-btn {
+	display: block;
+}
+
 .ui5-user-settings-item-header--with-back [ui5-title] {
-	padding-inline-start: calc(var(--_ui5_button_base_min_width) + 0.5rem);
+	padding-inline-start: calc(var(--_ui5_button_base_min_width, 2.25rem) + 0.5rem);
 }
 
 .ui5-user-settings-item-loading-container {
@@ -72,12 +77,6 @@
 
 .ui5-user-settings-item-busy:not([active]) {
 	display: none;
-}
-
-@media screen and (width >= 64rem) {
-	.ui5-user-settings-item-collapse-btn {
-		display: none;
-	}
 }
 
 @container (width > 37.5rem) {

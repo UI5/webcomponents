@@ -2140,3 +2140,52 @@ describe("Save mode", () => {
 			.should("have.attr", "id").and("match", /^.+-cancel-btn$/);
 	});
 });
+
+describe("Responsive layout on viewport resize / zoom", () => {
+	it("updates item header back button padding and list item navigation type when viewport resizes across 64rem", () => {
+		cy.viewport(1280, 800);
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="User Account" headerText="User Account" selected>
+				<UserSettingsView text="Account">
+					<Button id="account-btn">Account Button</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Appearance" headerText="Appearance">
+				<UserSettingsView text="Appearance">
+					<Button id="appearance-btn">Appearance Button</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-user-settings-item]").first().as("firstItem");
+
+		// At desktop width (1280px >= 64rem): side list items have type="Active" and back button is hidden
+		cy.get("@dialog").shadow().find("[ui5-li]").first()
+			.should("have.attr", "type", "Active");
+		cy.get("@firstItem").shadow().find(".ui5-user-settings-item-header")
+			.should("not.have.class", "ui5-user-settings-item-header--with-back");
+		cy.get("@firstItem").shadow().find(".ui5-user-settings-item-collapse-btn")
+			.should("not.be.visible");
+
+		// Resize to narrow viewport (600px < 64rem, e.g. 200% browser zoom) while dialog is open
+		cy.viewport(600, 800);
+
+		cy.get("@dialog").shadow().find("[ui5-li]").first()
+			.should("have.attr", "type", "Navigation");
+		cy.get("@firstItem").shadow().find(".ui5-user-settings-item-header")
+			.should("have.class", "ui5-user-settings-item-header--with-back");
+		cy.get("@firstItem").shadow().find("[ui5-title]")
+			.should("not.have.css", "padding-inline-start", "0px");
+
+		// Resize back to desktop viewport (1280px >= 64rem, returning to 100% zoom)
+		cy.viewport(1280, 800);
+
+		cy.get("@dialog").shadow().find("[ui5-li]").first()
+			.should("have.attr", "type", "Active");
+		cy.get("@firstItem").shadow().find(".ui5-user-settings-item-header")
+			.should("not.have.class", "ui5-user-settings-item-header--with-back");
+		cy.get("@firstItem").shadow().find(".ui5-user-settings-item-collapse-btn")
+			.should("not.be.visible");
+	});
+});
