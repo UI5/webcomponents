@@ -11,6 +11,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+**Note:** Version bump only for package @ui5/webcomponents-icons-tnt
+
+
+
+
+
 # [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
 
 **Note:** Version bump only for package @ui5/webcomponents-icons-tnt
