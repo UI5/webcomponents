@@ -287,6 +287,16 @@ describe("UploadCollection Rendering", () => {
 		cy.get("#firstItem").shadow().find(".ui5-li-singlesel-radiobtn").should("not.exist");
 	});
 
+	it("Tests that root li has role 'listitem' and does not have aria-selected", () => {
+		cy.mount(<UploadCollectionSample />);
+
+		cy.get("#uploadCollection").invoke("prop", "selectionMode", "Multiple");
+
+		cy.get("#firstItem").shadow().find("li")
+			.should("have.attr", "role", "listitem")
+			.and("not.have.attr", "aria-selected");
+	});
+
 	it("Tests that in 'SingleStart' mode there is a radio button", () => {
 		cy.mount(<UploadCollectionSample />);
 
