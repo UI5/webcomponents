@@ -888,6 +888,78 @@ describe("Events", () => {
 		});
 	});
 
+	it("getSearchButtonDomRef returns the search input when the search is expanded", () => {
+		cy.viewport(1200, 800);
+		cy.mount(
+			<ShellBar showSearchField={true} disableSearchCollapse={true}>
+				<ShellBarSearch slot="searchField" placeholder="Search"></ShellBarSearch>
+			</ShellBar>
+		);
+
+		// Precondition: the search is expanded (not collapsed), so the toggle button is absent
+		cy.get("[ui5-shellbar-search]").should("have.prop", "collapsed", false);
+
+		cy.get("[ui5-shellbar]").then(async $shellbar => {
+			const shellbar = $shellbar[0] as ShellBar;
+			const ref = await shellbar.getSearchButtonDomRef();
+			expect(ref, "expanded search resolves a focusable element").to.not.be.null;
+			expect(ref!.localName, "the resolved element is the search input").to.equal("input");
+		});
+	});
+
+	it("getSearchButtonDomRef opens the overflow and returns the search entry when the search is in overflow", () => {
+		cy.mount(
+			<ShellBar id="shellbar" primaryTitle="Product Title" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Button slot="content">Button 1</Button>
+				<Button slot="content">Button 2</Button>
+				<Button slot="content">Button 3</Button>
+				<Button slot="content">Button 4</Button>
+				<Button slot="content">Button 5</Button>
+				<Button slot="content">Button 6</Button>
+				<Button slot="content">Button 7</Button>
+				<Button slot="content">Button 8</Button>
+				<ShellBarSearch slot="searchField" placeholder="Search"></ShellBarSearch>
+				<ShellBarItem icon={activities} text="Action 1"></ShellBarItem>
+				<ShellBarItem icon={activities} text="Action 2"></ShellBarItem>
+				<ShellBarItem icon={activities} text="Action 3"></ShellBarItem>
+				<ShellBarItem icon={activities} text="Action 4"></ShellBarItem>
+				<ShellBarItem icon={activities} text="Action 5"></ShellBarItem>
+				<Avatar slot="profile">
+					<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+				</Avatar>
+			</ShellBar>
+		);
+
+		// Narrow viewport forces the collapsed search into the overflow
+		cy.viewport(280, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").as("shellbar");
+
+		// Precondition: the search action is collapsed into the overflow and the popover is closed
+		cy.get("@shellbar").then($shellbar => {
+			const shellbar = $shellbar[0] as ShellBar;
+			expect(shellbar.hiddenItemsIds, "search should be in overflow").to.include("search");
+			expect(shellbar.overflowPopoverOpen, "overflow starts closed").to.equal(false);
+		});
+
+		// getSearchButtonDomRef must open the overflow and return the focusable search entry inside it
+		cy.get("@shellbar").then(async $shellbar => {
+			const shellbar = $shellbar[0] as ShellBar;
+			const ref = await shellbar.getSearchButtonDomRef();
+			expect(ref, "search entry in overflow is resolved").to.not.be.null;
+			expect(ref!.getAttribute("data-action-id")).to.equal("search");
+			expect(shellbar.overflowPopoverOpen, "overflow was opened").to.equal(true);
+		});
+
+		// The returned element lives inside the opened overflow popover
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
+			.should("exist");
+	});
+
 	it("Test logo click fires logo-click event only once", () => {
 		cy.mount(
 			<ShellBar primaryTitle="Product Title" secondaryTitle="Secondary Title">

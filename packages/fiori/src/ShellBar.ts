@@ -1189,10 +1189,24 @@ class ShellBar extends UI5Element {
 
 	/**
 	 * Returns the search button DOM reference.
+	 *
+	 * The returned reference is resolved for the current search state:
+	 * - when the search button is collapsed into the overflow, the overflow popover is
+	 *   opened and the search entry inside it is returned;
+	 * - when the search is expanded, the search input is returned;
+	 * - otherwise the collapsed search toggle button is returned.
 	 * @public
+	 * @since 2.29.0
 	 */
 	async getSearchButtonDomRef(): Promise<HTMLElement | null> {
 		await renderFinished();
+		if (this.isHidden(ShellBarActions.Search)) {
+			this.overflowPopoverOpen = true;
+			await renderFinished();
+			return this.shadowRoot!.querySelector<HTMLElement>(
+				`.ui5-shellbar-overflow-popover [data-action-id="${ShellBarActions.Search}"]`,
+			) ?? this.overflowDomRef;
+		}
 		if (this.isSelfCollapsibleSearch) {
 			return (this.search as unknown as ShellBarSearchComponent).getSearchButtonDomRef();
 		}
