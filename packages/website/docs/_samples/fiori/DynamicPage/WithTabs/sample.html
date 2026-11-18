@@ -1,0 +1,96 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="height: 700px; background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <ui5-dynamic-page id="page">
+
+        <ui5-dynamic-page-title slot="titleArea">
+            <ui5-breadcrumbs slot="breadcrumbs">
+                <ui5-breadcrumbs-item href="#">Products</ui5-breadcrumbs-item>
+                <ui5-breadcrumbs-item href="#">Laptops</ui5-breadcrumbs-item>
+            </ui5-breadcrumbs>
+
+            <ui5-title slot="heading">Astro Laptop 1516</ui5-title>
+
+            <div slot="snappedHeading" class="snapped-title-heading">
+                <ui5-title wrapping-type="None">Astro Laptop 1516</ui5-title>
+            </div>
+
+            <p slot="subheading" class="text">HT-1251</p>
+            <p slot="snappedSubheading" class="text">HT-1251</p>
+
+            <ui5-toolbar slot="actionsBar" design="Transparent">
+                <ui5-toolbar-button text="Edit"></ui5-toolbar-button>
+                <ui5-toolbar-button design="Transparent" text="Share"></ui5-toolbar-button>
+            </ui5-toolbar>
+        </ui5-dynamic-page-title>
+
+        <ui5-dynamic-page-header slot="headerArea">
+            <div class="product-info">
+                <div class="product-info-cell">
+                    <ui5-label>Availability</ui5-label>
+                    <p class="text availability">In Stock</p>
+                </div>
+                <div class="product-info-cell">
+                    <ui5-label>Price</ui5-label>
+                    <p class="text">947.00 EUR</p>
+                </div>
+                <div class="product-info-cell">
+                    <ui5-label>Category</ui5-label>
+                    <p class="text">Laptops</p>
+                </div>
+            </div>
+        </ui5-dynamic-page-header>
+
+        <ui5-tabcontainer slot="stickySubheaderArea" tab-layout="Standard" collapsed>
+            <ui5-tab text="Overview" selected></ui5-tab>
+            <ui5-tab text="Specifications"></ui5-tab>
+            <ui5-tab text="Reviews"></ui5-tab>
+            <ui5-tab text="Related Items"></ui5-tab>
+        </ui5-tabcontainer>
+
+        <ui5-list header-text="Related Products (6)" mode="SingleSelect">
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
+            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+            <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+            <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+            <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
+            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+            <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+            <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+            <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+            <ui5-li description="HT-1001" icon="slim-arrow-right" icon-end additional-text="87.90 EUR">Gladiator MX</ui5-li>
+        </ui5-list>
+
+    </ui5-dynamic-page>
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

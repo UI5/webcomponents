@@ -11,6 +11,16 @@
     z-index: 4;
 }
 
+.ui5-dynamic-page-sticky-subheader {
+    position: sticky;
+    top: var(--_ui5_dp_sticky_subheader_top, 0);
+    z-index: 2;
+    background-color: var(--ui5_dynamic_page_background);
+    /* Tiny top inset so the collapse/expand buttons, which float centered on the header seam,
+       sit flush on the band's top edge (matching ObjectPage) instead of touching the tab labels. */
+    padding-top: 0.0625rem;
+}
+
 :host {
     display: block;
     height: 100%;

@@ -468,6 +468,60 @@ describe("DynamicPage", () => {
 			});
 	});
 
+	it("scrolls a focused element clear of the sticky subheader band", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<div slot="stickySubheaderArea" style={{ height: "40px", background: "lightblue" }}>Tabs</div>
+				<textarea data-testid="band-target" style={{ display: "block", height: "120px" }} />
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		// Snap the header
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 500;
+			});
+
+		cy.get("[ui5-dynamic-page]").should("have.prop", "headerSnapped", true);
+
+		// Focus an element — onContentFocusIn sets scroll-padding-top to scrollPaddingTop
+		cy.get("[data-testid='band-target']").focus().should("be.focused");
+
+		// The scroll-padding-top must account for both title and band
+		cy.get("[ui5-dynamic-page]")
+			.then(($dp) => {
+				const dp = $dp[0] as DynamicPage;
+				const titleHeight = dp.dynamicPageTitle!.getBoundingClientRect().height;
+				const bandHeight = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect().height;
+				const scrollPaddingTop = parseFloat(dp.scrollContainer!.style.scrollPaddingTop || "0");
+
+				expect(scrollPaddingTop).to.be.closeTo(titleHeight + bandHeight, 1);
+			});
+
+		// Also assert the target is not visually behind the band after scroll settles
+		cy.wait(100);
+
+		cy.get("[ui5-dynamic-page]")
+			.then(($dp) => {
+				const dp = $dp[0] as DynamicPage;
+				const containerRect = dp.scrollContainer!.getBoundingClientRect();
+				const titleHeight = dp.dynamicPageTitle!.getBoundingClientRect().height;
+				const bandHeight = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect().height;
+				const targetRect = (dp.querySelector("[data-testid='band-target']") as HTMLTextAreaElement).getBoundingClientRect();
+
+				expect(targetRect.top).to.be.at.least(containerRect.top + titleHeight + bandHeight);
+			});
+	});
+
 	it("should not scroll when clicking a TableRowAction overflow button on a visible row", () => {
 		cy.mount(
 			<DynamicPage style={{ height: "500px" }}>
@@ -564,6 +618,129 @@ describe("DynamicPage", () => {
 
 			expect(rowRect.bottom).to.be.greaterThan(visibleTop);
 			expect(rowRect.top).to.be.lessThan(visibleBottom);
+		});
+	});
+
+	it("renders slotted content in the sticky subheader area", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea"><div>Header</div></DynamicPageHeader>
+				<div slot="stickySubheaderArea" data-testid="subheader">Tabs go here</div>
+				<div style={{ height: "1000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-sticky-subheader")
+			.should("exist");
+		cy.get("[data-testid='subheader']").should("be.visible");
+	});
+
+	it("pins the sticky subheader below the title band when the header is snapped", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea"><div style={{ height: "200px" }}>Header Content</div></DynamicPageHeader>
+				<div slot="stickySubheaderArea" data-testid="subheader">Tabs go here</div>
+				<div style={{ height: "2000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]").as("dp");
+		cy.get("@dp").shadow().find(".ui5-dynamic-page-scroll-container").as("sc");
+		cy.get("@sc").then($sc => { $sc[0].scrollTop = 400; });
+		cy.get("@dp").should("have.prop", "headerSnapped", true);
+		cy.get("@dp").then($dp => {
+			const dp = $dp[0] as DynamicPage;
+			const band = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect();
+			const titleBand = dp.shadowRoot!.querySelector(".ui5-dynamic-page-title-header-wrapper")!.getBoundingClientRect();
+			expect(band.top).to.be.closeTo(titleBand.bottom, 2); // flush below, no overlap, no gap
+		});
+	});
+
+	it("keeps the sticky subheader flush with the header while it collapses (mid-scroll)", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea"><div style={{ height: "200px" }}>Header Content</div></DynamicPageHeader>
+				<div slot="stickySubheaderArea" data-testid="subheader">Tabs go here</div>
+				<div style={{ height: "2000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]").as("dp");
+		cy.get("@dp").shadow().find(".ui5-dynamic-page-scroll-container").as("sc");
+		// Scroll partway into the header — it should still be expanded, but offset has changed
+		cy.get("@sc").then($sc => {
+			$sc[0].scrollTop = 60;
+			$sc[0].dispatchEvent(new Event("scroll"));
+		});
+		cy.get("@dp").then($dp => {
+			const dp = $dp[0] as DynamicPage;
+			const band = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect();
+			const headerBand = dp.querySelector("[ui5-dynamic-page-header]")!.getBoundingClientRect();
+			expect(band.top).to.be.closeTo(headerBand.bottom, 2);
+		});
+	});
+
+	it("keeps the sticky subheader flush below the header when headerPinned", () => {
+		cy.mount(
+			<DynamicPage headerPinned style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea"><div style={{ height: "200px" }}>Header Content</div></DynamicPageHeader>
+				<div slot="stickySubheaderArea" data-testid="subheader">Tabs go here</div>
+				<div style={{ height: "2000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]").as("dp");
+		cy.get("@dp").shadow().find(".ui5-dynamic-page-scroll-container").as("sc");
+		cy.get("@sc").then($sc => {
+			$sc[0].scrollTop = 60;
+			$sc[0].dispatchEvent(new Event("scroll"));
+		});
+		cy.get("@dp").then($dp => {
+			const dp = $dp[0] as DynamicPage;
+			const band = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect();
+			const titleBand = dp.shadowRoot!.querySelector(".ui5-dynamic-page-title-header-wrapper")!.getBoundingClientRect();
+			expect(band.top).to.be.closeTo(titleBand.bottom, 2);
+		});
+	});
+
+	it("renders slotted sticky subheader content full-width with no forced padding", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<span data-testid="header-child">Header content</span>
+				</DynamicPageHeader>
+				<div slot="stickySubheaderArea" data-testid="subheader-el" style={{ width: "100%" }}>
+					<span data-testid="subheader-child">Tab strip</span>
+				</div>
+				<div style={{ height: "1000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]").then($dp => {
+			const dp = $dp[0] as DynamicPage;
+			const band = dp.shadowRoot!.querySelector(".ui5-dynamic-page-sticky-subheader")!.getBoundingClientRect();
+			const subheader = dp.querySelector("[data-testid='subheader-el']") as HTMLElement;
+			const subheaderRect = subheader.getBoundingClientRect();
+			// Slotted content fills the band width — no padding is imposed by the component
+			expect(subheaderRect.left).to.be.closeTo(band.left, 2);
+			expect(subheaderRect.right).to.be.closeTo(band.right, 2);
+		});
+	});
+
+	it("does not render a band or reserve space when no sticky subheader is slotted", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea"><div slot="heading">Title</div></DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea"><div>Header</div></DynamicPageHeader>
+				<div style={{ height: "1000px" }}>content</div>
+			</DynamicPage>
+		);
+		cy.get("[ui5-dynamic-page]").shadow()
+			.find(".ui5-dynamic-page-sticky-subheader").should("not.exist");
+		cy.get("[ui5-dynamic-page]").then($dp => {
+			expect(($dp[0] as any).stickySubheaderHeight).to.equal(0);
 		});
 	});
 });
