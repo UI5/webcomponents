@@ -10,6 +10,11 @@
 	height: var(--row-height);
 }
 
+:host([data-ui5-ibcs-row-type="OfWhich"]:not([position])),
+:host([data-ui5-ibcs-row-type="PercentOf"]:not([position])) {
+	min-height: calc(var(--_ui5_list_item_base_height) * 0.75);
+}
+
 :host(:first-of-type) > [ui5-table-cell],
 :host(:first-of-type) > ::slotted([ui5-table-cell]) {
 	border-top: none;

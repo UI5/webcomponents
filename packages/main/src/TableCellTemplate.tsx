@@ -7,10 +7,20 @@ export default function TableCellTemplate(this: TableCell) {
 				<>
 					<div id="popin-header" ref={this._injectHeaderNodes.bind(this)}></div>
 					<span id="popin-colon" aria-hidden="true">{this._i18nPopinColon}</span>
-					<slot id="popin-content"></slot>
+					{this._ibcsImpactText ?
+						<span id="popin-content">
+							<slot></slot>
+							<span class="ui5-table-ibcs-impact">{this._ibcsImpactText}</span>
+						</span>
+						:
+						<slot id="popin-content"></slot>
+					}
 				</>
 				:
-				<slot></slot>
+				<>
+					<slot></slot>
+					{this._ibcsImpactText && <span class="ui5-table-ibcs-impact">{this._ibcsImpactText}</span>}
+				</>
 			}
 		</>
 	);

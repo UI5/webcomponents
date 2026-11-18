@@ -24,11 +24,11 @@
 }
 
 ::slotted([ui5-table-cell-base]:first-of-type) {
-	padding-inline-start: var(--_ui5_first_table_cell_horizontal_padding);
+	padding-inline-start: calc(var(--_ui5_first_table_cell_horizontal_padding) + var(--_ui5_table_ibcs_indent, 0px));
 }
 
 #selection-cell + ::slotted([ui5-table-cell-base]:first-of-type) {
-	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
+	padding-inline-start: calc(var(--_ui5_table_cell_horizontal_padding) + var(--_ui5_table_ibcs_indent, 0px));
 }
 
 #actions-cell {

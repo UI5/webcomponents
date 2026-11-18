@@ -120,6 +120,7 @@ type TableRowActionClickEventDetail = {
  * * [TableSelectionSingle](../TableSelectionSingle) - adds single-selection capabilities to the table
  * * [TableGrowing](../TableGrowing) - provides growing capabilities to load more data
  * * [TableVirtualizer](../TableVirtualizer) - adds virtualization capabilities to the table
+ * * [TableIBCS](../TableIBCS) - adds experimental IBCS-oriented semantic presentation
  *
  * ### Keyboard Handling
  *
@@ -199,6 +200,7 @@ type TableRowActionClickEventDetail = {
  * @ui5subcomponent TableSelectionMulti
  * @ui5subcomponent TableSelectionSingle
  * @ui5subcomponent TableVirtualizer
+ * @ui5subcomponent TableIBCS
  */
 @customElement({
 	tag: "ui5-table",
@@ -662,7 +664,7 @@ class Table extends UI5Element {
 		const virtualizer = this._getVirtualizer();
 		const headerStyleMap: Record<string, string> = {};
 		this.headerRow[0]?.cells.forEach(headerCell => {
-			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
+			headerStyleMap[`--halign-${headerCell._id}`] = headerCell._effectiveHorizontalAlign || "initial";
 		});
 		return {
 			table: {

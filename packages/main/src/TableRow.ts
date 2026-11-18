@@ -7,6 +7,7 @@ import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
 import type TableCell from "./TableCell.js";
+import type { TableIBCSRowState } from "./TableIBCS.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
@@ -118,6 +119,9 @@ class TableRow extends TableRowBase<TableCell> {
 	@property({ type: Boolean })
 	movable = false;
 
+	@property({ type: Object, noAttribute: true })
+	_ibcs?: TableIBCSRowState;
+
 	@query("#popin-cell")
 	_popinCell?: TableCell;
 
@@ -127,6 +131,7 @@ class TableRow extends TableRowBase<TableCell> {
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
+		toggleAttribute(this, "data-ui5-ibcs-row-type", !!this._ibcs, this._ibcs?.type);
 	}
 
 	async _onpointerdown(e: PointerEvent) {

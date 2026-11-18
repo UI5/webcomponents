@@ -1312,6 +1312,11 @@
 				"name": "Basic"
 			},
 			{
+				"name": "IBCS",
+				"title": "Experimental IBCS Semantics",
+				"description": "Use the opt-in TableIBCS feature to apply semantic presentation to application-supplied rows, columns and cell impacts. Existing UI5 selection and layout APIs remain available."
+			},
+			{
 				"name": "ScrollMode",
 				"title": "Overflow Mode - Scroll",
 				"description": "The table provides two horizontal overflow modes: Scroll (default) or Popin."
@@ -1354,6 +1359,15 @@
 				"name": "StickyHeaderContainer",
 				"title": "Sticky Behavior with scrollable container",
 				"samplesFrom": "Table"
+			}
+		]
+	},
+	"TableIBCS": {
+		"samplesFrom": "Table",
+		"samples": [
+			{
+				"name": "IBCS",
+				"title": "Balance Sheet"
 			}
 		]
 	},

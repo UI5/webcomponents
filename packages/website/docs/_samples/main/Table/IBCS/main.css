@@ -1,0 +1,16 @@
+body {
+	font-family: var(--sapFontFamily);
+	color: var(--sapTextColor);
+	padding: 1rem;
+}
+
+.controls {
+	display: flex;
+	gap: 1rem;
+	margin-block: 1rem;
+}
+
+[ui5-table] {
+	max-width: 70rem;
+	font-variant-numeric: tabular-nums;
+}

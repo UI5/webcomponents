@@ -7,6 +7,9 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableCellBaseStyles from "./generated/themes/TableCellBase.css.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
+import type { TableIBCSCellState } from "./TableIBCS.js";
+import { toggleAttribute } from "./TableUtils.js";
+import TableIBCSCellStyles from "./generated/themes/TableIBCSCell.css.js";
 
 /**
  * @class
@@ -19,7 +22,7 @@ import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
  */
 @customElement({
 	renderer: jsxRenderer,
-	styles: TableCellBaseStyles,
+	styles: [TableCellBaseStyles, TableIBCSCellStyles],
 })
 abstract class TableCellBase extends UI5Element {
 	/**
@@ -45,6 +48,9 @@ abstract class TableCellBase extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_popinHidden = false;
 
+	@property({ type: Object, noAttribute: true })
+	_ibcs?: TableIBCSCellState;
+
 	ariaRole: string = "gridcell";
 
 	@i18n("@ui5/webcomponents")
@@ -53,6 +59,28 @@ abstract class TableCellBase extends UI5Element {
 	onEnterDOM() {
 		!this.role && this.setAttribute("role", this.ariaRole);
 		this.toggleAttribute("ui5-table-cell-base", true);
+	}
+
+	onBeforeRendering() {
+		const state = this._ibcs;
+		toggleAttribute(this, "data-ui5-ibcs-row-type", !!state?.rowType, state?.rowType);
+		toggleAttribute(this, "data-ui5-ibcs-column-type", !!state?.columnType, state?.columnType);
+		toggleAttribute(this, "data-ui5-ibcs-scenario", !!state?.scenario, state?.scenario);
+		toggleAttribute(this, "data-ui5-ibcs-impact", !!state?.impact, state?.impact);
+		toggleAttribute(this, "data-ui5-ibcs-group-start", !!state?.groupStart);
+		toggleAttribute(this, "data-ui5-ibcs-result", !!state?.result);
+		if (state?.columnType === "RowHeader" && state.depth) {
+			this.style.setProperty("--_ui5_table_ibcs_indent", `calc(${state.depth} * var(--ui5_table_ibcs_indent, 1rem))`);
+		} else {
+			this.style.removeProperty("--_ui5_table_ibcs_indent");
+		}
+	}
+
+	get _effectiveHorizontalAlign(): `${TableCellHorizontalAlign}` | undefined {
+		if (this.horizontalAlign || !this._ibcs?.columnType) {
+			return this.horizontalAlign;
+		}
+		return this._ibcs.columnType === "RowHeader" ? "Start" : "End";
 	}
 
 	getFocusDomRef() {

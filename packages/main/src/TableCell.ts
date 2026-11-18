@@ -6,7 +6,9 @@ import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
 import type TableRow from "./TableRow.js";
 import type Table from "./Table.js";
-import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
+import {
+	LABEL_COLON, TABLE_IBCS_FAVORABLE, TABLE_IBCS_UNFAVORABLE, TABLE_IBCS_NEUTRAL,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -56,10 +58,24 @@ class TableCell extends TableCellBase {
 		if (this.horizontalAlign) {
 			this.style.textAlign = this.horizontalAlign;
 			this.style.justifyContent = this.horizontalAlign;
+		} else if (this._ibcs?.columnType === "RowHeader" && this._ibcs.rowType === "OfWhich" && !this._headerCell?.horizontalAlign) {
+			this.style.textAlign = "end";
+			this.style.justifyContent = "end";
 		} else if (this._headerCell) {
 			this.style.textAlign = `var(--halign-${this._headerCell._id})`;
 			this.style.justifyContent = `var(--halign-${this._headerCell._id})`;
 		}
+	}
+
+	get _ibcsImpactText() {
+		const impact = this._ibcs?.impact;
+		const keys = {
+			Favorable: TABLE_IBCS_FAVORABLE,
+			Unfavorable: TABLE_IBCS_UNFAVORABLE,
+			Neutral: TABLE_IBCS_NEUTRAL,
+		};
+		const key = impact ? keys[impact] : undefined;
+		return key ? TableCellBase.i18nBundle.getText(key) : undefined;
 	}
 
 	_injectHeaderNodes(ref: HTMLElement | null) {

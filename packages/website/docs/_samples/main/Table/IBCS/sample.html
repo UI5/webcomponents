@@ -1,0 +1,58 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Experimental Table IBCS feature</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+<body style="background-color: var(--sapBackgroundColor)">
+<!-- playground-fold-end -->
+	<h2>Nordlicht GmbH — balance sheet</h2>
+	<p>2026-12-31; PY: 2025-12-31. Amounts in kEUR.</p>
+	<div class="controls">
+		<ui5-button id="toggle">Disable IBCS</ui5-button>
+		<ui5-select id="theme" accessible-name="Theme">
+			<ui5-option value="sap_horizon" selected>Horizon Light</ui5-option>
+			<ui5-option value="sap_horizon_dark">Horizon Dark</ui5-option>
+			<ui5-option value="sap_horizon_hcb">High Contrast Black</ui5-option>
+			<ui5-option value="sap_horizon_hcw">High Contrast White</ui5-option>
+		</ui5-select>
+	</div>
+	<ui5-table id="balance" accessible-name="Balance sheet" overflow-mode="Scroll">
+		<ui5-table-ibcs id="ibcs" slot="features"></ui5-table-ibcs>
+		<ui5-table-selection-single id="selection" slot="features" behavior="RowOnly"></ui5-table-selection-single>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="position" min-width="18rem">Position</ui5-table-header-cell>
+			<ui5-table-header-cell id="prior" width="6rem">PY</ui5-table-header-cell>
+			<ui5-table-header-cell id="actual" width="6rem">AC</ui5-table-header-cell>
+			<ui5-table-header-cell id="change" width="6rem">ΔPY</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-group-row>ASSETS</ui5-table-group-row>
+		<ui5-table-row row-key="fixed"><ui5-table-cell>Fixed assets</ui5-table-cell><ui5-table-cell>730</ui5-table-cell><ui5-table-cell>800</ui5-table-cell><ui5-table-cell>+70</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="inventory"><ui5-table-cell>Inventories</ui5-table-cell><ui5-table-cell>200</ui5-table-cell><ui5-table-cell>220</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="receivables"><ui5-table-cell>Receivables</ui5-table-cell><ui5-table-cell>230</ui5-table-cell><ui5-table-cell>250</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="longTerm"><ui5-table-cell>of which due after one year</ui5-table-cell><ui5-table-cell>80</ui5-table-cell><ui5-table-cell>100</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="cash"><ui5-table-cell>Cash and bank balances</ui5-table-cell><ui5-table-cell>220</ui5-table-cell><ui5-table-cell>230</ui5-table-cell><ui5-table-cell>+10</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="current"><ui5-table-cell>Current assets</ui5-table-cell><ui5-table-cell>650</ui5-table-cell><ui5-table-cell>700</ui5-table-cell><ui5-table-cell>+50</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="assets"><ui5-table-cell>Total assets</ui5-table-cell><ui5-table-cell>1,380</ui5-table-cell><ui5-table-cell>1,500</ui5-table-cell><ui5-table-cell>+120</ui5-table-cell></ui5-table-row>
+		<ui5-table-group-row>EQUITY AND LIABILITIES</ui5-table-group-row>
+		<ui5-table-row row-key="capital"><ui5-table-cell>Subscribed capital and reserves</ui5-table-cell><ui5-table-cell>650</ui5-table-cell><ui5-table-cell>700</ui5-table-cell><ui5-table-cell>+50</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="profit"><ui5-table-cell>Net income for the year</ui5-table-cell><ui5-table-cell>80</ui5-table-cell><ui5-table-cell>100</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="equity"><ui5-table-cell>Equity</ui5-table-cell><ui5-table-cell>730</ui5-table-cell><ui5-table-cell>800</ui5-table-cell><ui5-table-cell>+70</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="provisions"><ui5-table-cell>Provisions</ui5-table-cell><ui5-table-cell>140</ui5-table-cell><ui5-table-cell>150</ui5-table-cell><ui5-table-cell>+10</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="bank"><ui5-table-cell>Bank debt</ui5-table-cell><ui5-table-cell>380</ui5-table-cell><ui5-table-cell>400</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="trade"><ui5-table-cell>Trade payables</ui5-table-cell><ui5-table-cell>130</ui5-table-cell><ui5-table-cell>150</ui5-table-cell><ui5-table-cell>+20</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="debt"><ui5-table-cell>Liabilities</ui5-table-cell><ui5-table-cell>510</ui5-table-cell><ui5-table-cell>550</ui5-table-cell><ui5-table-cell>+40</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="financing"><ui5-table-cell>Total equity and liabilities</ui5-table-cell><ui5-table-cell>1,380</ui5-table-cell><ui5-table-cell>1,500</ui5-table-cell><ui5-table-cell>+120</ui5-table-cell></ui5-table-row>
+		<ui5-table-row row-key="ratio"><ui5-table-cell>Equity / total assets</ui5-table-cell><ui5-table-cell>52.9%</ui5-table-cell><ui5-table-cell>53.3%</ui5-table-cell><ui5-table-cell>+0.4pp</ui5-table-cell></ui5-table-row>
+	</ui5-table>
+	<p id="selected-row" role="status">Select a row using the existing UI5 selection feature.</p>
+	<p>Illustrative assessment: higher cash, earnings and equity are favorable; higher debt is unfavorable. Other changes are neutral. The application supplies these assessments and all formatted values.</p>
+	<p>This is an experimental IBCS-oriented presentation feature, not a certified accounting template.</p>
+<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->

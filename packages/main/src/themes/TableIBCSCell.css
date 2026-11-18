@@ -1,0 +1,94 @@
+/* This stylesheet is dormant unless the opt-in TableIBCS feature supplies state.
+   It does not alter public properties or the application's slotted content. */
+:host([data-ui5-ibcs-row-type="Total"]),
+:host([data-ui5-ibcs-row-type="Result"]),
+:host([data-ui5-ibcs-column-type="Total"]),
+:host([data-ui5-ibcs-result]) {
+	font-family: var(--sapFontBoldFamily);
+	font-weight: bold;
+}
+
+:host([data-ui5-ibcs-row-type="Total"]),
+:host([data-ui5-ibcs-row-type="Result"]) {
+	border-top-color: var(--sapList_TextColor);
+}
+
+:host([data-ui5-ibcs-row-type="OfWhich"]),
+:host([data-ui5-ibcs-row-type="PercentOf"]),
+:host([data-ui5-ibcs-column-type="OfWhich"]),
+:host([data-ui5-ibcs-column-type="PercentOf"]) {
+	font-size: var(--sapFontSmallSize);
+}
+
+:host([data-ui5-ibcs-row-type="OfWhich"]),
+:host([data-ui5-ibcs-row-type="PercentOf"]) {
+	border-top-color: transparent;
+}
+
+:host([data-ui5-ibcs-row-type="PercentOf"]),
+:host([data-ui5-ibcs-column-type="PercentOf"]) {
+	font-style: italic;
+}
+
+:host([data-ui5-ibcs-column-type="RowHeader"]) {
+	padding-inline-start: calc(var(--_ui5_table_cell_horizontal_padding) + var(--_ui5_table_ibcs_indent, 0px));
+}
+
+:host([data-ui5-ibcs-group-start]) {
+	padding-inline-start: var(--sapContent_Space_M);
+}
+
+:host([data-ui5-ibcs-impact="Favorable"]) {
+	color: var(--sapPositiveTextColor);
+}
+
+:host([data-ui5-ibcs-impact="Unfavorable"]) {
+	color: var(--sapNegativeTextColor);
+}
+
+:host([data-ui5-ibcs-impact="Neutral"]) {
+	color: var(--sapInformativeTextColor);
+}
+
+:host([data-ui5-ibcs-row-type]) ::slotted([ui5-label]),
+:host([data-ui5-ibcs-column-type]) ::slotted([ui5-label]),
+:host([data-ui5-ibcs-impact]) ::slotted([ui5-label]) {
+	font-family: inherit;
+	font-weight: inherit;
+	font-size: inherit;
+	font-style: inherit;
+	color: inherit;
+}
+
+:host([data-ui5-ibcs-scenario]) {
+	position: relative;
+	padding-bottom: calc(var(--_ui5_table_cell_vertical_padding) + 0.375rem);
+}
+
+:host([data-ui5-ibcs-scenario])::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0.25rem;
+	bottom: 0;
+	height: 0.3125rem;
+	border: var(--sapList_BorderWidth) solid var(--sapList_TextColor);
+	background: var(--sapList_Background);
+	pointer-events: none;
+}
+
+:host([data-ui5-ibcs-scenario="Actual"])::after {
+	background: var(--sapList_TextColor);
+}
+
+:host([data-ui5-ibcs-scenario="Previous"])::after {
+	background: color-mix(in srgb, var(--sapList_TextColor) 55%, var(--sapList_Background));
+	border-color: color-mix(in srgb, var(--sapList_TextColor) 55%, var(--sapList_Background));
+}
+
+:host([data-ui5-ibcs-scenario="Plan"])::after {
+	border-inline: 0;
+}
+
+:host([data-ui5-ibcs-scenario="Forecast"])::after {
+	background: repeating-linear-gradient(135deg, var(--sapList_TextColor) 0 1px, var(--sapList_Background) 1px 3px);
+}
