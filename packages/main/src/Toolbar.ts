@@ -216,6 +216,7 @@ class Toolbar extends UI5Element {
 	// the grouping decision has changed even when total content width has not.
 	_groupingKey = "";
 	_lastFocusedItem?: ToolbarItemBase | HTMLElement;
+	_overflowButtonWasFocused = false;
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -343,13 +344,11 @@ class Toolbar extends UI5Element {
 	}
 
 	onBeforeRendering() {
-		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const items = this.standardItems.filter(item => item.isToolbarNavigatable);
-			const lastItem = items.at(-1);
-			if (lastItem) {
-				this._lastFocusedItem = lastItem;
-				lastItem.focusForToolbarNavigation(false);
-			}
+		const activeEl = getActiveElement();
+		const overflowBtnFocusRef = this.overflowButtonDOM?.getFocusDomRef();
+
+		if (overflowBtnFocusRef && activeEl === overflowBtnFocusRef) {
+			this._overflowButtonWasFocused = true;
 		}
 		this.prePopulateAlwaysOverflowItems();
 	}
@@ -362,6 +361,15 @@ class Toolbar extends UI5Element {
 			this.addItemsAdditionalProperties(item);
 		});
 		this._reconcileLastFocusedItem();
+		if (this._overflowButtonWasFocused && this.hideOverflowButton) {
+			this._overflowButtonWasFocused = false;
+			const items = this.standardItems.filter(item => item.isToolbarNavigatable);
+			const lastItem = items.at(-1);
+			if (lastItem) {
+				this._lastFocusedItem = lastItem;
+				lastItem.focus();
+			}
+		}
 	}
 
 	/**
