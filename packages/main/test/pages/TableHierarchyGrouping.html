@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Table Hierarchy with Group Headers TestPage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body>
+	<ui5-title level="H3">Table Hierarchy with Group Headers</ui5-title>
+	<p>Expand or collapse departments, units, and teams using the group header buttons. Only employee rows can be selected.</p>
+
+	<ui5-table id="table" accessible-name="Organization by department" overflow-mode="Popin" alternate-row-colors>
+		<ui5-table-hierarchy id="hierarchy" slot="features"></ui5-table-hierarchy>
+		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell min-width="300px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell min-width="200px">Role</ui5-table-header-cell>
+			<ui5-table-header-cell min-width="150px">Location</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+	<p id="lastEvent" role="status"></p>
+
+	<script>
+		const table = document.getElementById("table");
+		const hierarchy = document.getElementById("hierarchy");
+		const nodesById = new Map();
+
+		const groups = [
+			{ id: "engineering", name: "Department: Engineering", expanded: true, children: [
+				{ id: "development", name: "Development", role: "Unit", location: "Walldorf", expanded: true, children: [
+					{ id: "ui-team", name: "UI Team", role: "Team", location: "Sofia", expanded: true, children: [
+						{ id: "alice", name: "Alice Smith", role: "Developer", location: "Sofia" },
+						{ id: "bob", name: "Bob Miller", role: "Developer", location: "Sofia" },
+					] },
+					{ id: "carol", name: "Carol Jones", role: "Architect", location: "Walldorf" },
+				] },
+				{ id: "dave", name: "Dave Brown", role: "Unit Lead", location: "Walldorf" },
+			] },
+			{ id: "sales-department", name: "Department: Sales", expanded: true, children: [
+				{ id: "sales", name: "Sales Organization", role: "Unit", location: "Paris", expanded: true, children: [
+					{ id: "sales-france", name: "France Team", role: "Team", location: "Paris", expanded: true, children: [
+						{ id: "eve", name: "Eve Martin", role: "Account Executive", location: "Paris" },
+						{ id: "frank", name: "Frank Moreau", role: "Account Executive", location: "Lyon" },
+					] },
+					{ id: "grace", name: "Grace Lee", role: "Assistant", location: "Paris" },
+				] },
+			] },
+		];
+
+		function createRow(node, level) {
+			nodesById.set(node.id, node);
+			const row = document.createElement(node.children ? "ui5-table-group-row" : "ui5-table-row");
+			row.rowKey = node.id;
+			row.hierarchyLevel = level;
+			row.hierarchyState = node.children ? (node.expanded ? "Expanded" : "Collapsed") : "Leaf";
+			if (node.children) {
+				row.textContent = node.name;
+				return row;
+			}
+
+			[node.name, node.role, node.location].forEach(text => {
+				const cell = document.createElement("ui5-table-cell");
+				const label = document.createElement("ui5-label");
+				label.textContent = text;
+				cell.append(label);
+				row.append(cell);
+			});
+			return row;
+		}
+
+		function createVisibleRows(nodes, level) {
+			return nodes.flatMap(node => {
+				const row = createRow(node, level);
+				return node.children && node.expanded ? [row, ...createVisibleRows(node.children, level + 1)] : [row];
+			});
+		}
+
+		hierarchy.addEventListener("toggle", event => {
+			const { row, expanded } = event.detail;
+			const node = nodesById.get(row.rowKey);
+			node.expanded = expanded;
+			if (expanded) {
+				row.after(...createVisibleRows(node.children, row.hierarchyLevel + 1));
+			} else {
+				let next = row.nextElementSibling;
+				while (next && next.hasAttribute("ui5-table-row") && next.hierarchyLevel > row.hierarchyLevel) {
+					const descendant = next;
+					next = next.nextElementSibling;
+					descendant.remove();
+				}
+			}
+			document.getElementById("lastEvent").textContent = `${node.name}: ${expanded ? "expanded" : "collapsed"}`;
+		});
+
+		Promise.all([
+			customElements.whenDefined("ui5-table"),
+			customElements.whenDefined("ui5-table-row"),
+			customElements.whenDefined("ui5-table-cell"),
+			customElements.whenDefined("ui5-table-group-row"),
+			customElements.whenDefined("ui5-table-hierarchy"),
+			customElements.whenDefined("ui5-table-selection-multi"),
+			customElements.whenDefined("ui5-label"),
+		]).then(() => {
+			table.append(...createVisibleRows(groups, 1));
+		});
+	</script>
+</body>
+
+</html>

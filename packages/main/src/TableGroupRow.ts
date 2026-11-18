@@ -1,4 +1,4 @@
-import { customElement } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import TableRow from "./TableRow.js";
 import TableRowBase from "./TableRowBase.js";
@@ -25,7 +25,11 @@ const EMPTY_ACTIONS = [] as unknown as Slot<TableRowActionBase>;
  * ### Usage
  *
  * The `ui5-table-group-row` is placed as a direct child of `ui5-table`, alongside `ui5-table-row` elements.
- * Rows following a group row are considered part of that group until the next group row.
+ * Without hierarchy, rows following a group row are considered part of that group until the next group row.
+ *
+ * With `ui5-table-hierarchy`, set `hierarchyState` to `Expanded` or `Collapsed` to render an expand/collapse button.
+ * Use `hierarchyLevel` to identify nested groups and their descendants and indent the header content.
+ * The application manages descendant rows in response to the hierarchy feature's `toggle` event.
  *
  * ```html
  * <ui5-table>
@@ -46,7 +50,7 @@ const EMPTY_ACTIONS = [] as unknown as Slot<TableRowActionBase>;
  * - **Actions** (`actions` slot): Row actions such as `ui5-table-row-action` or `ui5-table-row-action-navigation` are not rendered.
  * - **Navigation** (`navigated` property): The navigated indicator is not rendered on group rows.
  * - **Interactive** (`interactive` property): Group rows do not support click/activation behavior.
- * - **Selection** (`rowKey` property`): Group rows cannot be selected. They are excluded from select all and range selection operations.
+ * - **Selection**: Group rows cannot be selected. They are excluded from select all and range selection operations.
  * - **Virtualizer** (`position` property`): Group rows are not supported by the `ui5-table-virtualizer`.
  *
  * ### ES6 Module Import
@@ -64,6 +68,15 @@ const EMPTY_ACTIONS = [] as unknown as Slot<TableRowActionBase>;
 	template: TableGroupRowTemplate,
 })
 class TableGroupRow extends TableRow {
+	/**
+	 * Defines the content of the group header.
+	 *
+	 * @public
+	 * @since 2.29.0
+	 */
+	@slot({ type: Node, "default": true, individualSlots: false })
+	content!: DefaultSlot<Node>;
+
 	@query("#group-cell")
 	_groupCell!: TableCell;
 
@@ -111,9 +124,13 @@ class TableGroupRow extends TableRow {
 		return false;
 	}
 
+	get _hasSelectionSpacer() {
+		return !!this._tableHierarchy && !!this._table?._isRowSelectorRequired;
+	}
+
 	get _ariaColSpan(): number {
 		const colSpan = this._table?.headerRow[0]?._visibleCells.length ?? 1;
-		return (this._renderDummyCell) ? colSpan - 1 : colSpan;
+		return colSpan - Number(this._renderDummyCell) - Number(this._hasSelectionSpacer);
 	}
 }
 

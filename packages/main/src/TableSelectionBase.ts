@@ -145,7 +145,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 * @param row The row instance
 	 */
 	getRowKey(row: TableRow): string {
-		return row.rowKey || "";
+		return row.isGroupRow() ? "" : row.rowKey || "";
 	}
 
 	/**
