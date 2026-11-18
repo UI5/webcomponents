@@ -63,4 +63,63 @@ describe("Title", () => {
 			});
 		});
 	});
+
+	describe("Enhanced tooltip (truncation)", () => {
+		it("shows a tooltip with the full text when truncated", () => {
+			cy.mount(
+				<Title id="t" wrappingType="None" style="display:block;width:80px">
+					A very long title that overflows its box
+				</Title>
+			);
+
+			cy.get("#t")
+				.shadow()
+				.find("[ui5-tooltip]")
+				.should("exist")
+				.and($tt => {
+					expect($tt.attr("text")).to.contain("A very long title");
+				});
+		});
+
+		it("shows no tooltip when the text fits", () => {
+			cy.mount(
+				<Title id="t2" wrappingType="None" style="display:block;width:600px">
+					Short
+				</Title>
+			);
+
+			cy.get("#t2").shadow().find("[ui5-tooltip]").should($tt => {
+				if ($tt.length) {
+					expect($tt.attr("text") || "").to.equal("");
+				}
+			});
+		});
+
+		it("sets aria-description to the full text when truncated", () => {
+			cy.mount(
+				<Title id="t3" wrappingType="None" style="display:block;width:80px">
+					A very long title that overflows its box
+				</Title>
+			);
+
+			cy.get("#t3")
+				.shadow()
+				.find(".ui5-title-root")
+				.should("have.attr", "aria-description")
+				.and("contain", "A very long title");
+		});
+
+		it("sets no aria-description when the text fits", () => {
+			cy.mount(
+				<Title id="t4" wrappingType="None" style="display:block;width:600px">
+					Short
+				</Title>
+			);
+
+			cy.get("#t4")
+				.shadow()
+				.find(".ui5-title-root")
+				.should("not.have.attr", "aria-description");
+		});
+	});
 });

@@ -307,16 +307,13 @@ describe("Button general interaction", () => {
 });
 
 describe("Accessibility", () => {
-	it("setting tooltip on the host is reflected on the button tag", () => {
+	it("setting tooltip on the host is reflected on the enhanced tooltip", () => {
 		cy.mount(<Button icon="message-information" tooltip="Go home"></Button>);
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("button")
-			.as("button");
-
-		cy.get("@button")
-			.should("have.attr", "title", "Go home");
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "Go home");
 	});
 
 	it("tooltip from inner icon is propagated", () => {
@@ -324,18 +321,17 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-button]")
 			.shadow()
-			.find("button")
-			.as("button");
-
-		cy.get("@button")
-			.should("have.attr", "title", "Download");
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "Download");
 	});
 
 	it("tooltip not displayed when there is a text", () => {
 		cy.mount(<Button icon="home">Action</Button>);
 
 		cy.get("[ui5-button]")
-			.should("not.have.attr", "title");
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("not.exist");
 	});
 
 	it("aria-label is properly applied on the button tag", () => {
@@ -557,6 +553,45 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-description", "A long description.");
 	});
 
+	it("tooltip text is merged into aria-description on a text button", () => {
+		cy.mount(<Button tooltip="Saves the document">Save</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", "Saves the document");
+	});
+
+	it("tooltip text is appended after accessible-description and type in aria-description", () => {
+		cy.mount(<Button design="Emphasized" accessibleDescription="Decline" tooltip="Saves the document">Save</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", `Decline ${Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED)} Saves the document`);
+	});
+
+	it("tooltip serving as the accessible name is not duplicated into aria-description", () => {
+		cy.mount(<Button icon={employee} tooltip="Employee"></Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Employee");
+
+		cy.get("@button")
+			.should("not.have.attr", "aria-description");
+	});
+
 	it("button with a badge", () => {
 		cy.mount(
 			<Button design="Emphasized" icon={employee}>Emphasized
@@ -761,5 +796,37 @@ describe("Button form attribute", () => {
 
 		cy.get("@submitSpy")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("Button enhanced tooltip", () => {
+	it("renders an enhanced (visual) tooltip reflecting the tooltip property", () => {
+		cy.mount(<Button id="b" tooltip="Save the document">Save</Button>);
+
+		cy.get("#b")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("exist")
+			.and("have.attr", "text", "Save the document");
+	});
+
+	it("does not set the native title attribute", () => {
+		cy.mount(<Button id="b2" tooltip="No native title">Save</Button>);
+		cy.get("#b2").shadow().find("button").should("not.have.attr", "title");
+	});
+
+	it("renders no enhanced tooltip when there is no tooltip text", () => {
+		cy.mount(<Button id="b3">Save</Button>);
+		cy.get("#b3").shadow().find("[ui5-tooltip]").should("not.exist");
+	});
+
+	it("icon-only button exposes the tooltip as its accessible name", () => {
+		cy.mount(<Button id="b4" icon="home" tooltip="Go home"></Button>);
+
+		// With the native title gone, aria-label must carry the accessible name.
+		cy.get("#b4")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Go home");
 	});
 });

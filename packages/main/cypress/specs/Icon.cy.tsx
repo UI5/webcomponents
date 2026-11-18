@@ -22,16 +22,16 @@ describe("Icon general interaction", () => {
             .find(".ui5-icon-root")
             .should("exist");
     
-        cy.get("[ui5-icon][show-tooltip]").then(($icon) => {
-            cy.wrap($icon[0])
-                .invoke("prop", "_id")
-                .then((iconId) => {
-                    cy.get("[ui5-icon][show-tooltip]")
-                        .shadow()
-                        .find(`#${iconId}-tooltip`)
-                        .should("contain.text", "Save");
-                });
-        });
+        cy.get("[ui5-icon][show-tooltip]")
+            .shadow()
+            .find("[ui5-tooltip]")
+            .should("have.attr", "text", "Save");
+
+        // The legacy native SVG <title> tooltip anchor is gone.
+        cy.get("[ui5-icon][show-tooltip]")
+            .shadow()
+            .find("svg > title")
+            .should("not.exist");
     });
 
     it("Tests events 'click' and 'ui5-click' events", () => {

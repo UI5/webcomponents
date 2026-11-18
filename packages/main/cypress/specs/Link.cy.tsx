@@ -2,6 +2,7 @@ import Bar from "../../src/Bar.js";
 import Button from "../../src/Button.js";
 import Dialog from "../../src/Dialog.js";
 import Link from "../../src/Link.js";
+import Tooltip from "../../src/Tooltip.js";
 
 describe("General API", () => {
 	it("render initially", () => {
@@ -170,7 +171,37 @@ describe("General API", () => {
 		cy.get("[ui5-link]")
 			.shadow()
 			.find(".ui5-link-root")
-			.should("have.attr", "title", "my tooltip");
+			.should("not.have.attr", "title");
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should("have.attr", "text", "my tooltip");
+	});
+
+	it("exposes the tooltip text to screen readers via aria-description", () => {
+		cy.mount(<Link accessibleName="more info" tooltip="my tooltip">Click me</Link>);
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "aria-description", "my tooltip");
+	});
+
+	it("opens the enhanced tooltip on hover", () => {
+		cy.mount(<Link tooltip="my tooltip">Click me</Link>);
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.realHover();
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find("[ui5-tooltip]")
+			.should($tooltip => {
+				expect(($tooltip[0] as Tooltip).isOpen()).to.equal(true);
+			});
 	});
 
 	it("passes special keys pressed while item clicked", () => {

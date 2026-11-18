@@ -1,9 +1,12 @@
 import type InputIcon from "./InputIcon.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function InputIconTemplate(this: InputIcon) {
 	return (
+		<>
 		<div
+			id={`${this._id}-root`}
 			class={{
 				"ui5-input-icon-root": true,
 				"inputIcon": true,
@@ -13,7 +16,6 @@ export default function InputIconTemplate(this: InputIcon) {
 			role="button"
 			tabindex={-1}
 			aria-label={this.effectiveAriaLabel}
-			title={this.effectiveTitle}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}
 			onMouseUp={this._onmouseup}
@@ -32,5 +34,9 @@ export default function InputIconTemplate(this: InputIcon) {
 				/>
 			)}
 		</div>
+		{ this.effectiveTitle &&
+			<Tooltip text={this.effectiveTitle} opener={`${this._id}-root`} />
+		}
+		</>
 	);
 }

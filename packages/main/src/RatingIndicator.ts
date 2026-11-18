@@ -364,7 +364,11 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get _ariaDescription() {
-		return this.required ? RatingIndicator.i18nBundle.getText(RATING_INDICATOR_ARIA_DESCRIPTION) : undefined;
+		const requiredText = this.required ? RatingIndicator.i18nBundle.getText(RATING_INDICATOR_ARIA_DESCRIPTION) : undefined;
+		// The visual tooltip replaces the native title; announce a custom tooltip
+		// as a description. The default tooltip is decorative and left out.
+		const parts = [this.tooltip, requiredText].filter(part => part);
+		return parts.length ? parts.join(" ") : undefined;
 	}
 
 	get ariaReadonly() {

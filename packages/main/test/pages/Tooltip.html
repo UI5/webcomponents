@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tooltip test page</title>
+	<script type="module" src="../../src/Button.ts"></script>
+	<script type="module" src="../../src/Title.ts"></script>
+	<script type="module" src="../../src/Tooltip.ts"></script>
+	<style>
+		body { padding: 4rem; font-family: sans-serif; display: flex; flex-direction: column; gap: 2rem; align-items: flex-start; }
+		.narrow { width: 120px; }
+	</style>
+</head>
+<body>
+	<ui5-button tooltip="Save the current document">Save</ui5-button>
+	<ui5-button icon="edit" tooltip="Edit"></ui5-button>
+
+	<ui5-button id="standalone">Standalone opener</ui5-button>
+	<ui5-tooltip opener="standalone" text="Standalone tooltip" placement="Bottom"></ui5-tooltip>
+</body>
+</html>
