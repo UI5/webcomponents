@@ -72,6 +72,25 @@ interface IProductSwitchItem extends HTMLElement, ITabbable {
 })
 class ProductSwitch extends UI5Element {
 	/**
+	 * Defines whether the component is in loading state.
+	 * When set to `true`, the component displays a busy indicator over its content.
+	 * @default false
+	 * @public
+	 * @since 2.29.0
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
+	/**
+	 * Defines the delay in milliseconds, after which the busy indicator will show up for this component.
+	 * @default 1000
+	 * @public
+	 * @since 2.29.0
+	 */
+	@property({ type: Number })
+	loadingDelay = 1000;
+
+	/**
 	 * Indicates how many columns are displayed.
 	 * @private
 	 */
@@ -107,23 +126,16 @@ class ProductSwitch extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
-	static get ROW_MIN_WIDTH() {
-		return {
-			ONE_COLUMN: 600,
-			THREE_COLUMN: 900,
-		};
-	}
-
 	get _ariaLabelText() {
 		return ProductSwitch.i18nBundle.getText(PRODUCT_SWITCH_CONTAINER_LABEL);
 	}
 
 	onEnterDOM() {
-		ResizeHandler.register(document.body, this._handleResizeBound);
+		ResizeHandler.register(this, this._handleResizeBound);
 	}
 
 	onExitDOM() {
-		ResizeHandler.deregister(document.body, this._handleResizeBound);
+		ResizeHandler.deregister(this, this._handleResizeBound);
 	}
 
 	onBeforeRendering() {
@@ -137,17 +149,42 @@ class ProductSwitch extends UI5Element {
 	}
 
 	_handleResize() {
-		const documentWidth = document.body.clientWidth;
-
-		if (documentWidth <= (this.constructor as typeof ProductSwitch).ROW_MIN_WIDTH.ONE_COLUMN) {
-			this._setRowSize(1);
-		} else if (this.items.length <= 2) {
-			this._setRowSize(2);
-		} else if (documentWidth <= (this.constructor as typeof ProductSwitch).ROW_MIN_WIDTH.THREE_COLUMN || this.items.length <= 6) {
-			this._setRowSize(3);
-		} else {
-			this._setRowSize(4);
+		const items = this.items;
+		if (!items.length) {
+			return;
 		}
+
+		const root = this.shadowRoot?.querySelector<HTMLElement>(".ui5-product-switch-root");
+		if (!root) {
+			return;
+		}
+
+		// Derive the column count from the component's own available width (not the
+		// viewport), so the keyboard navigation matches the columns that actually render.
+		const firstItemStyle = getComputedStyle(items[0]);
+		const itemOuterWidth = items[0].offsetWidth
+			+ parseFloat(firstItemStyle.marginLeft)
+			+ parseFloat(firstItemStyle.marginRight);
+
+		if (itemOuterWidth <= 0) {
+			return;
+		}
+
+		const rootStyle = getComputedStyle(root);
+		const availableWidth = root.clientWidth
+			- parseFloat(rootStyle.paddingLeft)
+			- parseFloat(rootStyle.paddingRight);
+
+		let maxColumnsByItems = 3;
+		if (items.length > 6) {
+			maxColumnsByItems = 4;
+		} else if (items.length <= 2) {
+			maxColumnsByItems = 2;
+		}
+
+		const columnsByWidth = Math.floor(availableWidth / itemOuterWidth);
+
+		this._setRowSize(Math.max(1, Math.min(columnsByWidth, maxColumnsByItems)));
 	}
 
 	handleProductSwitchItemClick(e: MouseEvent) {
