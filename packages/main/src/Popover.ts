@@ -10,7 +10,6 @@ import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
 import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import Popup from "./Popup.js";
 import PopoverPlacement from "./types/PopoverPlacement.js";
 import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
@@ -293,7 +292,9 @@ class Popover extends Popup {
 		}
 
 		if (!opener || this.isOpenerOutsideViewport(opener.getBoundingClientRect())) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
 			this.open = false;
 			this.fireDecoratorEvent("close");
 			return;

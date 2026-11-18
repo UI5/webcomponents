@@ -1,6 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -284,7 +283,9 @@ class Button extends UI5Element {
 		hiddenButton.textContent = newStateObject.text || null;
 		hiddenButton._hideArrowButton = this._hideArrowButton;
 
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 		const hiddenButtonWidth = hiddenButton.offsetWidth;
 		this.style.width = `${hiddenButtonWidth}px`;
 		this.classList.add("ui5-ai-button-fade-out");

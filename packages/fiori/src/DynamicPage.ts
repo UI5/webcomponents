@@ -6,7 +6,6 @@ import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -444,7 +443,11 @@ class DynamicPage extends UI5Element {
 		this.isToggled = true;
 		this._toggleHeader();
 		this.fireDecoratorEvent("title-toggle");
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this.headerActions?.focusExpandButton();
 
 		if (this.hasSnappedTitleOnMobile) {
@@ -462,7 +465,11 @@ class DynamicPage extends UI5Element {
 			this.showHeaderInStickArea = false;
 		}
 		this.fireDecoratorEvent("pin-button-toggle");
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this.headerActions?.focusPinButton();
 	}
 
@@ -473,7 +480,11 @@ class DynamicPage extends UI5Element {
 		this.isToggled = true;
 		this._toggleHeader();
 		this.fireDecoratorEvent("title-toggle");
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this.dynamicPageTitle!.focus();
 	}
 
@@ -517,7 +528,10 @@ class DynamicPage extends UI5Element {
 
 		this.skipSnapOnScroll = true;
 
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		if (this._headerSnapped && this.scrollContainer.scrollTop < SCROLL_THRESHOLD) {
 			this.scrollContainer.scrollTop = SCROLL_THRESHOLD;
 		}

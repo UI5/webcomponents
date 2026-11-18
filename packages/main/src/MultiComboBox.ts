@@ -40,7 +40,6 @@ import {
 	isCtrlAltF8,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isPhone,
 	isAndroid,
@@ -1347,7 +1346,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.value = this.valueBeforeAutoComplete || this.value;
 
 			// wait item navigation to apply correct tabindex
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
 			firstListItem?.focus();
 		} else if (!this.readonly) {
 			this._navigateToNextItem();

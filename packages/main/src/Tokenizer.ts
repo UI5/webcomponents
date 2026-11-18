@@ -6,7 +6,6 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
@@ -528,7 +527,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	onAfterRendering() {
+	async onAfterRendering() {
 		const tokensArray = this._tokens;
 		const firstToken = tokensArray[0];
 
@@ -570,10 +569,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			this._tokenDeleting = false;
 		}
 
+		if (!await this.waitForRender()) {
+			return;
+		}
 		// Update lastVisibleToken after rendering is complete to avoid render loops
-		renderFinished().then(() => {
-			this._updateLastVisibleTokenAttribute();
-		});
+		this._updateLastVisibleTokenAttribute();
 	}
 
 	/**
@@ -722,7 +722,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			const focusItem = nextListItem || previousListItem;
 
 			if (focusItem) {
-				await renderFinished();
+				if (!await this.waitForRender()) {
+					return;
+				}
 				focusItem.focus();
 			}
 		}

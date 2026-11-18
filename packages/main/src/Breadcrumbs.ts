@@ -9,7 +9,6 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { locationOpen } from "@ui5/webcomponents-base/dist/Location.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import {
 	isSpace,
@@ -220,7 +219,9 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	}
 
 	async onAfterRendering() {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 
 		this._cacheWidths();
 		this._updateOverflow();

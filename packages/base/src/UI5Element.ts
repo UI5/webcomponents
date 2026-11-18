@@ -20,6 +20,7 @@ import {
 	cancelRender,
 	unregisterElement,
 	registerElement,
+	renderFinished,
 } from "./Render.js";
 import { registerTag, isTagRegistered, recordTagRegistrationFailure } from "./CustomElementsRegistry.js";
 import { observeDOMNode, unobserveDOMNode } from "./DOMObserver.js";
@@ -212,7 +213,6 @@ abstract class UI5Element extends HTMLElement {
 	_changedState: Array<ChangeInfo>;
 	_invalidationEventProvider: EventProvider<InvalidationInfo, void>;
 	_componentStateFinalizedEventProvider: EventProvider<void, void>;
-	_inDOM: boolean;
 	_fullyConnected: boolean;
 	_childChangeListeners: Map<string, ChildChangeListener>;
 	_slotsAssignedNodes: WeakMap<HTMLSlotElement, Array<SlotValue>>;
@@ -242,7 +242,6 @@ abstract class UI5Element extends HTMLElement {
 		const ctor = this.constructor as typeof UI5Element;
 		this._changedState = []; // Filled on each invalidation, cleared on re-render (used for debugging)
 		this._suppressInvalidation = true; // A flag telling whether all invalidations should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
-		this._inDOM = false; // A flag telling whether the UI5Element is currently in the DOM tree of the document or not
 		this._fullyConnected = false; // A flag telling whether the UI5Element's onEnterDOM hook was called (since it's possible to have the element removed from DOM before that)
 		this._childChangeListeners = new Map(); // used to store lazy listeners per slot for the child change event of every child inside that slot
 		this._slotChangeListeners = new Map(); // used to store lazy listeners per slot for the slotchange event of all slot children inside that slot
@@ -345,8 +344,6 @@ abstract class UI5Element extends HTMLElement {
 
 		const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
 
-		this._inDOM = true;
-
 		if (slotsAreManaged) {
 			// always register the observer before yielding control to the main thread (await)
 			this._startObservingDOMChildren();
@@ -368,7 +365,7 @@ abstract class UI5Element extends HTMLElement {
 			await languageChangePending;
 		}
 
-		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
+		if (!this.isConnected) { // Component removed from DOM while _processChildren was running
 			return;
 		}
 
@@ -405,8 +402,6 @@ abstract class UI5Element extends HTMLElement {
 	disconnectedCallback() {
 		const ctor = this.constructor as typeof UI5Element;
 		const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
-
-		this._inDOM = false;
 
 		if (slotsAreManaged) {
 			this._stopObservingDOMChildren();
@@ -446,6 +441,16 @@ abstract class UI5Element extends HTMLElement {
 	 * @public
 	 */
 	onExitDOM(): void { }
+
+	/**
+	 * Waits for the current render cycle to complete and returns whether the component is still connected to the DOM.
+	 * Use this to guard async logic that should not run if the component was removed while waiting.
+	 * @public
+	 */
+	async waitForRender(): Promise<boolean> {
+		await renderFinished();
+		return this.isConnected;
+	}
 
 	/**
 	 * @private

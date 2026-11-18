@@ -5,7 +5,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isLeft,
 	isRight,
@@ -578,28 +577,40 @@ class Carousel extends UI5Element {
 	async _handleHome(e: KeyboardEvent) {
 		e.preventDefault();
 		this._changePageIndex(0, { moveFocus: true });
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
 	async _handleEnd(e: KeyboardEvent) {
 		e.preventDefault();
 		this._changePageIndex(this.items.length - 1, { moveFocus: true });
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
 	async _handlePageUp(e: KeyboardEvent) {
 		e.preventDefault();
 		this._changePageIndex(this._currentPageIndex + this._pageStep, { moveFocus: true });
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
 	async _handlePageDown(e: KeyboardEvent) {
 		e.preventDefault();
 		this._changePageIndex(this._currentPageIndex - this._pageStep, { moveFocus: true });
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
@@ -626,7 +637,10 @@ class Carousel extends UI5Element {
 		}
 
 		this._changeFocusIndex(newFocusedItemIndex);
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
@@ -637,7 +651,10 @@ class Carousel extends UI5Element {
 		}
 
 		this._changeFocusIndex(newFocusedItemIndex);
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
@@ -648,7 +665,10 @@ class Carousel extends UI5Element {
 		}
 
 		this._changePageIndex(newCurrentPageIndex);
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 
@@ -659,7 +679,10 @@ class Carousel extends UI5Element {
 		}
 
 		this._changePageIndex(newCurrentPageIndex);
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.focusItem();
 	}
 

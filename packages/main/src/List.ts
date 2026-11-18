@@ -11,7 +11,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import {
 	isTabNext,
@@ -394,7 +393,7 @@ class List extends UI5Element {
 	 * @public
 	 */
 	@property()
-	separators: `${ListSeparator}`= "All";
+	separators: `${ListSeparator}` = "All";
 
 	/**
 	 * Defines whether the component will have growing capability either by pressing a `More` button,
@@ -447,8 +446,8 @@ class List extends UI5Element {
 	 * @public
 	 * @since 2.19.0
 	 */
-	 @property({ type: Boolean })
-	 stickyHeader = false;
+	@property({ type: Boolean })
+	stickyHeader = false;
 
 	/**
 	 * Defines the accessible name of the component.
@@ -461,26 +460,26 @@ class List extends UI5Element {
 
 	/**
 	* Defines additional accessibility attributes on different areas of the component.
- 	*
+	  *
 	* The accessibilityAttributes object has the following field:
 	*
 	*  - **growingButton**: `growingButton.name`, `growingButton.description`.
 	*
- 	* The accessibility attributes support the following values:
- 	*
+	  * The accessibility attributes support the following values:
+	  *
 	* - **name**: Defines the accessible ARIA name of the growing button.
 	* Accepts any string.
 	*
 	* - **description**: Defines the accessible ARIA description of the growing button.
 	* Accepts any string.
 	*
- 	* **Note:** The `accessibilityAttributes` property is in an experimental state and is a subject to change.
+	  * **Note:** The `accessibilityAttributes` property is in an experimental state and is a subject to change.
 	* @default {}
- 	* @public
- 	* @since 2.13.0
- 	*/
-	 @property({ type: Object })
-	 accessibilityAttributes: ListAccessibilityAttributes = {};
+	  * @public
+	  * @since 2.13.0
+	  */
+	@property({ type: Object })
+	accessibilityAttributes: ListAccessibilityAttributes = {};
 
 	/**
 	 * Defines the IDs of the elements that label the component.
@@ -922,7 +921,10 @@ class List extends UI5Element {
 	}
 
 	async observeListEnd() {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this.getEndIntersectionObserver().observe(this.listEndDOM!);
 	}
 
@@ -934,7 +936,9 @@ class List extends UI5Element {
 	}
 
 	async observeListStart() {
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
 		this.getStartIntersectionObserver().observe(this.listStartDOM!);
 	}
 

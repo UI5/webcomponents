@@ -24,7 +24,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import type List from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -420,7 +419,7 @@ class Menu extends UI5Element {
 	}
 
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await renderFinished();
+		await this.waitForRender();
 		const firstMenuItem = this._allMenuItems[0];
 
 		if (firstMenuItem) {

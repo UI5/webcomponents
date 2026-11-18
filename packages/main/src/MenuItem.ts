@@ -21,7 +21,6 @@ import {
 	isUp,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isDesktop, isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
@@ -445,7 +444,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await renderFinished();
+		await this.waitForRender();
 
 		if (this.hasSubmenu && this.isSubMenuOpen) {
 			const menuItems = this._allMenuItems;

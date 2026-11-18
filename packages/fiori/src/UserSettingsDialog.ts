@@ -12,7 +12,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
@@ -357,7 +356,11 @@ class UserSettingsDialog extends UI5Element {
 
 		// In navigation mode the content replaces the list, so move the focus to the
 		// first interactive element of the content instead of losing it.
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this._selectedSetting?.focusFirstContentElement();
 	}
 
@@ -445,7 +448,11 @@ class UserSettingsDialog extends UI5Element {
 
 		// The side list replaces the content, so return the focus to the
 		// user settings item that was selected instead of losing it.
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		const selectedListItem = this._selectedSetting
 			? this.shadowRoot!.querySelector<HTMLElement>(`#setting-${this._selectedSetting._id}`)
 			: null;

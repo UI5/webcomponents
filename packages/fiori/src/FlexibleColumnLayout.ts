@@ -14,7 +14,6 @@ import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationM
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents-icons/dist/vertical-grip.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isLeft,
 	isRight,
@@ -982,7 +981,10 @@ class FlexibleColumnLayout extends UI5Element {
 
 		this.separatorMovementSession.tmpFCLLayout = layoutAfterMove;
 
-		await renderFinished();
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		separator.focus();
 	}
 

@@ -8,7 +8,6 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import transformDateToSecondaryType from "@ui5/webcomponents-localization/dist/dates/transformDateToSecondaryType.js";
 import convertMonthNumbersToMonthNames from "@ui5/webcomponents-localization/dist/dates/convertMonthNumbersToMonthNames.js";
 import CalendarDateComponent from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isEnter,
 	isF4,
@@ -675,7 +674,10 @@ class Calendar extends CalendarPart {
 	async switchToDayPicker(suppressFocus = false) {
 		this._currentPicker = "day";
 		if (!suppressFocus) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
+
 			this._currentPickerDOM.focus();
 		}
 	}
@@ -683,7 +685,9 @@ class Calendar extends CalendarPart {
 	async switchToMonthPicker(suppressFocus = false) {
 		this._currentPicker = "month";
 		if (!suppressFocus) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
 			this._currentPickerDOM.focus();
 		}
 	}
@@ -699,7 +703,9 @@ class Calendar extends CalendarPart {
 	async switchToYearPicker(suppressFocus = false) {
 		this._currentPicker = "year";
 		if (!suppressFocus) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
 			this._currentPickerDOM.focus();
 		}
 	}
@@ -715,7 +721,9 @@ class Calendar extends CalendarPart {
 	async switchToYearRangePicker(suppressFocus = false) {
 		this._currentPicker = "yearrange";
 		if (!suppressFocus) {
-			await renderFinished();
+			if (!await this.waitForRender()) {
+				return;
+			}
 			this._currentPickerDOM.focus();
 		}
 	}
@@ -923,7 +931,11 @@ class Calendar extends CalendarPart {
 		if (e.detail.mouse) {
 			return;
 		}
-		await renderFinished();
+
+		if (!await this.waitForRender()) {
+			return;
+		}
+
 		this._currentPickerDOM.focus();
 	}
 

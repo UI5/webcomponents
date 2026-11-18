@@ -9,7 +9,6 @@ import { isInstanceOfUserSettingsNotificationsViewGroup } from "./UserSettingsNo
 import type UserSettingsItem from "./UserSettingsItem.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
@@ -159,7 +158,7 @@ class UserSettingsNotificationsView extends UserSettingsView {
 			: UserSettingsNotificationsView.i18nBundle.getText(USER_SETTINGS_NOTIFICATIONS_LIST_LABEL);
 	}
 
-	_navigateToSecondaryView(item: UserSettingsNotificationsViewItem) {
+	async _navigateToSecondaryView(item: UserSettingsNotificationsViewItem) {
 		const parentItem = this.closest<UserSettingsItem>("[ui5-user-settings-item]");
 		const secondaryViews = parentItem?.pages?.filter(view => view !== this && view.secondary) ?? [];
 
@@ -178,32 +177,30 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		this._lastNavigatedItem = item;
 		target.selected = true;
 
-		renderFinished().then(async () => {
-			if (!this.isConnected) {
-				return;
-			}
-			await target._waitForDomRef();
-			const focusable = await getFirstFocusableElement(target.getDomRef()!);
-			focusable?.focus();
-		});
+		if (!await this.waitForRender()) {
+			return;
+		}
+		await target._waitForDomRef();
+		const focusable = await getFirstFocusableElement(target.getDomRef()!);
+		focusable?.focus();
 	}
 
-	_processItemClick(item: UserSettingsNotificationsViewItem) {
+	async _processItemClick(item: UserSettingsNotificationsViewItem) {
 		if (!isInstanceOfUserSettingsNotificationsViewItem(item) || !item.navigable) {
 			return;
 		}
 		if (!this.fireDecoratorEvent("item-click", { item })) {
 			return;
 		}
-		this._navigateToSecondaryView(item);
+		await this._navigateToSecondaryView(item);
 	}
 
-	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
-		this._processItemClick(e.detail.item as UserSettingsNotificationsViewItem);
+	_handleItemClick = async (e: CustomEvent<ListItemClickEventDetail>) => {
+		await this._processItemClick(e.detail.item as UserSettingsNotificationsViewItem);
 	};
 
-	_handleFormItemClick = (e: CustomEvent<{ item: UserSettingsNotificationsViewItem }>) => {
-		this._processItemClick(e.detail.item);
+	_handleFormItemClick = async (e: CustomEvent<{ item: UserSettingsNotificationsViewItem }>) => {
+		await this._processItemClick(e.detail.item);
 	};
 }
 
