@@ -361,6 +361,11 @@ class Toolbar extends UI5Element {
 
 	async onAfterRendering() {
 		await renderFinished();
+
+		if (!this.isConnected) {
+			return;
+		}
+
 		this.storeItemsWidth();
 		this.processOverflowLayout();
 		this.items.forEach(item => {
