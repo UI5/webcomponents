@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** box-shadow in header buttons is removed ([9ff1f85](https://github.com/UI5/webcomponents/commit/9ff1f855ce2953a61b96868632c89a14f989db56))
+
+
+### Features
+
+* **ui5-table:** Add header-click event to the TableHeaderCell ([#14230](https://github.com/UI5/webcomponents/issues/14230)) ([b998e78](https://github.com/UI5/webcomponents/commit/b998e78336e9996a9f850895ae534fd67db68029))
+* **ui5-time-picker, ui5-datetime-picker:** add keyboard/clock toggle… ([#14216](https://github.com/UI5/webcomponents/issues/14216)) ([caca4ac](https://github.com/UI5/webcomponents/commit/caca4ac4031a534d15a517f6aa5e0e679286a478))
+
+
+
+
+
 # [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
 
 

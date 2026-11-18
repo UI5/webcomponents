@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Bug Fixes
+
+* **ui5-navigation-layout:** replace aside with div for side content ([#14251](https://github.com/UI5/webcomponents/issues/14251)) ([5a2329c](https://github.com/UI5/webcomponents/commit/5a2329c6160d7a2e3c9396696cec2cc06838bd88))
+* **ui5-shellbar:** fix full-width search overlay overflow ([#14288](https://github.com/UI5/webcomponents/issues/14288)) ([408106a](https://github.com/UI5/webcomponents/commit/408106acf6b2269be528df737673e4f4d2d12d96))
+* **ui5-side-navigation:** drop aria-labelledby when accessibleName is set ([#14256](https://github.com/UI5/webcomponents/issues/14256)) ([78bc71e](https://github.com/UI5/webcomponents/commit/78bc71e53c32c5e175635c06308418524fd359e2))
+* **ui5-side-navigation:** remove aria-roledescription from navigation list ([#14252](https://github.com/UI5/webcomponents/issues/14252)) ([8c9abba](https://github.com/UI5/webcomponents/commit/8c9abba9a85daf8e73eeeb5fb0e862b38bdd7cbb))
+* **ui5-timeline:** placement on the first item is correct now ([#14287](https://github.com/UI5/webcomponents/issues/14287)) ([ad911f3](https://github.com/UI5/webcomponents/commit/ad911f3bd8ac6b5283f07d772aab9cd8b5fbb1da))
+
+
+### Features
+
+* **ui5-product-switch:** address UX review feedback (UX, VD) ([#14127](https://github.com/UI5/webcomponents/issues/14127)) ([1914ae9](https://github.com/UI5/webcomponents/commit/1914ae918f652de82c81b52dc70713b8a2fb3f8b))
+* **ui5-shellbar:** add revealedItems to content-item-visibility-change event ([#14202](https://github.com/UI5/webcomponents/issues/14202)) ([0463922](https://github.com/UI5/webcomponents/commit/0463922aba4e872f9b381d722d7b607666998317))
+
+
+
+
+
 # [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
 
 
