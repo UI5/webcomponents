@@ -7,7 +7,6 @@
 	font-family: var(--sapFontFamily);
 	position: sticky;
 	top: 0;
-	z-index: 2;
 	background: var(--sapPageHeader_Background);
 	box-sizing: border-box;
 }

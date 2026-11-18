@@ -59,6 +59,7 @@
 	border-bottom: var(--_ui5_value_state_header_border_bottom);
 	flex-grow: 1;
 	position: relative;
+	z-index: 1;
 }
 
 .ui5-valuestatemessage--success {
@@ -141,9 +142,4 @@
 
 [ui5-responsive-popover] .ui5-valuestatemessage--warning {
 	box-shadow: var(--_ui5_value_state_header_box_shadow_warning);
-}
-
-/* Unset bottom border box-shadow in a specific case when the value state message is displayed on desktop in a popover and the suggestions list is empty */
-[ui5-responsive-popover].ui5-popover-with-value-state-header .ui5-valuestatemessage-root:has(+[ui5-list]:empty) {
-	box-shadow: none;
 }
