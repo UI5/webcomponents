@@ -1697,12 +1697,12 @@ describe("Side Navigation Accessibility", () => {
 			.should("have.attr", "aria-label", "Footer Navigation Menu");
 	});
 
-	it("Tests fixed area with only actions and external links drops tree semantics (expanded)", () => {
+	it("Tests fixed area with only unselectable leaf items drops tree semantics (expanded)", () => {
 		cy.mount(
 			<SideNavigation id="sn">
 				<SideNavigationItem text="Home"></SideNavigationItem>
 				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
-				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 			</SideNavigation>
 		);
 
@@ -1712,25 +1712,25 @@ describe("Side Navigation Accessibility", () => {
 			.find(".ui5-sn-fixed")
 			.should("have.attr", "role", "group");
 
-		// action item exposes a button role
+		// item without href exposes a button role
 		cy.get("#action")
 			.shadow()
 			.find(".ui5-sn-item")
 			.should("have.attr", "role", "button");
 
-		// external link item has no explicit role
+		// item with href (link) has no explicit role
 		cy.get("#external")
 			.shadow()
 			.find(".ui5-sn-item")
 			.should("not.have.attr", "role");
 	});
 
-	it("Tests fixed area with only actions and external links drops tree semantics (collapsed)", () => {
+	it("Tests fixed area with only unselectable leaf items drops tree semantics (collapsed)", () => {
 		cy.mount(
 			<SideNavigation id="sn" collapsed={true}>
 				<SideNavigationItem text="Home"></SideNavigationItem>
 				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
-				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 			</SideNavigation>
 		);
 
@@ -1751,17 +1751,17 @@ describe("Side Navigation Accessibility", () => {
 			.should("not.have.attr", "role");
 	});
 
-	it("Tests fixed area keeps tree semantics when a plain navigation item is present", () => {
+	it("Tests fixed area keeps tree semantics when a selectable item is present", () => {
 		cy.mount(
 			<SideNavigation id="sn">
 				<SideNavigationItem text="Home"></SideNavigationItem>
 				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
-				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 				<SideNavigationItem slot="fixedItems" id="plain" text="Settings" />
 			</SideNavigation>
 		);
 
-		// a single plain item reverts the whole fixed area to tree semantics
+		// a single selectable item reverts the whole fixed area to tree semantics
 		cy.get("#sn")
 			.shadow()
 			.find(".ui5-sn-fixed")
@@ -1783,12 +1783,35 @@ describe("Side Navigation Accessibility", () => {
 			.should("have.attr", "role", "treeitem");
 	});
 
+	it("Tests fixed area keeps tree semantics when an unselectable item has sub-items", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="parent" text="Useful Links" unselectable>
+					<SideNavigationSubItem text="Vacation Tool" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// a parent with sub-items keeps the tree semantics
+		cy.get("#sn")
+			.shadow()
+			.find(".ui5-sn-fixed")
+			.should("have.attr", "role", "tree");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "treeitem");
+	});
+
 	it("Tests actions-only fixed items are each independently tabbable (no roving tabindex)", () => {
 		cy.mount(
 			<SideNavigation id="sn">
 				<SideNavigationItem text="Home"></SideNavigationItem>
 				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
-				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 			</SideNavigation>
 		);
 
@@ -1809,7 +1832,7 @@ describe("Side Navigation Accessibility", () => {
 			<SideNavigation id="sn">
 				<SideNavigationItem text="Home"></SideNavigationItem>
 				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
-				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 			</SideNavigation>
 		);
 

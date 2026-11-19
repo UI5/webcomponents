@@ -178,13 +178,9 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 
 	get ariaRole() {
 		if (this._fixedItemsActionsOnly) {
-			if (this.isExternalLink) {
-				return undefined;
-			}
-
-			if (this.design === "Action") {
-				return "button";
-			}
+			// Items with an `href` behave as links and keep their native semantics
+			// (no explicit role); all others are exposed as buttons.
+			return this.href ? undefined : "button";
 		}
 
 		if (this.sideNavCollapsed) {

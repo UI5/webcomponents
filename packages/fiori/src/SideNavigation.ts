@@ -506,8 +506,8 @@ class SideNavigation extends UI5Element {
 
 	/**
 	 * Returns `true` when the fixed area contains at least one item and every fixed item
-	 * is either an action (`design="Action"`) or an external link (`target="_blank"`).
-	 * In that case the fixed area drops its tree semantics (see the template and
+	 * is unselectable and has no sub-items. In that case the fixed area is no longer a
+	 * navigation tree and drops its tree semantics (see the template and
 	 * `SideNavigationSelectableItemBase.ariaRole`).
 	 */
 	get _areFixedItemsActionsOnly() {
@@ -520,13 +520,13 @@ class SideNavigation extends UI5Element {
 				return false;
 			}
 
-			return item.design === "Action" || !!item.isExternalLink;
+			return item.unselectable && !item.hasSubItems;
 		});
 	}
 
 	/**
 	 * The role of the fixed-items container. Becomes `group` (dropping the tree/menubar
-	 * semantics) when the fixed area holds only actions and external links.
+	 * semantics) when the fixed area holds only unselectable items without sub-items.
 	 */
 	get _fixedItemsExpandedRole() {
 		return this._areFixedItemsActionsOnly ? "group" : "tree";
