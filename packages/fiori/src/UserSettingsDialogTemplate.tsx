@@ -33,7 +33,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 						{this.showSearchField &&
 							<Input placeholder="Search" type="Search" class="ui5-user-settings-side-search"
 								   onInput={this._handleInput}>
-								<Icon id="searchFieldIcon" slot="icon" name={search} showTooltip></Icon>
+								<Icon id="searchFieldIcon" slot="icon" name={search} accessible-name={this._searchInSettingsText} showTooltip></Icon>
 							</Input>
 						}
 					</div>

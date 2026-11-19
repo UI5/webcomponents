@@ -37,12 +37,12 @@ export default function UserSettingsItemTemplate(this: UserSettingsItem) {
 	</div>;
 
 	return (
-		<div class="ui5-user-settings-item">
+		<div class="ui5-user-settings-item" role="region" aria-label={this._titleText}>
 			<div class="ui5-user-settings-item-header-container">
 				<div class={`ui5-user-settings-item-header${this._shouldShowBackButton ? " ui5-user-settings-item-header--with-back" : ""}`}>
 					<Button icon="nav-back" design="Transparent" onClick={this._handleBackButtonClick} class="ui5-user-settings-item-collapse-btn" style={{ display: this._shouldShowBackButton ? "block" : "" }}></Button>
 
-					<Title level="H2" size="H5">{this._hasSelectedPageView ? this._selectedPageView.text : this.headerText}</Title>
+					<Title level="H2" size="H5">{this._titleText}</Title>
 				</div>
 			</div>
 
