@@ -37,6 +37,16 @@
 			flex: 0 0 auto;
 		}
 
+		.hud-panel {
+			display: contents;
+		}
+
+		.hud-panel > summary {
+			display: none;
+			cursor: pointer;
+			font-size: var(--sapFontSmallSize);
+		}
+
 		.hud {
 			display: flex;
 			flex-wrap: wrap;
@@ -250,6 +260,15 @@
 				width: 100%;
 			}
 
+			.hud-panel {
+				display: block;
+				width: 100%;
+			}
+
+			.hud-panel > summary {
+				display: list-item;
+			}
+
 			.toolbar .group {
 				border: none;
 				padding: 0;
@@ -266,25 +285,28 @@
 	<header class="app-header">
 		<ui5-title level="H5">TableVirtualizer &ndash; Variable Row Heights</ui5-title>
 		<a href="TableVirtualizerStory.html">Story</a>
-		<div class="hud" id="hud" aria-live="off">
-			<span id="hud-fps" title="Measured frame callback rate over each 500 ms window, including idle time. This is not the number of table renders."><b>FPS</b><i>-</i></span>
-			<span id="hud-hz" title="Detected refresh rate of the display"><b>display</b><i>-</i></span>
-			<span id="hud-avg" title="Average requestAnimationFrame callback rate since the last reset, including idle time"><b>avg</b><i>-</i></span>
-			<span id="hud-p50" title="Median time between two frames (8.3 ms at 120 Hz, 16.7 ms at 60 Hz)"><b>p50</b><i>-</i></span>
-			<span title="Logical rows of the data set"><b>rows</b><i id="hud-rows">-</i></span>
-			<span title="Row elements that currently exist in the page"><b>DOM rows</b><i id="hud-dom">-</i></span>
-			<span title="Rows whose real height is known. All other rows are estimated."><b>measured</b><i id="hud-measured">-</i></span>
-			<span title="Estimated height of rows that were not rendered yet (average of the measured rows)"><b>estimate</b><i id="hud-estimate">-</i></span>
-			<span title="Row elements created by the application so far"><b>created</b><i id="hud-created">-</i></span>
-			<span title="How often a parked row element was reused for another row (pool) or rebound (positional)"><b>reused</b><i id="hud-reused">-</i></span>
-			<span title="Parked row elements, ready to be reused"><b>pool</b><i id="hud-pool">-</i></span>
-			<span title="Rows that are visible on the screen"><b>visible</b><i id="hud-visible">-</i></span>
-			<span title="Rows the virtualizer asked the application to render (visible rows plus overscan)"><b>requested</b><i id="hud-requested">-</i></span>
-			<span title="Rows the application has actually rendered. Differs from 'requested' while the application is behind."><b>rendered</b><i id="hud-rendered">-</i></span>
-			<span title="Height corrections that are not yet reflected in the scroll position. They are applied when scrolling stops, so that the scrolling is never interrupted."><b>drift</b><i id="hud-drift">-</i></span>
-			<span title="How often a height change was compensated, so that the content you look at did not jump"><b>anchor fixes</b><i id="hud-anchor">-</i></span>
-			<span title="How often the drift was moved into the scroll position (should happen when scrolling stops, or at the very top/bottom)"><b>reconciles</b><i id="hud-reconcile">-</i></span>
-		</div>
+		<details class="hud-panel" id="hud-panel" open>
+			<summary>FPS &amp; statistics</summary>
+			<div class="hud" id="hud" aria-live="off">
+				<span id="hud-fps" title="Measured frame callback rate over each 500 ms window, including idle time. This is not the number of table renders."><b>FPS</b><i>-</i></span>
+				<span id="hud-hz" title="Detected refresh rate of the display"><b>display</b><i>-</i></span>
+				<span id="hud-avg" title="Average requestAnimationFrame callback rate since the last reset, including idle time"><b>avg</b><i>-</i></span>
+				<span id="hud-p50" title="Median time between two frames (8.3 ms at 120 Hz, 16.7 ms at 60 Hz)"><b>p50</b><i>-</i></span>
+				<span title="Logical rows of the data set"><b>rows</b><i id="hud-rows">-</i></span>
+				<span title="Row elements that currently exist in the page"><b>DOM rows</b><i id="hud-dom">-</i></span>
+				<span title="Rows whose real height is known. All other rows are estimated."><b>measured</b><i id="hud-measured">-</i></span>
+				<span title="Estimated height of rows that were not rendered yet (average of the measured rows)"><b>estimate</b><i id="hud-estimate">-</i></span>
+				<span title="Row elements created by the application so far"><b>created</b><i id="hud-created">-</i></span>
+				<span title="How often a parked row element was reused for another row (pool) or rebound (positional)"><b>reused</b><i id="hud-reused">-</i></span>
+				<span title="Parked row elements, ready to be reused"><b>pool</b><i id="hud-pool">-</i></span>
+				<span title="Rows that are visible on the screen"><b>visible</b><i id="hud-visible">-</i></span>
+				<span title="Rows the virtualizer asked the application to render (visible rows plus overscan)"><b>requested</b><i id="hud-requested">-</i></span>
+				<span title="Rows the application has actually rendered. Differs from 'requested' while the application is behind."><b>rendered</b><i id="hud-rendered">-</i></span>
+				<span title="Height corrections that are not yet reflected in the scroll position. They are applied when scrolling stops, so that the scrolling is never interrupted."><b>drift</b><i id="hud-drift">-</i></span>
+				<span title="How often a height change was compensated, so that the content you look at did not jump"><b>anchor fixes</b><i id="hud-anchor">-</i></span>
+				<span title="How often the drift was moved into the scroll position (should happen when scrolling stops, or at the very top/bottom)"><b>reconciles</b><i id="hud-reconcile">-</i></span>
+			</div>
+		</details>
 	</header>
 
 	<details class="controls" id="controls" open>
@@ -1333,18 +1355,29 @@
 			setText("hud-reconcile", `${virtualizer._stats.reconciliations} (${virtualizer._stats.reconciliationsWhileScrolling} in scroll)`);
 		}, 250);
 
+		const mobileHud = window.matchMedia("(max-width: 600px)");
+		const updateHudVisibility = () => {
+			$("hud-panel").open = !mobileHud.matches;
+		};
+		updateHudVisibility();
+		mobileHud.addEventListener("change", updateHudVisibility);
+
 		if (window.matchMedia("(max-width: 600px), (max-height: 760px)").matches) {
 			$("controls").open = false;
 		}
 
-		// the table may have rendered (and requested its first range) before this listener was attached
-		await customElements.whenDefined("ui5-table-virtualizer");
-		while (!virtualizer._table) {
-			await new Promise(requestAnimationFrame);
-		}
-		virtualizer.reset();
+		async function initialize() {
+			// the table may have rendered (and requested its first range) before this listener was attached
+			await customElements.whenDefined("ui5-table-virtualizer");
+			while (!virtualizer._table) {
+				await new Promise(requestAnimationFrame);
+			}
+			virtualizer.reset();
 
-		window.demo = { table, virtualizer, recycler, source, stats, holdKey, autoScroll, measureAnchor, coverageGap, setRenderTiming: timing => { renderTiming = timing; } };
+			window.demo = { table, virtualizer, recycler, source, stats, holdKey, autoScroll, measureAnchor, coverageGap, setRenderTiming: timing => { renderTiming = timing; } };
+		}
+
+		initialize().catch(error => console.error("Failed to initialize the variable-height table demo", error));
 	</script>
 </body>
 

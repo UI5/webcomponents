@@ -67,7 +67,7 @@
 			<ui5-table-header-row slot="headerRow" sticky>
 				<ui5-table-header-cell width="6rem">Order</ui5-table-header-cell>
 				<ui5-table-header-cell>Description</ui5-table-header-cell>
-				<ui5-table-header-cell width="5rem">Status</ui5-table-header-cell>
+				<ui5-table-header-cell width="5.3rem">Status</ui5-table-header-cell>
 				<ui5-table-header-cell width="6rem" horizontal-align="End">Price</ui5-table-header-cell>
 			</ui5-table-header-row>
 		</ui5-table>
@@ -106,9 +106,7 @@
 		const rows = [];
 		const priceFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" });
 
-		await Promise.all(["ui5-table", "ui5-table-row", "ui5-table-cell", "ui5-table-virtualizer", "ui5-tag"].map(tag => customElements.whenDefined(tag)));
-
-		virtualizer.addEventListener("range-change", event => {
+		function renderRange(event) {
 			const reserveRowHeight = Math.max(32, virtualizer._model.estimate);
 			const { first, last } = getPositionalRange(table, virtualizer, event.detail.first, event.detail.last, rows.length, reserveRowHeight);
 			const count = last - first;
@@ -133,13 +131,20 @@
 					setText(row.querySelector("[data-price]"), priceFormatter.format((2500 + (index * 3719) % 1000000) / 100));
 				}
 			});
-		});
-
-		// Request the initial range even if the table rendered before the listener was attached.
-		while (!virtualizer._table) {
-			await new Promise(requestAnimationFrame);
 		}
-		virtualizer.reset();
+
+		async function initialize() {
+			await Promise.all(["ui5-table", "ui5-table-row", "ui5-table-cell", "ui5-table-virtualizer", "ui5-tag"].map(tag => customElements.whenDefined(tag)));
+			virtualizer.addEventListener("range-change", renderRange);
+
+			// Request the initial range even if the table rendered before the listener was attached.
+			while (!virtualizer._table) {
+				await new Promise(requestAnimationFrame);
+			}
+			virtualizer.reset();
+		}
+
+		initialize().catch(error => console.error("Failed to initialize the simple table demo", error));
 	</script>
 </body>
 
