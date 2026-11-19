@@ -25,6 +25,7 @@ import "@ui5/webcomponents-icons/dist/credit-card.js";
 
 var shellBar = document.getElementById("shellbar");
 var popover = document.getElementById("productswitch-popover");
+var productSwitch = popover.querySelector("ui5-product-switch");
 shellBar.addEventListener("product-switch-click", (event) => {
     if (popover.open) {
         popover.open = false;
@@ -33,6 +34,10 @@ shellBar.addEventListener("product-switch-click", (event) => {
         popover.opener = event.detail.targetRef;
 		popover.open = true;
     }
+});
+// Selecting a product opens its homepage in a new tab, so close the popover in the original tab.
+productSwitch.addEventListener("click", () => {
+    popover.open = false;
 });
 [...document.querySelectorAll("ui5-toggle-button")].forEach(el => {
 	el.addEventListener("click", event => {

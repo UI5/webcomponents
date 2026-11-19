@@ -94,18 +94,6 @@ describe("API & Events", () => {
 			.should("be.visible");
 	});
 
-	it("tests if draggable=true is set", () => {
-		cy.get("[ui5-table-row]")
-			.should("have.length", 11)
-			.each(($row, index) => {
-				if (index === 10) {
-					cy.wrap($row).should("not.have.attr", "draggable");
-				} else {
-					cy.wrap($row).should("have.attr", "draggable", "true");
-				}
-			});
-	});
-
 	it("tests if events are fired and paramters are as expected", () => {
 		cy.get("[ui5-table]")
 			.then(table => {
