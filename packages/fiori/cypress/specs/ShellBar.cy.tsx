@@ -421,6 +421,40 @@ describe("Slots", () => {
 				.should("not.exist");
 		});
 
+		it("Should hide default-priority content items last-added-first (C, then B, then A)", () => {
+			// Spec: with no data-hide-order, content items hide in "last added, first hidden" order.
+			// So Item C (last added) hides first, then Item B, then Item A.
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar id="shellbar" primaryTitle="Product Title" showNotifications={true} showProductSwitch={true}>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Item A</Button>
+					<Button slot="content">Item B</Button>
+					<Button slot="content">Item C</Button>
+				</ShellBar>
+			);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			cy.get("#shellbar").as("shellbar");
+
+			// Wide: nothing hidden
+			cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+			// The three content items map to generated slots content-1 (A), content-2 (B), content-3 (C).
+			// The hiddenItemsIds array order encodes the hide sequence; as width shrinks the content
+			// items must enter it strictly as content-3, content-2, content-1 (last added, first hidden).
+			const hiddenContent = () =>
+				cy.get("@shellbar")
+					.invoke("prop", "hiddenItemsIds")
+					.then((ids: string[]) => ids.filter(id => id.startsWith("content-")));
+
+			// Narrow enough that all three overflow: order must be C, B, A.
+			cy.viewport(280, 1080);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			hiddenContent().should("deep.equal", ["content-3", "content-2", "content-1"]);
+		});
+
+
 		it("Should hide separators at S breakpoint regardless of content visibility", () => {
 			cy.viewport(1920, 1080);
 
@@ -1087,7 +1121,10 @@ describe("Events", () => {
 				.find(".ui5-shellbar-overflow-button")
 				.should("exist")
 				.then(overflowBtn => {
-					cy.get("@shellbar").then($shellbar => {
+					// Overflow resolution settles over a few animation frames after mount (the action
+					// buttons have no measurable width until their own render completes), so retry the
+					// assertion until notificationsDomRef points at the overflow button.
+					cy.get("@shellbar").should($shellbar => {
 						const shellbar = $shellbar[0] as ShellBar;
 						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
 					});
@@ -1561,6 +1598,38 @@ describe("ButtonBadge in ShellBar", () => {
 			.find(".ui5-shellbar-overflow-button ui5-button-badge[slot='badge']")
 			.should("exist")
 			.should("have.attr", "text", "42");
+	});
+
+	it("excludes the overflowed branding entry from the overflow badge count", () => {
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} notificationsCount="7">
+				<ShellBarBranding slot="branding">
+					Product Title
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Narrow enough that BOTH the notifications action and the branding identifier overflow.
+		cy.viewport(240, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").should(($sb: JQuery<ShellBar>) => {
+			const ids = $sb[0].hiddenItemsIds;
+			expect(ids, "notifications overflowed").to.include("notifications");
+			expect(ids, "branding identifier overflowed").to.include("branding-identifier");
+		});
+
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-overflow-button ui5-button-badge[slot='badge']")
+			.should("exist")
+			.should("have.attr", "design", "OverlayText")
+			.should("have.attr", "text", "7");
 	});
 });
 
@@ -2257,5 +2326,405 @@ describe("Non-ShellBarItem children in default slot", () => {
 			const matches = errors.filter(e => /processed too many times/i.test(e));
 			expect(matches, `unexpected RenderQueue errors:\n${matches.join("\n")}`).to.have.length(0);
 		});
+	});
+});
+
+describe("Overflow hide order", () => {
+	it("hides actions before the branding identifier", () => {
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar
+				id="shellbar"
+				showNotifications={true}
+				showProductSwitch={true}
+			>
+				<ShellBarBranding slot="branding">
+					Product Title
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+				<ToggleButton icon={da} slot="assistant"></ToggleButton>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: nothing hidden - guards against a vacuous pass.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Shrink to a width where the non-protected actions overflow but the
+		// branding identifier is still wide enough to survive.
+		cy.viewport(320, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// The non-protected actions (notifications + assistant) must be hidden,
+		// while the branding identifier is still visible: actions hide before branding.
+		cy.get("@shellbar").should(($shellbar: JQuery<ShellBar>) => {
+			const ids = $shellbar[0].hiddenItemsIds;
+			expect(ids, "notifications hidden").to.include("notifications");
+			expect(ids, "assistant hidden").to.include("assistant");
+			expect(ids, "branding identifier still visible").to.not.include("branding-identifier");
+		});
+	});
+
+	it("hides the branding logo last", () => {
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar
+				id="shellbar"
+				showNotifications={true}
+				showProductSwitch={true}
+			>
+				<ShellBarBranding slot="branding">
+					Product Title
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+				<ToggleButton icon={da} slot="assistant"></ToggleButton>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: nothing hidden - guards against a vacuous pass.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Very narrow: the identifier is hidden, and the logo is the last thing to go.
+		// The logo must never be hidden while the identifier is still visible.
+		cy.viewport(200, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").should(($shellbar: JQuery<ShellBar>) => {
+			const ids = $shellbar[0].hiddenItemsIds;
+			expect(ids, "identifier hidden at narrow width").to.include("branding-identifier");
+			// Invariant: the logo never hides before the identifier.
+			if (ids.includes("branding-logo")) {
+				expect(ids, "logo only hides after the identifier").to.include("branding-identifier");
+			}
+		});
+	});
+
+	it("honors explicit data-hide-order on content (lowest hides first)", () => {
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				{/* DOM order content-1, content-2, content-3 with explicit orders 3, 1, 2.
+				    The data-hide-order="1" item (content-2) must hide first. */}
+				<Button slot="content" data-hide-order="3">Item A</Button>
+				<Button slot="content" data-hide-order="1">Item B</Button>
+				<Button slot="content" data-hide-order="2">Item C</Button>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: nothing hidden - guards against a vacuous pass.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Shrink until at least one content item overflows; the first content id to
+		// enter hiddenItemsIds must be the data-hide-order="1" item (content-2).
+		cy.viewport(400, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").should(($shellbar: JQuery<ShellBar>) => {
+			const hiddenContent = $shellbar[0].hiddenItemsIds.filter(id => id.startsWith("content-"));
+			expect(hiddenContent.length, "at least one content item overflowed").to.be.greaterThan(0);
+			expect(hiddenContent[0], "lowest data-hide-order hides first").to.equal("content-2");
+		});
+	});
+});
+
+describe("Content never-hide", () => {
+	it("keeps a never-hide item in the DOM but reports it in hiddenItemsIds", () => {
+		// A data-never-hide content item is special-cased by the overflow algorithm:
+		// its id IS pushed to hiddenItemsIds (so consumers/events still see it as "hidden"),
+		// but it is NEVER removed from the DOM (no .ui5-shellbar-hidden class), so it stays visible.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" primaryTitle="Product Title" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Button slot="content" data-never-hide>Pinned Action</Button>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: non-vacuous baseline — nothing is hidden.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Shrink until the single content item overflows.
+		cy.viewport(280, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Its slot id (content-1) IS reported in hiddenItemsIds...
+		cy.get("@shellbar")
+			.invoke("prop", "hiddenItemsIds")
+			.should((ids: string[]) => {
+				expect(ids).to.include("content-1");
+			});
+
+		// ...but its #content-1 div stays in the DOM WITHOUT the hidden class (still visible).
+		cy.get("@shellbar")
+			.shadow()
+			.find("#content-1")
+			.should("exist")
+			.should("not.have.class", "ui5-shellbar-hidden");
+	});
+});
+
+describe("Branding title wrapping", () => {
+	it("wraps the title to keep the identifier visible", () => {
+		// With a two-word title, when a single line would overflow but two lines fit,
+		// the overflow loop wraps the title (sets _title-wrap on the branding host) instead
+		// of hiding the identifier, keeping branding-identifier out of hiddenItemsIds.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarBranding slot="branding">
+					Productivity Deployment
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: non-vacuous baseline — nothing hidden, title not wrapped.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Medium-narrow: a single line overflows, but the two words wrap onto two lines
+		// that fit. (At >=400px the title fits on one line; at <=320px it is forced to
+		// overflow — 360px sits comfortably inside the wrap window between those bounds.)
+		cy.viewport(360, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// The identifier stays (NOT in hiddenItemsIds) AND the branding host is wrapped.
+		cy.get("@shellbar")
+			.invoke("prop", "hiddenItemsIds")
+			.should((ids: string[]) => {
+				expect(ids).to.not.include("branding-identifier");
+			});
+		cy.get("@shellbar")
+			.find("[slot='branding']")
+			.should("have.attr", "_title-wrap");
+	});
+
+	it("hides the identifier when an unbreakable word cannot wrap", () => {
+		// A single long unbreakable word cannot wrap onto a second line; the horizontal-spill
+		// branch of tryShrink rejects the wrap, so the identifier is moved to overflow:
+		// branding-identifier IS in hiddenItemsIds and _title-wrap is cleared on the host.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarBranding slot="branding">
+					Supercalifragilisticexpialidociousantidisestablishmentarianism
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide: non-vacuous baseline — nothing hidden.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Narrow: the unbreakable word can't wrap, so the identifier must go to overflow.
+		cy.viewport(400, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// branding-identifier IS hidden AND _title-wrap was cleared (per handleUpdateOverflowResult).
+		cy.get("@shellbar")
+			.invoke("prop", "hiddenItemsIds")
+			.should((ids: string[]) => {
+				expect(ids).to.include("branding-identifier");
+			});
+		cy.get("@shellbar")
+			.find("[slot='branding']")
+			.should("not.have.attr", "_title-wrap");
+	});
+
+	it("re-expands the title when space returns (clears _title-wrap)", () => {
+		// The overflow loop strips the wrap attributes at the start of every pass, so a widen
+		// after a wrap must leave the title unwrapped again (_title-wrap absent) with the
+		// identifier still visible.
+		cy.viewport(360, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarBranding slot="branding">
+					Productivity Deployment
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Narrow: title is wrapped to keep the identifier.
+		cy.get("@shellbar")
+			.find("[slot='branding']")
+			.should("have.attr", "_title-wrap");
+
+		// Widen: the single line fits again, so the wrap is cleared and the identifier stays.
+		cy.viewport(1920, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should((ids: string[]) => {
+			expect(ids).to.not.include("branding-identifier");
+		});
+		cy.get("@shellbar")
+			.find("[slot='branding']")
+			.should("not.have.attr", "_title-wrap");
+	});
+});
+
+describe("Content visibility change event", () => {
+	it("fires content-item-visibility-change with the hidden content items", () => {
+		// The event fires whenever the set of hidden CONTENT items changes, carrying the full
+		// set of currently-hidden content elements in detail.items.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Button slot="content">Item A</Button>
+				<Button slot="content">Item B</Button>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		cy.get("@shellbar").then($sb => {
+			$sb[0].addEventListener("ui5-content-item-visibility-change", cy.stub().as("visibilityChange"));
+		});
+
+		// Wide baseline: nothing hidden, so the event has not fired for a non-empty set.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Shrink until content overflows: the event must fire, and its detail.items must be a
+		// non-empty array of content elements.
+		cy.viewport(320, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@visibilityChange").should("have.been.called");
+		cy.get("@visibilityChange").should(stub => {
+			const lastCall = (stub as sinon.SinonStub).lastCall;
+			const detail = lastCall.args[0].detail;
+			expect(detail.items, "items is an array").to.be.an("array");
+			expect(detail.items.length, "at least one content item reported").to.be.greaterThan(0);
+		});
+	});
+});
+
+describe("Overflow accessibility wiring", () => {
+	it("sets aria-controls on the overflow button pointing at the popover", () => {
+		cy.viewport(320, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Button slot="content">Item A</Button>
+				<Button slot="content">Item B</Button>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// The overflow button's underlying button must advertise the popover it controls.
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-overflow-button")
+			.should("exist")
+			.shadow()
+			.find("[aria-controls='ui5-shellbar-overflow-popover']")
+			.should("exist");
+	});
+});
+
+describe("Search vs content hide priority", () => {
+	it("hides the search button before the last-surviving content item", () => {
+		// Spec priority (CLOSED search strategy): the last-surviving content item outlives the
+		// search button (LAST_CONTENT 3000 > SEARCH 2000). This only applies while the search is a
+		// collapsed button; an expanded search field uses the OPEN strategy (search field stays,
+		// content hides), so the search must be collapsed first for this priority to take effect.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Input slot="searchField"></Input>
+				<Button slot="content">Item A</Button>
+				<Button slot="content">Item B</Button>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Collapse the search into its button form so the CLOSED strategy governs overflow.
+		cy.get("@shellbar").then(($sb: JQuery<ShellBar>) => {
+			$sb[0].showSearchField = false;
+		});
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Wide baseline: nothing hidden, search still collapsed.
+		cy.get("@shellbar").should(($sb: JQuery<ShellBar>) => {
+			expect($sb[0].showSearchField, "search collapsed").to.equal(false);
+			expect($sb[0].hiddenItemsIds, "nothing hidden at wide width").to.deep.equal([]);
+		});
+
+		// Narrow enough that the search button and all but the last content item overflow:
+		// the search button must be hidden while content-1 (the last-surviving item) stays.
+		cy.viewport(280, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").should(($sb: JQuery<ShellBar>) => {
+			const ids = $sb[0].hiddenItemsIds;
+			expect(ids, "search button hidden").to.include("search");
+			expect(ids, "last-surviving content item stays in the bar").to.not.include("content-1");
+		});
+	});
+});
+
+describe("Branding title vertical spill", () => {
+	it("hides the identifier when the wrapped title still needs more than two lines", () => {
+		// Distinct from the single-unbreakable-word case: here several words cannot fit within
+		// two lines at the computed wrap width, so the vertical-spill branch of tryShrink
+		// (scrollHeight exceeds ~2 line boxes) rejects the wrap and the identifier overflows.
+		cy.viewport(1920, 1080);
+
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarBranding slot="branding">
+					Enterprise Resource Planning Analytics Suite Dashboard
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").as("shellbar");
+
+		// Wide baseline: nothing hidden.
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+		// Narrow: a 5-word title can't fit in two lines at the capped width, so wrapping is
+		// rejected and the identifier moves to overflow (with _title-wrap cleared).
+		cy.viewport(300, 1080);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should((ids: string[]) => {
+			expect(ids).to.include("branding-identifier");
+		});
+		cy.get("@shellbar")
+			.find("[slot='branding']")
+			.should("not.have.attr", "_title-wrap");
 	});
 });
