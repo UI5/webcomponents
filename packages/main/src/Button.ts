@@ -504,9 +504,9 @@ class Button extends UI5Element implements IButton {
 		const needsOverflowVisible = this.badge.length && (this.badge[0].design === ButtonBadgeDesign.AttentionDot || this.badge[0].design === ButtonBadgeDesign.OverlayText);
 
 		if (needsOverflowVisible) {
-			this._internals.states.add("has-overlay-badge");
+			this._internals?.states?.add("has-overlay-badge");
 		} else {
-			this._internals.states.delete("has-overlay-badge");
+			this._internals?.states?.delete("has-overlay-badge");
 		}
 	}
 
