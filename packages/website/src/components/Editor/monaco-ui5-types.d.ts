@@ -1084,7 +1084,6 @@ interface TableRowProps extends UI5BaseProps {
   interactive?: boolean;
   navigated?: boolean;
   movable?: boolean;
-  loading?: boolean;
 }
 
 /** TableCell component props */
@@ -1155,9 +1154,9 @@ interface TableHeaderCellActionAIProps extends UI5BaseProps {
 
 /** TableVirtualizer component props */
 interface TableVirtualizerProps extends UI5BaseProps {
+  rowHeight?: number;
   rowCount?: number;
-  estimatedRowHeight?: number;
-  overscan?: number;
+  extraRows?: number;
   eventDetails?: any;
   onRangeChange?: (event: UI5CustomEvent<TableVirtualizerProps>) => void;
 }
