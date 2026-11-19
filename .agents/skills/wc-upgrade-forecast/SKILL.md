@@ -11,13 +11,14 @@ Use this skill as supplemental knowledge when forecasting an application upgrade
 
 ## Before analysing: locate the changelog
 
-Check these sources in order for the version range being analysed:
+The version range is always supplied by the user — never assume a default range (in particular, do not default to 1.x→2.x). Check these sources in order; the content must cover the exact requested range:
 
 1. **Local CHANGELOG.md** — search from the application directory upward; extract all entries between the source and target versions.
-2. **GitHub releases** — `https://github.com/SAP/ui5-webcomponents/releases` covers every release; fetch the relevant release pages.
-3. **No changelog found** — rely on library knowledge and mark every finding as **inferred**.
+2. **Local migration guide** — for cross-major ranges (e.g. 1.x→2.x), a dedicated guide under `docs/*migration*` is the authoritative source; prefer it for that range.
+3. **GitHub releases** — `https://github.com/SAP/ui5-webcomponents/releases` covers every release; fetch the pages for the versions in the range.
+4. **No changelog found** — if nothing covers the requested range, STOP and report that change data for the range could not be located. Do NOT fall back to general knowledge or emit a guide from priors.
 
-Use the changelog as the authoritative list of changes; do not assume a fixed set of breaking changes.
+Use the located changelog as the ONLY authoritative list of changes. Do not assume a fixed set of breaking changes, and do not supplement it with changes you know from other version ranges (e.g. the well-known 1.x→2.x renames) unless those entries actually appear in the content for this range.
 
 ## Missed-change knowledge
 
