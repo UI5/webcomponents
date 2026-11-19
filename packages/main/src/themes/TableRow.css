@@ -6,12 +6,11 @@
 	background: var(--_ui5_table_row_alternating_background);
 }
 
-:host([position]) {
-	height: var(--row-height);
-}
-
-:host(:first-of-type) > [ui5-table-cell],
-:host(:first-of-type) > ::slotted([ui5-table-cell]) {
+/* Recycled rows keep their height independent of DOM order. */
+:host(:first-of-type:not([position])) > [ui5-table-cell],
+:host(:first-of-type:not([position])) > ::slotted([ui5-table-cell]),
+:host([position="0"]) > [ui5-table-cell],
+:host([position="0"]) > ::slotted([ui5-table-cell]) {
 	border-top: none;
 }
 
@@ -105,4 +104,40 @@
 
 #actions-cell {
 	gap: var(--_ui5_table_row_actions_gap);
+}
+
+:host([loading]) {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background-image:
+			linear-gradient(transparent calc(50% - 0.75rem), var(--sapContent_Placeholderloading_Background) 0 calc(50% - 0.125rem), transparent 0),
+			linear-gradient(transparent calc(50% + 0.125rem), var(--sapContent_Placeholderloading_Background) 0 calc(50% + 0.75rem), transparent 0);
+		background-size: 50% 100%, 20% 100%;
+		background-position: var(--_ui5_first_table_cell_horizontal_padding) 0;
+		background-repeat: no-repeat;
+		animation: ui5-table-placeholder 1.2s ease-in-out infinite alternate;
+	}
+
+	> [ui5-table-cell],
+	> ::slotted([ui5-table-cell]) {
+		content-visibility: hidden;
+	}
+
+	> [ui5-table-cell]:not(#popin-cell),
+	> ::slotted([ui5-table-cell]) {
+		min-height: var(--_ui5_table_row_loading_height, var(--_ui5_list_item_base_height));
+	}
+}
+
+@keyframes ui5-table-placeholder {
+	to { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:host([loading])::before { animation: none; }
 }

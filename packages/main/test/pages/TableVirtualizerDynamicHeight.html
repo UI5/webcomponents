@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Table Virtualizer - Dynamic Row Heights</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			height: 100dvh;
+			background-color: var(--sapBackgroundColor);
+			color: var(--sapTextColor);
+			font-family: var(--sapFontFamily);
+			font-size: var(--sapFontSize);
+		}
+
+		.app-header {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0.25rem 1rem;
+			padding: 0.5rem 0.75rem;
+			background: var(--sapShell_Background);
+			border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+		}
+
+		.app-header ui5-title {
+			flex: 0 0 auto;
+		}
+
+		.hud {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			font-family: var(--sapFontFamily);
+			font-variant-numeric: tabular-nums;
+			font-size: var(--sapFontSmallSize);
+		}
+
+		.hud span {
+			display: inline-flex;
+			gap: 0.25rem;
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.75rem;
+			background: var(--sapNeutralBackground);
+			white-space: nowrap;
+		}
+
+		.hud b {
+			font-weight: normal;
+			color: var(--sapContent_LabelColor);
+		}
+
+		#hud-fps i {
+			flex: 0 0 3ch;
+			text-align: end;
+		}
+
+		.hud .bad {
+			background: var(--sapErrorBackground);
+		}
+
+		.hud .warn {
+			background: var(--sapWarningBackground);
+		}
+
+		.hud .good {
+			background: var(--sapSuccessBackground);
+		}
+
+		details.controls {
+			border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+			background: var(--sapGroup_ContentBackground);
+		}
+
+		details.controls > summary {
+			cursor: pointer;
+			padding: 0.375rem 0.75rem;
+			font-weight: bold;
+			user-select: none;
+		}
+
+		.toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-end;
+			gap: 0.5rem 0.75rem;
+			padding: 0 0.75rem 0.5rem;
+		}
+
+		.toolbar .group {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-end;
+			gap: 0.25rem;
+			padding-inline-end: 0.75rem;
+			border-inline-end: 1px solid var(--sapGroup_TitleBorderColor);
+		}
+
+		.toolbar .field {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.toolbar ui5-select {
+			width: 9rem;
+		}
+
+		.toolbar ui5-input {
+			width: 7rem;
+		}
+
+		.results {
+			padding: 0 0.75rem 0.5rem;
+			font-size: var(--sapFontSmallSize);
+			font-variant-numeric: tabular-nums;
+			white-space: pre-wrap;
+			max-height: 6rem;
+			overflow: auto;
+		}
+
+		.table-host {
+			flex: 1 1 auto;
+			min-height: 12rem;
+			padding: 0.5rem;
+			box-sizing: border-box;
+		}
+
+		#table {
+			height: 100%;
+		}
+
+		#table ui5-table-cell {
+			--_ui5_table_cell_valign: start;
+		}
+
+		/* row content */
+		.ct {
+			width: 100%;
+			min-width: 0;
+			overflow-wrap: anywhere;
+		}
+
+		.sub {
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSmallSize);
+		}
+
+		.id {
+			font-weight: bold;
+		}
+
+		.desc p {
+			margin: 0 0 0.375rem;
+			line-height: 1.4;
+		}
+
+		.desc p:last-child {
+			margin-bottom: 0;
+		}
+
+		.desc ul {
+			margin: 0.25rem 0 0.375rem;
+			padding-inline-start: 1.25rem;
+		}
+
+		.desc .items {
+			margin-top: 0.5rem;
+			padding: 0.5rem 0.75rem;
+			border-radius: 0.5rem;
+			background: var(--sapList_AlternatingBackground, var(--sapNeutralBackground));
+			list-style: none;
+		}
+
+		.desc .items li {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.125rem 0;
+		}
+
+		.desc .late {
+			margin-top: 0.5rem;
+			padding: 0.5rem 0.75rem;
+			border-inline-start: 3px solid var(--sapInformationBorderColor);
+			background: var(--sapInformationBackground);
+		}
+
+		.chip {
+			display: inline-block;
+			margin: 0 0.25rem 0.25rem 0;
+			padding: 0 0.5rem;
+			border-radius: 0.75rem;
+			background: var(--sapNeutralBackground);
+			font-size: var(--sapFontSmallSize);
+			line-height: 1.375rem;
+		}
+
+		.amount {
+			font-weight: bold;
+		}
+
+		.guide {
+			padding: 0 0.75rem 0.75rem;
+			font-size: var(--sapFontSmallSize);
+			line-height: 1.5;
+		}
+
+		.guide summary {
+			cursor: pointer;
+			font-weight: bold;
+			padding: 0.25rem 0;
+		}
+
+		.guide-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+			gap: 0.5rem 1.5rem;
+		}
+
+		.guide h4 {
+			margin: 0.5rem 0 0.25rem;
+			font-size: var(--sapFontSize);
+		}
+
+		.guide dl {
+			margin: 0;
+		}
+
+		.guide dt {
+			font-weight: bold;
+		}
+
+		.guide dd {
+			margin: 0 0 0.375rem;
+			color: var(--sapContent_LabelColor);
+		}
+
+		@media (max-width: 600px) {
+			.app-header ui5-title {
+				width: 100%;
+			}
+
+			.toolbar .group {
+				border: none;
+				padding: 0;
+			}
+
+			.table-host {
+				padding: 0;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<header class="app-header">
+		<ui5-title level="H5">TableVirtualizer &ndash; Variable Row Heights</ui5-title>
+		<a href="TableVirtualizerStory.html">Story</a>
+		<div class="hud" id="hud" aria-live="off">
+			<span id="hud-fps" title="Measured frame callback rate over each 500 ms window, including idle time. This is not the number of table renders."><b>FPS</b><i>-</i></span>
+			<span id="hud-hz" title="Detected refresh rate of the display"><b>display</b><i>-</i></span>
+			<span id="hud-avg" title="Average requestAnimationFrame callback rate since the last reset, including idle time"><b>avg</b><i>-</i></span>
+			<span id="hud-p50" title="Median time between two frames (8.3 ms at 120 Hz, 16.7 ms at 60 Hz)"><b>p50</b><i>-</i></span>
+			<span title="Logical rows of the data set"><b>rows</b><i id="hud-rows">-</i></span>
+			<span title="Row elements that currently exist in the page"><b>DOM rows</b><i id="hud-dom">-</i></span>
+			<span title="Rows whose real height is known. All other rows are estimated."><b>measured</b><i id="hud-measured">-</i></span>
+			<span title="Estimated height of rows that were not rendered yet (average of the measured rows)"><b>estimate</b><i id="hud-estimate">-</i></span>
+			<span title="Row elements created by the application so far"><b>created</b><i id="hud-created">-</i></span>
+			<span title="How often a parked row element was reused for another row (pool) or rebound (positional)"><b>reused</b><i id="hud-reused">-</i></span>
+			<span title="Parked row elements, ready to be reused"><b>pool</b><i id="hud-pool">-</i></span>
+			<span title="Rows that are visible on the screen"><b>visible</b><i id="hud-visible">-</i></span>
+			<span title="Rows the virtualizer asked the application to render (visible rows plus overscan)"><b>requested</b><i id="hud-requested">-</i></span>
+			<span title="Rows the application has actually rendered. Differs from 'requested' while the application is behind."><b>rendered</b><i id="hud-rendered">-</i></span>
+			<span title="Height corrections that are not yet reflected in the scroll position. They are applied when scrolling stops, so that the scrolling is never interrupted."><b>drift</b><i id="hud-drift">-</i></span>
+			<span title="How often a height change was compensated, so that the content you look at did not jump"><b>anchor fixes</b><i id="hud-anchor">-</i></span>
+			<span title="How often the drift was moved into the scroll position (should happen when scrolling stops, or at the very top/bottom)"><b>reconciles</b><i id="hud-reconcile">-</i></span>
+		</div>
+	</header>
+
+	<details class="controls" id="controls" open>
+		<summary>Controls &amp; scenarios</summary>
+		<div class="toolbar">
+			<div class="group">
+				<div class="field" title="Total number of rows in the data set (the rowCount property of the virtualizer)">
+					<ui5-label for="size">Rows</ui5-label>
+					<ui5-select id="size">
+						<ui5-option value="1000">1,000</ui5-option>
+						<ui5-option value="10000" selected>10,000</ui5-option>
+						<ui5-option value="50000">50,000</ui5-option>
+						<ui5-option value="100000">100,000</ui5-option>
+						<ui5-option value="1000000">1,000,000</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="field" title="Simulates a server: data arrives in pages of 50 rows after this delay. Until then the rows are shown as loading skeletons.">
+					<ui5-label for="delay">Server delay</ui5-label>
+					<ui5-select id="delay">
+						<ui5-option value="0" selected>None (data is local)</ui5-option>
+						<ui5-option value="100">100 ms</ui5-option>
+						<ui5-option value="400">400 ms</ui5-option>
+						<ui5-option value="1500">1500 ms</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="field" title="Pool keeps rows by logical index and reuses outgoing rows with state-preserving moves where supported. Keyed creates/deletes rows. Positional patches a fixed connected pool by slot.">
+					<ui5-label for="mode">Row elements</ui5-label>
+					<ui5-select id="mode">
+						<ui5-option value="pool" selected>Pool (reuse)</ui5-option>
+						<ui5-option value="keyed">Keyed (create/delete)</ui5-option>
+						<ui5-option value="positional">Positional (patch in place)</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="field" title="Extra area rendered beyond the visible area (the overscan property): fully in the scroll direction, half in the other direction.">
+					<ui5-label for="overscan">Extra rendering</ui5-label>
+					<ui5-select id="overscan">
+						<ui5-option value="100">100 px</ui5-option>
+						<ui5-option value="400">400 px</ui5-option>
+						<ui5-option value="1000" selected>1000 px</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="field" title="When this application renders the rows after the virtualizer asked for them. Immediately is best, the other options simulate slower applications or frameworks.">
+					<ui5-label for="timing">App renders rows</ui5-label>
+					<ui5-select id="timing">
+						<ui5-option value="sync" selected>Immediately</ui5-option>
+						<ui5-option value="frame">One frame later</ui5-option>
+						<ui5-option value="50">50 ms later</ui5-option>
+					</ui5-select>
+				</div>
+				<ui5-button id="best" design="Emphasized" tooltip="Local data, Pool where state-preserving moves are supported (Positional otherwise), 1000 px extra rendering, immediate rendering and no late content.">Test defaults</ui5-button>
+			</div>
+			<div class="group">
+				<ui5-button id="top">Top</ui5-button>
+				<ui5-button id="bottom">Bottom</ui5-button>
+				<div class="field">
+					<ui5-label for="jump-index">Row index</ui5-label>
+					<ui5-input id="jump-index" type="Number" value="5000"></ui5-input>
+				</div>
+				<ui5-button id="jump">Jump</ui5-button>
+			</div>
+			<div class="group">
+				<ui5-button id="expand-above" tooltip="Rows above the visible area grow or shrink. The visible rows must not move.">Grow rows above</ui5-button>
+				<ui5-button id="expand-visible" tooltip="Visible rows grow or shrink. The first visible row must not move.">Grow visible rows</ui5-button>
+				<ui5-button id="collapse-all">Collapse all</ui5-button>
+				<ui5-button id="columns" tooltip="Changes the width of the description column, so that the text wraps differently and all row heights change">Change column width</ui5-button>
+				<ui5-checkbox id="late" text="Content arrives later" tooltip="Some rows get an additional block 500 ms after they are shown, like images that load later. The rows grow while you look at them."></ui5-checkbox>
+			</div>
+			<div class="group">
+				<ui5-button id="refresh" tooltip="Discards the data. Rows turn into loading skeletons and are replaced when the data arrives again.">Reload data</ui5-button>
+				<ui5-button id="reset">Reset</ui5-button>
+				<ui5-checkbox id="compact" text="Compact"></ui5-checkbox>
+			</div>
+			<div class="group">
+				<ui5-button id="bench-down" tooltip="Scrolls down for 5 seconds and reports frame times, blank areas and content jumps">Auto-scroll &darr;</ui5-button>
+				<ui5-button id="bench-up">Auto-scroll &uarr;</ui5-button>
+				<div class="field">
+					<ui5-label for="bench-speed">Speed</ui5-label>
+					<ui5-select id="bench-speed">
+						<ui5-option value="1500">1,500 px/s</ui5-option>
+						<ui5-option value="4000" selected>4,000 px/s</ui5-option>
+						<ui5-option value="12000">12,000 px/s</ui5-option>
+					</ui5-select>
+				</div>
+				<ui5-button id="hold-pagedown" tooltip="Presses PageDown 40 times (like holding the key) and checks where the focus ends">Hold PageDown</ui5-button>
+				<ui5-button id="hold-pageup">Hold PageUp</ui5-button>
+				<ui5-button id="hold-arrowdown">Hold ArrowDown</ui5-button>
+				<ui5-button id="reset-stats" design="Transparent">Reset stats</ui5-button>
+			</div>
+		</div>
+		<div class="results" id="results">Scenarios: click a row and press or hold PageDown / PageUp / ArrowDown / Home / End, or use the buttons above. Results appear here.</div>
+		<details class="guide" id="guide">
+			<summary>What does this mean?</summary>
+			<div class="guide-grid">
+				<div>
+					<h4>What the table does (virtualizer settings)</h4>
+					<dl>
+						<dt>Rows</dt>
+						<dd>The size of the data set. Only the rows on the screen exist as elements, so 100,000 rows cost about as much as 1,000.</dd>
+						<dt>Extra rendering (overscan)</dt>
+						<dd>Rows are prepared beyond the screen to reduce gaps during fast scrolling. This rich-content demo starts with 1000 px; the virtualizer's default remains 400 px.</dd>
+						<dt>Loading skeletons</dt>
+						<dd>Rows without data are rendered with <code>loading</code>. Keep their cells; their content can be empty. The row uses the estimated height and is excluded from height estimation.</dd>
+					</dl>
+				</div>
+				<div>
+					<h4>What your app does (simulated here)</h4>
+					<dl>
+						<dt>Server delay</dt>
+						<dd>How long the simulated server needs to deliver a page of 50 rows. Selecting 0 ms also completes pending requests immediately. Not a setting of the table.</dd>
+						<dt>Row elements: Pool</dt>
+						<dd>Rows stay associated with their logical index while they remain in the range. Outgoing rows are rebound to entering indices and moved with <code>moveBefore()</code> where supported, preserving their connected state. Surplus rows are parked for reuse. Browsers without that API start in Positional mode; Pool remains available for comparison but ordinary insertion may interrupt native momentum. Data changes still update retained rows.</dd>
+						<dt>Row elements: Keyed</dt>
+						<dd>Rows that stay are kept, new rows are created, leaving rows are deleted. This is what React, Angular or Vue do when you render the rows with <code>key={position}</code>.</dd>
+						<dt>Row elements: Positional</dt>
+						<dd>Element number n always shows the n-th rendered row. The initial reserve uses the measured row-height estimate rather than assuming every rich row is compact-sized. The requested range always takes precedence, and the pool retains its largest size. Near the end it starts earlier to keep all positions valid. Rows, cells and matching content nodes stay connected. Scrolling by one row rebinds every slot, so this can do more work than Pool.</dd>
+						<dt>Inspecting the DOM</dt>
+						<dd>Pool and Keyed keep rows whose logical indices stay in range; Positional rebinds each slot as the range shifts. Matching text and rich-content nodes are patched in place. The positional pool grows as needed and only shrinks with the data set or reset. Pool uses connected moves where supported, but surplus rows can still detach. The Created counter counts row elements, not text nodes.</dd>
+						<dt>App renders rows</dt>
+						<dd>When the app reacts to the <code>range-change</code> event. Immediately is best; later rendering shows the extra rendering area or skeleton pattern during fast scrolling.</dd>
+						<dt>Content arrives later</dt>
+						<dd>Some rows get an extra block half a second after they appear, like images. The table keeps the content you look at in place.</dd>
+					</dl>
+				</div>
+				<div>
+					<h4>Status bar</h4>
+					<dl>
+						<dt>FPS, p50</dt>
+						<dd>FPS counts frame callbacks over each 500 ms window, independently of the other statistics. p50 shows the median callback interval. Both include idle time, not table renders. At 120 Hz a callback interval is about 8.3 ms, at 60 Hz about 16.7 ms.</dd>
+						<dt>Visible / requested / rendered</dt>
+						<dd>What is on screen, what the table asked for, and what the app has rendered. If rendered lags behind requested, the app is slower than the scrolling.</dd>
+						<dt>Measured / estimate</dt>
+						<dd>Rows with a known height, and the guessed height of all other rows.</dd>
+						<dt>Drift, anchor fixes, reconciles</dt>
+						<dd>How the table keeps your place when heights change: corrections are collected (drift) and applied when scrolling stops (reconciles), so a running scroll is never interrupted.</dd>
+						<dt>Created / reused / pool</dt>
+						<dd>How many row elements the app has created, reused, and parked.</dd>
+					</dl>
+				</div>
+			</div>
+		</details>
+	</details>
+
+	<main class="table-host">
+		<ui5-table id="table" accessible-name="Sales orders" overflow-mode="Scroll">
+			<ui5-table-virtualizer id="virtualizer" slot="features" row-count="10000" estimated-row-height="80" overscan="1000"></ui5-table-virtualizer>
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell width="8rem">Order</ui5-table-header-cell>
+				<ui5-table-header-cell width="11rem">Customer</ui5-table-header-cell>
+				<ui5-table-header-cell id="desc-column" min-width="16rem">Description</ui5-table-header-cell>
+				<ui5-table-header-cell width="11rem">Tags</ui5-table-header-cell>
+				<ui5-table-header-cell width="8rem">Status</ui5-table-header-cell>
+				<ui5-table-header-cell width="9rem" horizontal-align="End">Amount</ui5-table-header-cell>
+				<ui5-table-header-cell width="6rem">Details</ui5-table-header-cell>
+			</ui5-table-header-row>
+		</ui5-table>
+	</main>
+
+	<script type="module">
+		import { getPositionalRange, setText as patchText, setMarkup } from "./modules/TableVirtualizerRenderer.js";
+
+		const table = document.getElementById("table");
+		const virtualizer = document.getElementById("virtualizer");
+		const results = document.getElementById("results");
+		const $ = id => document.getElementById(id);
+
+		/* ---------- deterministic data ---------- */
+
+		const PAGE_SIZE = 50;
+		const COMPANIES = ["Acme Logistics", "Blue Ridge Foods", "Contoso Retail", "Delta Components", "Evergreen Pharma", "Fabrikam Industries", "Globex Energy", "Helios Solar", "Initech Systems", "Juniper Textiles", "Kestrel Aviation", "Lumen Optics", "Meridian Health", "Northwind Traders", "Orion Mining", "Pinnacle Motors", "Quantum Labs", "Riverside Paper", "Summit Outdoor", "Tidewater Marine"];
+		const PEOPLE = ["A. Fischer", "B. Okafor", "C. Rossi", "D. Kowalski", "E. Nakamura", "F. Dubois", "G. Larsen", "H. Silva", "I. Novak", "J. Andersson", "K. Haddad", "L. Moreau", "M. Becker", "N. Ivanova", "O. Brennan", "P. Costa"];
+		const SUBJECTS = ["The shipment", "This order", "The customer", "Our warehouse team", "The supplier", "Quality control", "The finance department", "Procurement", "The carrier", "The account manager"];
+		const VERBS = ["requested", "confirmed", "rescheduled", "flagged", "approved", "consolidated", "escalated", "split", "re-routed", "documented"];
+		const OBJECTS = ["the delivery for the next available slot", "a partial delivery of the remaining items", "the updated price conditions for the current quarter", "an additional inspection of the packaging", "the customs documents for cross-border transport", "the invoice against the framework agreement", "a change of the delivery address to the regional hub", "the replacement of two damaged pallets", "the payment terms of 30 days net", "the alignment with the production schedule"];
+		const TAILS = ["", " as discussed in the last review meeting", " after a short clarification with the sales team", " because of limited capacity at the distribution center", " to comply with the updated safety regulations", " while keeping the agreed service level"];
+		const TAGS = ["Priority", "Export", "Hazmat", "Fragile", "Bulk", "Express", "Consignment", "Returns", "Temperature controlled", "Key account", "Backorder", "Drop ship"];
+		const STATUSES = [["Delivered", "Positive"], ["In Process", "Information"], ["Delayed", "Critical"], ["Cancelled", "Negative"], ["New", "Neutral"]];
+		const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "CHF"];
+		const PRODUCTS = ["Steel bracket M8", "Industrial adhesive 5L", "Safety gloves (box)", "Hydraulic pump HX-200", "Copper cable 50m", "Pallet wrap film", "LED panel 60x60", "Bearing set 6204", "Control unit CU-7", "Thermal paste kit", "Filter cartridge F4", "Valve assembly V2"];
+
+		const mulberry32 = a => () => {
+			a |= 0; a = a + 0x6D2B79F5 | 0;
+			let t = Math.imul(a ^ a >>> 15, 1 | a);
+			t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+			return ((t ^ t >>> 14) >>> 0) / 4294967296;
+		};
+		const pick = (r, list) => list[Math.floor(r() * list.length)];
+		const sentence = r => `${pick(r, SUBJECTS)} ${pick(r, VERBS)} ${pick(r, OBJECTS)}${pick(r, TAILS)}.`;
+		const paragraph = (r, min, max) => {
+			const count = min + Math.floor(r() * (max - min + 1));
+			return `<p>${Array.from({ length: count }, () => sentence(r)).join(" ")}</p>`;
+		};
+
+		function generateItem(seed, index) {
+			const r = mulberry32(seed * 2654435761 ^ index * 40503);
+			const kind = r();
+			let desc;
+			if (kind < 0.3) {
+				desc = `<p>${pick(r, ["Standard order.", "Repeat order.", "Sample shipment.", "Urgent!", "Spare parts."])}</p>`;
+			} else if (kind < 0.65) {
+				desc = paragraph(r, 1, 3);
+			} else if (kind < 0.88) {
+				desc = paragraph(r, 2, 4) + paragraph(r, 1, 3);
+			} else if (kind < 0.975) {
+				desc = paragraph(r, 2, 3) + `<ul>${Array.from({ length: 3 + Math.floor(r() * 4) }, () => `<li>${sentence(r)}</li>`).join("")}</ul>` + paragraph(r, 1, 2);
+			} else {
+				desc = Array.from({ length: 8 + Math.floor(r() * 7) }, () => paragraph(r, 2, 4)).join(""); // very tall row
+			}
+
+			const tagCount = Math.floor(r() * r() * 6);
+			const tags = Array.from({ length: tagCount }, () => pick(r, TAGS));
+			const lineCount = 3 + Math.floor(r() * 10);
+			const currency = pick(r, CURRENCIES);
+			const status = pick(r, STATUSES);
+			const day = new Date(Date.UTC(2026, 0, 1) + Math.floor(r() * 320) * 86400000);
+			return {
+				id: `SO-${String(100000 + index)}`,
+				date: day.toISOString().slice(0, 10),
+				customer: pick(r, COMPANIES),
+				contact: `${pick(r, PEOPLE)}${r() < 0.35 ? ` · ${pick(r, ["Munich", "Lyon", "Austin", "Osaka", "Leeds", "Basel", "Porto", "Gdansk"])}` : ""}`,
+				descHtml: desc,
+				detailHtml: `<ul class="items">${Array.from({ length: lineCount }, (_, i) => `<li><span>${i + 1}. ${pick(r, PRODUCTS)}</span><span>${1 + Math.floor(r() * 40)} pcs</span></li>`).join("")}</ul>`,
+				tagsHtml: [...new Set(tags)].map(tag => `<span class="chip">${tag}</span>`).join(""),
+				status: { text: status[0], design: status[1] },
+				amount: (r() * r() * 250000 + 50).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+				currency,
+				late: r() < 0.25,
+			};
+		}
+
+		class DataSource {
+			constructor() {
+				this.pages = new Map();
+				this.pending = new Map();
+				this.delay = 0;
+				this.seed = 1;
+				this.generation = 0;
+				this.onLoad = null;
+			}
+
+			clear() {
+				this.generation++;
+				this.pages.clear();
+				this.pending.forEach(timer => clearTimeout(timer));
+				this.pending.clear();
+			}
+
+			setDelay(delay) {
+				this.delay = delay;
+				if (!delay) {
+					this.pending.forEach((timer, page) => {
+						clearTimeout(timer);
+						this.pages.set(page, this._generate(page));
+						this.onLoad && this.onLoad(page);
+					});
+					this.pending.clear();
+				}
+			}
+
+			get(index) {
+				const page = this.pages.get(Math.floor(index / PAGE_SIZE));
+				return page && page[index % PAGE_SIZE];
+			}
+
+			ensure(first, last) {
+				if (last <= first) {
+					return;
+				}
+				for (let page = Math.floor(first / PAGE_SIZE); page <= Math.floor((last - 1) / PAGE_SIZE); page++) {
+					if (!this.pages.has(page) && !this.pending.has(page)) {
+						this._load(page);
+					}
+				}
+			}
+
+			_generate(page) {
+				const start = page * PAGE_SIZE;
+				return Array.from({ length: PAGE_SIZE }, (_, i) => generateItem(this.seed, start + i));
+			}
+
+			_load(page) {
+				if (!this.delay) {
+					this.pages.set(page, this._generate(page));
+					return;
+				}
+				const generation = this.generation;
+				const jitter = 0.6 + ((page * 7919) % 100) / 125;
+				this.pending.set(page, setTimeout(() => {
+					if (generation !== this.generation) {
+						return;
+					}
+					this.pending.delete(page);
+					this.pages.set(page, this._generate(page));
+					this.onLoad && this.onLoad(page);
+				}, this.delay * jitter));
+			}
+		}
+
+		/* ---------- consumer-owned rendering with DOM recycling ---------- */
+
+		const expanded = new Set();
+		const lateShown = new Set();
+		let lateEnabled = false;
+
+		function createRow() {
+			const row = document.createElement("ui5-table-row");
+			row.innerHTML = `
+				<ui5-table-cell><div class="ct"><div class="id"></div><div class="sub"></div></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct"><div></div><div class="sub"></div></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct desc"></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct"></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct"><ui5-tag hide-state-icon></ui5-tag></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct"><span class="amount"></span> <span class="sub"></span></div></ui5-table-cell>
+				<ui5-table-cell><div class="ct"><ui5-button design="Transparent" data-toggle></ui5-button></div></ui5-table-cell>`;
+			const cts = row.querySelectorAll(".ct");
+			row._refs = {
+				id: cts[0].children[0], date: cts[0].children[1],
+				customer: cts[1].children[0], contact: cts[1].children[1],
+				desc: cts[2], tags: cts[3], status: cts[4].firstElementChild,
+				amount: cts[5].children[0], currency: cts[5].children[1],
+				toggle: cts[6].firstElementChild,
+			};
+			row._index = -1;
+			row._version = "";
+			return row;
+		}
+
+		function bindRow(row, index) {
+			const item = source.get(index);
+			const isExpanded = expanded.has(index);
+			const isLate = !!item && item.late && lateEnabled && lateShown.has(index);
+			const version = item ? `${isExpanded ? "e" : ""}${isLate ? "l" : ""}d` : "t";
+			if (row._index === index && row._version === version) {
+				return false;
+			}
+
+			row._index = index;
+			row._version = version;
+			row.position = index;
+			if (!item) {
+				row.rowKey = `T${index}`;
+				row.loading = true; // the table renders the skeleton
+				return true;
+			}
+
+			const refs = row._refs;
+			row.rowKey = item.id;
+			row.loading = false;
+			patchText(refs.id, item.id);
+			patchText(refs.date, item.date);
+			patchText(refs.customer, item.customer);
+			patchText(refs.contact, item.contact);
+			setMarkup(refs.desc, item.descHtml + (isExpanded ? item.detailHtml : "") + (isLate ? `<div class="late"><b>Delivery note attached.</b><br>Loaded asynchronously after the row was rendered. Signed by the carrier, 3 pages, scanned copy available.</div>` : ""));
+			setMarkup(refs.tags, item.tagsHtml);
+			refs.status.design = item.status.design;
+			patchText(refs.status, item.status.text);
+			patchText(refs.amount, item.amount);
+			patchText(refs.currency, item.currency);
+			patchText(refs.toggle, isExpanded ? "Less" : "More");
+
+			if (item.late && lateEnabled && !lateShown.has(index)) {
+				// simulates content that arrives after the row is rendered (e.g. an attachment)
+				setTimeout(() => requestAnimationFrame(() => {
+					lateShown.add(index);
+					if (row._index === index && row.isConnected) {
+						bindRow(row, index);
+					}
+				}), 500);
+			}
+			return true;
+		}
+
+		class RowRecycler {
+			constructor(host) {
+				this.host = host;
+				this.mode = typeof host.moveBefore === "function" ? "pool" : "positional";
+				this.mounted = new Map(); // index -> row (pool & keyed modes)
+				this.slots = []; // positional mode
+				this.pool = [];
+				this.resetCounters();
+			}
+
+			resetCounters() {
+				this.created = 0;
+				this.reused = 0;
+				this.rebinds = 0;
+			}
+
+			setMode(mode) {
+				this.clear();
+				this.mode = mode;
+			}
+
+			clear() {
+				this.mounted.forEach(row => row.remove());
+				this.slots.forEach(row => row.remove());
+				this.mounted.clear();
+				this.slots = [];
+				this.pool = [];
+			}
+
+			get mountedCount() {
+				return this.mode === "positional" ? this.slots.length : this.mounted.size;
+			}
+
+			_create() {
+				this.created++;
+				return createRow();
+			}
+
+			_bind(row, index) {
+				if (bindRow(row, index)) {
+					this.rebinds++;
+				}
+			}
+
+			render(first, last) {
+				if (this.mode === "positional") {
+					this._renderPositional(first, last);
+					return;
+				}
+				if (this.mode === "pool") {
+					this._renderPool(first, last);
+					return;
+				}
+
+				// release the rows that left the range
+				this.mounted.forEach((row, index) => {
+					if (index < first || index >= last) {
+						this.mounted.delete(index);
+						row.remove();
+					}
+				});
+
+				// acquire rows for the new indices and insert them in order, existing rows are not moved
+				let next = null;
+				for (let index = last - 1; index >= first; index--) {
+					let row = this.mounted.get(index);
+					if (!row) {
+						row = this._create();
+						this._bind(row, index);
+						this.host.insertBefore(row, next);
+						this.mounted.set(index, row);
+					} else {
+						this._bind(row, index);
+					}
+					next = row;
+				}
+			}
+
+			_renderPool(first, last) {
+				const outgoing = [];
+				this.mounted.forEach((row, index) => {
+					if (index < first || index >= last) {
+						this.mounted.delete(index);
+						outgoing.push(row);
+					}
+				});
+
+				let next = null;
+				for (let index = last - 1; index >= first; index--) {
+					let row = this.mounted.get(index);
+					if (!row) {
+						row = outgoing.pop() || this.pool.pop();
+						if (row) {
+							this.reused++;
+						} else {
+							row = this._create();
+						}
+						this._bind(row, index);
+						if (row.parentElement === this.host && typeof this.host.moveBefore === "function") {
+							this.host.moveBefore(row, next);
+						} else {
+							this.host.insertBefore(row, next);
+						}
+						this.mounted.set(index, row);
+					} else {
+						this._bind(row, index);
+					}
+					next = row;
+				}
+
+				outgoing.forEach(row => {
+					row.remove();
+					if (this.pool.length < 200) {
+						this.pool.push(row);
+					}
+				});
+			}
+
+			_renderPositional(first, last) {
+				const reserveRowHeight = Math.max(32, virtualizer._model.estimate);
+				({ first, last } = getPositionalRange(this.host, virtualizer, first, last, this.slots.length, reserveRowHeight));
+				source.ensure(first, last);
+				const count = Math.max(0, last - first);
+				while (this.slots.length < count) {
+					const row = this._create();
+					this.host.appendChild(row);
+					this.slots.push(row);
+				}
+				while (this.slots.length > count) {
+					this.slots.pop().remove();
+				}
+				this.slots.forEach((row, slot) => {
+					if (row._index !== first + slot && row._index !== -1) {
+						this.reused++;
+					}
+					this._bind(row, first + slot);
+				});
+			}
+
+			rowAt(index) {
+				if (this.mode === "positional") {
+					return this.slots.find(row => row._index === index);
+				}
+				return this.mounted.get(index);
+			}
+		}
+
+		const source = new DataSource();
+		const recycler = new RowRecycler(table);
+		$("mode").querySelectorAll("ui5-option").forEach(option => {
+			option.selected = option.value === recycler.mode;
+		});
+		let range = { first: 0, last: 0 };
+		let renderTiming = "sync";
+		let renderScheduled = false;
+
+		function renderRange() {
+			renderScheduled = false;
+			source.ensure(range.first, range.last);
+			recycler.render(range.first, range.last);
+		}
+
+		// simulates frameworks that apply the state change asynchronously (e.g. batched or scheduled rendering)
+		function scheduleRender() {
+			if (renderTiming === "sync") {
+				renderRange();
+			} else if (!renderScheduled) {
+				renderScheduled = true;
+				renderTiming === "frame" ? requestAnimationFrame(renderRange) : setTimeout(renderRange, Number(renderTiming));
+			}
+		}
+
+		virtualizer.addEventListener("range-change", e => {
+			range = e.detail;
+			scheduleRender();
+		});
+
+		// loaded data is applied at the beginning of the next frame, like frameworks that batch their updates per frame
+		source.onLoad = page => requestAnimationFrame(() => {
+			const start = page * PAGE_SIZE;
+			const first = recycler.mode === "positional" ? recycler.slots[0]?._index ?? range.first : range.first;
+			const last = recycler.mode === "positional" ? first + recycler.slots.length : range.last;
+			if (start < last && start + PAGE_SIZE > first) {
+				recycler.render(range.first, range.last);
+			}
+		});
+
+		table.addEventListener("click", e => {
+			const toggle = e.target.closest && e.target.closest("[data-toggle]");
+			const row = toggle && toggle.closest("ui5-table-row");
+			if (row && row._index >= 0) {
+				expanded.has(row._index) ? expanded.delete(row._index) : expanded.add(row._index);
+				bindRow(row, row._index);
+			}
+		});
+
+		/* ---------- controls ---------- */
+
+		const scrollContainer = () => table.shadowRoot.getElementById("table");
+		const log = text => {
+			results.textContent = `${new Date().toLocaleTimeString()}  ${text}\n${results.textContent}`.slice(0, 4000);
+		};
+		const nextFrames = (count = 2) => new Promise(resolve => {
+			const step = () => (--count ? requestAnimationFrame(step) : resolve());
+			requestAnimationFrame(step);
+		});
+		const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+		function resetAll() {
+			source.clear();
+			expanded.clear();
+			lateShown.clear();
+			recycler.clear();
+			recycler.resetCounters();
+			virtualizer.reset();
+			stats.reset();
+		}
+
+		$("size").addEventListener("change", e => {
+			virtualizer.rowCount = Number(e.detail.selectedOption.value);
+			resetAll();
+		});
+
+		$("delay").addEventListener("change", e => {
+			source.setDelay(Number(e.detail.selectedOption.value));
+			if (!source.delay) {
+				scheduleRender();
+			}
+		});
+
+		$("mode").addEventListener("change", e => {
+			recycler.setMode(e.detail.selectedOption.value);
+			recycler.resetCounters();
+			recycler.render(range.first, range.last);
+			if (recycler.mode === "pool" && typeof table.moveBefore !== "function") {
+				log("Pool uses ordinary insertion in this browser, which may interrupt native momentum. Positional is the default here.");
+			}
+		});
+
+		$("overscan").addEventListener("change", e => {
+			virtualizer.overscan = Number(e.detail.selectedOption.value);
+		});
+
+		$("timing").addEventListener("change", e => {
+			renderTiming = e.detail.selectedOption.value;
+			if (renderTiming === "sync") {
+				renderRange();
+			}
+		});
+
+		const selectValue = (id, value) => {
+			$(id).querySelectorAll("ui5-option").forEach(option => {
+				option.selected = option.value === value;
+			});
+		};
+
+		$("best").addEventListener("click", () => {
+			const mode = typeof table.moveBefore === "function" ? "pool" : "positional";
+			selectValue("delay", "0");
+			selectValue("mode", mode);
+			selectValue("overscan", "1000");
+			selectValue("timing", "sync");
+			renderTiming = "sync";
+			source.setDelay(0);
+			lateEnabled = false;
+			$("late").checked = false;
+			virtualizer.overscan = 1000;
+			recycler.setMode(mode);
+			recycler.resetCounters();
+			renderRange();
+			log(`Test defaults: local data, ${mode} rows, 1000 px extra rendering, immediate rendering and no late content.${mode === "positional" ? " State-preserving moves are unavailable in this browser." : ""}`);
+		});
+
+		$("top").addEventListener("click", () => virtualizer.scrollToIndex(0, "Start"));
+		$("bottom").addEventListener("click", () => virtualizer.scrollToIndex(virtualizer.rowCount - 1, "End"));
+		$("jump").addEventListener("click", () => {
+			const index = Math.max(0, Math.min(virtualizer.rowCount - 1, Number($("jump-index").value) || 0));
+			virtualizer.scrollToIndex(index, "Start");
+			log(`Jumped to row ${index}.`);
+		});
+
+		$("late").addEventListener("change", e => {
+			lateEnabled = e.target.checked;
+		});
+
+		$("compact").addEventListener("change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		$("columns").addEventListener("click", () => {
+			const column = $("desc-column");
+			column.width = column.width ? "" : "24rem";
+			log(`Description column width: ${column.width || "flexible"} (row heights change because of text wrapping).`);
+		});
+
+		/**
+		 * Measures how far the first visible row (the scroll anchor) moves on screen while the given change is applied.
+		 * A stable anchor is expected to move by 0px.
+		 */
+		async function measureAnchor(label, change, settle = 2) {
+			const index = anchorIndex();
+			const row = recycler.rowAt(index);
+			if (!row) {
+				log(`${label}: no anchor row rendered.`);
+				return;
+			}
+			const before = row.getBoundingClientRect().top;
+			const count = await change();
+			await (typeof settle === "number" ? nextFrames(settle) : settle());
+			const after = recycler.rowAt(index)?.getBoundingClientRect().top;
+			const shift = after === undefined ? "n/a" : `${(after - before).toFixed(1)}px`;
+			log(`${label}: ${count ?? ""} changed, anchor row ${index} moved by ${shift}.`);
+		}
+
+		$("expand-above").addEventListener("click", () => measureAnchor("Toggle rows above viewport", () => {
+			let count = 0;
+			for (let index = Math.max(virtualizer._renderedFirst, 0); index < virtualizer._visibleFirst; index++) {
+				const row = recycler.rowAt(index);
+				if (row && source.get(index)) {
+					expanded.has(index) ? expanded.delete(index) : expanded.add(index);
+					bindRow(row, index);
+					count++;
+				}
+			}
+			return `${count} rows`;
+		}));
+
+		$("expand-visible").addEventListener("click", () => measureAnchor("Toggle visible rows", () => {
+			let count = 0;
+			for (let index = virtualizer._visibleFirst; index < virtualizer._visibleLast; index++) {
+				const row = recycler.rowAt(index);
+				if (row && source.get(index)) {
+					expanded.has(index) ? expanded.delete(index) : expanded.add(index);
+					bindRow(row, index);
+					count++;
+				}
+			}
+			return `${count} rows`;
+		}));
+
+		$("collapse-all").addEventListener("click", () => {
+			expanded.clear();
+			recycler.render(range.first, range.last);
+		});
+
+		$("refresh").addEventListener("click", () => measureAnchor("Refresh data (tombstones, then content)", () => {
+			source.clear();
+			source.ensure(range.first, range.last);
+			recycler.render(range.first, range.last);
+			return "range";
+		}, async () => {
+			await sleep(source.delay * 1.5 + 100);
+			await nextFrames(3);
+		}));
+
+		$("reset").addEventListener("click", resetAll);
+
+		/* ---------- benchmarks ---------- */
+
+		/**
+		 * Returns the index of the scroll anchor: the first row with content that starts within the visible rows area.
+		 */
+		function viewportTop() {
+			return Math.max(scrollContainer().getBoundingClientRect().top, table.headerRow[0].getBoundingClientRect().bottom);
+		}
+
+		function anchorIndex() {
+			const top = viewportTop();
+			let index = virtualizer._visibleFirst;
+			const row = recycler.rowAt(index);
+			if (row && row.getBoundingClientRect().top < top - 1 && index + 1 < virtualizer.rowCount) {
+				index++;
+			}
+			// placeholders are not used as anchor while rows with content are visible
+			for (let candidate = index; candidate < virtualizer._visibleLast; candidate++) {
+				const candidateRow = recycler.rowAt(candidate);
+				if (candidateRow && !candidateRow.loading) {
+					return candidate;
+				}
+			}
+			return index;
+		}
+
+		/**
+		 * Returns the blank area (in px) of the visible rows area that is not covered by rendered rows.
+		 * Called after a frame was painted, it shows whether the rendering kept up with the scrolling.
+		 */
+		function coverageGap() {
+			const element = scrollContainer();
+			const header = table.headerRow[0].getBoundingClientRect();
+			const top = Math.max(element.getBoundingClientRect().top, header.bottom);
+			const bottom = element.getBoundingClientRect().top + element.clientHeight;
+			const rows = Array.from(table.children).filter(row => row.hasAttribute("ui5-table-row"));
+			let covered = top;
+			let gap = 0;
+			for (const row of rows) {
+				const rect = row.getBoundingClientRect();
+				if (rect.bottom <= covered) {
+					continue;
+				}
+				if (rect.top > covered + 1 && rect.top < bottom) {
+					gap += rect.top - covered;
+				}
+				covered = Math.max(covered, rect.bottom);
+				if (covered >= bottom) {
+					break;
+				}
+			}
+			const lastRow = rows[rows.length - 1];
+			if (covered < bottom - 1 && !(lastRow && lastRow.position === virtualizer.rowCount - 1)) {
+				gap += bottom - covered;
+			}
+			return gap;
+		}
+
+		async function autoScroll(direction) {
+			const speed = Number($("bench-speed").selectedOption.value);
+			const element = scrollContainer();
+			const created = recycler.created;
+			const reused = recycler.reused;
+			const rangeChanges = virtualizer._stats.rangeChanges;
+			let gapFrames = 0;
+			let maxGap = 0;
+			const jumps = [];
+			let lastJump = 0;
+			let pendingDelta = 0;
+			let probe = null;
+			stats.startRun();
+			const start = performance.now();
+			let last = start;
+			await new Promise(resolve => {
+				const step = now => {
+					element.dispatchEvent(new WheelEvent("wheel", { deltaY: direction })); // marks the scroll as input driven
+					const before = element.scrollTop;
+					element.scrollTop += direction * speed * (now - last) / 1000;
+					pendingDelta += element.scrollTop - before;
+					last = now;
+					setTimeout(() => { // after the frame is painted
+						const gap = coverageGap();
+						gap > 0 && gapFrames++;
+						maxGap = Math.max(maxGap, gap);
+
+						// the anchor row must move exactly by the scrolled distance, otherwise the content visibly jumps
+						// only rows that still start within the viewport are the anchor, rows scrolled partially out may change upwards
+						const probeRow = probe && probe.top - pendingDelta >= viewportTop() - 1 && recycler.rowAt(probe.index);
+						if (probeRow) {
+							const error = probeRow.getBoundingClientRect().top - (probe.top - pendingDelta);
+							if (Math.abs(error) <= 1) {
+								lastJump = 0;
+							} else if (lastJump && Math.abs(error + lastJump) < 2) {
+								// a data update between paint and this check shows a state that is never painted, the next frame reverts it
+								jumps.pop();
+								lastJump = 0;
+							} else {
+								jumps.push(Math.abs(error));
+								lastJump = error;
+							}
+						}
+						const index = anchorIndex();
+						const row = recycler.rowAt(index);
+						probe = row ? { index, top: row.getBoundingClientRect().top } : null;
+						pendingDelta = 0;
+					});
+					const atEdge = direction > 0 ? element.scrollTop + element.clientHeight >= element.scrollHeight - 1 : element.scrollTop <= 0;
+					if (now - start < 5000 && !atEdge) {
+						requestAnimationFrame(step);
+					} else {
+						resolve();
+					}
+				};
+				requestAnimationFrame(step);
+			});
+			const run = stats.endRun();
+			const jumpFrames = jumps.length;
+			const maxJump = Math.max(0, ...jumps);
+			log(`Auto-scroll ${direction > 0 ? "down" : "up"} @ ${speed}px/s: ${run.frames} frames, avg ${run.fps.toFixed(1)} FPS, p50 ${run.p50.toFixed(2)}ms, max ${run.max.toFixed(1)}ms, blank frames ${gapFrames} (max ${maxGap.toFixed(0)}px), content jumps ${jumpFrames} (max ${maxJump.toFixed(1)}px), range changes ${virtualizer._stats.rangeChanges - rangeChanges}, created ${recycler.created - created}, reused ${recycler.reused - reused}`);
+			return { ...run, gapFrames, maxGap, jumpFrames, maxJump };
+		}
+
+		$("bench-down").addEventListener("click", () => autoScroll(1));
+		$("bench-up").addEventListener("click", () => autoScroll(-1));
+
+		const deepActiveElement = () => {
+			let element = document.activeElement;
+			while (element && element.shadowRoot && element.shadowRoot.activeElement) {
+				element = element.shadowRoot.activeElement;
+			}
+			return element;
+		};
+
+		const rowOf = element => {
+			while (element && element !== table) {
+				if (element.hasAttribute && element.hasAttribute("ui5-table-row")) {
+					return element;
+				}
+				element = element.parentElement || element.getRootNode().host;
+			}
+		};
+
+		/**
+		 * Simulates a held key with an auto-repeat rate of ~30Hz and verifies the focus consistency afterwards.
+		 */
+		async function holdKey(key, presses = 40, interval = 33) {
+			if (!rowOf(deepActiveElement()) && deepActiveElement() !== scrollContainer()) {
+				const row = recycler.rowAt(virtualizer._visibleFirst);
+				row && row.focus();
+				await nextFrames(2);
+			}
+
+			let lost = 0;
+			stats.startRun();
+			const startIndex = virtualizer._focus?.index;
+			for (let i = 0; i < presses; i++) {
+				const target = deepActiveElement();
+				if (!target || target === document.body) {
+					lost++;
+					break;
+				}
+				target.dispatchEvent(new KeyboardEvent("keydown", { key, code: key, bubbles: true, composed: true, cancelable: true }));
+				target.dispatchEvent(new KeyboardEvent("keyup", { key, code: key, bubbles: true, composed: true, cancelable: true }));
+				await sleep(interval);
+			}
+			const run = stats.endRun();
+			await sleep(source.delay + 300);
+			await nextFrames(3);
+
+			const active = deepActiveElement();
+			const row = rowOf(active);
+			const logical = virtualizer._focus?.index;
+			const viewport = scrollContainer().getBoundingClientRect();
+			const rect = row && row.getBoundingClientRect();
+			const visible = !!rect && rect.bottom > viewport.top && rect.top < viewport.bottom;
+			const consistent = !!row && row.position === logical;
+			log(`Hold ${key} x${presses}: row ${startIndex} -> logical ${logical}, DOM focus row ${row ? row.position : (active === scrollContainer() ? "grid (pending)" : "none")}, ${consistent ? "consistent" : "INCONSISTENT"}, ${visible ? "visible" : "NOT visible"}, focus lost ${lost}x, p50 ${run.p50.toFixed(2)}ms`);
+		}
+
+		$("hold-pagedown").addEventListener("click", () => holdKey("PageDown"));
+		$("hold-pageup").addEventListener("click", () => holdKey("PageUp"));
+		$("hold-arrowdown").addEventListener("click", () => holdKey("ArrowDown", 60));
+
+		/* ---------- lightweight frame instrumentation ---------- */
+
+		const fpsMeter = {
+			frames: 0,
+			elapsed: 0,
+			reset() {
+				this.frames = 0;
+				this.elapsed = 0;
+				setText("hud-fps", "-", "");
+			},
+			push(delta) {
+				this.frames++;
+				this.elapsed += delta;
+				if (this.elapsed >= 500) {
+					const fps = this.frames * 1000 / this.elapsed;
+					const refreshRate = 1000 / (stats.interval || 1000 / 60);
+					setText("hud-fps", String(Math.round(fps)), fps >= 0.92 * refreshRate ? "good" : fps >= 50 ? "warn" : "bad");
+					this.frames = 0;
+					this.elapsed = 0;
+				}
+			},
+		};
+
+		const stats = {
+			size: 1024,
+			deltas: new Float64Array(1024),
+			cursor: 0,
+			count: 0,
+			total: 0,
+			interval: 0, // detected refresh interval of the display
+			last: 0,
+			run: null,
+			reset() {
+				this.cursor = 0;
+				this.count = 0;
+				this.total = 0;
+				this.last = 0;
+				fpsMeter.reset();
+			},
+			push(delta) {
+				this.deltas[this.cursor] = delta;
+				this.cursor = (this.cursor + 1) % this.size;
+				this.count++;
+				this.total += delta;
+				this.interval = this.interval ? Math.min(this.interval, Math.max(delta, 4)) : delta;
+				this.run && this.run.push(delta);
+			},
+			updateInterval() {
+				// most frames are delivered at the refresh rate, so the lower quartile is a robust estimate
+				const sorted = Float64Array.from(this.deltas.subarray(0, Math.min(this.count, this.size))).sort();
+				if (sorted.length > 30) {
+					this.interval = sorted[Math.floor(sorted.length / 4)];
+				}
+			},
+			startRun() {
+				this.run = [];
+			},
+			endRun() {
+				const run = summarize(this.run || []);
+				this.run = null;
+				return run;
+			},
+			recent() {
+				return summarize(Array.from(this.deltas.subarray(0, Math.min(this.count, this.size))));
+			},
+		};
+
+		function summarize(deltas) {
+			const sorted = Float64Array.from(deltas).sort();
+			const total = deltas.reduce((sum, delta) => sum + delta, 0);
+			const quantile = q => (sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))] : 0);
+			return {
+				frames: sorted.length,
+				fps: total ? sorted.length * 1000 / total : 0,
+				p50: quantile(0.5),
+				max: sorted.length ? sorted[sorted.length - 1] : 0,
+			};
+		}
+
+		const frame = now => {
+			if (!document.hidden) {
+				if (stats.last) {
+					const delta = now - stats.last;
+					stats.push(delta);
+					fpsMeter.push(delta);
+				}
+				stats.last = now;
+			}
+			requestAnimationFrame(frame);
+		};
+		requestAnimationFrame(frame);
+
+		document.addEventListener("visibilitychange", () => {
+			stats.last = 0; // do not count the time in background tabs
+			fpsMeter.reset();
+		});
+
+		$("reset-stats").addEventListener("click", () => stats.reset());
+
+		const hudCache = new Map();
+		const setText = (id, text, className) => {
+			if (hudCache.get(id) !== text) {
+				hudCache.set(id, text);
+				const element = $(id);
+				(element.querySelector("i") || element).textContent = text;
+			}
+			if (className !== undefined) {
+				$(id).className = className;
+			}
+		};
+
+		setInterval(() => {
+			if (document.hidden) {
+				return;
+			}
+			stats.updateInterval();
+			const recent = stats.recent();
+			const avg = stats.total ? stats.count * 1000 / stats.total : 0;
+			setText("hud-avg", avg.toFixed(1));
+			setText("hud-p50", `${recent.p50.toFixed(2)}ms`);
+			const interval = stats.interval || 1000 / 60;
+			setText("hud-hz", `${Math.round(1000 / interval)} Hz`);
+			setText("hud-rows", virtualizer.rowCount.toLocaleString("en-US"));
+			setText("hud-dom", String(table.rows.length));
+			setText("hud-measured", `${virtualizer._model.measuredCount.toLocaleString("en-US")}${virtualizer._model.provisionalCount ? ` +${virtualizer._model.provisionalCount} loading` : ""}`);
+			setText("hud-estimate", `${Math.round(virtualizer._model.estimate)}px`);
+			setText("hud-created", String(recycler.created));
+			setText("hud-reused", String(recycler.reused));
+			setText("hud-pool", String(recycler.pool.length));
+			setText("hud-visible", `${virtualizer._visibleFirst}–${virtualizer._visibleLast - 1}`);
+			setText("hud-requested", `${virtualizer._first}–${virtualizer._last - 1}`);
+			setText("hud-rendered", `${virtualizer._renderedFirst}–${virtualizer._renderedLast - 1}`);
+			setText("hud-drift", `${virtualizer._drift.toFixed(0)}px`);
+			setText("hud-anchor", String(virtualizer._stats.anchorCorrections));
+			setText("hud-reconcile", `${virtualizer._stats.reconciliations} (${virtualizer._stats.reconciliationsWhileScrolling} in scroll)`);
+		}, 250);
+
+		if (window.matchMedia("(max-width: 600px), (max-height: 760px)").matches) {
+			$("controls").open = false;
+		}
+
+		// the table may have rendered (and requested its first range) before this listener was attached
+		await customElements.whenDefined("ui5-table-virtualizer");
+		while (!virtualizer._table) {
+			await new Promise(requestAnimationFrame);
+		}
+		virtualizer.reset();
+
+		window.demo = { table, virtualizer, recycler, source, stats, holdKey, autoScroll, measureAnchor, coverageGap, setRenderTiming: timing => { renderTiming = timing; } };
+	</script>
+</body>
+
+</html>

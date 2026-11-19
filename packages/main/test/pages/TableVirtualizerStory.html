@@ -1,0 +1,3974 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<title>Scrolling 100,000 table rows smoothly – the new UI5 Table Virtualizer</title>
+	<meta name="description" content="How the UI5 Web Components Table Virtualizer renders huge tables with rows of different heights at 120 frames per second.">
+
+	<style>
+		:root {
+			--blue: #0070f2;
+			--blue-soft: #e5f0ff;
+			--navy: #12233a;
+			--ink: #1d2d3e;
+			--muted: #556b82;
+			--bg: #f5f6f7;
+			--card: #ffffff;
+			--line: #d5dadd;
+			--green: #1f8a4c;
+			--green-soft: #e3f6ea;
+			--red: #d20a3c;
+			--red-soft: #ffe8ee;
+			--orange: #c35500;
+			--orange-soft: #fff1e2;
+			--purple: #7247d6;
+			--purple-soft: #f0eaff;
+			--yellow: #e9a700;
+			--radius: 14px;
+			--shadow: 0 1px 2px rgba(18, 35, 58, 0.06), 0 6px 24px rgba(18, 35, 58, 0.08);
+			--mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+			--sans: "72", "72full", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+			color-scheme: light;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			scroll-snap-type: y proximity;
+			scroll-behavior: smooth;
+		}
+
+		body {
+			margin: 0;
+			background: var(--bg);
+			color: var(--ink);
+			font-family: var(--sans);
+			font-size: clamp(1rem, 0.85rem + 0.45vw, 1.3rem);
+			line-height: 1.5;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		code, kbd, pre {
+			font-family: var(--mono);
+		}
+
+		code {
+			padding: 0.05em 0.35em;
+			border-radius: 6px;
+			background: rgba(0, 112, 242, 0.09);
+			font-size: 0.9em;
+		}
+
+		kbd {
+			display: inline-block;
+			min-width: 1.6em;
+			padding: 0.05em 0.45em;
+			border: 1px solid var(--line);
+			border-bottom-width: 3px;
+			border-radius: 6px;
+			background: var(--card);
+			font-size: 0.85em;
+			text-align: center;
+		}
+
+		/* ---------- deck ---------- */
+
+		.slide {
+			position: relative;
+			display: flex;
+			align-items: center;
+			min-height: 100vh;
+			min-height: 100dvh;
+			padding: clamp(3.5rem, 6vh, 5rem) clamp(1.25rem, 6vw, 6rem);
+			scroll-snap-align: start;
+			overflow: hidden;
+		}
+
+		.slide:nth-of-type(even):not(.dark) {
+			background: #eef1f4;
+		}
+
+		.slide.dark {
+			background: radial-gradient(1200px 700px at 80% 20%, #1b4b8f 0%, var(--navy) 55%, #0b1626 100%);
+			color: #fff;
+		}
+
+		.slide.dark .muted, .slide.dark .lead {
+			color: #c5d4e6;
+		}
+
+		.cols {
+			display: grid;
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+			gap: clamp(1.5rem, 4vw, 4rem);
+			align-items: center;
+			width: 100%;
+			max-width: 1500px;
+			margin: 0 auto;
+		}
+
+		.single {
+			width: 100%;
+			max-width: 1300px;
+			margin: 0 auto;
+		}
+
+		.kicker {
+			margin: 0 0 0.5rem;
+			color: var(--blue);
+			font-size: 0.8em;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		.dark .kicker {
+			color: #7fb6ff;
+		}
+
+		h1, h2, h3 {
+			margin: 0 0 0.6em;
+			line-height: 1.12;
+			letter-spacing: -0.01em;
+		}
+
+		h1 {
+			font-size: clamp(2.3rem, 1.2rem + 4.6vw, 5.2rem);
+		}
+
+		h2 {
+			font-size: clamp(1.7rem, 1.1rem + 2.2vw, 3.1rem);
+		}
+
+		h3 {
+			font-size: 1.15em;
+		}
+
+		p {
+			margin: 0 0 0.9em;
+		}
+
+		.lead {
+			font-size: 1.15em;
+			color: var(--muted);
+		}
+
+		.muted {
+			color: var(--muted);
+		}
+
+		.small {
+			font-size: 0.8em;
+		}
+
+		.em-blue { color: var(--blue); font-weight: 700; }
+		.em-green { color: var(--green); font-weight: 700; }
+		.em-red { color: var(--red); font-weight: 700; }
+		.em-purple { color: var(--purple); font-weight: 700; }
+		.em-orange { color: var(--orange); font-weight: 700; }
+
+		ul.points {
+			margin: 0 0 1em;
+			padding: 0;
+			list-style: none;
+		}
+
+		ul.points li {
+			position: relative;
+			margin: 0 0 0.55em;
+			padding-inline-start: 1.6em;
+		}
+
+		ul.points li::before {
+			content: "";
+			position: absolute;
+			left: 0.25em;
+			top: 0.55em;
+			width: 0.55em;
+			height: 0.55em;
+			border-radius: 50%;
+			background: var(--blue);
+		}
+
+		ul.points.no li::before {
+			content: "✕";
+			top: 0;
+			width: auto;
+			height: auto;
+			background: none;
+			color: var(--red);
+			font-weight: 700;
+		}
+
+		ul.points.yes li::before {
+			content: "✓";
+			top: 0;
+			width: auto;
+			height: auto;
+			background: none;
+			color: var(--green);
+			font-weight: 700;
+		}
+
+		.card {
+			padding: 1.1em 1.25em;
+			border-radius: var(--radius);
+			background: var(--card);
+			box-shadow: var(--shadow);
+		}
+
+		.chips {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5em;
+			margin: 0 0 1em;
+		}
+
+		.chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35em;
+			padding: 0.3em 0.8em;
+			border-radius: 999px;
+			background: var(--card);
+			box-shadow: var(--shadow);
+			font-size: 0.85em;
+			font-weight: 600;
+		}
+
+		.chip.pop {
+			opacity: 0;
+			transform: translateY(8px) scale(0.95);
+			transition: opacity 0.35s, transform 0.35s;
+		}
+
+		.chip.pop.on {
+			opacity: 1;
+			transform: none;
+		}
+
+		/* ---------- stage (animated figure) ---------- */
+
+		.stage {
+			position: relative;
+			width: 100%;
+			min-height: 360px;
+			padding: 1rem 1rem 2.9rem;
+			border-radius: var(--radius);
+			background: var(--card);
+			box-shadow: var(--shadow);
+			font-size: 0.8em;
+			overflow: hidden;
+		}
+
+		.dark .stage {
+			background: rgba(255, 255, 255, 0.06);
+			box-shadow: none;
+		}
+
+		.replay, .playback {
+			position: absolute;
+			right: 0.6rem;
+			bottom: 0.6rem;
+			z-index: 5;
+			padding: 0.3em 0.75em;
+			border: 1px solid var(--line);
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.92);
+			color: var(--muted);
+			font: inherit;
+			font-size: 0.85em;
+			cursor: pointer;
+		}
+
+		.replay:hover, .playback:hover {
+			color: var(--blue);
+			border-color: var(--blue);
+		}
+
+		.scene-controls {
+			position: absolute;
+			right: 0.6rem;
+			bottom: 0.6rem;
+			display: flex;
+			gap: 0.5rem;
+			z-index: 5;
+		}
+
+		.scene-controls button {
+			position: static;
+		}
+
+		.slide > .scene-controls {
+			left: 1rem;
+			right: auto;
+			bottom: 1rem;
+		}
+
+		.caption {
+			margin-top: 0.6rem;
+			color: var(--muted);
+			font-size: 0.75em;
+			text-align: center;
+		}
+
+		.label {
+			font-size: 0.8em;
+			font-weight: 700;
+			color: var(--muted);
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+
+		/* mini table row used in many scenes */
+		.mrow {
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 0 10px;
+			border-bottom: 1px solid var(--line);
+			background: var(--card);
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.mrow b {
+			flex: 0 0 auto;
+			min-width: 5.2em;
+			font-size: 0.9em;
+		}
+
+		.mrow i {
+			display: block;
+			height: 8px;
+			border-radius: 4px;
+			background: #c9d3dd;
+		}
+
+		.mrow.hl {
+			background: var(--blue-soft);
+			box-shadow: inset 4px 0 0 var(--blue);
+		}
+
+		.mrow.good {
+			background: var(--green-soft);
+			box-shadow: inset 4px 0 0 var(--green);
+		}
+
+		.mrow.bad {
+			background: var(--red-soft);
+			box-shadow: inset 4px 0 0 var(--red);
+		}
+
+		.screen {
+			position: relative;
+			overflow: hidden;
+			border: 2px solid var(--ink);
+			border-radius: 18px;
+			background: var(--card);
+		}
+
+		.track {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			will-change: transform;
+		}
+
+		.pill {
+			display: inline-block;
+			padding: 0.15em 0.6em;
+			border-radius: 999px;
+			font-size: 0.85em;
+			font-weight: 700;
+		}
+
+		.pill.good { background: var(--green-soft); color: var(--green); }
+		.pill.bad { background: var(--red-soft); color: var(--red); }
+		.pill.info { background: var(--blue-soft); color: var(--blue); }
+		.pill.drift { background: var(--purple-soft); color: var(--purple); }
+
+		.big-number {
+			font-size: clamp(2rem, 1.3rem + 3vw, 4rem);
+			font-weight: 800;
+			line-height: 1;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.grid-2 {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1rem;
+		}
+
+		.grid-3 {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1rem;
+		}
+
+		.formula {
+			padding: 0.7em 1em;
+			border-radius: 10px;
+			background: var(--navy);
+			color: #fff;
+			font-family: var(--mono);
+			font-size: 0.95em;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+
+		.formula.wrap {
+			white-space: normal;
+			line-height: 1.7;
+		}
+
+		.formula .v {
+			color: #7fd1ff;
+		}
+
+		.formula .r {
+			color: #ffd166;
+		}
+
+		/* ---------- chrome ---------- */
+
+		#progress {
+			position: fixed;
+			left: 0;
+			top: 0;
+			z-index: 20;
+			height: 4px;
+			width: 0;
+			background: linear-gradient(90deg, var(--blue), #7fb6ff);
+			transition: width 0.3s;
+		}
+
+		#nav {
+			position: fixed;
+			right: 1rem;
+			bottom: 1rem;
+			z-index: 20;
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			padding: 0.3rem 0.4rem 0.3rem 0.8rem;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.9);
+			box-shadow: var(--shadow);
+			font-size: 0.8rem;
+			font-variant-numeric: tabular-nums;
+			backdrop-filter: blur(6px);
+		}
+
+		#nav button {
+			width: 2rem;
+			height: 2rem;
+			border: none;
+			border-radius: 50%;
+			background: var(--blue-soft);
+			color: var(--blue);
+			font-size: 1rem;
+			cursor: pointer;
+		}
+
+		/* ---------- title ---------- */
+
+		.stream {
+			position: absolute;
+			inset: -20% -10% -20% 52%;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			opacity: 0.35;
+			transform: rotate(-8deg);
+			animation: stream 22s linear infinite;
+			pointer-events: none;
+		}
+
+		.stream div {
+			flex: 0 0 auto;
+			display: flex;
+			gap: 10px;
+			padding: 10px 14px;
+			border-radius: 8px;
+			background: rgba(255, 255, 255, 0.08);
+		}
+
+		.stream i {
+			display: block;
+			height: 10px;
+			border-radius: 5px;
+			background: rgba(255, 255, 255, 0.35);
+		}
+
+		@keyframes stream {
+			to {
+				transform: rotate(-8deg) translateY(-50%);
+			}
+		}
+
+		.title-wrap {
+			position: relative;
+			max-width: 980px;
+		}
+
+		.title-wrap .count {
+			color: #7fd1ff;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.hint {
+			margin-top: 2rem;
+			color: #9fb4cc;
+			font-size: 0.85em;
+		}
+
+		.dark kbd {
+			background: rgba(255, 255, 255, 0.1);
+			border-color: rgba(255, 255, 255, 0.3);
+			color: #fff;
+		}
+
+		/* ---------- agenda ---------- */
+
+		.agenda {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 1rem;
+			counter-reset: step;
+		}
+
+		.agenda .card {
+			opacity: 0;
+			transform: translateY(16px);
+			transition: opacity 0.5s, transform 0.5s;
+		}
+
+		.agenda .card.on {
+			opacity: 1;
+			transform: none;
+		}
+
+		.agenda .card::before {
+			counter-increment: step;
+			content: counter(step);
+			display: grid;
+			place-items: center;
+			width: 2em;
+			height: 2em;
+			margin-bottom: 0.6em;
+			border-radius: 50%;
+			background: var(--blue);
+			color: #fff;
+			font-weight: 700;
+		}
+
+		/* ---------- cost ---------- */
+
+		.explode {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.explode .row-model {
+			display: flex;
+			gap: 6px;
+			padding: 10px;
+			border: 2px solid var(--blue);
+			border-radius: 10px;
+		}
+
+		.explode .row-model span {
+			flex: 1;
+			height: 28px;
+			border-radius: 6px;
+			background: var(--blue-soft);
+		}
+
+		.dots {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(22px, 1fr));
+			gap: 5px;
+			min-height: 120px;
+		}
+
+		.dots i {
+			aspect-ratio: 1;
+			border-radius: 3px;
+			background: var(--blue);
+			opacity: 0;
+			transform: scale(0.3);
+			transition: opacity 0.25s, transform 0.25s;
+		}
+
+		.dots i.on {
+			opacity: 0.85;
+			transform: none;
+		}
+
+		.bench {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.6rem;
+			align-items: center;
+		}
+
+		.btn {
+			padding: 0.55em 1.1em;
+			border: none;
+			border-radius: 999px;
+			background: var(--blue);
+			color: #fff;
+			font: inherit;
+			font-size: 0.85em;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.btn.secondary {
+			background: var(--blue-soft);
+			color: var(--blue);
+		}
+
+		.bench output {
+			display: block;
+			width: 100%;
+			min-height: 1.5em;
+			font-variant-numeric: tabular-nums;
+		}
+
+		/* ---------- virtualization window ---------- */
+
+		.vwin {
+			display: grid;
+			grid-template-columns: 70px 1fr;
+			gap: 1.5rem;
+			align-items: stretch;
+			height: 330px;
+		}
+
+		.minimap {
+			position: relative;
+			border-radius: 8px;
+			background: repeating-linear-gradient(to bottom, #dfe5eb 0 3px, transparent 3px 5px);
+		}
+
+		.minimap .window {
+			position: absolute;
+			left: -6px;
+			right: -6px;
+			height: 9%;
+			border: 3px solid var(--blue);
+			border-radius: 6px;
+			background: rgba(0, 112, 242, 0.15);
+		}
+
+		.counter-line {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.4rem 1.2rem;
+			margin-top: 0.8rem;
+			font-variant-numeric: tabular-nums;
+		}
+
+		/* ---------- variable heights ---------- */
+
+		.list-stage {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 1rem;
+			align-items: start;
+		}
+
+		.list-stage .screen {
+			height: 300px;
+		}
+
+		.marker {
+			position: absolute;
+			left: 0;
+			right: 0;
+			z-index: 2;
+			height: 0;
+			border-top: 3px dashed var(--red);
+			pointer-events: none;
+		}
+
+		.marker span {
+			position: absolute;
+			right: 6px;
+			top: -1.6em;
+			padding: 0 0.4em;
+			border-radius: 4px;
+			background: var(--red);
+			color: #fff;
+			font-size: 0.8em;
+			font-weight: 700;
+		}
+
+		.readout {
+			display: flex;
+			flex-direction: column;
+			gap: 0.6rem;
+		}
+
+		.readout .row {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.5rem 0.75rem;
+			border-radius: 8px;
+			background: var(--bg);
+			font-variant-numeric: tabular-nums;
+		}
+
+		/* ---------- frame budget ---------- */
+
+		.frames {
+			position: relative;
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			gap: 0;
+			margin: 2.2rem 0 1rem;
+			border-left: 2px solid var(--ink);
+		}
+
+		.frame {
+			position: relative;
+			height: 120px;
+			border-right: 2px solid var(--ink);
+			background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(0, 0, 0, 0.03) 9px 10px);
+		}
+
+		.frame .tick {
+			position: absolute;
+			top: -1.7em;
+			right: -1.4em;
+			font-size: 0.75em;
+			color: var(--muted);
+		}
+
+		.frame .work {
+			position: absolute;
+			left: 4px;
+			top: 20px;
+			height: 80px;
+			display: flex;
+			width: 0;
+			overflow: hidden;
+			transition: width 0.45s ease-out;
+		}
+
+		.frame .work span {
+			height: 100%;
+			border-right: 1px solid rgba(255, 255, 255, 0.7);
+		}
+
+		.frame .shown {
+			position: absolute;
+			left: 50%;
+			bottom: -1.9em;
+			transform: translateX(-50%);
+			font-size: 0.75em;
+			white-space: nowrap;
+			opacity: 0;
+			transition: opacity 0.3s;
+		}
+
+		.frame .shown.on {
+			opacity: 1;
+		}
+
+		.legend {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.4rem 1rem;
+			font-size: 0.85em;
+		}
+
+		.legend span::before {
+			content: "";
+			display: inline-block;
+			width: 0.9em;
+			height: 0.9em;
+			margin-inline-end: 0.35em;
+			border-radius: 3px;
+			background: var(--c);
+			vertical-align: -0.1em;
+		}
+
+		.playhead {
+			position: absolute;
+			top: -0.6rem;
+			bottom: -0.6rem;
+			width: 3px;
+			background: var(--red);
+			left: 0;
+		}
+
+		/* ---------- estimate ---------- */
+
+		.est-stage {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 1.2rem;
+		}
+
+		.est-list {
+			position: relative;
+			height: 340px;
+			overflow: hidden;
+			border-radius: 10px;
+			background: var(--bg);
+		}
+
+		.est-list .mrow {
+			transition: height 0.5s ease, background 0.3s;
+			border: 1px dashed #9aabbc;
+			border-top: none;
+			background: transparent;
+			color: var(--muted);
+		}
+
+		.est-list .mrow.measured {
+			border: none;
+			border-bottom: 1px solid var(--line);
+			background: var(--card);
+			color: var(--ink);
+		}
+
+		.est-view {
+			position: absolute;
+			left: 0;
+			right: 0;
+			z-index: 2;
+			border: 3px solid var(--blue);
+			border-radius: 8px;
+			background: rgba(0, 112, 242, 0.06);
+			transition: top 0.5s ease, height 0.5s ease;
+			pointer-events: none;
+		}
+
+		.flash {
+			animation: flash 0.9s ease-out;
+		}
+
+		@keyframes flash {
+			from {
+				background-color: #ffe9a8;
+			}
+		}
+
+		/* ---------- fenwick ---------- */
+
+		.fw {
+			display: grid;
+			grid-template-columns: repeat(16, minmax(0, 1fr));
+			grid-template-rows: repeat(5, 30px) 12px auto;
+			gap: 5px 3px;
+		}
+
+		.fw .node {
+			display: grid;
+			place-items: center;
+			border-radius: 6px;
+			background: #e6ebf0;
+			color: var(--ink);
+			font-size: 0.8em;
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+			transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.fw .node.on {
+			background: var(--blue);
+			color: #fff;
+		}
+
+		.fw .node.ok {
+			background: var(--green);
+			color: #fff;
+		}
+
+		.fw .node.no {
+			background: #b7c2cc;
+			color: #fff;
+		}
+
+		.fw .node.upd {
+			background: var(--orange);
+			color: #fff;
+		}
+
+		.fw .base {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 2px;
+			font-size: 0.72em;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.fw .base .bar {
+			width: 70%;
+			border-radius: 3px 3px 0 0;
+			background: #9fb3c8;
+			transition: background 0.2s, height 0.4s;
+		}
+
+		.fw .base.on .bar {
+			background: var(--blue);
+		}
+
+		.fw .base.upd .bar {
+			background: var(--orange);
+		}
+
+		.fw-status {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1.5rem;
+			align-items: baseline;
+			min-height: 3.4em;
+			margin-bottom: 0.8rem;
+		}
+
+		.fw-status .q {
+			font-weight: 700;
+		}
+
+		.vs {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.8rem;
+			margin-top: 0.9rem;
+		}
+
+		.vs > div {
+			padding: 0.6rem 0.8rem;
+			border-radius: 10px;
+			background: var(--bg);
+			font-variant-numeric: tabular-nums;
+		}
+
+		.vs .big-number {
+			font-size: 2rem;
+		}
+
+		/* ---------- two trees ---------- */
+
+		.tt-rows {
+			display: flex;
+			gap: 4px;
+			align-items: flex-end;
+			height: 120px;
+			margin-bottom: 0.8rem;
+		}
+
+		.tt-rows div {
+			flex: 1;
+			border-radius: 4px 4px 0 0;
+			background: var(--blue);
+			transition: height 0.5s;
+		}
+
+		.tt-rows div.est {
+			background: repeating-linear-gradient(45deg, #e0e7ee 0 6px, #f4f6f8 6px 12px);
+			border: 2px dashed #9aabbc;
+			border-bottom: none;
+		}
+
+		.mem {
+			display: flex;
+			height: 2.2rem;
+			border-radius: 8px;
+			overflow: hidden;
+			font-size: 0.75em;
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.mem span {
+			display: grid;
+			place-items: center;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
+		table.cmp {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.85em;
+		}
+
+		table.cmp th, table.cmp td {
+			padding: 0.45em 0.6em;
+			border-bottom: 1px solid var(--line);
+			text-align: start;
+			font-variant-numeric: tabular-nums;
+		}
+
+		table.cmp th {
+			color: var(--muted);
+			font-weight: 600;
+		}
+
+		/* ---------- measure ---------- */
+
+		.lane {
+			margin-bottom: 1.2rem;
+		}
+
+		.lane-blocks {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+			min-height: 34px;
+			margin: 0.4rem 0;
+		}
+
+		.blk {
+			display: grid;
+			place-items: center;
+			min-width: 56px;
+			height: 38px;
+			padding: 0 0.6em;
+			border-radius: 6px;
+			color: #fff;
+			font-size: 0.75em;
+			font-weight: 700;
+			opacity: 0;
+			transform: scale(0.6);
+			transition: opacity 0.2s, transform 0.2s;
+		}
+
+		.blk.on {
+			opacity: 1;
+			transform: none;
+		}
+
+		.blk.w { background: #6b84a0; }
+		.blk.r { background: var(--orange); }
+		.blk.l { background: var(--red); }
+		.blk.ok { background: var(--green); }
+
+		/* ---------- anchoring ---------- */
+
+		.two-phones {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.2rem;
+		}
+
+		.two-phones .screen {
+			height: 290px;
+		}
+
+		.two-phones .track {
+			transition: transform 0.6s ease;
+		}
+
+		.two-phones .mrow {
+			transition: height 0.6s ease;
+		}
+
+		.phone-label {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5rem;
+			margin-bottom: 0.4rem;
+			min-height: 1.9em;
+		}
+
+		.eye {
+			position: absolute;
+			right: 8px;
+			font-size: 1.1em;
+		}
+
+		.priority {
+			counter-reset: p;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.priority li {
+			counter-increment: p;
+			display: flex;
+			gap: 0.6em;
+			align-items: baseline;
+			margin-bottom: 0.4em;
+		}
+
+		.priority li::before {
+			content: counter(p);
+			display: grid;
+			place-items: center;
+			flex: 0 0 1.6em;
+			height: 1.6em;
+			border-radius: 50%;
+			background: var(--blue-soft);
+			color: var(--blue);
+			font-size: 0.85em;
+			font-weight: 700;
+		}
+
+		/* ---------- drift ---------- */
+
+		.drift-lanes {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.2rem;
+		}
+
+		.drift-lanes .screen {
+			height: 190px;
+		}
+
+		.drift-lanes canvas {
+			display: block;
+			width: 100%;
+			height: 90px;
+			margin-top: 0.5rem;
+			border-radius: 8px;
+			background: var(--bg);
+		}
+
+		.meter {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			margin-top: 0.5rem;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.meter .bar {
+			flex: 1;
+			height: 10px;
+			border-radius: 5px;
+			background: var(--bg);
+			overflow: hidden;
+		}
+
+		.meter .bar span {
+			display: block;
+			height: 100%;
+			width: 0;
+			background: var(--purple);
+			transition: width 0.3s;
+		}
+
+		/* ---------- one block ---------- */
+
+		.blocks {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.2rem;
+		}
+
+		.mini-table {
+			position: relative;
+			height: 300px;
+			overflow: hidden;
+			border-radius: 10px;
+			border: 2px solid var(--ink);
+			background: var(--card);
+			font-size: 0.85em;
+		}
+
+		.mini-table .row-a {
+			display: grid;
+			grid-template-columns: auto auto 1fr;
+			border-bottom: 1px solid var(--line);
+			background: var(--card);
+		}
+
+		.mini-table .grid-b {
+			display: grid;
+			grid-template-columns: auto auto 1fr;
+		}
+
+		.mini-table .row-b {
+			display: grid;
+			grid-column: 1 / -1;
+			grid-template-columns: subgrid;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.mini-table .c {
+			padding: 0.45em 0.6em;
+			border-inline-end: 2px solid var(--c, var(--line));
+			white-space: nowrap;
+		}
+
+		.mini-table.bad .c {
+			--c: rgba(210, 10, 60, 0.55);
+		}
+
+		.mini-table.good .c {
+			--c: rgba(31, 138, 76, 0.55);
+		}
+
+		.mini-table .mover {
+			will-change: transform;
+		}
+
+		.pipeline {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem;
+			align-items: center;
+			margin-top: 0.4rem;
+			font-size: 0.85em;
+		}
+
+		.pipeline span {
+			padding: 0.2em 0.6em;
+			border-radius: 6px;
+			background: var(--bg);
+		}
+
+		.pipeline span.skip {
+			opacity: 0.35;
+			text-decoration: line-through;
+		}
+
+		.pipeline span.run {
+			background: var(--green);
+			color: #fff;
+		}
+
+		/* ---------- huge ---------- */
+
+		.rulers {
+			position: relative;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 2rem;
+			height: 320px;
+		}
+
+		.ruler {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.ruler .bar {
+			position: relative;
+			width: 54px;
+			border-radius: 8px;
+			background: repeating-linear-gradient(to bottom, #dfe5eb 0 2px, #f4f6f8 2px 6px);
+			border: 2px solid var(--ink);
+		}
+
+		.ruler .thumb {
+			position: absolute;
+			left: -10px;
+			right: -10px;
+			height: 6px;
+			margin-top: -3px;
+			border-radius: 3px;
+			background: var(--blue);
+		}
+
+		.ruler .cap {
+			margin-top: 0.4rem;
+			text-align: center;
+			font-size: 0.85em;
+		}
+
+		.rulers svg {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			overflow: visible;
+		}
+
+		/* ---------- consumer ---------- */
+
+		.event-line {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0.6rem;
+			margin-bottom: 1rem;
+		}
+
+		.bubble {
+			padding: 0.45em 0.8em;
+			border-radius: 10px;
+			background: var(--navy);
+			color: #fff;
+			font-family: var(--mono);
+			font-size: 0.9em;
+		}
+
+		.lanes3 {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 1rem;
+		}
+
+		.rlane {
+			position: relative;
+			overflow: hidden;
+			padding: 0.6rem;
+			border-radius: 10px;
+			background: var(--bg);
+		}
+
+		.rlane .slots {
+			position: relative;
+			height: 210px;
+		}
+
+		.el {
+			position: absolute;
+			left: 0;
+			right: 0;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 0.6em;
+			border-radius: 7px;
+			color: #fff;
+			font-size: 0.8em;
+			font-weight: 700;
+			transition: transform 0.5s ease, opacity 0.4s ease, background 0.3s;
+		}
+
+		.el small {
+			font-weight: 400;
+			opacity: 0.85;
+		}
+
+		.el.rewrite {
+			animation: rewrite 0.6s ease;
+		}
+
+		@keyframes rewrite {
+			30% {
+				box-shadow: 0 0 0 3px #ffd166;
+			}
+		}
+
+		.counts {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.2rem 0.6rem;
+			margin-top: 0.4rem;
+			font-size: 0.8em;
+			font-variant-numeric: tabular-nums;
+		}
+
+		/* ---------- developer ---------- */
+
+		.steps3 {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.steps3 .card {
+			transition: box-shadow 0.4s, transform 0.4s;
+		}
+
+		.steps3 .card h3 {
+			margin-bottom: 0.3em;
+		}
+
+		.steps3 .card p {
+			margin: 0;
+		}
+
+		.steps3 .card.on {
+			box-shadow: 0 0 0 3px var(--blue), var(--shadow);
+			transform: translateY(-3px);
+		}
+
+		.steps3 .num {
+			display: inline-grid;
+			place-items: center;
+			width: 1.8em;
+			height: 1.8em;
+			margin-inline-end: 0.4em;
+			border-radius: 50%;
+			background: var(--blue);
+			color: #fff;
+			font-weight: 700;
+		}
+
+		.tabs {
+			display: flex;
+			gap: 0.4rem;
+			margin-bottom: -1px;
+		}
+
+		.tabs button {
+			padding: 0.4em 1em;
+			border: 1px solid transparent;
+			border-radius: 8px 8px 0 0;
+			background: transparent;
+			color: var(--muted);
+			font: inherit;
+			font-size: 0.85em;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.tabs button[aria-selected="true"] {
+			background: var(--navy);
+			color: #fff;
+		}
+
+		pre.code {
+			margin: 0;
+			padding: 1em 1.2em;
+			border-radius: 0 10px 10px 10px;
+			background: var(--navy);
+			color: #e6edf5;
+			font-size: clamp(0.7rem, 0.55rem + 0.3vw, 0.9rem);
+			line-height: 1.5;
+			overflow-x: auto;
+		}
+
+		pre.code .k { color: #ff9ad5; }
+		pre.code .s { color: #a5e3a1; }
+		pre.code .c { color: #8aa0b8; }
+		pre.code .h { color: #ffd166; }
+
+		/* ---------- tombstones ---------- */
+
+		.tomb {
+			position: relative;
+			height: 330px;
+			overflow: hidden;
+			border: 2px solid var(--ink);
+			border-radius: 12px;
+			background: var(--card);
+		}
+
+		.tomb .trow {
+			display: grid;
+			grid-template-columns: 5.5em 1fr 4.5em;
+			gap: 0.8em;
+			align-items: center;
+			padding: 0.5em 0.8em;
+			border-bottom: 1px solid var(--line);
+			transition: height 0.4s ease;
+			overflow: hidden;
+		}
+
+		.tomb .track {
+			transition: transform 0.4s ease;
+		}
+
+		.sk {
+			display: grid;
+			gap: 0.35rem;
+			width: 100%;
+		}
+
+		.sk i {
+			display: block;
+			width: 100%;
+			height: 0.7rem;
+			border-radius: 0.35rem;
+			background: #dfe3e8;
+			animation: pulse 1.2s ease-in-out infinite alternate;
+		}
+
+		.sk i:last-child {
+			width: 60%;
+		}
+
+		.trow > :last-child .sk i {
+			justify-self: end;
+		}
+
+		@keyframes pulse {
+			to {
+				opacity: 0.45;
+			}
+		}
+
+		.tomb .eye-row {
+			background: var(--blue-soft);
+			box-shadow: inset 4px 0 0 var(--blue);
+		}
+
+		.fade-in {
+			animation: fade-in 0.35s ease-out;
+		}
+
+		@keyframes fade-in {
+			from {
+				opacity: 0;
+			}
+		}
+
+		/* ---------- keyboard ---------- */
+
+		.keys-stage {
+			display: grid;
+			grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+			gap: 1.2rem;
+			align-items: start;
+		}
+
+		.keycap {
+			display: inline-grid;
+			place-items: center;
+			width: 5.5em;
+			height: 3.2em;
+			border: 2px solid var(--ink);
+			border-bottom-width: 6px;
+			border-radius: 10px;
+			background: var(--card);
+			font-weight: 700;
+			transition: transform 0.08s, border-bottom-width 0.08s;
+		}
+
+		.keycap.down {
+			transform: translateY(4px);
+			border-bottom-width: 2px;
+		}
+
+		.kb-table {
+			position: relative;
+			height: 280px;
+			overflow: hidden;
+			border: 3px solid var(--ink);
+			border-radius: 12px;
+			background: var(--card);
+			transition: box-shadow 0.2s;
+		}
+
+		.kb-table.waiting {
+			box-shadow: 0 0 0 4px rgba(0, 112, 242, 0.45);
+		}
+
+		.kb-table .mrow.focus {
+			outline: 3px solid var(--blue);
+			outline-offset: -3px;
+		}
+
+		.kb-log {
+			display: flex;
+			flex-direction: column;
+			gap: 0.4rem;
+			font-variant-numeric: tabular-nums;
+		}
+
+		/* ---------- rejected ---------- */
+
+		.rejected {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 0.9rem;
+		}
+
+		.rejected .card {
+			opacity: 0;
+			transform: translateY(14px);
+			transition: opacity 0.45s, transform 0.45s;
+			font-size: 0.85em;
+		}
+
+		.rejected .card.on {
+			opacity: 1;
+			transform: none;
+		}
+
+		.rejected h3 {
+			margin-bottom: 0.4em;
+			font-size: 1em;
+		}
+
+		.rejected .why {
+			color: var(--red);
+			font-weight: 700;
+			font-size: 0.8em;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		/* ---------- results ---------- */
+
+		.kpis {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 1rem;
+			margin-bottom: 1.2rem;
+		}
+
+		.kpis .card {
+			text-align: center;
+		}
+
+		.kpis .big-number {
+			color: var(--blue);
+		}
+
+		/* ---------- thanks ---------- */
+
+		.thanks {
+			display: grid;
+			grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+			gap: 3rem;
+			align-items: center;
+			width: 100%;
+			max-width: 1300px;
+			margin: 0 auto;
+		}
+
+		.qr-box {
+			justify-self: center;
+			padding: 1.2rem;
+			border-radius: 22px;
+			background: #fff;
+			color: var(--ink);
+			text-align: center;
+		}
+
+		.qr-box svg {
+			display: block;
+			width: min(320px, 60vw);
+			height: auto;
+		}
+
+		.qr-box a {
+			display: block;
+			margin-top: 0.6rem;
+			color: var(--blue);
+			font-size: 0.8em;
+			word-break: break-all;
+		}
+
+		/* ---------- scene helpers ---------- */
+
+		.abs-row {
+			position: absolute;
+			left: 0;
+			right: 0;
+		}
+
+		.guide {
+			position: absolute;
+			left: 0;
+			right: 0;
+			z-index: 3;
+			height: 0;
+			border-top: 2px dashed var(--blue);
+			pointer-events: none;
+		}
+
+		#est-rows {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			transition: transform 0.45s ease;
+		}
+
+		.kb-table .track {
+			transition: transform 0.35s ease;
+		}
+
+		.kb-table .mrow.ghost {
+			background: repeating-linear-gradient(-45deg, #f4f6f8 0 8px, #e9edf1 8px 16px);
+			color: transparent;
+		}
+
+		.kb-table .mrow.ghost i {
+			visibility: hidden;
+		}
+
+		.mini-table .mover {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+		}
+
+		.step-note {
+			min-height: 1.5em;
+			margin-top: 0.6rem;
+			font-weight: 700;
+			color: var(--blue);
+		}
+
+		/* ---------- responsive ---------- */
+
+		@media (max-width: 900px) {
+			.cols, .thanks {
+				grid-template-columns: 1fr;
+			}
+
+			.slide {
+				align-items: flex-start;
+			}
+
+			.agenda, .kpis {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.rejected {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.steps3 {
+				grid-template-columns: 1fr;
+			}
+
+			.keys-stage {
+				grid-template-columns: 1fr;
+			}
+
+			#nav {
+				right: 0.5rem;
+				bottom: 0.5rem;
+			}
+		}
+
+		@media (max-width: 600px) {
+			.two-phones, .drift-lanes, .blocks, .list-stage, .est-stage, .grid-2 {
+				grid-template-columns: 1fr;
+			}
+
+			.lanes3 {
+				grid-template-columns: 1fr;
+			}
+
+			.rejected, .agenda {
+				grid-template-columns: 1fr;
+			}
+
+			.fw {
+				grid-template-rows: repeat(5, 24px) 10px auto;
+				gap: 4px 2px;
+			}
+
+			.fw .node {
+				font-size: 0.6em;
+			}
+
+			.vs {
+				grid-template-columns: 1fr;
+			}
+
+			.stage {
+				padding: 0.75rem;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			html {
+				scroll-behavior: auto;
+			}
+
+			.stream, .sk i {
+				animation: none;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div id="progress" aria-hidden="true"></div>
+
+	<!-- 1 -->
+	<section class="slide dark" id="s-title" data-title="Title">
+		<div class="stream" aria-hidden="true"></div>
+		<div class="title-wrap">
+			<p class="kicker">UI5 Web Components &middot; Table</p>
+			<h1><span class="count">100,000</span> rows.<br>120 frames per second.<br>Any framework.</h1>
+			<p class="lead">How the new table virtualizer keeps huge tables smooth &ndash; even when every row has a different height.</p>
+			<p class="hint">Press <kbd>&rarr;</kbd> / <kbd>PgDn</kbd> or scroll</p>
+		</div>
+	</section>
+
+	<!-- 2 -->
+	<section class="slide" id="s-agenda" data-title="Agenda">
+		<div class="single">
+			<p class="kicker">Today</p>
+			<h2>From &ldquo;why is my table slow?&rdquo; to 120 FPS</h2>
+			<div class="agenda">
+				<div class="card"><h3>The problem</h3><p class="muted">Why big tables are slow, and why rows of different heights make it hard.</p></div>
+				<div class="card"><h3>The ideas</h3><p class="muted">Guessing, a clever tree, keeping your place, and not fighting your finger.</p></div>
+				<div class="card"><h3>Your part</h3><p class="muted">What an app has to do &ndash; with React, Angular or plain JavaScript.</p></div>
+				<div class="card"><h3>Results</h3><p class="muted">What we measured, what we rejected, and how you can try it.</p></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 3 -->
+	<section class="slide" id="s-cost" data-title="A table is heavy">
+		<div class="cols">
+			<div>
+				<p class="kicker">The problem</p>
+				<h2>Every row costs work</h2>
+				<p>A table row is not one thing. It is a row element, cells, texts, tags, buttons &ndash; and each of them has its own small inner structure.</p>
+				<p>The browser has to <b>create</b>, <b>style</b>, <b>lay out</b> and <b>paint</b> every single one of them.</p>
+				<p class="lead">One row of our demo table: <span class="em-blue">&asymp;58 elements</span>.<br>100,000 rows: <span class="em-red">&asymp;5.8 million elements</span>.</p>
+				<p class="muted small">Try it on your phone: the buttons build simple rows (much lighter than real table rows) and measure the time on <b>your</b> device.</p>
+			</div>
+			<div class="stage">
+				<div class="explode">
+					<div class="label">1 table row</div>
+					<div class="row-model"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+					<div class="label" id="dots-label">&hellip; is really</div>
+					<div class="dots" id="dots"></div>
+				</div>
+				<hr style="border: none; border-top: 1px solid var(--line); margin: 1rem 0;">
+				<div class="bench">
+					<button class="btn secondary" data-bench="15">Build 15 rows</button>
+					<button class="btn" data-bench="10000">Build 10,000 rows</button>
+					<output id="bench-out" class="muted">Measured live on this device.</output>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 4 -->
+	<section class="slide" id="s-window" data-title="Virtualization">
+		<div class="cols">
+			<div>
+				<p class="kicker">The classic trick</p>
+				<h2>Render only what you can see</h2>
+				<p>A screen shows maybe 10&ndash;20 rows. So we only create those &ndash; plus a few extra above and below.</p>
+				<p>While you scroll, rows that leave the screen are removed or <b>reused</b> for the rows that come in.</p>
+				<p class="lead">This is called <b>virtualization</b>: the table <em>pretends</em> to have 100,000 rows.</p>
+			</div>
+			<div class="stage">
+				<div class="vwin">
+					<div>
+						<div class="label" style="margin-bottom: 0.4rem;">Data</div>
+						<div class="minimap" style="height: calc(100% - 1.9rem);"><div class="window" id="mm-window"></div></div>
+					</div>
+					<div>
+						<div class="label" style="margin-bottom: 0.4rem;">Screen</div>
+						<div class="screen" id="win-screen" style="height: calc(100% - 1.9rem);"><div class="track" id="win-track"></div></div>
+					</div>
+				</div>
+				<div class="counter-line">
+					<span>Rows in the data: <b>100,000</b></span>
+					<span>Row elements in the page: <b class="em-blue" id="win-count">12</b></span>
+					<span>First visible: <b id="win-first">0</b></span>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 5 -->
+	<section class="slide" id="s-easy" data-title="Equal heights are easy">
+		<div class="cols">
+			<div>
+				<p class="kicker">How it used to work</p>
+				<h2>If every row is 50&nbsp;px tall, it&rsquo;s simple math</h2>
+				<p>Which row is at the top of the screen? Divide the scroll position by the row height.</p>
+				<div class="formula" id="easy-formula">first row = &lfloor; <span class="v">scrollTop</span> &divide; 50 &rfloor;</div>
+				<p class="muted" style="margin-top: 1rem;">Our previous virtualizer worked exactly like this. It needed one fixed <code>rowHeight</code> for all rows.</p>
+			</div>
+			<div class="stage">
+				<div class="list-stage">
+					<div class="screen" id="easy-screen"><div class="track" id="easy-track"></div></div>
+					<div class="readout">
+						<div class="row"><span>scrollTop</span><b id="easy-scroll">0</b></div>
+						<div class="row"><span>&divide; row height</span><b>50 px</b></div>
+						<div class="row"><span>= first row</span><b class="em-green" id="easy-first">0</b></div>
+						<p class="muted small">Always right &ndash; because every row has exactly the same height.</p>
+					</div>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 6 -->
+	<section class="slide" id="s-hard" data-title="Real rows are different">
+		<div class="cols">
+			<div>
+				<p class="kicker">The real world</p>
+				<h2>Real rows are not equal</h2>
+				<div class="chips" id="hard-chips">
+					<span class="chip pop">&#128221; Text wraps</span>
+					<span class="chip pop">&#128317; Details expanded</span>
+					<span class="chip pop">&#128444; Images load later</span>
+					<span class="chip pop">&#8596; Columns resized</span>
+					<span class="chip pop">&#128241; Phone rotated</span>
+				</div>
+				<p>Now the simple formula points to the <b class="em-red">wrong row</b>. And heights keep changing <em>while you look at them</em>, so the content jumps.</p>
+				<p class="lead">We have to know where every row starts &ndash; without ever having seen most of them.</p>
+			</div>
+			<div class="stage">
+				<div class="list-stage">
+					<div class="screen" id="hard-screen"><div class="track" id="hard-track"></div><div class="marker" id="hard-marker"><span>formula</span></div></div>
+					<div class="readout">
+						<div class="row"><span>scrollTop</span><b id="hard-scroll">0</b></div>
+						<div class="row"><span>Formula says</span><b class="em-red" id="hard-formula">row 0</b></div>
+						<div class="row"><span>Really visible</span><b class="em-green" id="hard-real">row 0</b></div>
+						<div class="row"><span>Off by</span><b id="hard-diff">0 rows</b></div>
+					</div>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 7 -->
+	<section class="slide" id="s-budget" data-title="The frame budget">
+		<div class="cols">
+			<div>
+				<p class="kicker">The time limit</p>
+				<h2>8.33 milliseconds</h2>
+				<p>A 120&nbsp;Hz display shows a new picture 120 times per second. For each picture, the browser has <b>8.33&nbsp;ms</b> for everything: our code, styles, layout, painting.</p>
+				<p>If one frame takes too long, the display shows the old picture again. You see that as <b class="em-red">stutter</b>.</p>
+				<p class="lead">So all of the following ideas have to be <b>fast</b> &ndash; not just correct.</p>
+			</div>
+			<div class="stage">
+				<div class="legend">
+					<span style="--c: #e9a700">JavaScript</span>
+					<span style="--c: #7247d6">Style</span>
+					<span style="--c: #0070f2">Layout</span>
+					<span style="--c: #1f8a4c">Paint</span>
+					<span style="--c: #6b84a0">Composite</span>
+				</div>
+				<div class="frames" id="frames"></div>
+				<p id="budget-note" class="muted small" style="margin-top: 2.4rem;">Illustration. Measured: the virtualizer&rsquo;s own work is about <b>0.1&nbsp;ms per frame</b> &ndash; even with a CPU slowed down 4&times;.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 8 -->
+	<section class="slide" id="s-estimate" data-title="Smart guessing">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 1</p>
+				<h2>Guess what you haven&rsquo;t seen</h2>
+				<p>Rows we have never rendered get an <b>estimated height</b>: the average of all rows we have measured so far. Before the first measurement, the app can give a hint (<code>estimatedRowHeight</code>).</p>
+				<p>Every rendered row is measured and replaces its guess with the truth.</p>
+				<p>We only update the guess when we have measured <b>twice as many rows</b> as last time &ndash; so the scrollbar does not twitch with every new row.</p>
+			</div>
+			<div class="stage">
+				<div class="est-stage">
+					<div class="est-list" id="est-list"><div class="est-view" id="est-view"></div><div id="est-rows"></div></div>
+					<div class="readout">
+						<div class="row"><span>Measured rows</span><b id="est-count">0</b></div>
+						<div class="row"><span>Average of measured</span><b id="est-avg">&ndash;</b></div>
+						<div class="row"><span>Guess for all others</span><b class="em-blue" id="est-est">80 px</b></div>
+						<div class="row"><span>Next guess update at</span><b id="est-next">1 measured</b></div>
+						<div class="row"><span>Total height of 100,000 rows</span><b id="est-total">8.0 M px</b></div>
+					</div>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 9 -->
+	<section class="slide" id="s-fenwick" data-title="Fast math">
+		<div class="single">
+			<p class="kicker">Idea 2 &middot; the cool part</p>
+			<h2>Where does row 70,000 start? &ndash; in 17 steps</h2>
+			<div class="cols" style="align-items: start;">
+				<div>
+					<p>To place a row we need the sum of all heights above it. Adding them one by one means up to <b>100,000 additions</b> &ndash; in every frame.</p>
+					<p>Instead, we keep a small tree of <b>partial sums</b> (a <i>Fenwick tree</i>). Each box knows the total height of a block of rows. Any sum needs only a few boxes:</p>
+					<ul class="points">
+						<li><b>Where does row i start?</b> Add at most 17 boxes.</li>
+						<li><b>A row changed its height?</b> Update at most 17 boxes.</li>
+						<li><b>Which row is at pixel y?</b> Walk down the tree: 17 decisions.</li>
+					</ul>
+					<p class="muted small">17 because 2<sup>17</sup> = 131,072 &ge; 100,000. With 1 million rows: 20 steps.</p>
+				</div>
+				<div class="stage">
+					<div class="fw-status"><span class="q" id="fw-q">16 rows, each with its height</span><span id="fw-a" class="muted"></span></div>
+					<div class="fw" id="fw"></div>
+					<div class="vs">
+						<div><div class="label">One by one</div><div class="big-number em-red" id="fw-naive">&ndash;</div><div class="muted small" id="fw-naive-note">additions</div></div>
+						<div><div class="label">With the tree</div><div class="big-number em-green" id="fw-tree">&ndash;</div><div class="muted small" id="fw-tree-note">boxes</div></div>
+					</div>
+					<button class="replay" type="button">&#8635; Replay</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 10 -->
+	<section class="slide" id="s-twotrees" data-title="Two trees and one guess">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 2, continued</p>
+				<h2>Two trees and one guess</h2>
+				<p>Most rows are never measured. We don&rsquo;t store a guess for each of them. Instead we keep two trees:</p>
+				<ul class="points">
+					<li><b>Tree 1</b>: sum of the <b>measured</b> heights</li>
+					<li><b>Tree 2</b>: <b>how many</b> rows are measured</li>
+				</ul>
+				<div class="formula wrap">start(i) = <span class="v">measuredSum(i)</span> + (i &minus; <span class="v">measuredCount(i)</span>) &times; <span class="r">guess</span></div>
+				<p style="margin-top: 1rem;">When the guess changes, nothing has to be updated &ndash; it is just one number in the formula.</p>
+			</div>
+			<div class="stage">
+				<div class="label">Rows 1&ndash;13: solid = measured, striped = guessed</div>
+				<div class="tt-rows" id="tt-rows"></div>
+				<div class="formula" id="tt-calc"></div>
+				<table class="cmp" style="margin-top: 1rem;">
+					<thead><tr><th></th><th>Adding one by one</th><th>Our trees</th></tr></thead>
+					<tbody>
+						<tr><td>Where does row i start?</td><td class="em-red">up to 100,000 steps</td><td class="em-green">&le; 17 steps</td></tr>
+						<tr><td>Which row is at y?</td><td class="em-red">up to 100,000 steps</td><td class="em-green">&le; 17 steps</td></tr>
+						<tr><td>One row changed its height</td><td class="em-red">shift all rows below</td><td class="em-green">&le; 17 steps</td></tr>
+						<tr><td>The guess changed</td><td class="em-red">update every guessed row</td><td class="em-green">1 step</td></tr>
+					</tbody>
+				</table>
+				<div class="label" style="margin: 1rem 0 0.4rem;">Memory per row: 17 bytes &rarr; 100,000 rows = 1.7&nbsp;MB</div>
+				<div class="mem">
+					<span style="flex: 4; background: var(--blue);">height 4 B</span>
+					<span style="flex: 1; background: var(--purple);">1</span>
+					<span style="flex: 8; background: var(--green);">tree 1: 8 B</span>
+					<span style="flex: 4; background: var(--orange);">tree 2: 4 B</span>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 11 -->
+	<section class="slide" id="s-measure" data-title="Measuring without stalling">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 3</p>
+				<h2>Let the browser tell us the sizes</h2>
+				<p>Asking &ldquo;how tall is this row?&rdquo; right after changing something forces the browser to calculate the layout <b>immediately</b> &ndash; again and again.</p>
+				<p>Instead we use a <b>ResizeObserver</b>: the browser does its layout once and then reports the sizes of all rows together.</p>
+				<p class="lead">Bonus: it also tells us when a row grows <em>later</em> &ndash; an image arrives, text rewraps, the phone rotates.</p>
+			</div>
+			<div class="stage">
+				<div class="lane">
+					<div class="label">Ask immediately</div>
+					<div class="lane-blocks" id="lane-sync"></div>
+					<div class="muted small" id="lane-sync-note">&nbsp;</div>
+				</div>
+				<div class="lane">
+					<div class="label">Let the browser report (ResizeObserver)</div>
+					<div class="lane-blocks" id="lane-ro"></div>
+					<div class="muted small" id="lane-ro-note">&nbsp;</div>
+				</div>
+				<div class="legend">
+					<span style="--c: #6b84a0">update a row</span>
+					<span style="--c: #c35500">read its height</span>
+					<span style="--c: #d20a3c">full layout</span>
+					<span style="--c: #1f8a4c">sizes delivered</span>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 12 -->
+	<section class="slide" id="s-anchor" data-title="Keeping your place">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 4</p>
+				<h2>Keep the row you are reading still</h2>
+				<p>A row <b>above</b> you grows &ndash; maybe its data just arrived. Without care, everything below is pushed down and you lose your place.</p>
+				<p>We pick one row as the <b>anchor</b> and keep it exactly where it is. Which one?</p>
+				<ol class="priority">
+					<li>The row you jumped to</li>
+					<li>The row with the keyboard focus</li>
+					<li>The first row you can read (not a loading placeholder)</li>
+				</ol>
+			</div>
+			<div class="stage">
+				<div class="two-phones">
+					<div>
+						<div class="phone-label"><span class="label">Without anchoring</span><span class="pill bad" id="anc-bad" style="visibility: hidden;">jumped 80 px</span></div>
+						<div class="screen" id="anc-a"><div class="track"></div></div>
+					</div>
+					<div>
+						<div class="phone-label"><span class="label">With anchoring</span><span class="pill good" id="anc-good" style="visibility: hidden;">moved 0 px</span></div>
+						<div class="screen" id="anc-b"><div class="track"></div></div>
+					</div>
+				</div>
+				<p class="caption">&#128065; = the row you are reading. A row above it grows by 80 px.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 13 -->
+	<section class="slide" id="s-drift" data-title="Don't fight the finger">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 5</p>
+				<h2>Never stop a scrolling finger</h2>
+				<p>The obvious way to keep your place is to correct the scroll position. But on phones and trackpads, changing the scroll position <b class="em-red">can stop momentum scrolling</b>.</p>
+				<p>So we don&rsquo;t touch it. We collect all corrections in one number &ndash; the <b class="em-purple">drift</b> &ndash; and move only the rows.</p>
+				<p class="lead">When scrolling stops, we hand the drift back to the scroll position. Rows and scroll position move together, so you see nothing.</p>
+			</div>
+			<div class="stage">
+				<div class="drift-lanes">
+					<div>
+						<div class="phone-label"><span class="label">Correct scroll position</span><span class="pill bad" id="drift-bad" style="visibility: hidden;">momentum scrolling stopped</span></div>
+						<div class="screen" id="drift-a"><div class="track"></div></div>
+						<canvas id="drift-a-graph" width="400" height="120" aria-label="Scroll speed"></canvas>
+					</div>
+					<div>
+						<div class="phone-label"><span class="label">Drift</span><span class="pill good" id="drift-good" style="visibility: hidden;">momentum scrolling continues</span></div>
+						<div class="screen" id="drift-b"><div class="track"></div></div>
+						<canvas id="drift-b-graph" width="400" height="120" aria-label="Scroll speed"></canvas>
+						<div class="meter"><span class="em-purple">drift</span><div class="bar"><span id="drift-meter"></span></div><b id="drift-value">0 px</b></div>
+					</div>
+				</div>
+				<p class="caption">The graphs show the scroll speed. A row above the screen grows by 120 px during momentum scrolling.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 14 -->
+	<section class="slide" id="s-block" data-title="One moving block">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 6</p>
+				<h2>Move one block, not every row</h2>
+				<p>In our table, all rows share <b>one grid</b>, so a long text in one row widens the column for every row. That&rsquo;s why the columns line up.</p>
+				<p>Positioning each row on its own pulls it out of the shared grid &ndash; every row sizes its columns differently.</p>
+				<p>So the visible rows stay in the grid, and we move them together as <b>one block</b> with a single <code>translateY</code>.</p>
+				<div class="pipeline"><span class="skip">Layout</span><span class="skip">Paint</span><span class="run">Composite (GPU)</span></div>
+				<p class="muted small" style="margin-top: 0.6rem;">Moving a block this way skips layout and painting. CSS tricks that skip off-screen content would also isolate each row from the grid &ndash; and we have no off-screen rows anyway.</p>
+			</div>
+			<div class="stage">
+				<div class="blocks">
+					<div>
+						<div class="phone-label"><span class="label">Each row on its own</span><span class="pill bad">columns broken</span></div>
+						<div class="mini-table bad" id="blk-a"></div>
+					</div>
+					<div>
+						<div class="phone-label"><span class="label">One block</span><span class="pill good">columns aligned</span></div>
+						<div class="mini-table good" id="blk-b"></div>
+					</div>
+				</div>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 15 -->
+	<section class="slide" id="s-big" data-title="Really big lists">
+		<div class="cols">
+			<div>
+				<p class="kicker">Idea 7</p>
+				<h2>Taller than the browser allows</h2>
+				<p>1,000,000 rows &times; 150&nbsp;px = <b>150 million pixels</b>. Browsers have a maximum element height &ndash; in Firefox about 18 million px.</p>
+				<p>So the scroll area never gets taller than <b>16 million px</b> (tested in Chrome, Firefox and Safari):</p>
+				<ul class="points">
+					<li><b>Dragging the scrollbar</b>: 50% of the scrollbar = 50% of the data.</li>
+					<li><b>Wheel, touch, keyboard</b>: still exactly 1 pixel per pixel &ndash; it feels completely normal.</li>
+				</ul>
+			</div>
+			<div class="stage">
+				<div class="rulers" id="rulers">
+					<div class="ruler"><div class="bar" style="height: 100%;"><div class="thumb" id="ruler-v"></div></div><div class="cap"><b>Your data</b><br><span id="ruler-v-label">row 0</span></div></div>
+					<div class="ruler"><div class="bar" style="height: 10.7%;"><div class="thumb" id="ruler-p"></div></div><div class="cap"><b>Scroll area</b><br>16,000,000 px</div></div>
+					<svg aria-hidden="true"><line id="ruler-line" stroke="#0070f2" stroke-width="2" stroke-dasharray="6 5"></line></svg>
+				</div>
+				<p class="caption">Left: 150,000,000 px of rows. Right: the 16,000,000 px the browser actually scrolls (same scale).</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 16 -->
+	<section class="slide" id="s-consumer" data-title="You own the rows">
+		<div class="single">
+			<p class="kicker">Works with any framework</p>
+			<h2>The table asks. Your app renders.</h2>
+			<div class="event-line">
+				<span class="bubble">range-change { first: 120, last: 135 }</span>
+				<span>&rarr;</span>
+				<span class="chip">Your app &middot; React, Angular, Vue, plain JS</span>
+				<span>&rarr;</span>
+				<span class="chip">rows 120&ndash;134 with <code>position</code></span>
+			</div>
+			<p>The table never creates rows itself &ndash; frameworks want to own their elements. How your app reuses its row elements is up to you:</p>
+			<div class="stage">
+				<div class="lanes3">
+					<div class="rlane" data-mode="keyed"><div class="label">Keyed &ndash; like React <code>key</code></div><div class="slots"></div><div class="counts"></div></div>
+					<div class="rlane" data-mode="positional"><div class="label">Positional &ndash; rewrite all</div><div class="slots"></div><div class="counts"></div></div>
+					<div class="rlane" data-mode="pool"><div class="label">Pool &ndash; park &amp; reuse</div><div class="slots"></div><div class="counts"></div></div>
+				</div>
+				<p class="caption">Colors = element identity. Scrolling by 2 rows: keyed creates 2 and deletes 2, positional rewrites all, pool reuses 2.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 17 -->
+	<section class="slide" id="s-dev" data-title="What you need to do">
+		<div class="single">
+			<p class="kicker">For app developers</p>
+			<h2>What you need to do: three things</h2>
+			<div class="steps3">
+				<div class="card"><h3><span class="num">1</span>Listen</h3><p class="muted">to the <code>range-change</code> event of <code>ui5-table-virtualizer</code>.</p></div>
+				<div class="card"><h3><span class="num">2</span>Render</h3><p class="muted">rows <code>first</code> to <code>last&minus;1</code>, in order, each with its <code>position</code>.</p></div>
+				<div class="card"><h3><span class="num">3</span>Flag</h3><p class="muted">rows whose data is still loading with <code>loading</code> &ndash; keep the cells, empty is fine. The table draws the placeholder.</p></div>
+			</div>
+			<div class="cols" style="align-items: start; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);">
+				<div>
+					<div class="tabs" role="tablist">
+						<button role="tab" aria-selected="true" data-tab="react">React</button>
+						<button role="tab" aria-selected="false" data-tab="js">Plain JavaScript</button>
+					</div>
+					<pre class="code" data-panel="react"><span class="k">function</span> <span class="h">Orders</span>({ orders }) {
+  <span class="k">const</span> [range, setRange] = useState({ first: 0, last: 0 });
+  <span class="k">const</span> rows = [];
+  <span class="k">for</span> (<span class="k">let</span> i = range.first; i &lt; range.last; i++) {
+    <span class="k">const</span> order = orders.get(i);  <span class="c">// undefined while loading</span>
+    rows.push(
+      &lt;TableRow <span class="h">key={i} position={i} loading={!order}</span>&gt;
+        &lt;TableCell&gt;{order?.id}&lt;/TableCell&gt;
+        &lt;TableCell&gt;{order?.text}&lt;/TableCell&gt;
+      &lt;/TableRow&gt;
+    );
+  }
+  <span class="k">return</span> (
+    &lt;Table&gt;
+      &lt;TableVirtualizer slot=<span class="s">"features"</span> rowCount={orders.size}
+        <span class="h">onRangeChange={e =&gt; setRange(e.detail)}</span> /&gt;
+      &lt;TableHeaderRow slot=<span class="s">"headerRow"</span>&gt;&hellip;&lt;/TableHeaderRow&gt;
+      {rows}
+    &lt;/Table&gt;
+  );
+}</pre>
+					<pre class="code" data-panel="js" hidden><span class="c">// 1. listen</span>
+virtualizer.addEventListener(<span class="s">"range-change"</span>, e =&gt; {
+  <span class="k">const</span> { first, last } = e.detail;
+
+  <span class="c">// 2. render rows first..last-1 in order</span>
+  <span class="k">for</span> (<span class="k">let</span> i = first; i &lt; last; i++) {
+    <span class="k">const</span> row = getRowElement(i);  <span class="c">// reuse from a pool</span>
+    row.<span class="h">position</span> = i;
+    <span class="k">const</span> order = store.get(i);
+
+    <span class="c">// 3. flag rows without data</span>
+    row.<span class="h">loading</span> = !order;
+    <span class="k">if</span> (order) fillCells(row, order);
+  }
+  releaseRowsOutside(first, last);  <span class="c">// back to the pool</span>
+});</pre>
+				</div>
+				<div class="card">
+					<h3>What you don&rsquo;t need to do</h3>
+					<ul class="points no">
+						<li>Know or calculate row heights</li>
+						<li>Any scroll math or scrollbar tricks</li>
+						<li>Keyboard and focus handling</li>
+						<li>Design loading placeholders</li>
+						<li>Keep track of which rows were measured</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 18 -->
+	<section class="slide" id="s-tomb" data-title="Loading placeholders">
+		<div class="cols">
+			<div>
+				<p class="kicker">Built in</p>
+				<h2>Placeholders while data loads</h2>
+				<p>Data often comes from a server. Until it arrives, a row only needs <code>loading</code>. The table takes care of the rest:</p>
+				<ul class="points yes">
+					<li>Loading rows show placeholders in theme colors</li>
+					<li>Height = the current guess, so fewer jumps when real data replaces it</li>
+					<li>Placeholder heights never spoil the guess</li>
+					<li>The row you read stays still when the data arrives</li>
+					<li>Very fast flings show a placeholder pattern instead of white space</li>
+				</ul>
+			</div>
+			<div class="stage">
+				<div class="tomb" id="tomb"></div>
+				<p class="caption">The server answers after 1.2 s. The marked row keeps its position.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 19 -->
+	<section class="slide" id="s-keys" data-title="Keyboard">
+		<div class="cols">
+			<div>
+				<p class="kicker">Accessibility</p>
+				<h2>Focus is a number, not an element</h2>
+				<p>Hold <kbd>Page&nbsp;Down</kbd>: the next target row usually does not exist yet. Most virtual lists lose the focus right here.</p>
+				<p>We remember the focus as a <b>row number</b>. Each key press is calculated from the guessed heights, so even a page of very different heights is one screen. The focus waits in the table until the row is there.</p>
+				<p class="lead">No key press is lost &ndash; even when the app renders late.</p>
+			</div>
+			<div class="stage">
+				<div class="keys-stage">
+					<div class="kb-log">
+						<div class="keycap" id="kb-key">PgDn</div>
+						<div class="readout">
+							<div class="row"><span>Key presses</span><b id="kb-presses">0</b></div>
+							<div class="row"><span>Focus target</span><b class="em-blue" id="kb-target">row 0</b></div>
+							<div class="row"><span>Focus is on</span><b id="kb-on">row 0</b></div>
+							<div class="row"><span>Lost key presses</span><b class="em-green">0</b></div>
+						</div>
+					</div>
+					<div class="kb-table" id="kb-table"><div class="track"></div></div>
+				</div>
+				<p class="caption">The app needs 400 ms to render new rows.</p>
+				<button class="replay" type="button">&#8635; Replay</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- 20 -->
+	<section class="slide" id="s-rejected" data-title="Ideas we rejected">
+		<div class="single">
+			<p class="kicker">Just as important</p>
+			<h2>Ideas we tried, and why we rejected them</h2>
+			<div class="rejected">
+				<div class="card"><h3>Build our own scrolling</h3><div class="why">Why not</div><p class="muted">Custom scroll physics never feels native. It breaks accessibility, find-in-page and scrolling inside the page.</p></div>
+				<div class="card"><h3>Position every row on its own</h3><div class="why">Why not</div><p class="muted">Rows leave the shared grid, so columns stop lining up.</p></div>
+				<div class="card"><h3>Correct the scroll position right away</h3><div class="why">Why not</div><p class="muted">Can stop momentum scrolling on phones and trackpads. The drift solves it.</p></div>
+				<div class="card"><h3>The table renders the rows</h3><div class="why">Why not</div><p class="muted">React and Angular want to own their elements. Two owners fight.</p></div>
+				<div class="card"><h3>Read each height right after rendering</h3><div class="why">Why not</div><p class="muted">Forces a full layout for every row. The browser reports sizes for free.</p></div>
+				<div class="card"><h3>CSS that skips off-screen content</h3><div class="why">Why not</div><p class="muted">Isolates rows from the grid. And there is nothing off-screen to skip.</p></div>
+				<div class="card"><h3>Add all heights every time</h3><div class="why">Why not</div><p class="muted">100,000 additions per frame. The tree needs 17.</p></div>
+				<div class="card"><h3>Remember only a few hundred heights</h3><div class="why">Why not</div><p class="muted">Positions jump when you scroll back. 1.7 MB for 100,000 rows is cheap.</p></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 21 -->
+	<section class="slide" id="s-results" data-title="Results">
+		<div class="single">
+			<p class="kicker">Measured, not promised</p>
+			<h2>Results</h2>
+			<div class="kpis">
+				<div class="card"><div class="big-number" data-count="120">0</div><div class="muted">FPS while auto-scrolling 12,000 px/s</div></div>
+				<div class="card"><div class="big-number" data-count="0">0</div><div class="muted">frames with white space</div></div>
+				<div class="card"><div class="big-number" data-count="0">0</div><div class="muted">lost key presses (58 presses, app 50 ms late)</div></div>
+				<div class="card"><div class="big-number" data-count="17">0</div><div class="muted">steps to find any of 100,000 rows</div></div>
+			</div>
+			<table class="cmp card">
+				<thead><tr><th>Scenario (5 s auto-scroll)</th><th>FPS</th><th>Frame time p95</th><th>White space</th><th>Content jumps</th></tr></thead>
+				<tbody id="results-body">
+					<tr><td>10,000 rows, 4,000 px/s</td><td>120</td><td>9.3 ms</td><td>0</td><td>0</td></tr>
+					<tr><td>10,000 rows, 12,000 px/s</td><td>120</td><td>9.0 ms</td><td>0</td><td>0</td></tr>
+					<tr><td>Scrolling up into never-seen rows</td><td>120</td><td>9.3 ms</td><td>0</td><td>0</td></tr>
+					<tr><td>100,000 rows (15 M px of content)</td><td>120</td><td>9.2 ms</td><td>0</td><td>1 &times; 1.3 px</td></tr>
+					<tr><td>Data arrives after 400 ms (placeholders)</td><td>120</td><td>9.3 ms</td><td>0</td><td>0</td></tr>
+				</tbody>
+			</table>
+			<p class="muted small" style="margin-top: 0.8rem;">Chrome 150, macOS, 12 cores, 120 Hz display. Automated scrolling. &ldquo;Content jumps&rdquo; = the row you read moved by more than 1 px.</p>
+			<div style="margin-top: 1rem;">
+				<a class="btn" href="TableVirtualizerDynamicHeight.html" target="_blank" rel="noopener" style="text-decoration: none; display: inline-block;">Open the live demo here</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- 22 -->
+	<section class="slide dark" id="s-thanks" data-title="Thank you">
+		<div class="thanks">
+			<div>
+				<p class="kicker">Thank you!</p>
+				<h1 style="font-size: clamp(2.2rem, 1.2rem + 3.6vw, 4.2rem);">Try it. Break it.<br>Tell us.</h1>
+				<p class="lead">Scan the code and try the demo on your phone: fling, rotate, switch the data size to 1,000,000 rows. We&rsquo;d love your feedback &ndash; especially what feels wrong.</p>
+				<ul class="points" style="color: #dbe6f3;">
+					<li>Variable row heights, no configuration</li>
+					<li>Native scrolling, 120 FPS</li>
+					<li>Any framework: the app owns its rows</li>
+					<li>Keyboard and placeholders built in</li>
+				</ul>
+			</div>
+			<!-- REPLACE QR: swap the placeholder SVG below for the real QR code (e.g. <img src="qr.png" alt="QR code to the demo">)
+			     and set the link to the deployed demo URL. -->
+			<div class="qr-box" id="qr-box">
+				<svg id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges" role="img" aria-label="QR code placeholder"></svg>
+				<a id="qr-link" href="TableVirtualizerDynamicHeight.html">QR placeholder &ndash; replace with the demo link</a>
+			</div>
+		</div>
+	</section>
+
+	<nav id="nav" aria-label="Slides">
+		<span id="nav-count">1 / 22</span>
+		<button type="button" id="nav-prev" aria-label="Previous slide">&uarr;</button>
+		<button type="button" id="nav-next" aria-label="Next slide">&darr;</button>
+	</nav>
+
+	<script>
+		(() => {
+			"use strict";
+
+			/* ---------- helpers ---------- */
+
+			const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			const CANCEL = Symbol("cancel");
+			const PALETTE = ["#0070f2", "#7247d6", "#1f8a4c", "#c35500", "#d20a3c", "#e9a700", "#6b84a0", "#0a8a8a", "#a0459b", "#5b6f00"];
+			const $ = (selector, root = document) => root.querySelector(selector);
+			const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+			const fmt = value => Math.round(value).toLocaleString("en-US");
+			const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+			const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+			const easeOut = t => 1 - Math.pow(1 - t, 3);
+			const linear = t => t;
+			// deterministic pseudo random numbers, so that every run of a scene looks the same
+			const rand = seed => {
+				const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+				return x - Math.floor(x);
+			};
+
+			function h(tag, className, html) {
+				const element = document.createElement(tag);
+				if (className) {
+					element.className = className;
+				}
+				if (html !== undefined) {
+					element.innerHTML = html;
+				}
+				return element;
+			}
+
+			function flash(element, color = "#ffe9a8", duration = 800) {
+				if (element && !reduced && element.animate) {
+					element.animate([{ backgroundColor: color, offset: 0 }], { duration, easing: "ease-out" });
+				}
+			}
+
+			function glow(element, color = "#ffd166", duration = 700) {
+				if (element && !reduced && element.animate) {
+					element.animate([{ boxShadow: `0 0 0 4px ${color}`, offset: 0.3 }], { duration, easing: "ease-out" });
+				}
+			}
+
+			function bars(seed, count = 2, min = 20, spread = 55) {
+				return Array.from({ length: count }, (_, k) => `<i style="width: ${Math.round(min + rand(seed * 7 + k) * spread)}%"></i>`).join("");
+			}
+
+			/* ---------- scene runner ---------- */
+
+			// A run is cancelled when its slide leaves the screen or the scene is replayed.
+			class Run {
+				alive = true;
+				paused = false;
+				pausedAt = 0;
+				pausedDuration = 0;
+				timers = new Set();
+				resumeWaiters = new Set();
+				animations = [];
+
+				constructor(slide) {
+					this.slide = slide;
+				}
+
+				now() {
+					return (this.paused ? this.pausedAt : performance.now()) - this.pausedDuration;
+				}
+
+				check() {
+					if (!this.alive) {
+						throw CANCEL;
+					}
+				}
+
+				schedule(timer) {
+					if (this.paused) {
+						return;
+					}
+					timer.started = performance.now();
+					timer.id = setTimeout(() => {
+						this.timers.delete(timer);
+						if (this.alive) {
+							timer.callback();
+						}
+					}, timer.remaining);
+				}
+
+				pause() {
+					if (this.paused || !this.alive) {
+						return;
+					}
+					this.pausedAt = performance.now();
+					this.paused = true;
+					this.timers.forEach(timer => {
+						if (timer.id !== undefined) {
+							clearTimeout(timer.id);
+							timer.id = undefined;
+							timer.remaining = Math.max(0, timer.remaining - (this.pausedAt - timer.started));
+						}
+					});
+					this.animations = this.slide.getAnimations({ subtree: true }).filter(animation => animation.playState === "running" || animation.pending);
+					this.animations.forEach(animation => animation.pause());
+				}
+
+				resume() {
+					if (!this.paused || !this.alive) {
+						return;
+					}
+					this.pausedDuration += performance.now() - this.pausedAt;
+					this.paused = false;
+					this.animations.forEach(animation => animation.play());
+					this.animations = [];
+					this.timers.forEach(timer => this.schedule(timer));
+					this.resumeWaiters.forEach(resolve => resolve());
+					this.resumeWaiters.clear();
+				}
+
+				stop() {
+					this.alive = false;
+					this.timers.forEach(timer => {
+						clearTimeout(timer.id);
+						timer.cancel?.();
+					});
+					this.timers.clear();
+					this.resumeWaiters.forEach(resolve => resolve());
+					this.resumeWaiters.clear();
+					this.slide.getAnimations({ subtree: true }).forEach(animation => animation.pause());
+					this.animations = [];
+				}
+
+				async sleep(ms) {
+					this.check();
+					if (!reduced && ms > 0) {
+						await new Promise(resolve => {
+							const timer = { remaining: ms, callback: resolve, cancel: resolve };
+							this.timers.add(timer);
+							this.schedule(timer);
+						});
+					}
+					this.check();
+				}
+
+				async frame() {
+					this.check();
+					await new Promise(resolve => requestAnimationFrame(resolve));
+					this.check();
+					if (this.paused) {
+						await new Promise(resolve => this.resumeWaiters.add(resolve));
+					}
+					this.check();
+					return this.now();
+				}
+
+				async tween(duration, update, easing = easeInOut) {
+					if (reduced || duration <= 0) {
+						update(1);
+						return;
+					}
+					const start = this.now();
+					for (;;) {
+						const t = clamp(((await this.frame()) - start) / duration);
+						update(easing(t));
+						if (t >= 1) {
+							return;
+						}
+					}
+				}
+
+				// waits before the next loop of a scene; with reduced motion, scenes show their final state once
+				async again(pause) {
+					if (reduced) {
+						return false;
+					}
+					await this.sleep(pause);
+					return true;
+				}
+
+				later(ms, callback) {
+					this.check();
+					const timer = { remaining: reduced ? 0 : ms, callback };
+					this.timers.add(timer);
+					this.schedule(timer);
+				}
+			}
+
+			const scenes = new Map();
+
+			function scene(id, play, setup) {
+				scenes.set(id, { play, setup, run: undefined, ready: false });
+			}
+
+			function startScene(id) {
+				const entry = scenes.get(id);
+				if (!entry) {
+					return;
+				}
+				entry.run?.stop();
+				if (!entry.ready) {
+					entry.ready = true;
+					entry.setup?.();
+				}
+				const run = new Run($("#" + id));
+				run.slide.getAnimations({ subtree: true }).forEach(animation => {
+					animation.currentTime = 0;
+					animation.play();
+				});
+				entry.run = run;
+				updatePlayback(id);
+				entry.play(run).catch(error => {
+					if (error !== CANCEL) {
+						console.error(error); // eslint-disable-line no-console
+					}
+				});
+			}
+
+			function stopScene(id) {
+				const entry = scenes.get(id);
+				if (entry?.run) {
+					entry.run.stop();
+					entry.run = undefined;
+					updatePlayback(id);
+				}
+			}
+
+			function updatePlayback(id) {
+				const run = scenes.get(id)?.run;
+				const button = $(".playback", $("#" + id));
+				if (!button) {
+					return;
+				}
+				button.textContent = !run || run.paused ? "Play" : "Pause";
+				button.setAttribute("aria-pressed", String(!!run?.paused));
+				button.disabled = reduced;
+			}
+
+			/* ---------- 1 title ---------- */
+
+			scene("s-title", async run => {
+				const count = $("#s-title .count");
+				await run.tween(1800, t => {
+					count.textContent = fmt(t * 100000);
+				}, easeOut);
+			}, () => {
+				const rows = [];
+				for (let i = 0; i < 26; i++) {
+					const cells = 2 + Math.floor(rand(i) * 3);
+					rows.push(`<div>${Array.from({ length: cells }, (_, k) => `<i style="width: ${Math.round(40 + rand(i * 5 + k) * 150)}px"></i>`).join("")}</div>`);
+				}
+				// the content is repeated, so that the endless stream animation has no visible seam
+				$("#s-title .stream").innerHTML = rows.join("") + rows.join("");
+			});
+
+			/* ---------- 2 agenda ---------- */
+
+			scene("s-agenda", async run => {
+				const cards = $$("#s-agenda .card");
+				cards.forEach(card => card.classList.remove("on"));
+				for (const card of cards) {
+					await run.sleep(220);
+					card.classList.add("on");
+				}
+			});
+
+			/* ---------- 3 cost ---------- */
+
+			// elements of one demo row per cell: selection, order, customer, description, tags, status, amount
+			const COST_GROUPS = [5, 6, 14, 10, 8, 7, 8];
+
+			scene("s-cost", async run => {
+				const dots = $$("#dots i");
+				const cells = $$("#s-cost .row-model span");
+				const label = $("#dots-label");
+				dots.forEach(dot => dot.classList.remove("on"));
+				cells.forEach(cell => {
+					cell.style.background = "";
+				});
+				label.innerHTML = "&hellip; is really";
+				await run.sleep(500);
+				let index = 0;
+				for (let group = 0; group < COST_GROUPS.length; group++) {
+					cells[group].style.background = PALETTE[group];
+					for (let k = 0; k < COST_GROUPS[group]; k++) {
+						dots[index++].classList.add("on");
+						await run.sleep(30);
+					}
+				}
+				await run.sleep(300);
+				label.innerHTML = `&hellip; is really <span class="em-blue">58 elements</span> &times; 100,000 rows = <span class="em-red">5.8 million</span>`;
+			}, () => {
+				const dots = $("#dots");
+				COST_GROUPS.forEach((size, group) => {
+					for (let k = 0; k < size; k++) {
+						const dot = h("i");
+						dot.style.background = PALETTE[group];
+						dots.append(dot);
+					}
+				});
+			});
+
+			const benchResults = {};
+
+			async function runBench(count) {
+				const output = $("#bench-out");
+				output.textContent = `Building ${fmt(count)} rows\u2026`;
+				await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve)));
+				const host = h("div");
+				host.style.cssText = "position: absolute; left: 0; top: 0; width: 640px; visibility: hidden; pointer-events: none;";
+				$("#s-cost .stage").append(host);
+				const start = performance.now();
+				const fragment = document.createDocumentFragment();
+				for (let i = 0; i < count; i++) {
+					const row = h("div");
+					row.style.cssText = "display: flex; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;";
+					for (let c = 0; c < 7; c++) {
+						const cell = h("span");
+						cell.textContent = `Cell ${c + 1} of row ${i + 1}`;
+						row.append(cell);
+					}
+					fragment.append(row);
+				}
+				host.append(fragment);
+				host.getBoundingClientRect(); // forces style and layout, like showing the rows
+				benchResults[count] = performance.now() - start;
+				host.remove();
+				output.innerHTML = Object.keys(benchResults).map(rows => {
+					const ms = benchResults[rows];
+					const frames = ms / 8.33;
+					return `<b>${fmt(rows)} rows</b>: ${ms.toFixed(1)} ms <span class="${frames > 1 ? "em-red" : "em-green"}">(${frames < 1 ? "fits in one frame" : `${fmt(frames)} frames lost`})</span>`;
+				}).join(" &middot; ");
+			}
+
+			/* ---------- 4 virtualization window ---------- */
+
+			scene("s-window", async run => {
+				const screen = $("#win-screen");
+				const rows = $$("#win-track .abs-row");
+				const windowBox = $("#mm-window");
+				const firstLabel = $("#win-first");
+				const ROW = 34;
+				const TOTAL = 100000;
+				const shown = rows.map(() => -1);
+				const render = (y, highlight) => {
+					const first = Math.floor(y / ROW);
+					rows.forEach((row, k) => {
+						// element k always shows the index that has the same remainder: rows leaving at the top come back at the bottom
+						const index = first + (((k - first) % rows.length) + rows.length) % rows.length;
+						row.style.transform = `translateY(${index * ROW - y}px)`;
+						if (shown[k] !== index) {
+							shown[k] = index;
+							row.firstElementChild.textContent = `Row ${fmt(index + 1)}`;
+							row.querySelectorAll("i").forEach((bar, b) => {
+								bar.style.width = `${Math.round(18 + rand(index * 3 + b) * 50)}%`;
+							});
+							highlight && flash(row);
+						}
+					});
+					windowBox.style.top = `${clamp(y / (TOTAL * ROW - screen.clientHeight)) * 91}%`;
+					firstLabel.textContent = fmt(first + 1);
+				};
+				do {
+					render(0, false);
+					await run.sleep(800);
+					await run.tween(3600, t => render(t * 16 * ROW, true));
+					await run.sleep(500);
+					await run.tween(2600, t => render((16 + t * (70000 - 16)) * ROW, false));
+					await run.sleep(400);
+					await run.tween(2200, t => render((70000 + t * 8) * ROW, true));
+				} while (await run.again(2200));
+			}, () => {
+				const track = $("#win-track");
+				for (let k = 0; k < 12; k++) {
+					const row = h("div", "mrow abs-row", "<b></b><i></i><i></i>");
+					row.style.height = "34px";
+					track.append(row);
+				}
+			});
+
+			/* ---------- 5 equal heights ---------- */
+
+			scene("s-easy", async run => {
+				const track = $("#easy-track");
+				const rows = Array.from(track.children);
+				let current = -1;
+				const update = y => {
+					y = Math.round(y);
+					const first = Math.floor(y / 50);
+					track.style.transform = `translateY(${-y}px)`;
+					$("#easy-scroll").textContent = fmt(y);
+					$("#easy-first").textContent = `row ${first}`;
+					$("#easy-formula").innerHTML = `first row = &lfloor; <span class="v">${fmt(y)}</span> &divide; 50 &rfloor; = <span class="r">${first}</span>`;
+					if (first !== current) {
+						rows[current]?.classList.remove("good");
+						rows[first]?.classList.add("good");
+						current = first;
+					}
+				};
+				do {
+					update(0);
+					await run.sleep(700);
+					await run.tween(4200, t => update(t * 1500));
+					await run.sleep(1000);
+					await run.tween(1600, t => update(1500 * (1 - t)));
+				} while (await run.again(800));
+			}, () => {
+				const track = $("#easy-track");
+				for (let i = 0; i < 50; i++) {
+					const row = h("div", "mrow", `<b>Row ${i}</b>${bars(i, 1, 25, 45)}`);
+					row.style.height = "50px";
+					track.append(row);
+				}
+			});
+
+			/* ---------- 6 different heights ---------- */
+
+			const HARD_HEIGHTS = Array.from({ length: 60 }, (_, i) => 34 + Math.round(rand(i + 11) * 100));
+
+			scene("s-hard", async run => {
+				const track = $("#hard-track");
+				const rows = Array.from(track.children);
+				const screen = $("#hard-screen");
+				const marker = $("#hard-marker");
+				const chips = $$("#hard-chips .chip");
+				const heights = HARD_HEIGHTS.slice();
+				const prefix = n => heights.slice(0, n).reduce((sum, height) => sum + height, 0);
+				const indexAt = y => {
+					let sum = 0;
+					for (let i = 0; i < heights.length; i++) {
+						sum += heights[i];
+						if (sum > y) {
+							return i;
+						}
+					}
+					return heights.length - 1;
+				};
+				let marked = [];
+				const update = y => {
+					y = Math.round(y);
+					const formula = Math.floor(y / 50);
+					const real = indexAt(y);
+					track.style.transform = `translateY(${-y}px)`;
+					marked.forEach(row => row.classList.remove("good", "bad"));
+					marked = [rows[formula], rows[real]].filter(Boolean);
+					rows[formula]?.classList.add("bad");
+					rows[real]?.classList.add("good");
+					const top = prefix(formula) - y;
+					const bottom = screen.clientHeight - 4;
+					marker.style.top = `${clamp(top, 0, bottom)}px`;
+					marker.firstElementChild.textContent = `formula: row ${formula}${top > bottom ? " \u2193" : top < 0 ? " \u2191" : ""}`;
+					$("#hard-scroll").textContent = fmt(y);
+					$("#hard-formula").textContent = `row ${formula}`;
+					$("#hard-real").textContent = `row ${real}`;
+					$("#hard-diff").textContent = `${Math.abs(formula - real)} rows`;
+				};
+				chips.forEach(chip => chip.classList.remove("on"));
+				do {
+					heights.splice(0, heights.length, ...HARD_HEIGHTS);
+					rows.forEach((row, i) => {
+						row.style.transition = "none";
+						row.style.height = `${heights[i]}px`;
+					});
+					update(0);
+					for (const chip of chips) {
+						if (!chip.classList.contains("on")) {
+							await run.sleep(250);
+							chip.classList.add("on");
+						}
+					}
+					await run.sleep(600);
+					await run.tween(5000, t => update(t * 2200));
+					await run.sleep(900);
+					// heights also change while you look at them: the content below jumps
+					const reading = indexAt(2200);
+					rows[reading].style.transition = "height 0.5s ease";
+					heights[reading] += 70;
+					rows[reading].style.height = `${heights[reading]}px`;
+					glow(screen, "rgba(210, 10, 60, 0.55)", 1200);
+					update(2200);
+				} while (await run.again(2600));
+			}, () => {
+				const track = $("#hard-track");
+				HARD_HEIGHTS.forEach((height, i) => {
+					const row = h("div", "mrow", `<b>Row ${i}</b>${bars(i, 2, 15, 30)}`);
+					row.style.height = `${height}px`;
+					track.append(row);
+				});
+			});
+
+			/* ---------- 7 frame budget ---------- */
+
+			// work per frame in ms: JavaScript, style, layout, paint, composite. Frame 4 is too long, frame 5 has no own work.
+			const FRAMES = [
+				[1.2, 0.8, 1.0, 0.9, 0.5],
+				[1.0, 1.1, 1.3, 1.0, 0.5],
+				[1.4, 1.2, 1.6, 1.0, 0.6],
+				[3.4, 4.0, 5.2, 2.0, 0.8],
+				null,
+				[1.1, 0.9, 1.1, 0.9, 0.5],
+			];
+			const WORK_COLORS = ["#e9a700", "#7247d6", "#0070f2", "#1f8a4c", "#6b84a0"];
+			const FRAME_LABELS = [
+				"<span class=\"em-green\">&#10003; new picture</span>",
+				"<span class=\"em-green\">&#10003; new picture</span>",
+				"<span class=\"em-green\">&#10003; new picture</span>",
+				"<span class=\"em-red\">&#10007; old picture again</span>",
+				"<span class=\"em-orange\">late picture</span>",
+				"<span class=\"em-green\">&#10003; new picture</span>",
+			];
+
+			scene("s-budget", async run => {
+				const frames = $$("#frames .frame");
+				const playhead = $("#frames .playhead");
+				do {
+					frames.forEach(frame => {
+						frame.querySelector(".work").style.width = "0";
+						frame.querySelector(".shown").classList.remove("on");
+					});
+					playhead.style.left = "0";
+					await run.sleep(600);
+					let started = -1;
+					let shown = -1;
+					await run.tween(7200, t => {
+						const position = t * FRAMES.length;
+						playhead.style.left = `${t * 100}%`;
+						while (started < Math.min(FRAMES.length - 1, Math.floor(position))) {
+							const work = frames[++started].querySelector(".work");
+							if (work.dataset.ratio) {
+								work.style.width = `calc((100% - 8px) * ${work.dataset.ratio})`;
+							}
+						}
+						// the display shows a picture at the end of every frame
+						while (shown < Math.floor(position) - 1 || (t === 1 && shown < FRAMES.length - 1)) {
+							frames[++shown].querySelector(".shown").classList.add("on");
+						}
+					}, linear);
+				} while (await run.again(3000));
+			}, () => {
+				const container = $("#frames");
+				FRAMES.forEach((work, k) => {
+					const frame = h("div", "frame");
+					frame.append(h("span", "tick", `${((k + 1) * 8.33).toFixed(1)} ms`));
+					const bar = h("div", "work");
+					if (work) {
+						const total = work.reduce((sum, value) => sum + value, 0);
+						work.forEach((value, c) => {
+							const span = h("span");
+							span.style.width = `${(value / total) * 100}%`;
+							span.style.background = WORK_COLORS[c];
+							bar.append(span);
+						});
+						bar.dataset.ratio = (total / 8.33).toFixed(3);
+					}
+					frame.append(bar, h("div", "shown", FRAME_LABELS[k]));
+					container.append(frame);
+				});
+				container.append(h("div", "playhead"));
+			});
+
+			/* ---------- 8 estimation ---------- */
+
+			const EST_HEIGHTS = Array.from({ length: 26 }, (_, i) => 44 + Math.round(rand(i + 3) * 156));
+
+			scene("s-estimate", async run => {
+				const container = $("#est-rows");
+				const rows = Array.from(container.children);
+				const view = $("#est-view");
+				const VIEW_TOP = 24;
+				const VIEW_HEIGHT = 150;
+				const SCALE = 0.5; // the drawing is half the real size
+				view.style.top = `${VIEW_TOP}px`;
+				view.style.height = `${VIEW_HEIGHT}px`;
+				const readout = (count, sum, estimate, next) => {
+					$("#est-count").textContent = fmt(count);
+					$("#est-avg").textContent = count ? `${fmt(sum / count)} px` : "\u2013";
+					$("#est-est").textContent = `${fmt(estimate)} px`;
+					$("#est-next").textContent = `${fmt(next)} measured`;
+					$("#est-total").textContent = `${((sum + (100000 - count) * estimate) / 1e6).toFixed(1)} M px`;
+				};
+				do {
+					let estimate = 80;
+					let count = 0;
+					let sum = 0;
+					let next = 1;
+					const measured = rows.map(() => false);
+					container.style.transition = "none";
+					container.style.transform = `translateY(${VIEW_TOP}px)`;
+					rows.forEach(row => {
+						row.style.transition = "none";
+						row.classList.remove("measured");
+						row.style.height = `${estimate * SCALE}px`;
+						row.lastElementChild.textContent = "guess";
+					});
+					container.getBoundingClientRect();
+					container.style.transition = "";
+					rows.forEach(row => {
+						row.style.transition = "";
+					});
+					readout(count, sum, estimate, next);
+					await run.sleep(900);
+					for (let i = 0; i < rows.length; i++) {
+						measured[i] = true;
+						count++;
+						sum += EST_HEIGHTS[i];
+						rows[i].classList.add("measured");
+						rows[i].style.height = `${EST_HEIGHTS[i] * SCALE}px`;
+						rows[i].lastElementChild.textContent = `${EST_HEIGHTS[i]} px`;
+						flash(rows[i]);
+						if (count >= next) {
+							// the guess is only updated when the number of measured rows has doubled
+							estimate = Math.round(sum / count);
+							next *= 2;
+							rows.forEach((row, k) => {
+								if (!measured[k]) {
+									row.style.height = `${estimate * SCALE}px`;
+								}
+							});
+							flash($("#est-est").parentElement, "#cfe3ff", 1000);
+						}
+						// keep the newest measured row at the bottom of the visible area
+						let bottom = 0;
+						for (let k = 0; k <= i; k++) {
+							bottom += (measured[k] ? EST_HEIGHTS[k] : estimate) * SCALE;
+						}
+						container.style.transform = `translateY(${Math.min(VIEW_TOP, VIEW_TOP + VIEW_HEIGHT - bottom)}px)`;
+						readout(count, sum, estimate, next);
+						await run.sleep(i < 6 ? 950 : 420);
+					}
+				} while (await run.again(2600));
+			}, () => {
+				const container = $("#est-rows");
+				EST_HEIGHTS.forEach((_, i) => {
+					container.append(h("div", "mrow", `<b>Row ${i + 1}</b><span class="small" style="margin-inline-start: auto;">guess</span>`));
+				});
+			});
+
+			/* ---------- 9 Fenwick tree ---------- */
+
+			const FW_HEIGHTS = [44, 90, 60, 120, 44, 75, 44, 150, 60, 44, 100, 44, 80, 44, 130, 60];
+			const lowbit = i => i & -i;
+
+			scene("s-fenwick", async run => {
+				const fw = $("#fw");
+				const nodes = [];
+				const bases = [];
+				$$(".node", fw).forEach(node => {
+					nodes[Number(node.dataset.i)] = node;
+				});
+				$$(".base", fw).forEach(base => {
+					bases[Number(base.dataset.i)] = base;
+				});
+				const heights = FW_HEIGHTS.slice();
+				const boxSum = i => {
+					let sum = 0;
+					for (let k = i - lowbit(i) + 1; k <= i; k++) {
+						sum += heights[k - 1];
+					}
+					return sum;
+				};
+				const q = $("#fw-q");
+				const a = $("#fw-a");
+				const naive = $("#fw-naive");
+				const tree = $("#fw-tree");
+				const setCounters = (naiveValue, treeValue, naiveNote, treeNote) => {
+					naive.textContent = naiveValue;
+					tree.textContent = treeValue;
+					$("#fw-naive-note").textContent = naiveNote;
+					$("#fw-tree-note").textContent = treeNote;
+				};
+				const clear = () => {
+					nodes.forEach(node => node?.classList.remove("on", "ok", "no", "upd"));
+					bases.forEach(base => base?.classList.remove("on", "upd"));
+				};
+				const setBar = i => {
+					bases[i].querySelector(".bar").style.height = `${heights[i - 1] * 0.5}px`;
+					bases[i].querySelector("span").textContent = heights[i - 1];
+				};
+				const scaleUp = async (naiveNote, treeNote) => {
+					await run.sleep(1300);
+					setCounters("100,000", "17", naiveNote, treeNote);
+					glow(naive.parentElement, "rgba(210, 10, 60, 0.4)");
+					glow(tree.parentElement, "rgba(31, 138, 76, 0.4)");
+					await run.sleep(2800);
+				};
+
+				do {
+					heights.splice(0, heights.length, ...FW_HEIGHTS);
+					clear();
+					nodes.forEach(node => node && (node.style.opacity = "0"));
+					bases.forEach(base => base && (base.querySelector(".bar").style.height = "0"));
+					setCounters("\u2013", "\u2013", "additions", "boxes");
+					q.textContent = "16 rows, each with its height";
+					a.textContent = "";
+					await run.sleep(400);
+					for (let i = 1; i <= 16; i++) {
+						setBar(i);
+						await run.sleep(60);
+					}
+					await run.sleep(700);
+					q.textContent = "Each box stores the sum of a block of rows";
+					for (let level = 0; level <= 4; level++) {
+						for (let i = 1; i <= 16; i++) {
+							if (lowbit(i) === 1 << level) {
+								nodes[i].textContent = fmt(boxSum(i));
+								nodes[i].style.opacity = "1";
+							}
+						}
+						await run.sleep(500);
+					}
+					await run.sleep(1500);
+
+					// where does a row start?
+					q.textContent = "Where does row 14 start?";
+					a.textContent = "= the sum of rows 1\u201313";
+					setCounters(0, 0, "additions", "boxes");
+					await run.sleep(1000);
+					for (let i = 1; i <= 13; i++) {
+						bases[i].classList.add("on");
+						naive.textContent = i;
+						await run.sleep(120);
+					}
+					await run.sleep(500);
+					let sum = 0;
+					let steps = 0;
+					const used = [];
+					for (let i = 13; i > 0; i -= lowbit(i)) {
+						nodes[i].classList.add("on");
+						sum += boxSum(i);
+						used.push(fmt(boxSum(i)));
+						tree.textContent = ++steps;
+						a.textContent = `= ${used.join(" + ")}`;
+						await run.sleep(800);
+					}
+					a.textContent = `= ${used.join(" + ")} = ${fmt(sum)} px`;
+					await scaleUp("additions for 100,000 rows", "boxes for 100,000 rows");
+
+					// which row is at y?
+					clear();
+					q.textContent = "Which row is at y = 700 px?";
+					a.textContent = "";
+					setCounters(0, 0, "additions", "decisions");
+					await run.sleep(1000);
+					let total = 0;
+					for (let i = 1; i <= 16; i++) {
+						total += heights[i - 1];
+						bases[i].classList.add("on");
+						naive.textContent = i;
+						await run.sleep(120);
+						if (total > 700) {
+							break;
+						}
+					}
+					await run.sleep(500);
+					let position = 0;
+					let rest = 700;
+					let decisions = 0;
+					for (let step = 16; step > 0; step >>= 1) {
+						const next = position + step;
+						tree.textContent = ++decisions;
+						if (next <= 16 && boxSum(next) <= rest) {
+							nodes[next].classList.add("ok");
+							position = next;
+							rest -= boxSum(next);
+							a.textContent = `box ${fmt(boxSum(next))} fits \u2192 take it, ${fmt(rest)} px left`;
+						} else {
+							nodes[next]?.classList.add("no");
+							a.textContent = `box ${fmt(boxSum(next))} is too big \u2192 go left`;
+						}
+						await run.sleep(1100);
+					}
+					a.textContent = `\u2192 row ${position + 1}`;
+					await scaleUp("additions for 100,000 rows", "decisions for 100,000 rows");
+
+					// a row changes its height
+					clear();
+					q.textContent = "Row 5 grows by 40 px";
+					a.textContent = "";
+					setCounters(0, 0, "positions to shift", "boxes to update");
+					await run.sleep(1000);
+					heights[4] += 40;
+					setBar(5);
+					bases[5].classList.add("upd");
+					await run.sleep(700);
+					steps = 0;
+					for (let i = 5; i <= 16; i += lowbit(i)) {
+						nodes[i].classList.add("upd");
+						nodes[i].textContent = fmt(boxSum(i));
+						tree.textContent = ++steps;
+						await run.sleep(750);
+					}
+					for (let i = 6; i <= 16; i++) {
+						bases[i].classList.add("on");
+						naive.textContent = i - 5;
+						await run.sleep(100);
+					}
+					a.textContent = "only 4 boxes change";
+					await scaleUp("positions for 100,000 rows", "boxes for 100,000 rows");
+				} while (await run.again(400));
+			}, () => {
+				const fw = $("#fw");
+				for (let i = 1; i <= 16; i++) {
+					const node = h("div", "node");
+					node.dataset.i = i;
+					node.style.gridRow = String(5 - Math.log2(lowbit(i)));
+					node.style.gridColumn = `${i - lowbit(i) + 1} / ${i + 1}`;
+					node.style.transition = "background 0.25s, color 0.25s, opacity 0.35s";
+					node.title = `Sum of rows ${i - lowbit(i) + 1}\u2013${i}`;
+					fw.append(node);
+				}
+				for (let i = 1; i <= 16; i++) {
+					const base = h("div", "base", "<div class=\"bar\"></div><span></span>");
+					base.dataset.i = i;
+					base.style.gridRow = "7";
+					base.style.gridColumn = String(i);
+					fw.append(base);
+				}
+			});
+
+			/* ---------- 10 two trees ---------- */
+
+			// rows 1-13: measured heights, or undefined for rows that use the guess (9 measured rows, sum 1,240 px)
+			const TT_ROWS = [100, 160, 120, undefined, 180, 90, undefined, 150, 140, undefined, 200, undefined, 100];
+
+			scene("s-twotrees", async run => {
+				const barsElements = Array.from($("#tt-rows").children);
+				const calc = $("#tt-calc");
+				const SCALE = 0.5;
+				do {
+					barsElements.forEach(bar => {
+						bar.style.transition = "none";
+						bar.style.height = "0";
+					});
+					barsElements[0].getBoundingClientRect();
+					barsElements.forEach(bar => {
+						bar.style.transition = "";
+					});
+					calc.innerHTML = "&nbsp;";
+					await run.sleep(400);
+					for (let i = 0; i < TT_ROWS.length; i++) {
+						barsElements[i].style.height = `${(TT_ROWS[i] ?? 80) * SCALE}px`;
+						await run.sleep(90);
+					}
+					await run.sleep(800);
+					calc.innerHTML = "Tree 1: sum of the measured rows = <span class=\"v\">1,240</span>";
+					barsElements.forEach((bar, i) => TT_ROWS[i] !== undefined && flash(bar, "#7fd1ff", 1200));
+					await run.sleep(2000);
+					calc.innerHTML = "Tree 2: number of measured rows = <span class=\"v\">9</span>";
+					barsElements.forEach((bar, i) => TT_ROWS[i] !== undefined && glow(bar, "#7fd1ff", 900));
+					await run.sleep(2000);
+					calc.innerHTML = "start(14) = <span class=\"v\">1,240</span> + (13 &minus; <span class=\"v\">9</span>) &times; <span class=\"r\">80</span> = <b>1,560</b>";
+					await run.sleep(2800);
+					barsElements.forEach((bar, i) => {
+						if (TT_ROWS[i] === undefined) {
+							bar.style.height = `${96 * SCALE}px`;
+						}
+					});
+					calc.innerHTML = "start(14) = <span class=\"v\">1,240</span> + (13 &minus; <span class=\"v\">9</span>) &times; <span class=\"r\">96</span> = <b>1,624</b> <span class=\"r\">&larr; only the guess changed</span>";
+					flash(calc.querySelector(".r"), "#8a6d00", 1200);
+				} while (await run.again(3600));
+			}, () => {
+				const container = $("#tt-rows");
+				TT_ROWS.forEach(height => container.append(h("div", height === undefined ? "est" : "")));
+			});
+
+			/* ---------- 11 measuring ---------- */
+
+			scene("s-measure", async run => {
+				const sync = $("#lane-sync");
+				const observer = $("#lane-ro");
+				const syncNote = $("#lane-sync-note");
+				const observerNote = $("#lane-ro-note");
+				const add = async (lane, type, text, ms) => {
+					const block = h("div", `blk ${type}`, text);
+					lane.append(block);
+					await run.frame();
+					block.classList.add("on");
+					await run.sleep(ms);
+				};
+				do {
+					sync.innerHTML = "";
+					observer.innerHTML = "";
+					syncNote.innerHTML = "&nbsp;";
+					observerNote.innerHTML = "&nbsp;";
+					await run.sleep(600);
+					const syncLane = (async () => {
+						for (let i = 1; i <= 6; i++) {
+							await add(sync, "w", `row ${i}`, 160);
+							await add(sync, "r", "read", 120);
+							await add(sync, "l", "layout", 420);
+							syncNote.innerHTML = `${i} ${i === 1 ? "row" : "rows"} &rarr; <span class="em-red">${i} full ${i === 1 ? "layout" : "layouts"}</span>`;
+						}
+					})();
+					const observerLane = (async () => {
+						for (let i = 1; i <= 6; i++) {
+							await add(observer, "w", `row ${i}`, 160);
+						}
+						await add(observer, "l", "layout", 420);
+						await add(observer, "ok", "6 sizes", 200);
+						observerNote.innerHTML = "6 rows &rarr; <span class=\"em-green\">1 layout</span>, all sizes reported together";
+					})();
+					await Promise.all([syncLane, observerLane]);
+				} while (await run.again(3000));
+			});
+
+			/* ---------- 12 anchoring ---------- */
+
+			const ANCHOR_ROWS = [70, 56, 64, 80, 56, 72, 60, 64];
+			const ANCHOR_OFFSET = 40;
+			const ANCHOR_GROWTH = 80;
+
+			const anchorLoading = "<b>Row 41</b><span class=\"sk\" style=\"flex: 1;\"><i></i><i></i></span>";
+			const anchorLoaded = "<b>Row 41</b><span style=\"flex: 1; display: grid; gap: 7px;\"><i style=\"width: 92%\"></i><i style=\"width: 76%\"></i><i style=\"width: 84%\"></i><i style=\"width: 58%\"></i></span>";
+
+			scene("s-anchor", async run => {
+				const phones = [$("#anc-a"), $("#anc-b")];
+				const pills = [$("#anc-bad"), $("#anc-good")];
+				do {
+					pills.forEach(pill => {
+						pill.style.visibility = "hidden";
+					});
+					phones.forEach(phone => {
+						const track = $(".track", phone);
+						const rows = $$(".mrow", track);
+						track.style.transition = "none";
+						track.style.transform = `translateY(${-ANCHOR_OFFSET}px)`;
+						rows.forEach((row, i) => {
+							row.style.transition = "none";
+							row.style.height = `${ANCHOR_ROWS[i]}px`;
+						});
+						rows[0].innerHTML = anchorLoading;
+						track.getBoundingClientRect();
+						track.style.transition = "";
+						rows.forEach(row => {
+							row.style.transition = "";
+						});
+					});
+					await run.sleep(1800);
+					// the data of the partially visible row above arrives, the row grows
+					phones.forEach((phone, p) => {
+						const rows = $$(".mrow", phone);
+						rows[0].innerHTML = anchorLoaded;
+						rows[0].style.height = `${ANCHOR_ROWS[0] + ANCHOR_GROWTH}px`;
+						flash(rows[0]);
+						if (p === 1) {
+							$(".track", phone).style.transform = `translateY(${-ANCHOR_OFFSET - ANCHOR_GROWTH}px)`;
+						}
+					});
+					await run.sleep(800);
+					pills.forEach(pill => {
+						pill.style.visibility = "visible";
+					});
+				} while (await run.again(3000));
+			}, () => {
+				$$("#anc-a, #anc-b").forEach(phone => {
+					const track = $(".track", phone);
+					ANCHOR_ROWS.forEach((height, i) => {
+						const row = h("div", i === 1 ? "mrow hl" : "mrow", `<b>Row ${41 + i}</b>${bars(i + 40, 2, 15, 30)}${i === 1 ? "<span class=\"eye\">&#128065;</span>" : ""}`);
+						row.style.height = `${height}px`;
+						track.append(row);
+					});
+					// marks the original position of the row you are reading
+					const guide = h("div", "guide");
+					guide.style.top = `${ANCHOR_ROWS[0] - ANCHOR_OFFSET}px`;
+					phone.append(guide);
+				});
+			});
+
+			/* ---------- 13 drift ---------- */
+
+			const DRIFT = { v0: 2400, tau: 0.75, growAt: 0.7, end: 2.8, growth: 120 };
+			const driftPosition = t => DRIFT.v0 * DRIFT.tau * (1 - Math.exp(-t / DRIFT.tau));
+			const driftVelocity = t => DRIFT.v0 * Math.exp(-t / DRIFT.tau);
+
+			function drawSpeed(canvas, points, stopped) {
+				const context = canvas.getContext("2d");
+				const { width, height } = canvas;
+				const x = t => 10 + (t / DRIFT.end) * (width - 20);
+				const y = v => height - 14 - (v / DRIFT.v0) * (height - 34);
+				context.clearRect(0, 0, width, height);
+				context.font = "600 13px system-ui, sans-serif";
+				context.fillStyle = "#556b82";
+				context.fillText("scroll speed", 10, 16);
+				context.strokeStyle = "#c8d1da";
+				context.lineWidth = 1;
+				context.beginPath();
+				context.moveTo(10, height - 14);
+				context.lineTo(width - 10, height - 14);
+				context.stroke();
+				const last = points[points.length - 1];
+				if (last && last[0] >= DRIFT.growAt) {
+					context.strokeStyle = "#7247d6";
+					context.setLineDash([4, 4]);
+					context.beginPath();
+					context.moveTo(x(DRIFT.growAt), 22);
+					context.lineTo(x(DRIFT.growAt), height - 14);
+					context.stroke();
+					context.setLineDash([]);
+					context.fillStyle = "#7247d6";
+					context.fillText("a row grows", x(DRIFT.growAt) + 5, 34);
+				}
+				context.strokeStyle = stopped ? "#d20a3c" : "#0070f2";
+				context.lineWidth = 3;
+				context.beginPath();
+				points.forEach(([t, v], k) => (k ? context.lineTo(x(t), y(v)) : context.moveTo(x(t), y(v))));
+				context.stroke();
+			}
+
+			scene("s-drift", async run => {
+				const lanes = [
+					{ track: $("#drift-a .track"), canvas: $("#drift-a-graph"), pill: $("#drift-bad"), stops: true },
+					{ track: $("#drift-b .track"), canvas: $("#drift-b-graph"), pill: $("#drift-good"), stops: false },
+				];
+				const meter = $("#drift-meter");
+				const value = $("#drift-value");
+				const setDrift = (drift, text) => {
+					meter.style.width = `${(drift / DRIFT.growth) * 100}%`;
+					value.textContent = text ?? `${fmt(drift)} px`;
+				};
+				const step = t => {
+					lanes.forEach(lane => {
+						const stopped = lane.stops && t >= DRIFT.growAt;
+						lane.points.push([t, stopped ? 0 : driftVelocity(t)]);
+						lane.track.style.transform = `translateY(${-driftPosition(stopped ? DRIFT.growAt : t)}px)`;
+						drawSpeed(lane.canvas, lane.points, stopped);
+						if (t >= DRIFT.growAt) {
+							lane.pill.style.visibility = "visible";
+						}
+					});
+					if (t >= DRIFT.growAt) {
+						setDrift(DRIFT.growth);
+					}
+				};
+				do {
+					lanes.forEach(lane => {
+						lane.points = [];
+						lane.pill.style.visibility = "hidden";
+						lane.track.style.transform = "";
+						drawSpeed(lane.canvas, [], false);
+					});
+					setDrift(0);
+					await run.sleep(900);
+					if (reduced) {
+						for (let t = 0; t <= DRIFT.end; t += 0.05) {
+							step(t);
+						}
+					} else {
+						const start = run.now();
+						for (let t = 0; t < DRIFT.end;) {
+							t = Math.min(DRIFT.end, ((await run.frame()) - start) / 1000);
+							step(t);
+						}
+					}
+					await run.sleep(900);
+					// scrolling has stopped: the drift is moved into the scroll position, rows and scroll position move together
+					setDrift(0, "0 px \u2013 handed back");
+				} while (await run.again(2400));
+			}, () => {
+				$$("#drift-a .track, #drift-b .track").forEach(track => {
+					for (let i = 0; i < 60; i++) {
+						const row = h("div", "mrow", `<b>Row ${i + 1}</b>${bars(i + 70, 2, 15, 30)}`);
+						row.style.height = "40px";
+						track.append(row);
+					}
+				});
+			});
+
+			/* ---------- 14 one moving block ---------- */
+
+			const BLOCK_NAMES = ["Ana", "Bartholomew Industries", "Li", "Quantum Labs", "Northwind Traders Intl.", "Zed", "Helios Solar", "Acme"];
+			const BLOCK_STATES = ["Delivered", "Waiting for carrier", "New", "In process", "Cancelled", "Returned"];
+
+			scene("s-block", async run => {
+				const tables = [
+					{ mover: $("#blk-a .mover"), own: true },
+					{ mover: $("#blk-b .mover"), own: false },
+				];
+				const makeRow = (own, i) => h("div", own ? "row-a" : "row-b",
+					`<div class="c">#${1001 + i}</div><div class="c">${BLOCK_NAMES[i % BLOCK_NAMES.length]}</div><div class="c">${BLOCK_STATES[(i * 5) % BLOCK_STATES.length]}</div>`);
+				do {
+					tables.forEach(table => {
+						table.mover.innerHTML = "";
+						table.mover.style.transform = "";
+						for (let i = 0; i < 9; i++) {
+							table.mover.append(makeRow(table.own, i));
+						}
+					});
+					await run.sleep(1000);
+					for (let next = 9; next < 21; next++) {
+						const rowHeight = tables[0].mover.firstElementChild.offsetHeight;
+						await run.tween(650, t => tables.forEach(table => {
+							table.mover.style.transform = `translateY(${-t * rowHeight}px)`;
+						}));
+						tables.forEach(table => {
+							table.mover.firstElementChild.remove();
+							table.mover.append(makeRow(table.own, next));
+							table.mover.style.transform = "";
+						});
+						await run.sleep(300);
+					}
+				} while (await run.again(400));
+			}, () => {
+				$("#blk-a").append(h("div", "mover"));
+				$("#blk-b").append(h("div", "mover grid-b"));
+			});
+
+			/* ---------- 15 really big lists ---------- */
+
+			scene("s-big", async run => {
+				const rulers = $("#rulers");
+				const thumbData = $("#ruler-v");
+				const thumbScroll = $("#ruler-p");
+				const label = $("#ruler-v-label");
+				const line = $("#ruler-line");
+				const update = (data, scroll, text) => {
+					thumbData.style.top = `${data * 100}%`;
+					thumbScroll.style.top = `${scroll * 100}%`;
+					label.innerHTML = `row ${fmt(data * 1000000)}<br><span class="muted">${text}</span>`;
+					const box = rulers.getBoundingClientRect();
+					const from = thumbScroll.getBoundingClientRect();
+					const to = thumbData.getBoundingClientRect();
+					line.setAttribute("x1", from.left - box.left);
+					line.setAttribute("y1", from.top + from.height / 2 - box.top);
+					line.setAttribute("x2", to.right - box.left);
+					line.setAttribute("y2", to.top + to.height / 2 - box.top);
+				};
+				do {
+					update(0, 0, "dragging the scrollbar");
+					await run.sleep(800);
+					await run.tween(3600, t => update(t, t, "dragging the scrollbar"));
+					await run.sleep(700);
+					await run.tween(1600, t => update(1 - t * 0.8, 1 - t * 0.8, "dragging the scrollbar"));
+					await run.sleep(900);
+					// wheel, touch and keyboard move both by the same number of pixels (both bars use the same scale)
+					const stepPx = 6;
+					const dataStep = stepPx / thumbData.parentElement.clientHeight;
+					const scrollStep = stepPx / thumbScroll.parentElement.clientHeight;
+					let data = 0.2;
+					let scroll = 0.2;
+					for (let k = 0; k < 3; k++) {
+						const fromData = data;
+						const fromScroll = scroll;
+						await run.tween(500, t => update(fromData + t * dataStep, fromScroll + t * scrollStep, "wheel / touch: 1 px = 1 px"));
+						data += dataStep;
+						scroll += scrollStep;
+						await run.sleep(450);
+					}
+					await run.sleep(1200);
+				} while (await run.again(1200));
+			});
+
+			/* ---------- 16 the app owns the rows ---------- */
+
+			scene("s-consumer", async run => {
+				const PITCH = 35;
+				const VISIBLE = 6;
+				const lanes = $$("#s-consumer .rlane").map(lane => ({ mode: lane.dataset.mode, slots: $(".slots", lane), counts: $(".counts", lane) }));
+				const place = (element, slot, x = 0) => {
+					element.style.transform = `translate(${x}%, ${slot * PITCH}px)`;
+				};
+				const label = (element, index) => {
+					element.firstElementChild.textContent = `Row ${index}`;
+				};
+				const counts = lane => {
+					const { created, deleted, rewritten, reused } = lane.stats;
+					lane.counts.innerHTML = `<span>created <b>${created}</b></span><span>deleted <b>${deleted}</b></span><span>rewritten <b>${rewritten}</b></span><span>reused <b>${reused}</b></span>`;
+				};
+				const create = (lane, index, slot) => {
+					const element = h("div", "el", `<span></span><small>element #${++lane.serial}</small>`);
+					element.style.background = PALETTE[(lane.serial - 1) % PALETTE.length];
+					label(element, index);
+					place(element, slot);
+					lane.slots.append(element);
+					return element;
+				};
+				do {
+					let first = 120;
+					lanes.forEach(lane => {
+						lane.slots.innerHTML = "";
+						lane.serial = 0;
+						lane.stats = { created: 0, deleted: 0, rewritten: 0, reused: 0 };
+						lane.byIndex = new Map();
+						for (let k = 0; k < VISIBLE; k++) {
+							lane.byIndex.set(first + k, create(lane, first + k, k));
+						}
+						counts(lane);
+					});
+					await run.sleep(1200);
+					for (let step = 0; step < 5; step++) {
+						const next = first + 2;
+						lanes.forEach(lane => {
+							if (lane.mode === "positional") {
+								// element k always shows row first + k: every element gets new content
+								Array.from(lane.slots.children).forEach((element, k) => {
+									label(element, next + k);
+									glow(element);
+								});
+								lane.stats.rewritten += VISIBLE;
+							} else {
+								const leaving = [first, first + 1].map(index => lane.byIndex.get(index));
+								[first, first + 1].forEach(index => lane.byIndex.delete(index));
+								lane.byIndex.forEach((element, index) => place(element, index - next));
+								if (lane.mode === "keyed") {
+									// the framework deletes the elements of leaving rows and creates new ones
+									leaving.forEach(element => {
+										element.style.opacity = "0";
+										place(element, -2);
+										run.later(500, () => element.remove());
+									});
+									[next + 4, next + 5].forEach((index, k) => {
+										const element = create(lane, index, 4 + k);
+										element.style.opacity = "0";
+										lane.byIndex.set(index, element);
+										run.later(60, () => {
+											element.style.opacity = "";
+										});
+									});
+									lane.stats.created += 2;
+									lane.stats.deleted += 2;
+								} else {
+									// pool: leaving elements are parked and reused for the entering rows
+									leaving.forEach((element, k) => {
+										place(element, k, 115);
+										run.later(500, () => {
+											element.style.transition = "none";
+											place(element, 4 + k, 115);
+											label(element, next + 4 + k);
+											element.getBoundingClientRect();
+											element.style.transition = "";
+											place(element, 4 + k);
+										});
+										lane.byIndex.set(next + 4 + k, element);
+									});
+									lane.stats.reused += 2;
+								}
+							}
+							counts(lane);
+						});
+						first = next;
+						await run.sleep(1700);
+					}
+				} while (await run.again(1500));
+			});
+
+			/* ---------- 17 what you need to do ---------- */
+
+			scene("s-dev", async run => {
+				const cards = $$("#s-dev .steps3 .card");
+				let current = 0;
+				do {
+					cards.forEach((card, i) => card.classList.toggle("on", i === current));
+					current = (current + 1) % cards.length;
+				} while (await run.again(1800));
+			});
+
+			/* ---------- 18 loading placeholders ---------- */
+
+			const TOMB_ROWS = [
+				{ id: "SO-1041", text: "Two pallets damaged in transit, replacement requested from the warehouse in Lyon.", amount: "1,240 &euro;", height: 88 },
+				{ id: "SO-1042", text: "Standard order.", amount: "310 &euro;", height: 46 },
+				{ id: "SO-1043", text: "Split delivery: half now, half after the inventory count. The invoice follows the second delivery.", amount: "8,900 &euro;", height: 104 },
+				{ id: "SO-1044", text: "&#128065; You are reading this row.", amount: "520 &euro;", height: 56, reading: true },
+				{ id: "SO-1045", text: "Repeat order, same conditions as last quarter.", amount: "2,150 &euro;", height: 66 },
+				{ id: "SO-1046", text: "Express.", amount: "95 &euro;", height: 46 },
+				{ id: "SO-1047", text: "Customs documents attached, temperature controlled transport for the whole route.", amount: "12,700 &euro;", height: 88 },
+				{ id: "SO-1048", text: "New customer.", amount: "640 &euro;", height: 46 },
+			];
+			const TOMB_GUESS = 60;
+
+			scene("s-tomb", async run => {
+				const track = $("#tomb .track");
+				const rows = Array.from(track.children);
+				const reading = TOMB_ROWS.findIndex(row => row.reading);
+				const setLoading = (row, loading, data) => {
+					row.classList.toggle("loading", loading);
+					row.innerHTML = loading ? "<div class=\"sk\"><i></i><i></i></div>".repeat(3)
+						: `<b>${data.id}</b><span>${data.text}</span><span style="text-align: end;">${data.amount}</span>`;
+					row.style.height = `${loading ? TOMB_GUESS : data.height}px`;
+				};
+				do {
+					track.style.transition = "none";
+					track.style.transform = "";
+					rows.forEach((row, i) => {
+						row.style.transition = "none";
+						setLoading(row, !TOMB_ROWS[i].reading, TOMB_ROWS[i]);
+					});
+					track.getBoundingClientRect();
+					track.style.transition = "";
+					rows.forEach(row => {
+						row.style.transition = "";
+					});
+					await run.sleep(1200);
+					// the data arrives: the rows get their real heights, the row you read keeps its position
+					let delta = 0;
+					rows.forEach((row, i) => {
+						if (!TOMB_ROWS[i].reading) {
+							setLoading(row, false, TOMB_ROWS[i]);
+							delta += i < reading ? TOMB_ROWS[i].height - TOMB_GUESS : 0;
+						}
+					});
+					track.style.transform = `translateY(${-delta}px)`;
+				} while (await run.again(3200));
+			}, () => {
+				const tomb = $("#tomb");
+				const track = h("div", "track");
+				TOMB_ROWS.forEach(data => track.append(h("div", data.reading ? "trow eye-row" : "trow")));
+				// marks the original position of the row you are reading
+				const guide = h("div", "guide");
+				guide.style.top = `${TOMB_ROWS.findIndex(row => row.reading) * TOMB_GUESS}px`;
+				tomb.append(track, guide);
+			});
+
+			/* ---------- 19 keyboard ---------- */
+
+			const KB_HEIGHTS = Array.from({ length: 70 }, (_, i) => 32 + Math.round(rand(i + 21) * 60));
+			const KB_RENDER_DELAY = 400;
+
+			scene("s-keys", async run => {
+				const table = $("#kb-table");
+				const track = $(".track", table);
+				const rows = Array.from(track.children);
+				const key = $("#kb-key");
+				const pos = index => KB_HEIGHTS.slice(0, index).reduce((sum, height) => sum + height, 0);
+				const state = { focus: 0, rendered: new Set() };
+				const showFocus = () => {
+					rows.forEach(row => row.classList.remove("focus"));
+					if (state.rendered.has(state.focus)) {
+						rows[state.focus].classList.add("focus");
+						table.classList.remove("waiting");
+						$("#kb-on").textContent = `row ${state.focus}`;
+					} else {
+						table.classList.add("waiting");
+						$("#kb-on").textContent = "the table (waiting)";
+					}
+				};
+				do {
+					const viewHeight = table.clientHeight;
+					state.focus = 0;
+					state.rendered = new Set();
+					rows.forEach((row, i) => {
+						const visible = pos(i) < viewHeight;
+						row.classList.toggle("ghost", !visible);
+						visible && state.rendered.add(i);
+					});
+					track.style.transition = "none";
+					track.style.transform = "";
+					track.getBoundingClientRect();
+					track.style.transition = "";
+					$("#kb-presses").textContent = "0";
+					$("#kb-target").textContent = "row 0";
+					showFocus();
+					await run.sleep(1200);
+					for (let press = 1; press <= 7; press++) {
+						key.classList.add("down");
+						await run.sleep(110);
+						key.classList.remove("down");
+						// Page Down: the last row that still fits into one screen below the focused row
+						const top = pos(state.focus);
+						let target = state.focus + 1;
+						while (target + 1 < rows.length && pos(target + 2) <= top + viewHeight) {
+							target++;
+						}
+						state.focus = target;
+						const viewTop = Math.max(0, pos(target + 1) - viewHeight);
+						track.style.transform = `translateY(${-viewTop}px)`;
+						$("#kb-presses").textContent = press;
+						$("#kb-target").textContent = `row ${target}`;
+						const missing = rows.map((_, i) => i).filter(i => !state.rendered.has(i) && pos(i) < viewTop + viewHeight && pos(i + 1) > viewTop);
+						// the app renders the new rows later; the focus waits in the table
+						run.later(KB_RENDER_DELAY, () => {
+							missing.forEach(i => {
+								state.rendered.add(i);
+								rows[i].classList.remove("ghost");
+							});
+							showFocus();
+						});
+						showFocus();
+						await run.sleep(260);
+					}
+					await run.sleep(KB_RENDER_DELAY + 300);
+				} while (await run.again(1800));
+			}, () => {
+				const track = $("#kb-table .track");
+				KB_HEIGHTS.forEach((height, i) => {
+					const row = h("div", "mrow", `<b>Row ${i}</b>${bars(i + 90, 2, 15, 30)}`);
+					row.style.height = `${height}px`;
+					track.append(row);
+				});
+			});
+
+			/* ---------- 20 rejected ideas ---------- */
+
+			scene("s-rejected", async run => {
+				const cards = $$("#s-rejected .card");
+				cards.forEach(card => card.classList.remove("on"));
+				for (const card of cards) {
+					await run.sleep(160);
+					card.classList.add("on");
+				}
+			});
+
+			/* ---------- 21 results ---------- */
+
+			scene("s-results", async run => {
+				const numbers = $$("#s-results [data-count]");
+				await run.tween(1500, t => numbers.forEach(number => {
+					number.textContent = fmt(Number(number.dataset.count) * t);
+				}), easeOut);
+			});
+
+			/* ---------- 22 thank you: QR placeholder ---------- */
+
+			function drawQrPlaceholder() {
+				const size = 29;
+				const cells = [];
+				const finder = (x, y, ox, oy) => {
+					const dx = x - ox;
+					const dy = y - oy;
+					if (dx < 0 || dy < 0 || dx > 7 || dy > 7) {
+						return undefined;
+					}
+					if (dx === 7 || dy === 7) {
+						return false; // separator
+					}
+					return dx === 0 || dy === 0 || dx === 6 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
+				};
+				for (let y = 0; y < size; y++) {
+					for (let x = 0; x < size; x++) {
+						let dark = finder(x, y, 0, 0) ?? finder(size - 1 - x, y, 0, 0) ?? finder(x, size - 1 - y, 0, 0);
+						if (dark === undefined) {
+							dark = (x === 6 || y === 6) ? (x + y) % 2 === 0 : rand(x * 31 + y * 17) > 0.5;
+						}
+						dark && cells.push(`M${x} ${y}h1v1h-1z`);
+					}
+				}
+				$("#qr").innerHTML = `<rect width="29" height="29" fill="#fff"/><path fill="#12233a" d="${cells.join("")}"/>`;
+			}
+
+			/* ---------- navigation ---------- */
+
+			const slides = $$(".slide");
+			const visibility = new Map();
+			let current = 0;
+
+			function setCurrent(index) {
+				current = index;
+				$("#nav-count").textContent = `${index + 1} / ${slides.length}`;
+				$("#progress").style.width = `${(index / (slides.length - 1)) * 100}%`;
+			}
+
+			function go(index) {
+				const target = clamp(index, 0, slides.length - 1);
+				setCurrent(target);
+				slides[target].scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+			}
+
+			const observer = new IntersectionObserver(entries => {
+				entries.forEach(entry => {
+					// relative to the viewport, so that slides taller than the screen count as visible too
+					const visible = entry.intersectionRect.height / Math.max(1, Math.min(window.innerHeight, entry.boundingClientRect.height));
+					visibility.set(entry.target, visible);
+					if (visible >= 0.5 && !scenes.get(entry.target.id)?.run) {
+						startScene(entry.target.id);
+					} else if (visible < 0.15) {
+						stopScene(entry.target.id);
+					}
+				});
+				let best = current;
+				let bestVisible = -1;
+				slides.forEach((slide, index) => {
+					const visible = visibility.get(slide) ?? 0;
+					if (visible > bestVisible) {
+						best = index;
+						bestVisible = visible;
+					}
+				});
+				setCurrent(best);
+			}, { threshold: [0, 0.15, 0.3, 0.5, 0.7, 0.9, 1] });
+
+			slides.forEach(slide => observer.observe(slide));
+
+			document.addEventListener("keydown", e => {
+				if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest?.("input, textarea, select, [contenteditable]")) {
+					return;
+				}
+				if (e.key === " " && e.target.closest?.("button, a")) {
+					return;
+				}
+				const next = ["ArrowRight", "ArrowDown", "PageDown"].includes(e.key) || (e.key === " " && !e.shiftKey);
+				const previous = ["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key) || (e.key === " " && e.shiftKey);
+				if (next || previous) {
+					go(current + (next ? 1 : -1));
+				} else if (e.key === "Home" || e.key === "End") {
+					go(e.key === "Home" ? 0 : slides.length - 1);
+				} else {
+					return;
+				}
+				e.preventDefault();
+			});
+
+			$("#nav-prev").addEventListener("click", () => go(current - 1));
+			$("#nav-next").addEventListener("click", () => go(current + 1));
+
+			scenes.forEach((_, id) => {
+				const slide = $("#" + id);
+				let controls = $(".scene-controls", slide);
+				if (!controls) {
+					const replay = $(".replay", slide) || h("button", "replay", "&#8635; Replay");
+					controls = h("div", "scene-controls");
+					(replay.parentElement || $(".stage", slide) || slide).append(controls);
+					controls.append(h("button", "playback", "Play"), replay);
+				}
+				controls.setAttribute("role", "group");
+				controls.setAttribute("aria-label", `${slide.dataset.title} animation`);
+				const button = $(".playback", controls);
+				button.type = "button";
+				button.addEventListener("click", () => {
+					const run = scenes.get(id).run;
+					if (!run) {
+						startScene(id);
+					} else if (run.paused) {
+						run.resume();
+					} else {
+						run.pause();
+					}
+					updatePlayback(id);
+				});
+
+				updatePlayback(id);
+			});
+
+			$$(".replay").forEach(button => {
+				button.type = "button";
+				button.addEventListener("click", () => startScene(button.closest(".slide").id));
+			});
+
+			$$("#s-cost [data-bench]").forEach(button => button.addEventListener("click", () => runBench(Number(button.dataset.bench))));
+
+			$$("#s-dev .tabs button").forEach(button => button.addEventListener("click", () => {
+				$$("#s-dev .tabs button").forEach(tab => tab.setAttribute("aria-selected", String(tab === button)));
+				$$("#s-dev pre[data-panel]").forEach(panel => {
+					panel.hidden = panel.dataset.panel !== button.dataset.tab;
+				});
+			}));
+
+			drawQrPlaceholder();
+			setCurrent(0);
+		})();
+	</script>
+</body>
+
+</html>

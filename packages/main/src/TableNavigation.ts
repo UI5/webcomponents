@@ -81,7 +81,7 @@ class TableNavigation extends TableExtension {
 		return e.composedPath()[0] === this._gridWalker.getCurrent();
 	}
 
-	_focusElement(element: HTMLElement, ignoreFocusIn: boolean = true) {
+	_focusElement(element: HTMLElement, ignoreFocusIn: boolean = true, preventScroll: boolean = false) {
 		if (!element || element === getActiveElement()) {
 			return;
 		}
@@ -97,7 +97,7 @@ class TableNavigation extends TableExtension {
 		}
 
 		this._ignoreFocusIn = ignoreFocusIn;
-		element.focus({ preventScroll: element === this._table._beforeElement || element === this._table._afterElement });
+		element.focus({ preventScroll: preventScroll || element === this._table._beforeElement || element === this._table._afterElement });
 		if (element instanceof HTMLInputElement) {
 			element.select();
 		}
@@ -211,7 +211,7 @@ class TableNavigation extends TableExtension {
 			this._gridWalker.setCurrent(eventOrigin);
 		}
 
-		this._table._getVirtualizer()?._onKeyDown(e);
+		this._table._getVirtualizer()?._navigation.onKeyDown(e, eventOrigin);
 		if (e.defaultPrevented) {
 			return;
 		}

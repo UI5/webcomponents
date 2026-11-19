@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<title>Table Virtualizer - Simple Mobile Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			height: 100dvh;
+			box-sizing: border-box;
+			padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+			background: var(--sapBackgroundColor);
+			color: var(--sapTextColor);
+			font-family: var(--sapFontFamily);
+			font-size: var(--sapFontSize);
+		}
+
+		header {
+			padding: 0.75rem 1rem;
+		}
+
+		h1 {
+			margin: 0 0 0.25rem;
+			font-size: 1.125rem;
+		}
+
+		p {
+			margin: 0;
+			color: var(--sapContent_LabelColor);
+		}
+
+		main {
+			flex: 1;
+			min-height: 0;
+		}
+
+		#table {
+			height: 100%;
+			width: 100%;
+		}
+
+		.description {
+			white-space: pre-line;
+			overflow-wrap: anywhere;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Sales orders</h1>
+		<p>10,000 local rows, rendered immediately. Stable positional pool, patched in place. Swipe to test native momentum.</p>
+	</header>
+	<main>
+		<ui5-table id="table" accessible-name="Sales orders" overflow-mode="Scroll">
+			<ui5-table-virtualizer id="virtualizer" slot="features" row-count="10000" estimated-row-height="80" overscan="400"></ui5-table-virtualizer>
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell width="6rem">Order</ui5-table-header-cell>
+				<ui5-table-header-cell>Description</ui5-table-header-cell>
+				<ui5-table-header-cell width="5rem">Status</ui5-table-header-cell>
+				<ui5-table-header-cell width="6rem" horizontal-align="End">Price</ui5-table-header-cell>
+			</ui5-table-header-row>
+		</ui5-table>
+	</main>
+	<template id="row-template">
+		<ui5-table-row>
+			<ui5-table-cell><span data-order></span></ui5-table-cell>
+			<ui5-table-cell><span class="description"></span></ui5-table-cell>
+			<ui5-table-cell><ui5-tag data-status hide-state-icon></ui5-tag></ui5-table-cell>
+			<ui5-table-cell><span data-price></span></ui5-table-cell>
+		</ui5-table-row>
+	</template>
+
+	<script type="module">
+		import { getPositionalRange, setText } from "./modules/TableVirtualizerRenderer.js";
+
+		const table = document.getElementById("table");
+		const virtualizer = document.getElementById("virtualizer");
+		const template = document.getElementById("row-template");
+		const descriptions = [
+			"Ready for delivery.",
+			"Office supplies for the team. Please deliver to reception during working hours.",
+			"Replacement parts.\nDelivery expected on Friday.",
+			"Two packages for the regional office.\nPlease call reception on arrival.\nKeep both packages together.",
+			"Collected by the customer.",
+			"The customer requested a later delivery. The warehouse will keep the order until the new date is confirmed.",
+			"Monthly restock.\nPaper, envelopes and labels.\nThe invoice is included in the first box.\nNo signature required.",
+			"Delivery address confirmed.\nThe order is being packed.",
+		];
+		const statuses = [
+			{ text: "Delivered", design: "Positive" },
+			{ text: "Pending", design: "Critical" },
+			{ text: "In process", design: "Information" },
+			{ text: "Cancelled", design: "Negative" },
+		];
+		const rows = [];
+		const priceFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" });
+
+		await Promise.all(["ui5-table", "ui5-table-row", "ui5-table-cell", "ui5-table-virtualizer", "ui5-tag"].map(tag => customElements.whenDefined(tag)));
+
+		virtualizer.addEventListener("range-change", event => {
+			const reserveRowHeight = Math.max(32, virtualizer._model.estimate);
+			const { first, last } = getPositionalRange(table, virtualizer, event.detail.first, event.detail.last, rows.length, reserveRowHeight);
+			const count = last - first;
+			while (rows.length < count) {
+				const row = template.content.firstElementChild.cloneNode(true);
+				table.appendChild(row);
+				rows.push(row);
+			}
+			while (rows.length > count) {
+				rows.pop().remove();
+			}
+			rows.forEach((row, slot) => {
+				const index = first + slot;
+				if (row.position !== index) {
+					row.position = index;
+					setText(row.querySelector("[data-order]"), `SO-${100000 + index}`);
+					setText(row.querySelector(".description"), descriptions[index % descriptions.length]);
+					const status = statuses[index % statuses.length];
+					const tag = row.querySelector("[data-status]");
+					tag.design = status.design;
+					setText(tag, status.text);
+					setText(row.querySelector("[data-price]"), priceFormatter.format((2500 + (index * 3719) % 1000000) / 100));
+				}
+			});
+		});
+
+		// Request the initial range even if the table rendered before the listener was attached.
+		while (!virtualizer._table) {
+			await new Promise(requestAnimationFrame);
+		}
+		virtualizer.reset();
+	</script>
+</body>
+
+</html>
