@@ -1,5 +1,6 @@
 import ShellBar from "../../src/ShellBar.js";
 import ShellBarBranding from "../../src/ShellBarBranding.js"
+import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 
 const RESIZE_THROTTLE_RATE = 300; // ms
 
@@ -233,6 +234,19 @@ describe("Branding overflow entry", () => {
 		cy.get("#shellbar").as("shellbar");
 	};
 
+	const mountWithAvatarLogo = (title = "Product Title") => {
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+				<ShellBarBranding id="shellbarBranding" slot="branding">
+					{title}
+					<Avatar id="brandingLogo" slot="logo" initials="PT" />
+				</ShellBarBranding>
+			</ShellBar>
+		);
+
+		cy.get("#shellbar").as("shellbar");
+	};
+
 	const forceIdentifierOverflow = () => {
 		cy.viewport(200, 1080);
 		cy.wait(RESIZE_THROTTLE_RATE);
@@ -304,6 +318,24 @@ describe("Branding overflow entry", () => {
 			.find(".ui5-shellbar-overflow-popover .ui5-shellbar-overflow-branding-logo img")
 			.should("exist")
 			.and("have.attr", "src", LOGO_SRC)
+			.and("not.have.attr", "slot");
+
+		// The original slotted logo is still in the light DOM (not moved).
+		cy.get("#brandingLogo")
+			.should("exist")
+			.and("have.attr", "slot", "logo");
+	});
+
+	it("clones a ui5-avatar logo into the popover entry", () => {
+		mountWithAvatarLogo("Product Title");
+		forceIdentifierOverflow();
+		openOverflowPopover();
+
+		// The cloned ui5-avatar lives inside the popover subtree with no slot attribute.
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-overflow-popover .ui5-shellbar-overflow-branding-logo [ui5-avatar]")
+			.should("exist")
 			.and("not.have.attr", "slot");
 
 		// The original slotted logo is still in the light DOM (not moved).
