@@ -483,10 +483,12 @@ class Table extends UI5Element {
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
+				const position = (row as TableRow).position;
 				row._rowActionCount = rowActionCount;
 				row._renderDummyCell = !hasFlexibleColumns;
 				row._renderNavigated = this._renderNavigated;
-				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
+				// virtualized rows alternate based on their logical position, so that recycling does not flip the colors
+				row._alternate = this.alternateRowColors && (position !== undefined ? position % 2 === 0 : alternateIndex++ % 2 === 0);
 			} else {
 				row._rowActionCount = 0;
 				row._renderDummyCell = !hasFlexibleColumns && !this._hasPopin;
@@ -580,7 +582,8 @@ class Table extends UI5Element {
 	}
 
 	_onfocusin(e: FocusEvent) {
-		if (e.target === this) {
+		// the virtualizer positions the rows itself when it moves the focus to rows that are not laid out yet
+		if (e.target === this || this._getVirtualizer()?._focusing) {
 			return;
 		}
 
@@ -667,12 +670,9 @@ class Table extends UI5Element {
 		return {
 			table: {
 				"grid-template-columns": this._gridTemplateColumns,
-				"--row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
+				// the virtualizer anchors the scroll position itself, native scroll anchoring would correct twice
+				"overflow-anchor": virtualizer ? "none" : undefined,
 				...headerStyleMap,
-			},
-			spacer: {
-				"transform": virtualizer?._getTransform(),
-				"will-change": virtualizer && "transform",
 			},
 		};
 	}

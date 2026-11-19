@@ -88,7 +88,7 @@ function App() {
           id="virtualizer"
           slot="features"
           rowCount={1000}
-          rowHeight={32}
+          estimatedRowHeight={32}
           ref={virtualizerRef}
           onRangeChange={handleRangeChange}
         />

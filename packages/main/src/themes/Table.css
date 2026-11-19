@@ -42,3 +42,40 @@
 :host([loading]) #table:has(#loading[_is-busy]) ::slotted(*) {
 	opacity: var(--sapContent_DisabledOpacity);
 }
+
+/* Temporary focus sink while a logical row is not rendered. */
+#table[tabindex]:focus {
+	outline: none;
+}
+
+/* Keep the empty-area placeholder on a static, viewport-sized surface. */
+#rows[data-virtualized] {
+	--_ui5_table_row_loading_height: var(--_ui5_list_item_base_height);
+	position: relative;
+	grid-template-rows: minmax(0, 1fr);
+	background-color: var(--sapList_Background);
+
+	&::before {
+		content: "";
+		position: sticky;
+		top: 0;
+		height: min(100%, var(--_ui5_table_virtualizer_viewport_height));
+		grid-area: 1 / 1 / 2 / -1;
+		align-self: start;
+		pointer-events: none;
+		background-color: var(--sapList_Background);
+		background-image:
+			linear-gradient(var(--sapList_BorderColor) var(--sapList_BorderWidth), transparent 0),
+			linear-gradient(transparent calc(50% - 0.75rem), var(--sapContent_Placeholderloading_Background) 0 calc(50% - 0.125rem), transparent 0),
+			linear-gradient(transparent calc(50% + 0.125rem), var(--sapContent_Placeholderloading_Background) 0 calc(50% + 0.75rem), transparent 0);
+		background-size: 100% var(--_ui5_table_row_loading_height), 50% var(--_ui5_table_row_loading_height), 20% var(--_ui5_table_row_loading_height);
+		background-position: 0 0, var(--_ui5_first_table_cell_horizontal_padding) 0, var(--_ui5_first_table_cell_horizontal_padding) 0;
+		background-repeat: repeat-y;
+	}
+
+	#spacer {
+		position: relative;
+		grid-area: 1 / 1 / 2 / -1;
+		align-self: start;
+	}
+}

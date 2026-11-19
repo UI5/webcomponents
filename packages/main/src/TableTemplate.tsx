@@ -20,7 +20,7 @@ export default function TableTemplate(this: Table) {
 				<slot name="headerRow"></slot>
 
 				<div id="rows">
-					<div id="spacer" style={this.styles.spacer}>
+					<div id="spacer">
 						<slot></slot>
 					</div>
 				</div>
