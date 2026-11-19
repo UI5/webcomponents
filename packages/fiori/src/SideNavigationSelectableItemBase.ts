@@ -245,6 +245,10 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 
 	get _ariaCurrent() {
+		if (this._fixedItemsActionsOnly) {
+			return undefined;
+		}
+
 		if (!this.sideNavCollapsed && !this.selected) {
 			return undefined;
 		}
@@ -253,6 +257,10 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 
 	get _ariaSelected() {
+		if (this._fixedItemsActionsOnly) {
+			return undefined;
+		}
+
 		if (!this.sideNavCollapsed) {
 			return undefined;
 		}

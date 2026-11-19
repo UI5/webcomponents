@@ -1723,13 +1723,24 @@ describe("Side Navigation Accessibility", () => {
 			.shadow()
 			.find(".ui5-sn-item")
 			.should("not.have.attr", "role");
+
+		// no tree/selection state is exposed on the items
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
 	});
 
 	it("Tests fixed area with only unselectable leaf items drops tree semantics (collapsed)", () => {
 		cy.mount(
 			<SideNavigation id="sn" collapsed={true}>
 				<SideNavigationItem text="Home"></SideNavigationItem>
-				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable selected />
 				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
 			</SideNavigation>
 		);
@@ -1749,6 +1760,27 @@ describe("Side Navigation Accessibility", () => {
 			.shadow()
 			.find(".ui5-sn-item")
 			.should("not.have.attr", "role");
+
+		// no tree/selection state is exposed on the items, even if an item is selected
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
 	});
 
 	it("Tests fixed area keeps tree semantics when a selectable item is present", () => {
