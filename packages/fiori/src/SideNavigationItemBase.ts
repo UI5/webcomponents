@@ -86,6 +86,16 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	inPopover = false;
 
 	/**
+	 * Indicates that every fixed item in the side navigation is either an action
+	 * (`design="Action"`) or an external link (`target="_blank"`), so the fixed area
+	 * should drop its tree semantics.
+	 * @private
+	 * @default false
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_fixedItemsActionsOnly = false;
+
+	/**
 	 * The term to highlight in the item's text, propagated from the side navigation's
 	 * `highlightedText` property so that changing it re-renders the affected items.
 	 * @private

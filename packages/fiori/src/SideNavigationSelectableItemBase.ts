@@ -177,6 +177,16 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	associatedItem?: SideNavigationItemBase;
 
 	get ariaRole() {
+		if (this._fixedItemsActionsOnly) {
+			if (this.isExternalLink) {
+				return undefined;
+			}
+
+			if (this.design === "Action") {
+				return "button";
+			}
+		}
+
 		if (this.sideNavCollapsed) {
 			return this.isOverflow || this.unselectable ? "menuitem" : "menuitemradio";
 		}

@@ -310,6 +310,19 @@ class SideNavigation extends UI5Element {
 				item._highlightedText = this.highlightedText;
 			});
 
+		const fixedItemsActionsOnly = this._areFixedItemsActionsOnly;
+		this.fixedItems.forEach(item => {
+			item._fixedItemsActionsOnly = fixedItemsActionsOnly;
+
+			// When the fixed area holds only actions and external links it is no longer a
+			// tree/menubar: the items are not managed by `_fixedItemNavigation` (see
+			// `getEnabledFixedItems`), so there is no roving tabindex nor arrow-key movement.
+			// Each item is instead independently reachable with the Tab key.
+			if (fixedItemsActionsOnly) {
+				item.forcedTabIndex = "0";
+			}
+		});
+
 		this.initGroupsSettings(this.items);
 		this.initGroupsSettings(this.fixedItems);
 	}
@@ -491,6 +504,38 @@ class SideNavigation extends UI5Element {
 		return !!this.fixedItems.length;
 	}
 
+	/**
+	 * Returns `true` when the fixed area contains at least one item and every fixed item
+	 * is either an action (`design="Action"`) or an external link (`target="_blank"`).
+	 * In that case the fixed area drops its tree semantics (see the template and
+	 * `SideNavigationSelectableItemBase.ariaRole`).
+	 */
+	get _areFixedItemsActionsOnly() {
+		if (!this.fixedItems.length) {
+			return false;
+		}
+
+		return this.fixedItems.every(item => {
+			if (!isInstanceOfSideNavigationSelectableItemBase(item)) {
+				return false;
+			}
+
+			return item.design === "Action" || !!item.isExternalLink;
+		});
+	}
+
+	/**
+	 * The role of the fixed-items container. Becomes `group` (dropping the tree/menubar
+	 * semantics) when the fixed area holds only actions and external links.
+	 */
+	get _fixedItemsExpandedRole() {
+		return this._areFixedItemsActionsOnly ? "group" : "tree";
+	}
+
+	get _fixedItemsCollapsedRole() {
+		return this._areFixedItemsActionsOnly ? "group" : "menubar";
+	}
+
 	get noMatchText() {
 		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, 0);
 	}
@@ -504,6 +549,13 @@ class SideNavigation extends UI5Element {
 	}
 
 	getEnabledFixedItems(): Array<ITabbable> {
+		// In actions-only mode the fixed area is a flat group: its items are not part of
+		// the roving-tabindex item navigation, so no arrow-key movement is registered for
+		// them (their tabindex is set directly in `onBeforeRendering`).
+		if (this._areFixedItemsActionsOnly) {
+			return [];
+		}
+
 		return this.getEnabledItems(this.fixedItems);
 	}
 
@@ -533,6 +585,10 @@ class SideNavigation extends UI5Element {
 
 	focusItem(item: SideNavigationItemBase) {
 		if (item.isFixedItem) {
+			// In actions-only mode the fixed items are not managed by the item navigation.
+			if (this._areFixedItemsActionsOnly) {
+				return;
+			}
 			this._fixedItemNavigation.setCurrentItem(item);
 		} else {
 			this._flexibleItemNavigation.setCurrentItem(item);
