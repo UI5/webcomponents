@@ -1694,7 +1694,7 @@ describe("Side Navigation Accessibility", () => {
 			cy.get("#sn")
 			.shadow()
 			.find(".ui5-sn-fixed")
-			.should("have.attr", "aria-label", "Footer Navigation Menu");
+			.should("have.attr", "aria-label", "Bottom Navigation Area");
 	});
 
 	it("Tests fixed area with only unselectable leaf items drops tree semantics (expanded)", () => {
