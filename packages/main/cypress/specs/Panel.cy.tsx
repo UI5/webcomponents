@@ -724,4 +724,30 @@ describe("Accessibility", () => {
 			.find(".ui5-panel-root")
 			.should("have.attr", "aria-label", accessibleNamePanel);
 	});
+
+	it("accessibleRole=None renders no role and no aria-label on root", () => {
+		cy.mount(<Panel headerText="Panel" accessibleRole={PanelAccessibleRole.None}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-root")
+			.should("not.have.attr", "role")
+			.and("not.have.attr", "aria-label")
+			.and("not.have.attr", "aria-labelledby");
+	});
+
+	it("accessibleRole=None with accessibleName still renders no role or aria-label on root", () => {
+		cy.mount(<Panel headerText="Panel" accessibleRole={PanelAccessibleRole.None} accessibleName="My Panel">
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-root")
+			.should("not.have.attr", "role")
+			.and("not.have.attr", "aria-label")
+			.and("not.have.attr", "aria-labelledby");
+	});
 });

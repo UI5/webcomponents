@@ -139,7 +139,10 @@ class Panel extends UI5Element {
 	/**
 	 * Sets the accessible ARIA role of the component.
 	 * Depending on the usage, you can change the role from the default `Form`
-	 * to `Region` or `Complementary`.
+	 * to `Region`, `Complementary`, or `None`.
+	 *
+	 * **Note:** When set to `None`, no ARIA role is rendered on the root element.
+	 * Use this when the Panel is purely presentational and should not appear as a landmark in the accessibility tree.
 	 * @default "Form"
 	 * @public
 	 */
@@ -345,10 +348,16 @@ class Panel extends UI5Element {
 	}
 
 	get accRole() {
+		if (this.accessibleRole === "None") {
+			return undefined;
+		}
 		return this.accessibleRole.toLowerCase() as Lowercase<PanelAccessibleRole>;
 	}
 
 	get effectiveAccessibleName() {
+		if (this.accessibleRole === "None") {
+			return undefined;
+		}
 		return typeof this.accessibleName === "string" && this.accessibleName.length ? this.accessibleName : undefined;
 	}
 
@@ -373,6 +382,9 @@ class Panel extends UI5Element {
 	}
 
 	get fixedPanelAriaLabelledbyReference() {
+		if (this.accessibleRole === "None") {
+			return undefined;
+		}
 		return this.fixed && !this.effectiveAccessibleName ? `${this._id}-header-title` : undefined;
 	}
 
