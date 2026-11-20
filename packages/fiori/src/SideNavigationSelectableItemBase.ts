@@ -177,6 +177,12 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	associatedItem?: SideNavigationItemBase;
 
 	get ariaRole() {
+		if (this._fixedItemsActionsOnly) {
+			// Items with an `href` behave as links and keep their native semantics
+			// (no explicit role); all others are exposed as buttons.
+			return this.href ? undefined : "button";
+		}
+
 		if (this.sideNavCollapsed) {
 			return this.isOverflow || this.unselectable ? "menuitem" : "menuitemradio";
 		}
@@ -239,6 +245,10 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 
 	get _ariaCurrent() {
+		if (this._fixedItemsActionsOnly) {
+			return undefined;
+		}
+
 		if (!this.sideNavCollapsed && !this.selected) {
 			return undefined;
 		}
@@ -247,6 +257,10 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 
 	get _ariaSelected() {
+		if (this._fixedItemsActionsOnly) {
+			return undefined;
+		}
+
 		if (!this.sideNavCollapsed) {
 			return undefined;
 		}
