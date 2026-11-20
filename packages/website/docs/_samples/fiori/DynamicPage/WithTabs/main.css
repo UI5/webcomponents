@@ -34,3 +34,69 @@
     color: var(--sapObjectHeader_Title_TextColor);
     font-size: var(--sapObjectHeader_Title_SnappedFontSize);
 }
+
+.tab-content {
+    display: none;
+    padding: 1rem 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.overview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.overview-card {
+    flex: 1 1 180px;
+    background: var(--sapBaseColor);
+    border: 1px solid var(--sapGroup_TitleBorderColor);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.overview-card ui5-label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.overview-card .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--sapTextColor);
+    font-family: var(--sapFontFamily);
+}
+
+.overview-card .value.positive {
+    color: var(--sapPositiveTextColor);
+}
+
+.spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+}
+
+.spec-table tr {
+    border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+}
+
+.spec-table td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: top;
+}
+
+.spec-table td:first-child {
+    color: var(--sapContent_LabelColor);
+    width: 40%;
+    font-weight: 600;
+}
+
+.spec-table td:last-child {
+    color: var(--sapTextColor);
+}
+

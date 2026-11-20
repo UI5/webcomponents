@@ -1,3 +1,4 @@
+import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageHeaderClass from "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js";
@@ -27,7 +28,24 @@ const Title = createReactComponent(TitleClass);
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
+const relatedProducts = [
+  { description: "HT-2001", text: "10 inch Portable DVD", price: "47.00 EUR" },
+  { description: "HT-2001", text: "7 inch Widescreen Portable DVD Player w MP3", price: "249.00 EUR" },
+  { description: "HT-1251", text: "Astro Laptop 1516", price: "947.00 EUR" },
+  { description: "HT-1251", text: "Astro Phone 6", price: "647.00 EUR" },
+  { description: "HT-1252", text: "Audio/Video Cable Kit - 4m", price: "27.99 EUR" },
+  { description: "HT-6001", text: "Beam Breaker B-1", price: "447.90 EUR" },
+  { description: "HT-6001", text: "Beam Breaker B-2", price: "647.50 EUR" },
+  { description: "HT-6001", text: "Beam Breaker B-3", price: "847.80 EUR" },
+  { description: "HT-2001", text: "Beam Breaker B-4", price: "1,250.00 EUR" },
+  { description: "HT-8001", text: "Camcorder View", price: "1,288.00 EUR" },
+  { description: "HT-2001", text: "Benda Laptop 1408", price: "996.00 EUR" },
+  { description: "HT-0003", text: "Cepat Tablet 10.5", price: "147.00 EUR" },
+];
+
 function App() {
+  const [selectedTab, setSelectedTab] = useState(0);
+
   return (
     <>
       <style>{`
@@ -66,6 +84,66 @@ function App() {
             font-family: var(--sapObjectHeader_Title_FontFamily);
             color: var(--sapObjectHeader_Title_TextColor);
             font-size: var(--sapObjectHeader_Title_SnappedFontSize);
+        }
+
+        .tab-content {
+            padding: 1rem 0;
+        }
+
+        .overview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .overview-card {
+            flex: 1 1 180px;
+            background: var(--sapBaseColor);
+            border: 1px solid var(--sapGroup_TitleBorderColor);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .overview-card ui5-label {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .overview-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--sapTextColor);
+            font-family: var(--sapFontFamily);
+        }
+
+        .overview-card .value.positive {
+            color: var(--sapPositiveTextColor);
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--sapFontFamily);
+            font-size: var(--sapFontSize);
+        }
+
+        .spec-table tr {
+            border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+        }
+
+        .spec-table td {
+            padding: 0.75rem 0.5rem;
+            vertical-align: top;
+        }
+
+        .spec-table td:first-child {
+            color: var(--sapContent_LabelColor);
+            width: 40%;
+            font-weight: 600;
+        }
+
+        .spec-table td:last-child {
+            color: var(--sapTextColor);
         }
       `}</style>
       <div style={{ height: "580px" }}>
@@ -112,90 +190,74 @@ function App() {
             </div>
           </DynamicPageHeader>
 
-          <TabContainer slot="stickySubheaderArea" tabLayout="Standard" collapsed>
-            <Tab text="Overview" selected={true} />
-            <Tab text="Specifications" />
-            <Tab text="Reviews" />
-            <Tab text="Related Items" />
+          <TabContainer
+            slot="stickySubheaderArea"
+            tabLayout="Standard"
+            collapsed
+            onTabSelect={e => setSelectedTab(e.detail.tabIndex)}
+          >
+            <Tab text="Overview" selected={selectedTab === 0} />
+            <Tab text="Specifications" selected={selectedTab === 1} />
+            <Tab text="Related Items" selected={selectedTab === 2} />
           </TabContainer>
 
-          <List headerText="Related Products (6)" selectionMode="Single">
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="47.00 EUR">
-              10 inch Portable DVD
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="249.00 EUR">
-              7 inch Widescreen Portable DVD Player w MP3
-            </ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="947.00 EUR">
-              Astro Laptop 1516
-            </ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="647.00 EUR">
-              Astro Phone 6
-            </ListItemStandard>
-            <ListItemStandard description="HT-1252" icon="slim-arrow-right" iconEnd={true} additionalText="27.99 EUR">
-              Audio/Video Cable Kit - 4m
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="447.90 EUR">
-              Beam Breaker B-1
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="647.50 EUR">
-              Beam Breaker B-2
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="847.80 EUR">
-              Beam Breaker B-3
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="1,250.00 EUR">
-              Beam Breaker B-4
-            </ListItemStandard>
-            <ListItemStandard description="HT-8001" icon="slim-arrow-right" iconEnd={true} additionalText="1,288.00 EUR">
-              Camcorder View
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="996.00 EUR">
-              Benda Laptop 1408
-            </ListItemStandard>
-            <ListItemStandard description="HT-0003" icon="slim-arrow-right" iconEnd={true} additionalText="147.00 EUR">
-              Cepat Tablet 10.5
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="47.00 EUR">
-              10 inch Portable DVD
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="249.00 EUR">
-              7 inch Widescreen Portable DVD Player w MP3
-            </ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="947.00 EUR">
-              Astro Laptop 1516
-            </ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="647.00 EUR">
-              Astro Phone 6
-            </ListItemStandard>
-            <ListItemStandard description="HT-1252" icon="slim-arrow-right" iconEnd={true} additionalText="27.99 EUR">
-              Audio/Video Cable Kit - 4m
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="447.90 EUR">
-              Beam Breaker B-1
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="647.50 EUR">
-              Beam Breaker B-2
-            </ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="847.80 EUR">
-              Beam Breaker B-3
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="1,250.00 EUR">
-              Beam Breaker B-4
-            </ListItemStandard>
-            <ListItemStandard description="HT-8001" icon="slim-arrow-right" iconEnd={true} additionalText="1,288.00 EUR">
-              Camcorder View
-            </ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="996.00 EUR">
-              Benda Laptop 1408
-            </ListItemStandard>
-            <ListItemStandard description="HT-0003" icon="slim-arrow-right" iconEnd={true} additionalText="147.00 EUR">
-              Cepat Tablet 10.5
-            </ListItemStandard>
-            <ListItemStandard description="HT-1001" icon="slim-arrow-right" iconEnd={true} additionalText="87.90 EUR">
-              Gladiator MX
-            </ListItemStandard>
-          </List>
+          {selectedTab === 0 && (
+            <div className="tab-content">
+              <div className="overview-grid">
+                <div className="overview-card">
+                  <Label>Stock</Label>
+                  <div className="value positive">In Stock</div>
+                </div>
+                <div className="overview-card">
+                  <Label>Price</Label>
+                  <div className="value">947.00 EUR</div>
+                </div>
+                <div className="overview-card">
+                  <Label>Units Sold</Label>
+                  <div className="value">12,430</div>
+                </div>
+                <div className="overview-card">
+                  <Label>Rating</Label>
+                  <div className="value">4.3 / 5</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {selectedTab === 1 && (
+            <div className="tab-content">
+              <table className="spec-table">
+                <tbody>
+                  <tr><td>Processor</td><td>Intel Core i7-1355U, 10 cores, up to 5.0 GHz</td></tr>
+                  <tr><td>Memory</td><td>16 GB DDR5 RAM (upgradeable to 64 GB)</td></tr>
+                  <tr><td>Storage</td><td>512 GB NVMe SSD (PCIe Gen 4)</td></tr>
+                  <tr><td>Display</td><td>15.6" FHD IPS, 1920×1080, 300 nits, anti-glare</td></tr>
+                  <tr><td>Battery</td><td>72 Wh, up to 10 hours</td></tr>
+                  <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
+                  <tr><td>Weight</td><td>1.85 kg</td></tr>
+                  <tr><td>Model Number</td><td>HT-1251</td></tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {selectedTab === 2 && (
+            <div className="tab-content">
+              <List headerText="Related Products (12)" selectionMode="Single">
+                {relatedProducts.map((product, index) => (
+                  <ListItemStandard
+                    key={index}
+                    description={product.description}
+                    icon="slim-arrow-right"
+                    iconEnd={true}
+                    additionalText={product.price}
+                  >
+                    {product.text}
+                  </ListItemStandard>
+                ))}
+              </List>
+            </div>
+          )}
         </DynamicPage>
       </div>
     </>

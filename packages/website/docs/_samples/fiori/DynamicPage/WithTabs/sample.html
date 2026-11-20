@@ -52,40 +52,65 @@
             </div>
         </ui5-dynamic-page-header>
 
-        <ui5-tabcontainer slot="stickySubheaderArea" tab-layout="Standard" collapsed>
+        <ui5-tabcontainer id="tabs" slot="stickySubheaderArea" tab-layout="Standard" collapsed>
             <ui5-tab text="Overview" selected></ui5-tab>
             <ui5-tab text="Specifications"></ui5-tab>
-            <ui5-tab text="Reviews"></ui5-tab>
             <ui5-tab text="Related Items"></ui5-tab>
         </ui5-tabcontainer>
 
-        <ui5-list header-text="Related Products (6)" mode="SingleSelect">
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
-            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
-            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
-            <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
-            <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
-            <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
-            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
-            <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
-            <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
-            <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
-            <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
-            <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
-            <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
-            <ui5-li description="HT-1001" icon="slim-arrow-right" icon-end additional-text="87.90 EUR">Gladiator MX</ui5-li>
-        </ui5-list>
+        <!-- Overview -->
+        <div id="tab-overview" class="tab-content active">
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <ui5-label>Stock</ui5-label>
+                    <div class="value positive">In Stock</div>
+                </div>
+                <div class="overview-card">
+                    <ui5-label>Price</ui5-label>
+                    <div class="value">947.00 EUR</div>
+                </div>
+                <div class="overview-card">
+                    <ui5-label>Units Sold</ui5-label>
+                    <div class="value">12,430</div>
+                </div>
+                <div class="overview-card">
+                    <ui5-label>Rating</ui5-label>
+                    <div class="value">4.3 / 5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Specifications -->
+        <div id="tab-specifications" class="tab-content">
+            <table class="spec-table">
+                <tr><td>Processor</td><td>Intel Core i7-1355U, 10 cores, up to 5.0 GHz</td></tr>
+                <tr><td>Memory</td><td>16 GB DDR5 RAM (upgradeable to 64 GB)</td></tr>
+                <tr><td>Storage</td><td>512 GB NVMe SSD (PCIe Gen 4)</td></tr>
+                <tr><td>Display</td><td>15.6" FHD IPS, 1920×1080, 300 nits, anti-glare</td></tr>
+                <tr><td>Battery</td><td>72 Wh, up to 10 hours</td></tr>
+                <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
+                <tr><td>Weight</td><td>1.85 kg</td></tr>
+                <tr><td>Model Number</td><td>HT-1251</td></tr>
+            </table>
+        </div>
+
+        <!-- Related Items -->
+        <div id="tab-related" class="tab-content">
+            <ui5-list header-text="Related Products (12)" mode="SingleSelect">
+                <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
+                <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+            </ui5-list>
+        </div>
 
     </ui5-dynamic-page>
     <!-- playground-fold -->

@@ -11,6 +11,10 @@
 			{
 				"name": "Basic",
 				"title": "Basic Usage"
+			},
+			{
+				"name": "WithTabs",
+				"title": "With Tabs"
 			}
 		]
 	},

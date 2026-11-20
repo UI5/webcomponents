@@ -743,6 +743,35 @@ describe("DynamicPage", () => {
 			expect(($dp[0] as any).stickySubheaderHeight).to.equal(0);
 		});
 	});
+
+	it("keeps scrollPaddingTop at the full sticky extent when the header is pinned and no subheader is slotted", () => {
+		cy.mount(
+			<DynamicPage headerPinned style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then($container => {
+				$container[0].scrollTop = 60;
+			});
+
+		cy.get("[ui5-dynamic-page]").then($dp => {
+			const dp = $dp[0] as DynamicPage;
+			const wrapper = dp.shadowRoot!.querySelector(".ui5-dynamic-page-title-header-wrapper")!;
+			const wrapperHeight = wrapper.getBoundingClientRect().height;
+
+			expect(dp.scrollPaddingTop).to.be.closeTo(wrapperHeight, 1);
+			expect(dp.stickySubheaderHeight).to.equal(0);
+		});
+	});
 });
 
 describe("Scroll", () => {

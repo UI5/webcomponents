@@ -14,3 +14,19 @@ import "@ui5/webcomponents/dist/List.js";
 import "@ui5/webcomponents/dist/ListItemStandard.js";
 
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
+
+const page = document.getElementById("page");
+const tabs = document.getElementById("tabs");
+
+const panels = {
+    0: document.getElementById("tab-overview"),
+    1: document.getElementById("tab-specifications"),
+    2: document.getElementById("tab-related"),
+};
+
+tabs.addEventListener("tab-select", e => {
+    Object.values(panels).forEach(panel => panel.classList.remove("active"));
+    panels[e.detail.tabIndex].classList.add("active");
+    page.scrollContainer.scrollTop = 0;
+});
+
