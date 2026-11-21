@@ -1,0 +1,2 @@
+"use strict";import{registerI18nLoader as r}from"./asset-registries/i18n.js";import{registerLocaleDataLoader as e}from"./asset-registries/LocaleData.js";import{registerThemePropertiesLoader as o,registerCustomThemePropertiesLoader as t}from"./asset-registries/Themes.js";import{registerIconLoader as i}from"./asset-registries/Icons.js";export{r as registerI18nLoader,e as registerLocaleDataLoader,o as registerThemePropertiesLoader,t as registerCustomThemePropertiesLoader,i as registerIconLoader};
+//# sourceMappingURL=AssetRegistry.js.map

@@ -1,0 +1,2 @@
+"use strict";const o=typeof document>"u",n={search(){return o?"":window.location.search}},i=()=>o?"":window.location.hostname,c=()=>o?"":window.location.port,a=()=>o?"":window.location.protocol,s=()=>o?"":window.location.href,u=()=>n.search(),w=(t,r,e)=>{o||window.open(t,r,e)},l=()=>{o||window.location.reload()};export{n as internals,l as locationReload,s as getLocationHref,u as getLocationSearch,i as getLocationHostname,c as getLocationPort,a as getLocationProtocol,w as locationOpen};
+//# sourceMappingURL=Location.js.map
