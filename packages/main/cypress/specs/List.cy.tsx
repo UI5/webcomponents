@@ -4333,7 +4333,7 @@ describe("List - Navigation arrow", () => {
 describe("List - Single-select RadioButton accessibility", () => {
 	it("inner RadioButton is hidden from assistive technologies", () => {
 		cy.mount(
-			<List selectionMode="Single">
+			<List selectionMode="SingleEnd">
 				<ListItemStandard>Ascending</ListItemStandard>
 				<ListItemStandard>Descending</ListItemStandard>
 			</List>
@@ -4347,7 +4347,7 @@ describe("List - Single-select RadioButton accessibility", () => {
 
 	it("inner RadioButton has no accessible-name when hidden", () => {
 		cy.mount(
-			<List selectionMode="Single">
+			<List selectionMode="SingleEnd">
 				<ListItemStandard>Ascending</ListItemStandard>
 			</List>
 		);
