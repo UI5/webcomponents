@@ -1,9 +1,12 @@
 import type InputIcon from "./InputIcon.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function InputIconTemplate(this: InputIcon) {
 	return (
+		<>
 		<div
+			id={`${this._id}-root`}
 			class={{
 				"ui5-input-icon-root": true,
 				"inputIcon": true,
@@ -13,7 +16,7 @@ export default function InputIconTemplate(this: InputIcon) {
 			role="button"
 			tabindex={-1}
 			aria-label={this.effectiveAriaLabel}
-			title={this.effectiveTitle}
+			data-ui5-has-tooltip={this.effectiveTitle ? `${this._id}-tooltip` : undefined}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}
 			onMouseUp={this._onmouseup}
@@ -32,5 +35,13 @@ export default function InputIconTemplate(this: InputIcon) {
 				/>
 			)}
 		</div>
+		{ this.effectiveTitle &&
+			// Review (double-announcement): effectiveTitle and effectiveAriaLabel are
+			// both `accessibleName`, so the name already equals the tooltip text — no
+			// `aria-describedby`. Tooltip is visual only; `data-ui5-has-tooltip`
+			// drives the gesture.
+			<Tooltip id={`${this._id}-tooltip`}>{this.effectiveTitle}</Tooltip>
+		}
+		</>
 	);
 }

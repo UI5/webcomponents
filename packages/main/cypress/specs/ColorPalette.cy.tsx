@@ -321,9 +321,9 @@ describe("Color Palette Item - tooltip", () => {
 
 		cy.get("#no-tooltip")
 			.shadow()
-			.find(".ui5-cp-item")
-			.should("have.attr", "title")
-			.and("contain", "darkblue");
+			.find("[ui5-tooltip]")
+			.invoke("text")
+			.should("contain", "darkblue");
 	});
 
 	it("should display the custom tooltip when tooltip property is set", () => {
@@ -335,9 +335,9 @@ describe("Color Palette Item - tooltip", () => {
 
 		cy.get("#custom-tooltip")
 			.shadow()
-			.find(".ui5-cp-item")
-			.should("have.attr", "title")
-			.and("contain", "Raspberry")
+			.find("[ui5-tooltip]")
+			.invoke("text")
+			.should("contain", "Raspberry")
 			.and("not.contain", "#d60d5a");
 	});
 });

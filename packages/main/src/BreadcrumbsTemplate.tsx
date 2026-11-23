@@ -22,7 +22,7 @@ export default function BreadcrumbsTemplate(this: Breadcrumbs) {
 							accessibilityAttributes={this.linkAccessibilityAttributes}
 							onClick={this._openRespPopover}
 						>
-							<Icon name={slimArrowDown} title={this._dropdownArrowAccessibleNameText}/>
+							<Icon name={slimArrowDown} accessibleName={this._dropdownArrowAccessibleNameText} showTooltip/>
 						</Link>
 					</li>
 
