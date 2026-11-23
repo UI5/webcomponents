@@ -22,13 +22,13 @@
 		/*
 			The 4-row cap lives on the popover, not on the ui5-product-switch, so the
 			popover's content part is the single scroll container and a nested scrollbar
-			is impossible. 32.5rem is the height of 4 standard rows (4 * 7.5rem of
-			item + margins, plus 2 * 1.25rem of the product-switch's own padding).
-			If the items wrap to multiple lines, raise this value so 4 wrapped rows fit.
+			is impossible. The height is computed from the actual rendered rows by
+			ui5-product-switch's getRowsHeight(4) and fed in through the --ps-row-cap
+			custom property, so it follows the real column count and wrapped items.
 		*/
 		#productswitch-popover::part(content) {
 			padding: 0;
-			max-height: 32.5rem;
+			max-height: var(--ps-row-cap, none);
 		}
 	</style>
 </head>
@@ -86,6 +86,11 @@
 		var popover = document.getElementById("productswitch-popover");
 		var productSwitch = popover.querySelector("ui5-product-switch");
 
+		function capToFourRows() {
+			var height = productSwitch.getRowsHeight(4);
+			popover.style.setProperty("--ps-row-cap", height ? height + "px" : "none");
+		}
+
 		shellBar.addEventListener("product-switch-click", function(event) {
 			if (popover.open) {
 				popover.open = false;
@@ -95,6 +100,10 @@
 				popover.open = true;
 			}
 		});
+
+		// Recompute once the items are laid out (on open) and whenever the width changes.
+		popover.addEventListener("open", capToFourRows);
+		new ResizeObserver(capToFourRows).observe(productSwitch);
 
 		productSwitch.addEventListener("click", function() {
 			popover.open = false;

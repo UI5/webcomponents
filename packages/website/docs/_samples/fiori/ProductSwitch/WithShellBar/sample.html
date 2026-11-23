@@ -10,12 +10,13 @@
         /*
             Cap the popover to 4 product-switch rows. The cap lives on the popover's
             content part, which is the single scroll container, so no nested scrollbar
-            can appear. 32.5rem is the height of 4 standard rows; raise it if the items
-            wrap to multiple lines.
+            can appear. The height is computed from the real rendered rows by
+            ui5-product-switch's getRowsHeight(4) and passed in via --ps-row-cap, so it
+            follows the current column count and any wrapped items.
         */
         #productswitch-popover::part(content) {
             padding: 0;
-            max-height: 32.5rem;
+            max-height: var(--ps-row-cap, none);
         }
     </style>
 </head>

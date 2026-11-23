@@ -228,6 +228,50 @@ class ProductSwitch extends UI5Element {
 	getFocusDomRef() {
 		return this._itemNavigation._getCurrentItem();
 	}
+
+	/**
+	 * Returns the height in pixels the component needs in order to display its first `rows` rows,
+	 * measured from its actual rendered layout and including its own vertical padding. The value
+	 * accounts for the current number of columns and for items whose text wraps to more than one line.
+	 *
+	 * Returns 0 when the content already fits within `rows` and no height limit is needed.
+	 *
+	 * Apply the returned value as a `max-height` on the scroll container that hosts the component
+	 * (for example, the popover it is placed in), so that container stays the single scroll owner.
+	 * The component itself never scrolls.
+	 * @param rows The number of rows that should remain fully visible. Defaults to 4.
+	 * @returns The height in pixels, or 0 when no limit is needed.
+	 * @public
+	 * @since 2.30.0
+	 */
+	getRowsHeight(rows = 4): number {
+		const items = [...this.items];
+		if (!items.length) {
+			return 0;
+		}
+
+		const root = this.shadowRoot?.querySelector<HTMLElement>(".ui5-product-switch-root");
+		if (!root) {
+			return 0;
+		}
+
+		// Group items into rows by their rendered top offset, so responsive column
+		// counts and wrapped (taller) items are both reflected automatically.
+		const rowTops = [...new Set(items.map(item => Math.round(item.getBoundingClientRect().top)))].sort((a, b) => a - b);
+		if (rowTops.length <= rows) {
+			return 0;
+		}
+
+		const hostTop = this.getBoundingClientRect().top;
+		const lastVisibleRowTop = rowTops[rows - 1];
+		const lastVisibleRowBottom = Math.max(...items
+			.filter(item => Math.round(item.getBoundingClientRect().top) === lastVisibleRowTop)
+			.map(item => item.getBoundingClientRect().bottom));
+
+		const bottomPadding = parseFloat(getComputedStyle(root).paddingBottom);
+
+		return Math.ceil(lastVisibleRowBottom - hostTop + bottomPadding);
+	}
 }
 
 ProductSwitch.define();

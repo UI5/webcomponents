@@ -1,6 +1,6 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -33,7 +33,21 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
   const popoverRef = useRef(null);
+  const productSwitchRef = useRef<ProductSwitchClass>(null);
   const [assistantIcon, setAssistantIcon] = useState("da");
+
+  // Cap the popover to 4 rows, measured from the actual rendered layout.
+  const capToFourRows = () => {
+    const height = productSwitchRef.current!.getRowsHeight(4);
+    popoverRef.current!.style.setProperty("--ps-row-cap", height ? `${height}px` : "none");
+  };
+
+  // Recompute whenever the product switch width changes (on open it is measured via onOpen).
+  useEffect(() => {
+    const observer = new ResizeObserver(capToFourRows);
+    observer.observe(productSwitchRef.current!);
+    return () => observer.disconnect();
+  }, []);
 
   const handleShellbarProductSwitchClick = (
     event: UI5CustomEvent<ShellBarClass, "product-switch-click">,
@@ -64,13 +78,14 @@ function App() {
       {/*
         Cap the popover to 4 product-switch rows. The cap lives on the popover's
         content part, which is the single scroll container, so no nested scrollbar
-        can appear. 32.5rem is the height of 4 standard rows; raise it if the items
-        wrap to multiple lines.
+        can appear. The height is computed from the real rendered rows by
+        getRowsHeight(4) and passed in via --ps-row-cap, so it follows the current
+        column count and any wrapped items.
       */}
       <style>{`
         #productswitch-popover::part(content) {
           padding: 0;
-          max-height: 32.5rem;
+          max-height: var(--ps-row-cap, none);
         }
       `}</style>
       <ShellBar
@@ -90,8 +105,8 @@ function App() {
           onClick={handleToggleButtonClick}
         />
       </ShellBar>
-      <Popover ref={popoverRef} id="productswitch-popover" placement="Bottom">
-        <ProductSwitch>
+      <Popover ref={popoverRef} id="productswitch-popover" placement="Bottom" onOpen={capToFourRows}>
+        <ProductSwitch ref={productSwitchRef}>
           <ProductSwitchItem
             titleText="Home"
             subtitleText="Central Home"

@@ -26,6 +26,13 @@ import "@ui5/webcomponents-icons/dist/credit-card.js";
 var shellBar = document.getElementById("shellbar");
 var popover = document.getElementById("productswitch-popover");
 var productSwitch = popover.querySelector("ui5-product-switch");
+
+// Cap the popover to 4 rows, measured from the actual rendered layout.
+function capToFourRows() {
+    var height = productSwitch.getRowsHeight(4);
+    popover.style.setProperty("--ps-row-cap", height ? height + "px" : "none");
+}
+
 shellBar.addEventListener("product-switch-click", (event) => {
     if (popover.open) {
         popover.open = false;
@@ -35,6 +42,9 @@ shellBar.addEventListener("product-switch-click", (event) => {
 		popover.open = true;
     }
 });
+// Recompute once the items are laid out (on open) and whenever the width changes.
+popover.addEventListener("open", capToFourRows);
+new ResizeObserver(capToFourRows).observe(productSwitch);
 // Selecting a product opens its homepage in a new tab, so close the popover in the original tab.
 productSwitch.addEventListener("click", () => {
     popover.open = false;
