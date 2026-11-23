@@ -1,0 +1,62 @@
+/*
+ * The light-DOM text is the aria-describedby source; keep it in the
+ * accessibility tree but out of the visual flow (not display:none, which
+ * would drop it from the a11y tree). The visible tooltip is the popover.
+ */
+:host {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/*
+ * Overstyle the wrapped popover to the OpenUI5 tooltip look.
+ *
+ * Reachable from here (the popover is a direct child of the tooltip's shadow root):
+ * - `--_ui5_popover_background` drives both the bubble background (Popover.css
+ *   root) AND the arrow fill (`.ui5-popover-arrow:after`), so one property
+ *   recolors bubble + arrow.
+ * - `::part(content)` for the inner content wrapper (padding).
+ * - `::part(header)` / `::part(footer)` never render for a tooltip; hidden defensively.
+ * - `.ui5-tooltip-text` lives in our own shadow root (sizing + wrapping).
+ *
+ * Coupling note: `--_ui5_popover_background` / `--_ui5_popover_box_shadow` are
+ * Popover-private vars (no public part/var recolors the bubble + arrow). If
+ * Popover renames them this override silently stops theming — revisit if a
+ * public styling hook becomes available.
+ */
+.ui5-tooltip-popover {
+	--_ui5_popover_background: var(--sapIndicationColor_9_Background);
+	--_ui5_popover_box_shadow: var(--sapContent_Lite_Shadow);
+	min-width: unset;
+	min-height: 1.5rem;
+	border-radius: 0.25rem;
+	box-shadow: var(--sapContent_Lite_Shadow);
+	color: var(--sapContent_ContrastTextColor);
+	font-size: var(--sapFontSmallSize);
+}
+
+.ui5-tooltip-popover::part(content) {
+	padding: 5px 0.5rem;
+	color: var(--sapContent_ContrastTextColor);
+}
+
+.ui5-tooltip-popover::part(header),
+.ui5-tooltip-popover::part(footer) {
+	display: none;
+}
+
+.ui5-tooltip-text {
+	display: block;
+	max-width: 17rem;
+	color: var(--sapContent_ContrastTextColor);
+	font-size: var(--sapFontSmallSize);
+	overflow-wrap: break-word;
+}
