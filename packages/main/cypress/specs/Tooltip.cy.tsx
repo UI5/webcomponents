@@ -121,4 +121,44 @@ describe("Tooltip", () => {
 		cy.get("#other").trigger("mouseover");
 		cy.get("#tt").shadow().find("[ui5-popover]").should("not.have.attr", "open");
 	});
+
+	it("closes a tooltip when the pointer moves to another opener", () => {
+		cy.mount(
+			<>
+				<button id="a" data-ui5-has-tooltip="ta" aria-describedby="ta">A</button>
+				<button id="b" data-ui5-has-tooltip="tb" aria-describedby="tb">B</button>
+				<Tooltip id="ta" delay={0}>Tooltip A</Tooltip>
+				<Tooltip id="tb" delay={0}>Tooltip B</Tooltip>
+			</>
+		);
+
+		// Open A by hovering its opener.
+		cy.get("#a").trigger("mouseover");
+		cy.get("#ta").shadow().find("[ui5-popover]").should("have.attr", "open");
+
+		// Move to B's opener: A must close, B must open.
+		cy.get("#a").trigger("mouseout");
+		cy.get("#b").trigger("mouseover");
+		cy.get("#tb").shadow().find("[ui5-popover]").should("have.attr", "open");
+		cy.get("#ta").shadow().find("[ui5-popover]").should("not.have.attr", "open");
+	});
+
+	it("closes a tooltip when focus moves to another opener", () => {
+		cy.mount(
+			<>
+				<button id="a" data-ui5-has-tooltip="ta" aria-describedby="ta">A</button>
+				<button id="b" data-ui5-has-tooltip="tb" aria-describedby="tb">B</button>
+				<Tooltip id="ta" delay={0}>Tooltip A</Tooltip>
+				<Tooltip id="tb" delay={0}>Tooltip B</Tooltip>
+			</>
+		);
+
+		// Open A on focus.
+		cy.get("#a").focus();
+		cy.get("#ta").shadow().find("[ui5-popover]").should("have.attr", "open");
+
+		// Move focus to B: A must close.
+		cy.get("#b").focus();
+		cy.get("#ta").shadow().find("[ui5-popover]").should("not.have.attr", "open");
+	});
 });

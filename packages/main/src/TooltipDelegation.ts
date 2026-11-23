@@ -18,9 +18,15 @@ const LONG_PRESS_MS = 500;
 // Registered tooltips, keyed by id for opener → tooltip lookup.
 const registry = new Map<string, ITooltipTarget>();
 
-let openTimer: ReturnType<typeof setTimeout> | undefined;
-let closeTimer: ReturnType<typeof setTimeout> | undefined;
+// Per-tooltip open/close timers. Keeping them per-tooltip (rather than one shared
+// pair) is essential: when the pointer or focus moves from tooltip A's opener to
+// tooltip B's opener, scheduling B's open must not cancel A's pending close.
+const openTimers = new WeakMap<ITooltipTarget, ReturnType<typeof setTimeout>>();
+const closeTimers = new WeakMap<ITooltipTarget, ReturnType<typeof setTimeout>>();
+
 let longPressTimer: ReturnType<typeof setTimeout> | undefined;
+// The tooltip currently shown or pending-open; used to dismiss it when another
+// opens and to close on activation/Escape.
 let activeTooltip: ITooltipTarget | undefined;
 
 // Find the nearest [data-ui5-has-tooltip] on the event's composed path. A
@@ -65,23 +71,47 @@ function isWithin(node: Node, opener: HTMLElement): boolean {
 	return false;
 }
 
-function clearTimers() {
-	clearTimeout(openTimer);
-	clearTimeout(closeTimer);
+// Cancel both pending timers for a single tooltip.
+function clearTooltipTimers(tooltip: ITooltipTarget) {
+	clearTimeout(openTimers.get(tooltip));
+	clearTimeout(closeTimers.get(tooltip));
+	openTimers.delete(tooltip);
+	closeTimers.delete(tooltip);
+}
+
+// Close the currently active tooltip immediately (used on activation/Escape, and
+// when a different tooltip is about to open).
+function dismissActive() {
+	if (activeTooltip) {
+		clearTooltipTimers(activeTooltip);
+		activeTooltip.closeTooltip();
+		activeTooltip = undefined;
+	}
 	clearTimeout(longPressTimer);
 }
 
 function scheduleOpen(tooltip: ITooltipTarget) {
-	clearTimeout(closeTimer);
-	clearTimeout(openTimer);
+	// Moving onto a new opener dismisses the previous tooltip at once, so two
+	// tooltips are never shown and the previous one cannot leak open.
+	if (activeTooltip && activeTooltip !== tooltip) {
+		clearTooltipTimers(activeTooltip);
+		activeTooltip.closeTooltip();
+	}
+	clearTooltipTimers(tooltip);
 	activeTooltip = tooltip;
-	openTimer = setTimeout(() => tooltip.openTooltip(), tooltip.delay);
+	openTimers.set(tooltip, setTimeout(() => tooltip.openTooltip(), tooltip.delay));
 }
 
 function scheduleClose(tooltip: ITooltipTarget) {
-	clearTimeout(openTimer);
-	clearTimeout(closeTimer);
-	closeTimer = setTimeout(() => tooltip.closeTooltip(), tooltip.delay);
+	clearTimeout(openTimers.get(tooltip));
+	openTimers.delete(tooltip);
+	clearTimeout(closeTimers.get(tooltip));
+	closeTimers.set(tooltip, setTimeout(() => {
+		tooltip.closeTooltip();
+		if (activeTooltip === tooltip) {
+			activeTooltip = undefined;
+		}
+	}, tooltip.delay));
 }
 
 const onMouseOver = (e: Event) => {
@@ -105,8 +135,7 @@ const onMouseDown = (e: MouseEvent) => {
 	if (e.button === 2) {
 		return;
 	}
-	clearTimers();
-	activeTooltip?.closeTooltip();
+	dismissActive();
 };
 
 const onFocusIn = (e: Event) => {
@@ -134,14 +163,12 @@ const onFocusOut = (e: Event) => {
 
 const onKeyDown = (e: KeyboardEvent) => {
 	if (e.key === "Escape") {
-		clearTimers();
-		activeTooltip?.closeTooltip();
+		dismissActive();
 		return;
 	}
 	// Activation closes immediately; the key still propagates.
 	if (e.key === "Enter" || e.key === " ") {
-		clearTimers();
-		activeTooltip?.closeTooltip();
+		dismissActive();
 	}
 };
 
@@ -150,6 +177,11 @@ const onTouchStart = (e: Event) => {
 	const tooltip = opener && tooltipForOpener(opener);
 	if (!tooltip) {
 		return;
+	}
+	// Dismiss any other active tooltip, then arm the long-press.
+	if (activeTooltip && activeTooltip !== tooltip) {
+		clearTooltipTimers(activeTooltip);
+		activeTooltip.closeTooltip();
 	}
 	clearTimeout(longPressTimer);
 	activeTooltip = tooltip;
@@ -182,7 +214,7 @@ function detach() {
 	document.removeEventListener("touchstart", onTouchStart);
 	document.removeEventListener("touchend", onTouchEnd);
 	document.removeEventListener("touchcancel", onTouchEnd);
-	clearTimers();
+	dismissActive();
 }
 
 /**
@@ -202,6 +234,9 @@ function deregisterTooltip(tooltip: ITooltipTarget): void {
 	if (registry.get(tooltip.id) === tooltip) {
 		registry.delete(tooltip.id);
 	}
+	// Cancel any pending timers for the removed tooltip so they can't fire after it
+	// leaves the DOM.
+	clearTooltipTimers(tooltip);
 	if (activeTooltip === tooltip) {
 		activeTooltip = undefined;
 	}
