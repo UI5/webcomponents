@@ -1,11 +1,10 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
-import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import ToggleButtonClass from "@ui5/webcomponents/dist/ToggleButton.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/da-2.js";
@@ -28,29 +27,10 @@ const ProductSwitch = createReactComponent(ProductSwitchClass);
 const ProductSwitchItem = createReactComponent(ProductSwitchItemClass);
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
-const Popover = createReactComponent(PopoverClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
-  const popoverRef = useRef(null);
   const [assistantIcon, setAssistantIcon] = useState("da");
-
-  const handleShellbarProductSwitchClick = (
-    event: UI5CustomEvent<ShellBarClass, "product-switch-click">,
-  ) => {
-    if (popoverRef.current!.open) {
-      popoverRef.current!.open = false;
-    } else {
-      event.preventDefault();
-      popoverRef.current!.opener = event.detail.targetRef;
-      popoverRef.current!.open = true;
-    }
-  };
-
-  const handleProductSelect = () => {
-    // Selecting a product opens its homepage in a new tab, so close the popover in the original tab.
-    popoverRef.current!.open = false;
-  };
 
   const handleToggleButtonClick = (
     e: UI5CustomEvent<ToggleButtonClass, "click">,
@@ -60,135 +40,45 @@ function App() {
   };
 
   return (
-    <>
-      <ShellBar
-        id="shellbar"
-        secondaryTitle="home"
-        showProductSwitch={true}
-        onProductSwitchClick={handleShellbarProductSwitchClick}
-      >
-        <ShellBarBranding slot="branding">
-          Corporate Portal
-          <img src="/images/sap-logo-svg.svg" alt="SAP Logo" slot="logo" />
-        </ShellBarBranding>
-        <ToggleButton
-          icon={assistantIcon}
-          design="Transparent"
-          slot="assistant"
-          onClick={handleToggleButtonClick}
-        />
-      </ShellBar>
-      <Popover ref={popoverRef} id="productswitch-popover" placement="Bottom">
-        <ProductSwitch>
-          <ProductSwitchItem
-            titleText="Home"
-            subtitleText="Central Home"
-            icon="home"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Analytics Cloud"
-            subtitleText="Analytics Cloud"
-            icon="business-objects-experience"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Catalog"
-            subtitleText="Ariba"
-            icon="contacts"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Guided Buying"
-            icon="credit-card"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Strategic Procurement"
-            icon="cart-3"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Travel &amp; Expense"
-            subtitleText="Concur"
-            icon="flight"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Vendor Management"
-            subtitleText="Fieldglass"
-            icon="shipping-status"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Human Capital Management"
-            icon="customer"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Sales Cloud"
-            subtitleText="Sales Cloud"
-            icon="sales-notification"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Commerce Cloud"
-            subtitleText="Commerce Cloud"
-            icon="retail-store"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Marketing Cloud"
-            subtitleText="Marketing Cloud"
-            icon="marketing-campaign"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Service Cloud"
-            icon="family-care"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="Customer Data Cloud"
-            icon="customer-briefing"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-          <ProductSwitchItem
-            titleText="S/4HANA"
-            icon="batch-payments"
-            targetSrc="about:blank"
-            target="_blank"
-            onClick={handleProductSelect}
-          />
-        </ProductSwitch>
-      </Popover>
-    </>
+    <ShellBar
+      id="shellbar"
+      secondaryTitle="home"
+      showProductSwitch={true}
+    >
+      <ShellBarBranding slot="branding">
+        Corporate Portal
+        <img src="/images/sap-logo-svg.svg" alt="SAP Logo" slot="logo" />
+      </ShellBarBranding>
+      <ToggleButton
+        icon={assistantIcon}
+        design="Transparent"
+        slot="assistant"
+        onClick={handleToggleButtonClick}
+      />
+
+      {/* The ShellBar owns and opens the popover and caps it at 4 rows, so the app
+          needs no popover and no open/close logic. */}
+      <ProductSwitch slot="productSwitch">
+        <ProductSwitchItem titleText="Home" subtitleText="Central Home" icon="home" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Analytics Cloud" subtitleText="Analytics Cloud" icon="business-objects-experience" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Catalog" subtitleText="Ariba" icon="contacts" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Guided Buying" icon="credit-card" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Strategic Procurement" icon="cart-3" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Travel &amp; Expense" subtitleText="Concur" icon="flight" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Vendor Management" subtitleText="Fieldglass" icon="shipping-status" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Human Capital Management" icon="customer" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Sales Cloud" subtitleText="Sales Cloud" icon="sales-notification" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Commerce Cloud" subtitleText="Commerce Cloud" icon="retail-store" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Marketing Cloud" subtitleText="Marketing Cloud" icon="marketing-campaign" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Service Cloud" icon="family-care" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Customer Data Cloud" icon="customer-briefing" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="S/4HANA" icon="batch-payments" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Field Service" subtitleText="Service Cloud" icon="family-care" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Subscription Billing" icon="credit-card" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Integration Suite" icon="shipping-status" targetSrc="about:blank" target="_blank" />
+        <ProductSwitchItem titleText="Build Process Automation" icon="cart-3" targetSrc="about:blank" target="_blank" />
+      </ProductSwitch>
+    </ShellBar>
   );
 }
 

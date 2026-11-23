@@ -228,6 +228,44 @@ class ProductSwitch extends UI5Element {
 	getFocusDomRef() {
 		return this._itemNavigation._getCurrentItem();
 	}
+
+	/**
+	 * Returns the height in pixels needed to display the first `rows` rows, measured from the
+	 * actual rendered layout (so it reflects the current column count and any wrapped item text),
+	 * including the component's own vertical padding. Returns 0 when the content fits within `rows`.
+	 *
+	 * Internal: used by a host that owns the scroll container (for example `ui5-shellbar`) to cap
+	 * its popover at a number of fully visible rows. Not part of the public API.
+	 * @private
+	 */
+	_getRowsHeight(rows = 4): number {
+		const items = [...this.items];
+		if (!items.length) {
+			return 0;
+		}
+
+		const root = this.shadowRoot?.querySelector<HTMLElement>(".ui5-product-switch-root");
+		if (!root) {
+			return 0;
+		}
+
+		// Group items into rows by their rendered top offset, so responsive column
+		// counts and wrapped (taller) items are both reflected automatically.
+		const rowTops = [...new Set(items.map(item => Math.round(item.getBoundingClientRect().top)))].sort((a, b) => a - b);
+		if (rowTops.length <= rows) {
+			return 0;
+		}
+
+		const hostTop = this.getBoundingClientRect().top;
+		const lastVisibleRowTop = rowTops[rows - 1];
+		const lastVisibleRowBottom = Math.max(...items
+			.filter(item => Math.round(item.getBoundingClientRect().top) === lastVisibleRowTop)
+			.map(item => item.getBoundingClientRect().bottom));
+
+		const bottomPadding = parseFloat(getComputedStyle(root).paddingBottom);
+
+		return Math.ceil(lastVisibleRowBottom - hostTop + bottomPadding);
+	}
 }
 
 ProductSwitch.define();

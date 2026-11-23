@@ -16,10 +16,11 @@
             Corporate Portal
             <img src="../assets/images/sap-logo-svg.svg" alt="SAP Logo" slot="logo" />
         </ui5-shellbar-branding>
-		<ui5-toggle-button icon="sap-icon://da" design="Transparent" slot="assistant"></ui5-toggle-button>
-    </ui5-shellbar>
-    <ui5-popover id="productswitch-popover" placement="Bottom">
-        <ui5-product-switch>
+        <ui5-toggle-button icon="sap-icon://da" design="Transparent" slot="assistant"></ui5-toggle-button>
+
+        <!-- The ShellBar owns and opens the popover and caps it at 4 rows, so the app
+             needs no popover and no open/close logic. -->
+        <ui5-product-switch slot="productSwitch">
             <ui5-product-switch-item title-text="Home" subtitle-text="Central Home"
                 icon="home" target-src="about:blank" target="_blank"></ui5-product-switch-item>
             <ui5-product-switch-item title-text="Analytics Cloud" subtitle-text="Analytics Cloud"
@@ -43,9 +44,14 @@
             <ui5-product-switch-item title-text="Customer Data Cloud"
                 icon="customer-briefing" target-src="about:blank" target="_blank"></ui5-product-switch-item>
             <ui5-product-switch-item title-text="S/4HANA" icon="batch-payments" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Field Service" subtitle-text="Service Cloud"
+                icon="family-care" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Subscription Billing" icon="credit-card" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Integration Suite" icon="shipping-status" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Build Process Automation" icon="cart-3" target-src="about:blank" target="_blank"></ui5-product-switch-item>
         </ui5-product-switch>
+    </ui5-shellbar>
 
-    </ui5-popover>
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

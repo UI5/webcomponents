@@ -47,6 +47,7 @@ import ShellBarItemNavigation from "./shellbar/ShellBarItemNavigation.js";
 import ShellBarItem, { isInstanceOfShellBarItem } from "./ShellBarItem.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
+import type ProductSwitch from "./ProductSwitch.js";
 import type { ShellBarOverflowResult } from "./shellbar/ShellBarOverflow.js";
 
 import type {
@@ -400,6 +401,18 @@ class ShellBar extends UI5Element {
 	profile!: Slot<HTMLElement>;
 
 	/**
+	 * Defines the `ui5-product-switch` shown in a popover when the product-switch
+	 * button is activated. When set, the `ui5-shellbar` owns and opens the popover
+	 * itself, so the app does not need to manage one. The popover caps its visible
+	 * height at four product rows and scrolls for the rest.
+	 *
+	 * **Note:** This slot is in an experimental state and is a subject to change.
+	 * @public
+	 */
+	@slot()
+	productSwitch!: Slot<ProductSwitch>;
+
+	/**
 	 * Defines the `notificationsCount`,
 	 * displayed in the notification icon top-right corner.
 	 * @default undefined
@@ -499,6 +512,13 @@ class ShellBar extends UI5Element {
 	overflowPopoverOpen = false;
 
 	/**
+	 * Open state of the product-switch popover.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	productSwitchPopoverOpen = false;
+
+	/**
 	 * IDs of items currently hidden due to overflow.
 	 * Used to trigger rerender for conditional rendering.
 	 * @private
@@ -558,6 +578,8 @@ class ShellBar extends UI5Element {
 
 	private _searchAdaptor = new ShellBarSearch(this.getSearchDeps());
 	private _searchAdaptorLegacy = new ShellBarSearchLegacy(this.getSearchDeps());
+
+	private _productSwitchResizeObserver?: ResizeObserver;
 
 	/* =================== Legacy Members =================== */
 
@@ -1212,7 +1234,51 @@ class ShellBar extends UI5Element {
 	}
 
 	handleProductSwitchClick() {
+		// When a ui5-product-switch is slotted, the ShellBar owns and toggles its own
+		// popover. Otherwise, keep the legacy behavior and let the app open its own.
+		if (this._hasProductSwitch) {
+			this.productSwitchPopoverOpen = !this.productSwitchPopoverOpen;
+			return false;
+		}
 		return this._fireClickEvent("product-switch-click", this.productSwitchDomRef);
+	}
+
+	get _hasProductSwitch(): boolean {
+		return this.productSwitch.length > 0;
+	}
+
+	onProductSwitchPopoverOpen() {
+		// The ShellBar owns this popover, so it is the single scroll owner. Cap it at
+		// 4 rows measured from the product-switch's actual rendered layout, and keep it
+		// in sync while the width (and therefore the column count) changes.
+		this._capProductSwitchPopover();
+		const productSwitch = this.productSwitch[0];
+		if (productSwitch && typeof ResizeObserver !== "undefined") {
+			this._productSwitchResizeObserver ??= new ResizeObserver(() => this._capProductSwitchPopover());
+			this._productSwitchResizeObserver.observe(productSwitch);
+		}
+	}
+
+	onProductSwitchPopoverClose() {
+		this.productSwitchPopoverOpen = false;
+		this._productSwitchResizeObserver?.disconnect();
+	}
+
+	_capProductSwitchPopover() {
+		const popover = this.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-product-switch-popover");
+		const productSwitch = this.productSwitch[0];
+		if (!popover || !productSwitch) {
+			return;
+		}
+		const height = productSwitch._getRowsHeight(4);
+		popover.style.setProperty("--_ui5-shellbar-product-switch-cap", height ? `${height}px` : "none");
+	}
+
+	onProductSwitchItemClick(e: MouseEvent) {
+		// Selecting a product closes the popover (it typically opens a new tab).
+		if ((e.target as HTMLElement).closest("[ui5-product-switch-item]")) {
+			this.productSwitchPopoverOpen = false;
+		}
 	}
 
 	getCSSVariable(cssVar: string): string {

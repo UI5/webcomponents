@@ -3,6 +3,17 @@
 	padding: 0;
 }
 
+/*
+	The ShellBar owns the product-switch popover, so its content part is the single
+	scroll container. The 4-row cap is measured from the product-switch's actual
+	rendered rows (column count + wrapped text) and fed in via the custom property,
+	so the popover scrolls after exactly 4 complete rows in any language or font size.
+*/
+.ui5-shellbar-product-switch-popover::part(content) {
+	padding: 0;
+	max-height: var(--_ui5-shellbar-product-switch-cap, none);
+}
+
 .ui5-shellbar-overflow-popover [ui5-li]::part(icon) {
 	color: var(--sapList_TextColor);
 }

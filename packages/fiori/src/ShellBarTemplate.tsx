@@ -210,6 +210,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 						{productSwitchAction && (
 							<Button
 								data-ui5-stable={productSwitchAction.stableDomRef}
+								id="ui5-shellbar-button-product-switch"
 								class={{
 									"ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start": true,
 									"ui5-shellbar-hidden": this.isHidden("products")
@@ -255,6 +256,24 @@ export default function ShellBarTemplate(this: ShellBar) {
 					})}
 				</List>
 			</Popover>
+
+			{/* Product Switch Popover (ShellBar-owned, single scroll owner) */}
+			{this._hasProductSwitch && (
+				<Popover
+					class="ui5-shellbar-product-switch-popover"
+					open={this.productSwitchPopoverOpen}
+					opener="ui5-shellbar-button-product-switch"
+					placement="Bottom"
+					horizontalAlign={this.popoverHorizontalAlign}
+					hideArrow={true}
+					accessibleName={actionsAccInfo.products.title}
+					onOpen={this.onProductSwitchPopoverOpen}
+					onClose={this.onProductSwitchPopoverClose}
+					onClick={this.onProductSwitchItemClick}
+				>
+					<slot name="productSwitch"></slot>
+				</Popover>
+			)}
 		</>
 	);
 }
