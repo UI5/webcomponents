@@ -21,6 +21,6 @@ skill:
 - Use **real events** (`cy.realClick()`, `cy.realPress()`, `cy.realType()`) instead of synthetic `.click()` / `.type()`.
 - Select components by **attribute notation** — `cy.get("[ui5-button]")`, never the tag name.
 - Type element boundaries with generics — `cy.get<Button>("[ui5-button]")`.
-- Await async base-API calls via `cy.wrap({ fn }).then(async ({ fn }) => { await fn(args); })` and reset global config (language, theme) in `afterEach`.
-- Assert on **public props** and **rendered shadow DOM**, not private internals — every test needs a meaningful assertion beyond `"exist"`.
+- Await async base-API calls via `cy.wrap({ fn }).then(async ({ fn }) => { await fn(args); })` and reset global config (language, theme) in `afterEach` only if the test changes global configuration.
+- Assert on **public props** and **rendered shadow DOM** — every test needs a meaningful assertion beyond `"exist"`. Private internals may be asserted when they drive rendering or accessibility text construction.
 - Extract repeated interaction sequences into `ui5<Component><Action>` custom commands.

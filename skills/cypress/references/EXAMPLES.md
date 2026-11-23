@@ -27,6 +27,8 @@ describe("Button", () => {
 
 		cy.get<Button>("[ui5-button]")
 			.realClick();
+		cy.get<Button>("[ui5-button]")
+			.should("be.focused");
 		cy.realPress("Space");
 		cy.realPress("Enter");
 
@@ -38,7 +40,7 @@ describe("Button", () => {
 		cy.mount(<Button disabled onClick={cy.stub().as("click")}>Press</Button>);
 
 		cy.get<Button>("[ui5-button]")
-			.realClick({ force: true });
+			.realClick({ force: true }); // force bypasses the pointer-events: none on disabled elements
 
 		cy.get("@click")
 			.should("not.have.been.called");
@@ -83,9 +85,8 @@ describe("Popover", () => {
 			.ui5PopoverOpened();
 
 		cy.get<Popover>("[ui5-popover]")
-			.shadow()
-			.find(".ui5-popover-arrow")
-			.should("be.visible");
+			.find("span")
+			.should("have.text", "Content");
 	});
 
 	it("closes on Escape", () => {
@@ -107,7 +108,7 @@ describe("Popover", () => {
 		cy.realPress("Escape");
 
 		cy.get<Popover>("[ui5-popover]")
-			.should("not.have.attr", "open");
+			.ui5PopoverClosed();
 	});
 });
 ```
@@ -150,6 +151,8 @@ describe("Input", () => {
 
 		cy.get<Input>("[ui5-input]")
 			.realClick();
+		cy.get<Input>("[ui5-input]")
+			.should("be.focused");
 
 		cy.realType("changed");
 		cy.realPress("Enter");
@@ -162,9 +165,7 @@ describe("Input", () => {
 		cy.mount(<Input disabled value="initial" onChange={cy.stub().as("change")} />);
 
 		cy.get<Input>("[ui5-input]")
-			.realClick({ force: true });
-
-		cy.realType("changed");
+			.realClick({ force: true }); // force bypasses the pointer-events: none on disabled elements
 
 		cy.get<Input>("[ui5-input]")
 			.should("have.prop", "value", "initial");
@@ -223,8 +224,8 @@ describe("Dialog", () => {
 
 		cy.realPress("Escape");
 
-		cy.get("#dialog")
-			.should("not.have.attr", "open");
+		cy.get<Dialog>("#dialog")
+			.ui5DialogClosed();
 	});
 });
 ```

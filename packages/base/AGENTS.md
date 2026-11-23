@@ -159,7 +159,7 @@ All component tests are Cypress component tests written in TSX. The full testing
 
 **When to load it:** any time you are writing or debugging Cypress tests.
 
-**How to use it:** open `SKILL.md`, read the routing table at the top, then open **only** the one reference file it names for your task. Do not read every file.
+**How to use it:** open [`skills/cypress/SKILL.md`](../../skills/cypress/SKILL.md), read the routing table at the top, then open **only** the one reference file it names for your task. Do not read every file.
 
 ## Summary of Rules
 

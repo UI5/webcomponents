@@ -34,14 +34,22 @@ When you find such a pattern, extract it into a custom command.
 
 A command lives in the commands file that matches **the type of its `prevSubject`**, not the top-level component being tested. If a command's subject is a `Calendar` element, it belongs in `Calendar.commands.ts` regardless of which test file uses it.
 
-```typescript
-// Wrong — DayPicker is a sub-element of Calendar, not DatePicker
-// DatePicker.commands.ts:
-Cypress.Commands.add("ui5DatePickerGetDayPicker", { prevSubject: true }, (subject: JQuery<DatePicker>) => { ... });
+Because commands are shipped as a package so that consumers can write tests for the components they use, **every internal sub-element that a test may need to reach must have its own getter command**. Without these getters, consumers would have to rediscover and duplicate the internal DOM structure themselves.
 
-// Right — the subject is Calendar, so it lives in Calendar.commands.ts
-// Calendar.commands.ts:
-Cypress.Commands.add("ui5CalendarGetDayPicker", { prevSubject: true }, (subject: JQuery<Calendar>) => { ... });
+```typescript
+// DatePicker.commands.ts — exposes the internal Calendar to callers
+Cypress.Commands.add("ui5DatePickerGetCalendar", { prevSubject: true }, (subject: JQuery<DatePicker>) => {
+	return cy.wrap(subject)
+		.shadow()
+		.find("[ui5-calendar]");
+});
+
+// Calendar.commands.ts — exposes the internal DayPicker to callers
+Cypress.Commands.add("ui5CalendarGetDayPicker", { prevSubject: true }, (subject: JQuery<Calendar>) => {
+	return cy.wrap(subject)
+		.shadow()
+		.find("[ui5-daypicker]");
+});
 ```
 
 Usage in a spec chains the two commands naturally:
@@ -52,17 +60,36 @@ cy.get<DatePicker>("@datePicker")
 	.should("be.visible");
 ```
 
-### Inline vs command
-
-A `find()` inside a spec is fine for a one-off access. Extract it into a getter command only when the same multi-step chain appears in more than one place:
+A wrong placement would be to put `ui5DatePickerGetDayPicker` directly on `DatePicker` — it skips the intermediate `Calendar` subject and forces callers to know that `DayPicker` is two levels deep rather than one:
 
 ```typescript
-// Acceptable — single, one-off access
+// Wrong — DayPicker is a sub-element of Calendar, not a direct child of DatePicker
+// DatePicker.commands.ts:
+Cypress.Commands.add("ui5DatePickerGetDayPicker", { prevSubject: true }, (subject: JQuery<DatePicker>) => { ... });
+```
+
+### Inline vs command
+
+There are two cases:
+
+**Internal sub-elements** — always extract into a getter command, even for a single use. Because commands are shipped as a package, consumers must be able to reach any internal element without knowing the shadow DOM structure themselves:
+
+```typescript
+// Always a command — consumers need this to test the component
+cy.get<DatePicker>("@datePicker")
+	.ui5DatePickerGetCalendar()
+	.ui5CalendarGetDayPicker();
+```
+
+**Interaction / assertion sequences in specs** — a `find()` inside a spec is fine for a one-off access. Extract into a command only when the same multi-step chain appears in more than one place:
+
+```typescript
+// Acceptable — single, one-off spec-level access
 cy.get<DatePicker>("@datePicker")
 	.shadow()
 	.find("[ui5-calendar]");
 
-// Extract when the same chain appears in 2+ places
+// Extract when the same chain appears in 2+ specs
 cy.get<DatePicker>("@datePicker")
 	.ui5DatePickerGetCalendar()
 	.ui5CalendarGetDayPicker();
@@ -169,50 +196,6 @@ All UI5 custom commands are prefixed `ui5` followed by the component name in Pas
 - `ui5DatePickerGetInnerInput` — subject is DatePicker
 - `ui5CalendarGetDayPicker` — subject is Calendar (not `ui5DatePickerGetDayPicker`)
 - `ui5SegmentedButtonItemToggleSelect`
-
----
-
-## Popup Open/Closed Utilities
-
-Do not repeat the popover state assertion inline in every command. Import `isPopupOpen` and `isPopupClosed` from the shared utils file:
-
-```
-packages/main/cypress/support/commands/utils/popup-open.ts
-```
-
-These helpers verify the full set of conditions that mean a popup is truly open or closed: the `open` attribute, the `:popover-open` CSS pseudo-class, and non-zero dimensions.
-
-**Using them in a commands file:**
-
-```typescript
-import { isPopupOpen, isPopupClosed } from "./utils/popup-open.js";
-
-Cypress.Commands.add("ui5DialogOpened", { prevSubject: true }, (subject: JQuery<Dialog>) => {
-	isPopupOpen(() => cy.wrap(subject));
-});
-
-Cypress.Commands.add("ui5DialogClosed", { prevSubject: true }, (subject: JQuery<Dialog>) => {
-	isPopupClosed(() => cy.wrap(subject));
-});
-```
-
-When the popup is a shadow-DOM child (e.g. `ResponsivePopover` renders a `ui5-dialog` on phone), pass a getter that navigates to the correct element:
-
-```typescript
-Cypress.Commands.add("ui5ResponsivePopoverOpened", { prevSubject: true }, (subject: JQuery<ResponsivePopover>) => {
-	if (isPhone()) {
-		isPopupOpen(() =>
-			cy.wrap(subject)
-				.shadow()
-				.find("[ui5-dialog]")
-		);
-	} else {
-		isPopupOpen(() => cy.wrap(subject));
-	}
-});
-```
-
-**Never** copy the assertion block manually into a new command — always import from utils.
 
 ---
 

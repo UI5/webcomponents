@@ -46,8 +46,21 @@ When reviewing a test file, check the items below. Work top-down: fix all **Crit
 4. **Alias consistency** — is the element aliased before use, and is that alias used consistently rather than re-selecting the same element?
 5. **Formatting** — is every chained method on its own line with a leading tab? Are distinct steps separated by blank lines?
 6. **File placement** — if all tests in the file require phone simulation, should this be a `.mobile.cy.tsx` file instead?
-7. **Icon imports** — is every icon used in `cy.mount()` explicitly imported?
+7. **Icon imports** — is every icon used in `cy.mount()` explicitly imported? Icons provide a default export with the icon name — use it instead of passing raw strings to the `name` attribute:
+   ```typescript
+   import home from "@ui5/webcomponents-icons/dist/home.js";
+   // correct
+   cy.mount(<Icon name={home} />);
+   // wrong
+   cy.mount(<Icon name="home" />);
+   ```
 
 ---
 
 For each issue found, either fix it directly or explain what to extract and where to put it.
+
+---
+
+## Visual tests
+
+When reviewing a PR that adds a new API, check whether a visual test is needed. See [`VISUAL-TESTS.md`](./VISUAL-TESTS.md) for the criteria and how to add one.

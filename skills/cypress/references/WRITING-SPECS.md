@@ -16,7 +16,7 @@ Detailed conventions for authoring a Cypress spec: file layout, meaningful asser
 | `packages/{package}/cypress/specs/{ComponentName}.cy.tsx` | Main spec |
 | `packages/{package}/cypress/specs/{ComponentName}.mobile.cy.tsx` | Phone-only tests — use when tests require `cy.ui5SimulateDevice("phone")` for the entire file |
 
-**File naming:** the only two valid suffixes are `.cy.tsx` and `.mobile.cy.tsx`. The file name must start with the PascalCase component name — `DatePicker.cy.tsx`, not `date-picker.cy.tsx` or `DatePickerGerman.cy.tsx`. All tests for a component belong in one of these two files.
+**File naming:** the primary suffixes are `.cy.tsx` and `.mobile.cy.tsx`. The file name should start with the PascalCase component name — `DatePicker.cy.tsx`, not `date-picker.cy.tsx`. Additional spec files are valid when they require isolated page setup that would affect other tests (e.g. `OpenUI5andWebCPopups.webCDialogOpenUI5Select.cy.tsx` for OpenUI5 integration scenarios), or when verifying shared behaviour across multiple components in one place to avoid regressions (e.g. form support). Do not create additional files just to group tests by locale or theme — use `describe` blocks or `beforeEach` within the main spec instead.
 
 ### Minimal structure
 ```typescript
@@ -109,6 +109,8 @@ cy.mount(<Button onClick={cy.stub().as("click")}>Press</Button>);
 
 cy.get<Button>("[ui5-button]")
 	.realClick();
+cy.get<Button>("[ui5-button]")
+	.should("be.focused");
 cy.get<Button>("[ui5-button]")
 	.realPress("Space");
 cy.get<Button>("[ui5-button]")
@@ -329,9 +331,6 @@ cy.get("#cb:invalid")
 | `cy.ui5SimulateDevice("phone")` | Force phone behaviour; `"phone"` is the only valid device |
 | `cy.ui5AssertValidityState(partial)` | Assert any subset of form validity state |
 | `realClick`, `realHover`, `realPress`, `realType` | Wait for render before dispatching real events |
-| `cy.screenshot` | Honoured with `SCREENSHOT_DELAY` env var |
-
-**Import every icon you use.** The test bundle contains all icons, so a missing import passes locally and breaks in a real application.
 
 ---
 

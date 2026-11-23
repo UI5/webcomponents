@@ -19,6 +19,7 @@ Write and review Cypress component tests that match the project's conventions. T
 | Adding or modifying custom commands | [`COMMANDS.md`](./references/COMMANDS.md) |
 | Reviewing an existing spec | [`REVIEWING.md`](./references/REVIEWING.md) + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) |
 | Debugging a flaky, intermittent, or failing test | [`DEBUGGING.md`](./references/DEBUGGING.md) + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) — async focus, animation timing, CPU throttling, deterministic failures |
+| Deciding whether a new API needs a visual test | [`VISUAL-TESTS.md`](./references/VISUAL-TESTS.md) |
 
 ## File locations
 
