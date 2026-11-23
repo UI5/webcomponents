@@ -114,7 +114,27 @@ class Tooltip extends UI5Element {
 		// Reflected as a real attribute (not via ElementInternals) so it is
 		// queryable by ARIA tooling and matches the repo's role convention.
 		this.setAttribute("role", "tooltip");
+		// Mirror the text content into aria-label. The host text is clip-hidden,
+		// and some engines do not reliably compute a description from a visually
+		// hidden text node referenced by aria-describedby; an explicit aria-label
+		// gives the referenced node a stable accessible name that aria-describedby
+		// reads as the description.
+		this._syncAriaLabel();
 		registerTooltip(this);
+	}
+
+	onBeforeRendering(): void {
+		// Keep aria-label in sync if the text content changes after mount.
+		this._syncAriaLabel();
+	}
+
+	_syncAriaLabel(): void {
+		const text = this.textContent?.trim();
+		if (text) {
+			this.setAttribute("aria-label", text);
+		} else {
+			this.removeAttribute("aria-label");
+		}
 	}
 
 	onExitDOM(): void {
