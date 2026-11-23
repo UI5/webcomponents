@@ -544,6 +544,34 @@ describe("InputTableSuggest - Typeahead", () => {
 		});
 	});
 
+	it("does not autocomplete on Tab after deleting the autocompleted value", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions>
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>Jane</InputTableSuggestCell>
+				</InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+
+		cy.get("@input").realType("jo");
+		cy.get("@input").should("have.value", "john");
+
+		cy.realPress("Backspace");
+		cy.get("@input").should("have.value", "jo");
+		cy.get("@input").find("[ui5-table-row]").first().should("have.prop", "selected", false);
+
+		cy.realPress("Tab");
+		cy.get("@input").should("have.value", "jo");
+	});
+
 	it("resets row selection on backspace after typeahead", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions>
@@ -774,6 +802,38 @@ describe("InputTableSuggest - Value State", () => {
 			.shadow()
 			.find("[ui5-popover].ui5-valuestatemessage-popover")
 			.should("have.attr", "open");
+	});
+
+	it("closes the standalone value state popover while the suggestions popover is open", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions valueState="Negative">
+				<InputTableSuggestHeaderRow slot="headerRow">
+					<InputTableSuggestHeaderCell>Name</InputTableSuggestHeaderCell>
+				</InputTableSuggestHeaderRow>
+				<InputTableSuggestRow>
+					<InputTableSuggestCell>John</InputTableSuggestCell>
+				</InputTableSuggestRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("have.attr", "open");
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("not.have.attr", "open");
 	});
 });
 

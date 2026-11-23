@@ -332,6 +332,13 @@ class InputTableSuggest extends InputField {
 		}
 
 		super.onBeforeRendering();
+
+		// The base logic keys value-state-popover visibility off `this.open`, but the tabular
+		// popover is driven by `_open`. While it is open the value state message is shown in its
+		// header, so the standalone value-state popover must stay closed to avoid showing both.
+		if (this._useTableSuggestions && this._open) {
+			this.closeValueStatePopover();
+		}
 	}
 
 	_input(e: CustomEvent | InputEvent, eventType: string) {
@@ -398,7 +405,11 @@ class InputTableSuggest extends InputField {
 		}
 
 		const innerInput = this.getInputDOMRefSync();
-		if (!innerInput || !this.value || this._isKeyNavigation) {
+		// Typeahead must only run as a direct result of typing. On Tab/blur the keydown
+		// leaves _shouldAutocomplete true, and the close re-render would otherwise
+		// autocomplete the first matching row even after the user deleted it. isTyping is
+		// set on input and cleared on focusout/commit, so it gates out those renders.
+		if (!innerInput || !this.value || this._isKeyNavigation || !this.isTyping) {
 			return;
 		}
 

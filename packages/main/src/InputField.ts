@@ -766,10 +766,6 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 		return domRef ? domRef.querySelector<HTMLInputElement>(`input`) : null;
 	}
 
-	get nativeInputWidth() {
-		return this.nativeInput ? this.nativeInput.offsetWidth : 0;
-	}
-
 	_handleResize() {
 		this._inputWidth = this.offsetWidth;
 	}
@@ -982,7 +978,6 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 			"ariaAutoComplete": this._inputAccInfo.ariaAutoComplete,
 			"role": this._inputAccInfo && this._inputAccInfo.role,
 			"ariaControls": this._inputAccInfo && this._inputAccInfo.ariaControls,
-			"ariaExpanded": this._inputAccInfo && this._inputAccInfo.ariaExpanded,
 			"ariaDescription": this._accInfoAriaDescription,
 			"accessibleDescription": this.ariaDescriptionText,
 			"ariaLabel": (this._inputAccInfo && this._inputAccInfo.ariaLabel) || this._accessibleLabelsRefTexts || this.accessibleName || this._associatedLabelsTexts || undefined,

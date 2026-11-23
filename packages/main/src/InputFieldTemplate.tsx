@@ -137,6 +137,7 @@ function ValueStatePopover(this: InputField) {
 					preventInitialFocus={true}
 					preventFocusRestore={true}
 					hideArrow={true}
+					accessibleRole="None"
 					class="ui5-valuestatemessage-popover"
 					placement="Bottom"
 					tabindex={-1}

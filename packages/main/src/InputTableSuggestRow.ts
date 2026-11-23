@@ -44,7 +44,7 @@ class InputTableSuggestRow extends TableRow {
 		"default": true,
 		individualSlots: true,
 		invalidateOnChildChange: {
-			properties: ["merged", "_popin", "_popinHidden"],
+			properties: ["merged", "_popin"],
 			slots: false,
 		},
 	})

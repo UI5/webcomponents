@@ -360,9 +360,6 @@ class Input extends InputField implements SuggestionComponent {
 			});
 		}
 
-		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
-		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
-
 		const hasItems = !!this._flattenItems.length;
 		const hasValue = !!this.value;
 		const isFocused = this.shadowRoot!.querySelector("input") === getActiveElement();
@@ -1102,20 +1099,6 @@ class Input extends InputField implements SuggestionComponent {
 	}
 
 	/**
-	 * Returns a reference to the native input element
-	 * @protected
-	 */
-	get nativeInput() {
-		const domRef = this.getDomRef();
-
-		return domRef ? domRef.querySelector<HTMLInputElement>(`input`) : null;
-	}
-
-	get nativeInputWidth() {
-		return this.nativeInput ? this.nativeInput.offsetWidth : 0;
-	}
-
-	/**
 	 * Returns if the suggestions popover is scrollable.
 	 * The method returns `Promise` that resolves to true,
 	 * if the popup is scrollable and false otherwise.
@@ -1210,11 +1193,7 @@ class Input extends InputField implements SuggestionComponent {
 	get ariaDescribedByIds() {
 		return [
 			this.suggestionsTextId,
-			this.valueStateTextId,
-			this._valueStateLinksShortcutsTextAccId,
-			this._inputAccInfo.ariaDescribedBy,
-			this._accInfoAriaDescriptionId,
-			this.ariaDescriptionTextId,
+			super.ariaDescribedByIds,
 		].filter(Boolean).join(" ");
 	}
 

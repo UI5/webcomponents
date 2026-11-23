@@ -42,7 +42,7 @@ class InputTableSuggestHeaderRow extends TableHeaderRow {
 		type: HTMLElement,
 		"default": true,
 		invalidateOnChildChange: {
-			properties: ["width", "_popin", "horizontalAlign", "popinHidden"],
+			properties: ["width", "_popin", "horizontalAlign"],
 			slots: false,
 		},
 		individualSlots: true,
