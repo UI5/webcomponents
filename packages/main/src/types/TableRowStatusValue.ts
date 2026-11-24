@@ -1,10 +1,10 @@
 /**
  * Defines the semantic status of a table row.
  *
- * @since 2.29.0
+ * @since 2.30.0
  * @public
  */
-enum RowStatus {
+enum TableRowStatusValue {
 	/**
 	 * Indicates a positive or successful state (for example, completed or approved).
 	 * @public
@@ -30,4 +30,4 @@ enum RowStatus {
 	Information = "Information",
 }
 
-export default RowStatus;
+export default TableRowStatusValue;

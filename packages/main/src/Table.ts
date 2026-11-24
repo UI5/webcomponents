@@ -192,9 +192,11 @@ type TableRowActionClickEventDetail = {
  * @ui5subcomponent TableHeaderCell
  * @ui5subcomponent TableHeaderCellActionAI
  * @ui5subcomponent TableHeaderRow
+ * @ui5subcomponent TableHeaderRowStatus
  * @ui5subcomponent TableRow
  * @ui5subcomponent TableRowAction
  * @ui5subcomponent TableRowActionNavigation
+ * @ui5subcomponent TableRowStatus
  * @ui5subcomponent TableSelection
  * @ui5subcomponent TableSelectionMulti
  * @ui5subcomponent TableSelectionSingle

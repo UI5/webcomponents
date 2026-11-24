@@ -446,7 +446,7 @@ describe("Table Row - Status", () => {
 		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");
 	});
 
-	it("uses indication colors in simple and extended designs with semantic value precedence", () => {
+	it("uses semantic and indication colors in both designs with semantic value precedence", () => {
 		cy.mount(
 			<>
 				<Table>
@@ -460,24 +460,20 @@ describe("Table Row - Status", () => {
 					</TableRow>
 				</Table>
 				<div id="palette" />
-				<TableRowStatus id="semantic" value="Negative" icon="information" _design="Extended" />
 			</>
 		);
 
-		const checkColors = (reference: string, extended: boolean) => {
+		const checkColors = (extended: boolean) => {
 			cy.get("#status").should($status => {
 				const status = $status[0];
-				const palette = status.ownerDocument.querySelector(reference)!;
-				const barColor = palette.shadowRoot
-					? getComputedStyle(palette.shadowRoot.querySelector("#status")!).backgroundColor
-					: getComputedStyle(palette).borderTopColor;
+				const palette = status.ownerDocument.querySelector("#palette")!;
+				const barColor = getComputedStyle(palette).borderTopColor;
 				const background = getComputedStyle(palette).backgroundColor;
 				const icon = status.shadowRoot!.querySelector("#status-icon");
 				if (icon) {
-					const referenceIcon = palette.shadowRoot?.querySelector("#status-icon");
-					expect(getComputedStyle(icon).color).to.equal(getComputedStyle(referenceIcon || palette).color);
+					expect(getComputedStyle(icon).color).to.equal(getComputedStyle(palette).color);
 				}
-				const context = `scheme ${status.getAttribute("color-scheme")} / ${reference}`;
+				const context = `value ${status.getAttribute("value")} / scheme ${status.getAttribute("color-scheme")}`;
 				expect(getComputedStyle(status.shadowRoot!.querySelector("#status")!).backgroundColor, context).to.equal(barColor);
 				expect(getComputedStyle(status).backgroundColor).to.equal(extended ? background : TRANSPARENT);
 			});
@@ -495,17 +491,29 @@ describe("Table Row - Status", () => {
 				const palette = `--sapIndicationColor_${scheme}`;
 				cy.get("#status").invoke("attr", "color-scheme", `${scheme}`);
 				cy.get("#palette").invoke("attr", "style", `background: var(${palette}b_Background); border-color: var(${palette}); color: var(${palette}b_TextColor)`);
-				checkColors("#palette", design === "Extended");
+				checkColors(design === "Extended");
 			}
+
+			[
+				{ value: "Negative", bar: "--sapErrorBorderColor", icon: "--sapNegativeColor", background: "--sapErrorBackground" },
+				{ value: "Critical", bar: "--sapWarningBorderColor", icon: "--sapCriticalColor", background: "--sapWarningBackground" },
+				{ value: "Positive", bar: "--sapSuccessBorderColor", icon: "--sapPositiveColor", background: "--sapSuccessBackground" },
+				{ value: "Information", bar: "--sapInformationBorderColor", icon: "--sapInformativeColor", background: "--sapInformationBackground" },
+			].forEach(({ value, bar, icon, background }) => {
+				cy.get("#status").invoke("prop", "value", value);
+				cy.get("#palette").invoke("attr", "style", `background: var(${background}); border-color: var(${bar}); color: var(${icon})`);
+				checkColors(design === "Extended");
+			});
+
+			cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
+			const palette = `--sapIndicationColor_${schemeCount}`;
+			cy.get("#palette").invoke("attr", "style", `background: var(${palette}b_Background); border-color: var(${palette}); color: var(${palette}b_TextColor)`);
+			checkColors(design === "Extended");
 		});
 
 		cy.get("#status").shadow().find("#status-icon").should("have.attr", "name", "information");
 		cy.get("#status").shadow().find("#status-tooltip").should("have.attr", "title", "Custom status");
 
-		cy.get("#status").invoke("prop", "value", "Negative");
-		checkColors("#semantic", true);
-		cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
-		checkColors("#palette", true);
 		cy.get("#status").invoke("removeAttr", "color-scheme");
 		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
 		cy.get("#status").should("have.css", "background-color", TRANSPARENT);

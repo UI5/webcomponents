@@ -3,10 +3,10 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/information.js";
-import type RowStatus from "./types/RowStatus.js";
+import type TableRowStatusValue from "./types/TableRowStatusValue.js";
 import type TableRowStatus from "./TableRowStatus.js";
 
-const DEFAULT_ICONS: Record<`${RowStatus}`, string> = {
+const DEFAULT_ICONS: Record<`${TableRowStatusValue}`, string> = {
 	Positive: "sys-enter-2",
 	Negative: "error",
 	Critical: "alert",

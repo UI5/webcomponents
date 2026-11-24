@@ -5,7 +5,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import TableRowStatusTemplate from "./TableRowStatusTemplate.js";
 import TableRowStatusCss from "./generated/themes/TableRowStatus.css.js";
-import type RowStatus from "./types/RowStatus.js";
+import type TableRowStatusValue from "./types/TableRowStatusValue.js";
 import type RowStatusDesign from "./types/RowStatusDesign.js";
 import {
 	TABLE_ROW_HIGHLIGHT_NEGATIVE,
@@ -14,7 +14,7 @@ import {
 	TABLE_ROW_HIGHLIGHT_INFORMATION,
 } from "./generated/i18n/i18n-defaults.js";
 
-const STATUS_TEXTS: Record<`${RowStatus}`, I18nText> = {
+const STATUS_TEXTS: Record<`${TableRowStatusValue}`, I18nText> = {
 	Negative: TABLE_ROW_HIGHLIGHT_NEGATIVE,
 	Critical: TABLE_ROW_HIGHLIGHT_CRITICAL,
 	Positive: TABLE_ROW_HIGHLIGHT_POSITIVE,
@@ -37,7 +37,7 @@ const STATUS_TEXTS: Record<`${RowStatus}`, I18nText> = {
  *
  * @constructor
  * @extends UI5Element
- * @since 2.29.0
+ * @since 2.30.0
  * @public
  */
 @customElement({
@@ -48,17 +48,17 @@ const STATUS_TEXTS: Record<`${RowStatus}`, I18nText> = {
 })
 class TableRowStatus extends UI5Element {
 	/**
-	 * Defines the semantic status of the row.
+	 * Defines the semantic status value of the row.
 	 *
 	 * A colored indicator is rendered at the start of the row to signal its status.
-	 * Semantic values (`Positive`, `Critical`, `Negative`, `Information`) also provide a built-in screen-reader announcement.
+	 * Semantic values (`Positive`, `Critical`, `Negative`, `Information`) also provide a built-in screen reader announcement.
 	 * If neither `value` nor `colorScheme` is set, no status indicator is rendered.
 	 *
 	 * @default undefined
 	 * @public
 	 */
 	@property()
-	value?: `${RowStatus}`;
+	value?: `${TableRowStatusValue}`;
 
 	/**
 	 * Defines the text alternative announced by assistive technologies for the status indicator.
