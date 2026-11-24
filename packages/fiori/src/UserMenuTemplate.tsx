@@ -115,7 +115,7 @@ function headerContent(this: UserMenu) {
 						}
 					</Avatar>
 				</span>
-				{this._selectedAccount.titleText && !this._titleMovedToHeader &&
+				{this._selectedAccount.titleText &&
 					<Title level="H1" id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Title>
 				}
 

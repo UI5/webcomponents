@@ -144,7 +144,7 @@ describe("Initial rendering", () => {
     	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-other-accounts-title").should("not.exist");
     });
 
-    it("keeps a single H1 when the title moves to the header on scroll", () => {
+    it("shows the title in the header bar when the title moves to the header on scroll", () => {
     	cy.mount(
     		<>
     			<Button id="openUserMenuBtn">Open User Menu</Button>
@@ -164,16 +164,14 @@ describe("Initial rendering", () => {
     		($menu[0] as UserMenu)._titleMovedToHeader = true;
     	});
 
-    	// the inline selected-account title is no longer rendered
-    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("not.exist");
-
-    	// the header-bar title becomes the single H1
+    	// the header-bar title is shown
     	cy.get("@responsivePopover").find(".ui5-user-menu-fixed-header [ui5-title]").as("headerTitle");
     	cy.get("@headerTitle").should("have.attr", "level", "H1");
     	cy.get("@headerTitle").contains("Alain Chevalier");
 
-    	// still exactly one H1 rendered across the popover
-    	cy.get("@responsivePopover").find("[ui5-title][level=H1]").should("have.length", 1);
+    	// the inline title stays mounted so the IntersectionObserver keeps tracking it
+    	// and can move the title back out of the header when scrolling up again
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("exist");
     });
 
 
