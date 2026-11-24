@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Features
+
+* **ui5-product-switch:** address UX review feedback (UX, VD) ([#14127](https://github.com/UI5/webcomponents/issues/14127)) ([1914ae9](https://github.com/UI5/webcomponents/commit/1914ae918f652de82c81b52dc70713b8a2fb3f8b))
+* **ui5-table:** Add header-click event to the TableHeaderCell ([#14230](https://github.com/UI5/webcomponents/issues/14230)) ([b998e78](https://github.com/UI5/webcomponents/commit/b998e78336e9996a9f850895ae534fd67db68029))
+
+
+
+
+
+# [2.29.0](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.1...v2.29.0) (2026-11-18)
+
+
+### Features
+
+* **ui5-product-switch:** address UX review feedback (UX, VD) ([#14127](https://github.com/UI5/webcomponents/issues/14127)) ([1914ae9](https://github.com/UI5/webcomponents/commit/1914ae918f652de82c81b52dc70713b8a2fb3f8b))
+* **ui5-table:** Add header-click event to the TableHeaderCell ([#14230](https://github.com/UI5/webcomponents/issues/14230)) ([b998e78](https://github.com/UI5/webcomponents/commit/b998e78336e9996a9f850895ae534fd67db68029))
+
+
+
+
+
 # [2.29.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.29.0-rc.0...v2.29.0-rc.1) (2026-11-10)
 
 

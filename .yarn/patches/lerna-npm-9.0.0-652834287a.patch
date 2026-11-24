@@ -1,0 +1,45 @@
+diff --git a/dist/commands/publish/command.js b/dist/commands/publish/command.js
+index 81ba8ac28f0e3512df2e62144c5b13f1e7405a20..8e317bc788b785df72707ff10d9727e90495e8f7 100644
+--- a/dist/commands/publish/command.js
++++ b/dist/commands/publish/command.js
+@@ -5176,8 +5176,8 @@ async function oidc({ packageName, registry, opts, config }) {
+       if (headerB64 && payloadB64) {
+         const payloadJson = Buffer.from(payloadB64, "base64").toString("utf8");
+         const payload = JSON.parse(payloadJson);
+-        if (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
+-        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"]) {
++        if (process.env["NPM_CONFIG_PROVENANCE"] !== "false" && (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
++        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"])) {
+           const visibility = await import_libnpmaccess.default.getVisibility(packageName, opts);
+           if (visibility?.public) {
+             npmlog_default.verbose("oidc", `Enabling provenance`);
+diff --git a/dist/commands/publish/index.js b/dist/commands/publish/index.js
+index d0f1eafacb2336d387b43eb1d5a14bce636a3749..3d7ea7c800c470e489a6fa4bdbbce9c871fdea1b 100644
+--- a/dist/commands/publish/index.js
++++ b/dist/commands/publish/index.js
+@@ -5176,8 +5176,8 @@ async function oidc({ packageName, registry, opts, config }) {
+       if (headerB64 && payloadB64) {
+         const payloadJson = Buffer.from(payloadB64, "base64").toString("utf8");
+         const payload = JSON.parse(payloadJson);
+-        if (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
+-        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"]) {
++        if (process.env["NPM_CONFIG_PROVENANCE"] !== "false" && (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
++        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"])) {
+           const visibility = await import_libnpmaccess.default.getVisibility(packageName, opts);
+           if (visibility?.public) {
+             npmlog_default.verbose("oidc", `Enabling provenance`);
+diff --git a/dist/index.js b/dist/index.js
+index 0860a73516147cec14807f56e381583212c9ccb1..5bc22b5ec20c005c2d2a8b783daa2d0207967ffe 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -5678,8 +5678,8 @@ async function oidc({ packageName, registry, opts, config }) {
+       if (headerB64 && payloadB64) {
+         const payloadJson = Buffer.from(payloadB64, "base64").toString("utf8");
+         const payload = JSON.parse(payloadJson);
+-        if (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
+-        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"]) {
++        if (process.env["NPM_CONFIG_PROVENANCE"] !== "false" && (import_ci_info.default.GITHUB_ACTIONS && payload.repository_visibility === "public" || // only set provenance for gitlab if the repo is public and SIGSTORE_ID_TOKEN is available
++        import_ci_info.default.GITLAB && payload.project_visibility === "public" && process.env["SIGSTORE_ID_TOKEN"])) {
+           const visibility = await import_libnpmaccess.default.getVisibility(packageName, opts);
+           if (visibility?.public) {
+             npmlog_default.verbose("oidc", `Enabling provenance`);

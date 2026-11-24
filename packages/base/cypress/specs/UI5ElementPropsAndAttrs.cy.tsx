@@ -138,7 +138,7 @@ describe("Properties and attributes convert to each other", () => {
 			.should("deep.equal", ["three"]);
 	});
 
-	it.skip("Tests that a declarative object attribute is parsed into the property and not removed by the framework", () => {
+	it("Tests that a declarative object attribute is parsed into the property and not removed by the framework", () => {
 		cy.mount(<Generic object-prop='{"a":1,"b":"two"}'></Generic>);
 
 		cy.get("[ui5-test-generic]")
@@ -150,6 +150,32 @@ describe("Properties and attributes convert to each other", () => {
 		cy.get("@testGeneric")
 			.invoke("prop", "objectProp")
 			.should("deep.equal", { a: 1, b: "two" });
+	});
+
+	it("Tests that a later setAttribute for an object property still flows into the property", () => {
+		cy.mount(<Generic></Generic>);
+
+		cy.get("[ui5-test-generic]")
+			.as("testGeneric");
+
+		cy.get("@testGeneric")
+			.invoke("attr", "object-prop", '{"x":42}');
+
+		cy.get("@testGeneric")
+			.invoke("prop", "objectProp")
+			.should("deep.equal", { x: 42 });
+
+		// Programmatic write to the property must not touch the DOM attribute -
+		// it stays at the author-set value even though it is now out of sync with the property.
+		cy.get("@testGeneric")
+			.invoke("prop", "objectProp", { x: 99 });
+
+		cy.get("@testGeneric")
+			.should("have.attr", "object-prop", '{"x":42}');
+
+		cy.get("@testGeneric")
+			.invoke("prop", "objectProp")
+			.should("deep.equal", { x: 99 });
 	});
 
 	it("Tests that noAttribute properties have no attributes", () => {
