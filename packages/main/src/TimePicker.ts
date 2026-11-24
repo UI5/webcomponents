@@ -47,7 +47,7 @@ import type { InputAccInfo } from "./Input.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import type { TimeSelectionChangeEventDetail } from "./TimePickerInternals.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { isHighZoom } from "@ui5/webcomponents-base/dist/util/HighZoom.js";
+import isHighZoom from "@ui5/webcomponents-base/dist/util/HighZoom.js";
 
 import {
 	TIMEPICKER_SUBMIT_BUTTON,

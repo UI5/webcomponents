@@ -38,7 +38,7 @@ import {
 	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { isHighZoom } from "@ui5/webcomponents-base/dist/util/HighZoom.js";
+import isHighZoom from "@ui5/webcomponents-base/dist/util/HighZoom.js";
 
 // Template
 import DateTimePickerTemplate from "./DateTimePickerTemplate.js";
