@@ -225,6 +225,9 @@ Design points adopted: text-only content, `placement` enum name, a single `delay
 `role="tooltip"` + description as the correct default, and Vaadin's "blur closes
 immediately".
 
+The full per-framework survey — complete API snippets, key props, and notes — is in
+[`Tooltip-framework-survey.md`](./Tooltip-framework-survey.md).
+
 Sources: MUI `mui.com/material-ui/react-tooltip` · Ant `ant.design/components/tooltip`
 · React Aria `react-aria.adobe.com/Tooltip` · shadcn
 `ui.shadcn.com/docs/components/radix/tooltip` · Vaadin
