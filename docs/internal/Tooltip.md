@@ -83,9 +83,9 @@ property.
 ## Future development
 
 A `slot="tooltip"` form (`<ui5-button><ui5-tooltip slot="tooltip">…</ui5-tooltip></ui5-button>`)
-mirrors Vaadin and would let app developers attach a tooltip to any component
-without a `tooltip` property. Deferred — it reintroduces a per-host association the
-attribute model avoids.
+would let app developers attach a tooltip to any component without a `tooltip`
+property. Deferred — it reintroduces a per-host association the attribute model
+avoids.
 
 ---
 

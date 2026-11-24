@@ -180,10 +180,9 @@ submissions.
 ## Future development
 
 A `slot="tooltip"` form — `<ui5-button><ui5-tooltip slot="tooltip">…</ui5-tooltip></ui5-button>`
-— mirrors Vaadin's slot model and would let app developers attach a tooltip to any
-component without a `tooltip` property. Deferred: it reintroduces a per-host
-association and slot plumbing that the attribute model avoids. Captured as a future
-option, not in scope now.
+— would let app developers attach a tooltip to any component without a `tooltip`
+property. Deferred: it reintroduces a per-host association and slot plumbing that
+the attribute model avoids. Captured as a future option, not in scope now.
 
 ---
 
