@@ -61,6 +61,18 @@ function App() {
 
   return (
     <>
+      {/*
+        Cap the popover at 4 product-switch rows. The cap lives on the popover's
+        content part, which is the single scroll container, so no nested scrollbar
+        can appear. 32.5rem is the height of 4 standard rows; raise it if the product
+        items wrap to multiple lines.
+      */}
+      <style>{`
+        #productswitch-popover::part(content) {
+          padding: 0;
+          max-height: 32.5rem;
+        }
+      `}</style>
       <ShellBar
         id="shellbar"
         secondaryTitle="home"
@@ -182,6 +194,35 @@ function App() {
           <ProductSwitchItem
             titleText="S/4HANA"
             icon="batch-payments"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
+          <ProductSwitchItem
+            titleText="Field Service"
+            subtitleText="Service Cloud"
+            icon="family-care"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
+          <ProductSwitchItem
+            titleText="Subscription Billing"
+            icon="credit-card"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
+          <ProductSwitchItem
+            titleText="Integration Suite"
+            icon="shipping-status"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
+          <ProductSwitchItem
+            titleText="Build Process Automation"
+            icon="cart-3"
             targetSrc="about:blank"
             target="_blank"
             onClick={handleProductSelect}
