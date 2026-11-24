@@ -31,6 +31,7 @@ import {
 	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
 	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
 	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
+	USER_SETTINGS_DIALOG_SEARCH_IN_SETTINGS,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -401,6 +402,10 @@ class UserSettingsDialog extends UI5Element {
 	}
 	get noSearchResultsText() {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
+	}
+
+	get _searchInSettingsText() {
+		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_IN_SETTINGS);
 	}
 
 	get _searchResultsText() {
