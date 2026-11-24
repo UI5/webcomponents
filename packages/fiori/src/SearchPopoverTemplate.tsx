@@ -50,7 +50,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 				</>
 			)) : null }
 
-			<main class="ui5-search-popover-content">
+			<div class="ui5-search-popover-content">
 				<slot name="messageArea"></slot>
 				<div class="search-popover-busy-wrapper">
 					<BusyIndicator active={true}></BusyIndicator>
@@ -74,7 +74,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 				<span class="ui5-hidden-text" id="suggestions-speech-output">{this.suggestionsText}</span>
 				{this.messageArea[0]?.text ? (<span class="ui5-hidden-text" id="message-area-text">{this.messageArea[0].text}</span>) : null}
 				{this.messageArea[0]?.description ? (<span class="ui5-hidden-text" id="message-area-description">{this.messageArea[0].description}</span>) : null}
-			</main>
+			</div>
 
 			{this.action.length ? (<slot onKeyDown={this._handleActionKeydown} name="action" slot="footer"></slot>) : null}
 		</ResponsivePopover>
