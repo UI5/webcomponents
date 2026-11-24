@@ -2,33 +2,35 @@
 
 Migration surface for the tooltip rework. Three inventories: components with a
 public `tooltip` property, components using native `title`, and their
-interactive/non-interactive split.
+interactive/non-interactive split. The **Interactive** column marks each record:
+Yes (natively focusable / handles input), No (display only), or Conditional
+(depends on a property/mode).
 
 ## 1. Components with a public `tooltip` property (21)
 
-| Component | Package | Source |
-|---|---|---|
-| `ui5-button` | main | `packages/main/src/Button.ts` |
-| `ui5-avatar-badge` | main | `packages/main/src/AvatarBadge.ts` |
-| `ui5-color-palette-item` | main | `packages/main/src/ColorPaletteItem.ts` |
-| `ui5-link` | main | `packages/main/src/Link.ts` |
-| `ui5-menu-item` | main | `packages/main/src/MenuItem.ts` (+ inherits ListItem) |
-| `ui5-option` | main | `packages/main/src/Option.ts` |
-| `ui5-option-custom` | main | `packages/main/src/OptionCustom.ts` |
-| `ui5-segmented-button-item` | main | `packages/main/src/SegmentedButtonItem.ts` |
-| `ui5-rating-indicator` | main | `packages/main/src/RatingIndicator.ts` |
-| `ui5-select` | main | `packages/main/src/Select.ts` |
-| `ui5-switch` | main | `packages/main/src/Switch.ts` |
-| `ui5-toolbar-button` | main | `packages/main/src/ToolbarButton.ts` |
-| `ui5-li` | main | inherited from `packages/main/src/ListItem.ts` |
-| `ui5-li-custom` | main | inherited from `packages/main/src/ListItem.ts` |
-| `ui5-tree-item` | main | inherited via TreeItemBase from `ListItem.ts` |
-| `ui5-tree-item-custom` | main | inherited via TreeItemBase from `ListItem.ts` |
-| `ui5-view-settings-dialog-custom-tab` | fiori | `packages/fiori/src/ViewSettingsDialogCustomTab.ts` |
-| `ui5-user-settings-item` | fiori | `packages/fiori/src/UserSettingsItem.ts` |
-| `ui5-side-navigation-item` | fiori | inherited from `SideNavigationItemBase.ts` |
-| `ui5-side-navigation-sub-item` | fiori | inherited from `SideNavigationItemBase.ts` |
-| `ui5-side-navigation-group` | fiori | inherited from `SideNavigationItemBase.ts` |
+| Component | Package | Source | Interactive |
+|---|---|---|---|
+| `ui5-button` | main | `packages/main/src/Button.ts` | Yes |
+| `ui5-avatar-badge` | main | `packages/main/src/AvatarBadge.ts` | No |
+| `ui5-color-palette-item` | main | `packages/main/src/ColorPaletteItem.ts` | No (navigated by parent ColorPalette) |
+| `ui5-link` | main | `packages/main/src/Link.ts` | Yes |
+| `ui5-menu-item` | main | `packages/main/src/MenuItem.ts` (+ inherits ListItem) | Yes |
+| `ui5-option` | main | `packages/main/src/Option.ts` | Yes |
+| `ui5-option-custom` | main | `packages/main/src/OptionCustom.ts` | Yes |
+| `ui5-segmented-button-item` | main | `packages/main/src/SegmentedButtonItem.ts` | Yes |
+| `ui5-rating-indicator` | main | `packages/main/src/RatingIndicator.ts` | Yes |
+| `ui5-select` | main | `packages/main/src/Select.ts` | Yes |
+| `ui5-switch` | main | `packages/main/src/Switch.ts` | Yes |
+| `ui5-toolbar-button` | main | `packages/main/src/ToolbarButton.ts` | Yes |
+| `ui5-li` | main | inherited from `packages/main/src/ListItem.ts` | Yes |
+| `ui5-li-custom` | main | inherited from `packages/main/src/ListItem.ts` | Yes |
+| `ui5-tree-item` | main | inherited via TreeItemBase from `ListItem.ts` | Yes |
+| `ui5-tree-item-custom` | main | inherited via TreeItemBase from `ListItem.ts` | Yes |
+| `ui5-view-settings-dialog-custom-tab` | fiori | `packages/fiori/src/ViewSettingsDialogCustomTab.ts` | Yes |
+| `ui5-user-settings-item` | fiori | `packages/fiori/src/UserSettingsItem.ts` | Yes |
+| `ui5-side-navigation-item` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
+| `ui5-side-navigation-sub-item` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
+| `ui5-side-navigation-group` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
 
 Base classes defining the inherited property: `packages/main/src/ListItem.ts`,
 `packages/fiori/src/SideNavigationItemBase.ts`. No AI-package component declares a
@@ -36,29 +38,29 @@ public `tooltip`.
 
 ## 2. Components using native `title` (21)
 
-| Component | Package | File | Use |
-|---|---|---|---|
-| `ui5-icon` | main | `IconTemplate.tsx` / `Icon.ts` | renders `<ui5-tooltip>` from `effectiveAccessibleName` when `showTooltip` |
-| `ui5-tag` | main | `TagTemplate.tsx` | native `title` on root button/div |
-| `ui5-li` + ListItem family | main | `ListItemTemplate.tsx` | native `title` from `_accInfo.tooltip` |
-| `ui5-select` | main | `SelectTemplate.tsx` | native `title` from `_effectiveTooltip` |
-| `ui5-numeric-input` | main | `NumericInputTemplate.tsx` | native `title` on step icons |
-| `ui5-calendar` | main | `CalendarHeaderTemplate.tsx` | native `title` on nav buttons |
-| `ui5-daypicker` | main | `DayPickerTemplate.tsx` | native `title` per day cell |
-| `ui5-dialog` | main | `DialogTemplate.tsx` | native `title` on resize handle |
-| `ui5-popover` | main | `PopoverTemplate.tsx` | native `title` on resize handle |
-| `ui5-tab` | main | `TabInStripTemplate.tsx` | native `title` on expand button |
-| `ui5-busy-indicator` | main | `BusyIndicatorTemplate.tsx` | native `title` on busy area |
-| `ui5-panel` | main | `Panel.ts` | `title` ARIA key forwarded to inner button |
-| `ui5-split-button` | main | `SplitButton.ts` | `title` ARIA key forwarded to inner buttons |
-| `ui5-ai-button` | ai | `Button.ts` | `title` ARIA key forwarded to inner buttons |
-| `ui5-side-navigation-item` | fiori | `SideNavigationItemTemplate.tsx` | native `title` from `_tooltip` |
-| `ui5-side-navigation-sub-item` | fiori | `SideNavigationSubItemTemplate.tsx` | native `title` from `_tooltip` |
-| `ui5-side-navigation-group` | fiori | `SideNavigationGroupTemplate.tsx` | native `title` from `_tooltip` |
-| `ui5-shellbar` | fiori | `ShellBarLegacyTemplate.tsx` | native `title` on logo |
-| `ui5-li-notification-group` | fiori | `NotificationListGroupItemTemplate.tsx` | native `title` on toggle icon |
-| `ui5-user-menu` | fiori | `UserMenuTemplate.tsx` | native `title` on avatar wrapper |
-| `ui5-user-settings-account-view` | fiori | `UserSettingsAccountViewTemplate.tsx` | native `title` on avatar wrapper |
+| Component | Package | File | Use | Interactive |
+|---|---|---|---|---|
+| `ui5-icon` | main | `IconTemplate.tsx` / `Icon.ts` | renders `<ui5-tooltip>` from `effectiveAccessibleName` when `showTooltip` | Conditional (only in `mode="Interactive"`) |
+| `ui5-tag` | main | `TagTemplate.tsx` | native `title` on root button/div | Conditional (only with `interactive` set) |
+| `ui5-li` + ListItem family | main | `ListItemTemplate.tsx` | native `title` from `_accInfo.tooltip` | Yes |
+| `ui5-select` | main | `SelectTemplate.tsx` | native `title` from `_effectiveTooltip` | Yes |
+| `ui5-numeric-input` | main | `NumericInputTemplate.tsx` | native `title` on step icons | Yes |
+| `ui5-calendar` | main | `CalendarHeaderTemplate.tsx` | native `title` on nav buttons | Yes |
+| `ui5-daypicker` | main | `DayPickerTemplate.tsx` | native `title` per day cell | Yes |
+| `ui5-dialog` | main | `DialogTemplate.tsx` | native `title` on resize handle | Yes |
+| `ui5-popover` | main | `PopoverTemplate.tsx` | native `title` on resize handle | Yes |
+| `ui5-tab` | main | `TabInStripTemplate.tsx` | native `title` on expand button | Yes |
+| `ui5-busy-indicator` | main | `BusyIndicatorTemplate.tsx` | native `title` on busy area | No |
+| `ui5-panel` | main | `Panel.ts` | `title` ARIA key forwarded to inner button | Yes |
+| `ui5-split-button` | main | `SplitButton.ts` | `title` ARIA key forwarded to inner buttons | Yes |
+| `ui5-ai-button` | ai | `Button.ts` | `title` ARIA key forwarded to inner buttons | Yes |
+| `ui5-side-navigation-item` | fiori | `SideNavigationItemTemplate.tsx` | native `title` from `_tooltip` | Yes |
+| `ui5-side-navigation-sub-item` | fiori | `SideNavigationSubItemTemplate.tsx` | native `title` from `_tooltip` | Yes |
+| `ui5-side-navigation-group` | fiori | `SideNavigationGroupTemplate.tsx` | native `title` from `_tooltip` | Yes |
+| `ui5-shellbar` | fiori | `ShellBarLegacyTemplate.tsx` | native `title` on logo | Yes |
+| `ui5-li-notification-group` | fiori | `NotificationListGroupItemTemplate.tsx` | native `title` on toggle icon | Yes |
+| `ui5-user-menu` | fiori | `UserMenuTemplate.tsx` | native `title` on avatar wrapper | Yes |
+| `ui5-user-settings-account-view` | fiori | `UserSettingsAccountViewTemplate.tsx` | native `title` on avatar wrapper | No |
 
 ## 3. Interactive vs non-interactive
 
