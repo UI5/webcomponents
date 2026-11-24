@@ -49,10 +49,20 @@ describe("Tooltip", () => {
 		cy.get("#tt").should("have.attr", "role", "tooltip");
 	});
 
-	it("keeps its text in the accessible tree while closed (not display:none)", () => {
+	it("exposes its text as aria-label so aria-describedby resolves a description", () => {
+		cy.mount(<Tooltip id="tt">Describe me</Tooltip>);
+
+		cy.get("#tt").should("have.attr", "aria-label", "Describe me");
+	});
+
+	it("keeps its text and mirrors it to aria-label as the description source", () => {
 		cy.mount(<Tooltip id="tt">Described text</Tooltip>);
 
+		// The host text is visually hidden (sr-only) but preserved, and mirrored to
+		// aria-label, which aria-describedby resolves. The host stays rendered (not
+		// display:none) so its shadow popover can appear on open.
 		cy.get("#tt").should("have.text", "Described text");
+		cy.get("#tt").should("have.attr", "aria-label", "Described text");
 		cy.get("#tt").then($el => {
 			expect(getComputedStyle($el[0]).display).to.not.equal("none");
 		});

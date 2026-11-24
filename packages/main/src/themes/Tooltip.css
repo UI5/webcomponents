@@ -1,7 +1,10 @@
 /*
- * The light-DOM text is the aria-describedby source; keep it in the
- * accessibility tree but out of the visual flow (not display:none, which
- * would drop it from the a11y tree). The visible tooltip is the popover.
+ * Hide the host's light-DOM text visually without removing the host from the
+ * render tree: the visible tooltip is the popover in the host's shadow root, and
+ * `display: none` on the host would hide that shadow subtree too (the popover
+ * would never appear). The sr-only / clip pattern hides only the inline text.
+ * Accessibility rides on the host's `aria-label` (see Tooltip.ts), which
+ * `aria-describedby` resolves regardless of this visual hiding.
  */
 :host {
 	position: absolute;

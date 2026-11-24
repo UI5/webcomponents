@@ -62,22 +62,34 @@ load-bearing for memory-safety.
 
 ### Accessibility — light-DOM text, author-owned link
 
-- The tooltip's **child text** is the accessible description. `aria-describedby`
-  resolves to the referenced element and reads its rendered text; it does not need
-  to pierce the shadow root, so the text must live in the tooltip's **light DOM**.
+- The tooltip's **child text** is the content. `aria-describedby` on the opener
+  references the `<ui5-tooltip>`; the screen reader reads the referenced element's
+  accessible name as the opener's description.
 - The host sets `role="tooltip"` as a **reflected attribute** (SSR-safe). An
   earlier draft set it through `ElementInternals.role`, but that only sets the
   default AX role — it is not a queryable `role` attribute, is overridable, and is
   invisible to ARIA tooling and tests. Reflecting a real attribute matches the
-  repo convention (e.g. Avatar) and is robustly testable. No `aria-label` is set —
-  the description comes from the text content, not an ARIA label.
+  repo convention (e.g. Avatar) and is robustly testable.
+- The host also sets `aria-label` equal to its text content. Browser evidence
+  showed that relying on the clip-hidden text *node* to feed the description was
+  **inconsistent** — in Chrome a `<div tabindex=0>` opener resolved the description
+  but a native `<button>` opener did not. An explicit `aria-label` gives the
+  referenced `role="tooltip"` node a stable accessible **name**, which
+  `aria-describedby` reads as the description; with it, both opener kinds compute
+  the description reliably. (This is the robustness OpenUI5 got from an
+  invisible-anchor span, achieved here without the extra node.)
 - The visible popover renders the host's `textContent` directly (text-only content
   model), rather than chaining a `<slot>` through the inner `<ui5-popover>`'s own
   slot. This keeps the render simple and the text reliably present; the trade-off
   is that text is read at render time (static text — the documented 90% case).
-- The light-DOM text is visually hidden (sr-only / clip pattern, **not**
-  `display:none`, which would drop it from the accessibility tree) while the
-  popover is closed.
+- The light-DOM text is visually hidden with the **sr-only / clip** pattern, not
+  `display:none`. `display:none` on the host would hide its entire shadow subtree
+  too — including the popover — so the visual tooltip would never appear (verified
+  in-browser). The clip pattern hides only the inline text while leaving the host
+  rendered so its shadow popover can open. (The host's `aria-label` carries the
+  description regardless; `aria-describedby` even resolves hidden referenced
+  elements, so a11y does not depend on this choice — the popover's visibility
+  does.)
 - ARIA is **author-owned**: the author writes `aria-describedby` once in markup.
   Auto-assigning it would force observing the opener before any gesture — the
   observer-free design deliberately leaves this to the author.

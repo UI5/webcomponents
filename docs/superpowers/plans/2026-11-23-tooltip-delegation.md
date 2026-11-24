@@ -1,6 +1,6 @@
 # Tooltip Delegation Model — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Replace the `<ui5-tooltip opener="id">` model with a framework-agnostic `data-ui5-has-tooltip` + `aria-describedby` + `<ui5-tooltip>` model driven by one document-level set of delegated gesture listeners.
 
@@ -53,9 +53,9 @@
 **Files:**
 - Create: `docs/internal/Tooltip-stats.md`
 
-- [ ] **Step 1: Write the stats doc** using the surveyed inventory (21 components with a public `tooltip` property; 21 using native `title`; interactive/non-interactive split). Content is in the "Statistics content" appendix at the end of this plan — paste it verbatim.
+- [x] **Step 1: Write the stats doc** using the surveyed inventory (21 components with a public `tooltip` property; 21 using native `title`; interactive/non-interactive split). Content is in the "Statistics content" appendix at the end of this plan — paste it verbatim.
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add docs/internal/Tooltip-stats.md
@@ -75,7 +75,7 @@ git commit -m "docs(ui5-tooltip): add tooltip/title usage statistics"
 - `deregisterTooltip(tooltip: ITooltipTarget): void`
 - `ITooltipTarget` = `{ id: string; getRootNode(): Node; openTooltip(): void; closeTooltip(): void; isOpen(): boolean; delay: number; }` (satisfied by the `Tooltip` component).
 
-- [ ] **Step 1: Write the singleton**
+- [x] **Step 1: Write the singleton**
 
 ```ts
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
@@ -294,7 +294,7 @@ export { registerTooltip, deregisterTooltip };
 export type { ITooltipTarget };
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add packages/main/src/TooltipDelegation.ts
@@ -308,7 +308,7 @@ git commit -m "feat(ui5-tooltip): add document-level gesture delegation singleto
 **Files:**
 - Modify (rewrite): `packages/main/src/Tooltip.ts`
 
-- [ ] **Step 1: Rewrite the component**
+- [x] **Step 1: Rewrite the component**
 
 ```ts
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -448,7 +448,7 @@ Tooltip.define();
 export default Tooltip;
 ```
 
-- [ ] **Step 2: Rewrite the template**
+- [x] **Step 2: Rewrite the template**
 
 ```tsx
 import type Tooltip from "./Tooltip.js";
@@ -473,7 +473,7 @@ export default function TooltipTemplate(this: Tooltip) {
 }
 ```
 
-- [ ] **Step 3: Update the host CSS** so the light-DOM text stays in the a11y tree but is not visible in flow (the visual is the popover).
+- [x] **Step 3: Update the host CSS** so the light-DOM text stays in the a11y tree but is not visible in flow (the visual is the popover).
 
 File `packages/main/src/themes/Tooltip.css` — add this `:host` block at the top (keep the existing `.ui5-tooltip-popover` / `.ui5-tooltip-text` rules):
 
@@ -495,12 +495,12 @@ File `packages/main/src/themes/Tooltip.css` — add this `:host` block at the to
 }
 ```
 
-- [ ] **Step 4: TypeScript check**
+- [x] **Step 4: TypeScript check**
 
 Run (from repo root): `yarn ts`
 Expected: no errors referencing `Tooltip.ts`, `TooltipTemplate.tsx`, or `TooltipDelegation.ts`. (Pre-existing errors in migrated component templates are expected until Task 7 — they still reference `text=`/`opener=`. If `yarn ts` is too noisy, defer the full check to after Task 7 and rely on the Cypress specs in Task 5, which compile the specs' own imports.)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/main/src/Tooltip.ts packages/main/src/TooltipTemplate.tsx packages/main/src/themes/Tooltip.css
@@ -514,12 +514,12 @@ git commit -m "feat(ui5-tooltip): light-DOM text content + role via internals, o
 **Files:**
 - Delete: `packages/main/src/TooltipGestures.ts`
 
-- [ ] **Step 1: Confirm no remaining imports**
+- [x] **Step 1: Confirm no remaining imports**
 
 Run: `grep -rn "TooltipGestures" packages/main/src`
 Expected: no results (Task 3 removed the import from `Tooltip.ts`).
 
-- [ ] **Step 2: Delete and commit**
+- [x] **Step 2: Delete and commit**
 
 ```bash
 git rm packages/main/src/TooltipGestures.ts
@@ -533,7 +533,7 @@ git commit -m "refactor(ui5-tooltip): drop per-opener TooltipGestures (replaced 
 **Files:**
 - Modify (rewrite): `packages/main/cypress/specs/Tooltip.cy.tsx`
 
-- [ ] **Step 1: Write the specs**
+- [x] **Step 1: Write the specs**
 
 ```tsx
 import Tooltip from "../../src/Tooltip.js";
@@ -655,14 +655,14 @@ describe("Tooltip", () => {
 });
 ```
 
-- [ ] **Step 2: Run the specs**
+- [x] **Step 2: Run the specs**
 
 Run: `yarn test:cypress:single cypress/specs/Tooltip.cy.tsx`
 Expected: all specs PASS.
 
-- [ ] **Step 3: Fix any failures** against the Task 2/3 code (not by weakening assertions). Re-run until green.
+- [x] **Step 3: Fix any failures** against the Task 2/3 code (not by weakening assertions). Re-run until green.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add packages/main/cypress/specs/Tooltip.cy.tsx
@@ -676,7 +676,7 @@ git commit -m "test(ui5-tooltip): cover data-attr delegation model"
 **Files:**
 - Modify (rewrite): `packages/main/test/pages/Tooltip.html`
 
-- [ ] **Step 1: Write the page**
+- [x] **Step 1: Write the page**
 
 ```html
 <!DOCTYPE html>
@@ -710,9 +710,9 @@ git commit -m "test(ui5-tooltip): cover data-attr delegation model"
 </html>
 ```
 
-- [ ] **Step 2: Verify in browser** — the real-browser verification is delegated to the browser-e2e-tester subagent in Task 9. Do not manually eyeball here.
+- [x] **Step 2: Verify in browser** — the real-browser verification is delegated to the browser-e2e-tester subagent in Task 9. Do not manually eyeball here.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add packages/main/test/pages/Tooltip.html
@@ -760,7 +760,7 @@ Where an opener already has an author-facing `aria-describedby` (merge, space-se
 
 For each file:
 
-- [ ] **Step 1 (ButtonTemplate.tsx, worked example):** On the root `<button>` (lines ~15-48, the one with `id={`${this._id}-root`}`) add the two attributes, and replace the tooltip block (lines ~77-82):
+- [x] **Step 1 (ButtonTemplate.tsx, worked example):** On the root `<button>` (lines ~15-48, the one with `id={`${this._id}-root`}`) add the two attributes, and replace the tooltip block (lines ~77-82):
 
 ```tsx
 // On the <button ...>:
@@ -777,14 +777,14 @@ For each file:
 
 Note: `ButtonTemplate.tsx` already passes `aria-describedby`? No — it passes `aria-description`. Keep `aria-description={this.ariaDescriptionText}` as-is (it is a different attribute). The new `aria-describedby` is additive.
 
-- [ ] **Step 2:** Apply the same pattern to each remaining file in the per-site map. Open each file, locate the opener element and the `<Tooltip>` line, apply the two attributes + child-text change + review comment.
+- [x] **Step 2:** Apply the same pattern to each remaining file in the per-site map. Open each file, locate the opener element and the `<Tooltip>` line, apply the two attributes + child-text change + review comment.
 
-- [ ] **Step 3: TypeScript check**
+- [x] **Step 3: TypeScript check**
 
 Run (from repo root): `yarn ts`
 Expected: no errors in any migrated template (no more `text=`/`opener=` on `<Tooltip>`).
 
-- [ ] **Step 4: Update component specs** — change each assertion that referenced the old `opener`/`text` usage to the new model. Target specs: `Button.cy.tsx`, `Link.cy.tsx`, `Switch.cy.tsx`, `SegmentedButton.cy.tsx`, `RatingIndicator.cy.tsx`, `ColorPalette.cy.tsx`, `Icon.cy.tsx`, `Title.cy.tsx`.
+- [x] **Step 4: Update component specs** — change each assertion that referenced the old `opener`/`text` usage to the new model. Target specs: `Button.cy.tsx`, `Link.cy.tsx`, `Switch.cy.tsx`, `SegmentedButton.cy.tsx`, `RatingIndicator.cy.tsx`, `ColorPalette.cy.tsx`, `Icon.cy.tsx`, `Title.cy.tsx`.
 
 For each, run its spec and fix assertions to:
 - assert the opener element has `data-ui5-has-tooltip` and `aria-describedby` pointing at the inner tooltip id, and/or
@@ -793,7 +793,7 @@ For each, run its spec and fix assertions to:
 Run per file, e.g.: `yarn test:cypress:single cypress/specs/Button.cy.tsx`
 Expected: PASS. Fix the spec (not the component) when an assertion encodes the old model.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/main/src/*Template.tsx packages/main/cypress/specs
@@ -808,9 +808,9 @@ git commit -m "feat(ui5-tooltip): migrate components to data-attr delegation mod
 - Create: `docs/internal/Tooltip.md`
 - Modify: `packages/website/docs/_samples/main/Tooltip/Basic/sample.html`, `main.js`, `Basic.md`
 
-- [ ] **Step 1: Write `docs/internal/Tooltip.md`** — proposed solution on top, alternatives + analysis after, the readable comparison table with in-page links, the extra `title`-reuse and magic-attribute variants folded in, factory/React-hook as a detail of the proposal, slot-based as "future development", and a link to `Tooltip-stats.md`. Source the content from `docs/superpowers/specs/2026-11-23-tooltip-delegation-design.md` (already written to that structure) — condense to an experts' overview, no long explanations.
+- [x] **Step 1: Write `docs/internal/Tooltip.md`** — proposed solution on top, alternatives + analysis after, the readable comparison table with in-page links, the extra `title`-reuse and magic-attribute variants folded in, factory/React-hook as a detail of the proposal, slot-based as "future development", and a link to `Tooltip-stats.md`. Source the content from `docs/superpowers/specs/2026-11-23-tooltip-delegation-design.md` (already written to that structure) — condense to an experts' overview, no long explanations.
 
-- [ ] **Step 2: Update the website sample** to the new model:
+- [x] **Step 2: Update the website sample** to the new model:
 
 `sample.html` component usage (between fold comments):
 ```html
@@ -823,7 +823,7 @@ import "@ui5/webcomponents/dist/Tooltip.js";
 ```
 `Basic.md` — unchanged wrapper (html + js).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/internal/Tooltip.md packages/website/docs/_samples/main/Tooltip
@@ -834,7 +834,7 @@ git commit -m "docs(ui5-tooltip): public API doc + updated website sample"
 
 ## Task 9: Real-browser verification (delegated)
 
-- [ ] **Step 1: Dispatch the browser-e2e-tester subagent** against the dev server (started from repo root with `yarn start`, port 8080 only) and the page `http://localhost:8080/test/pages/Tooltip.html`. Verify:
+- [x] **Step 1: Dispatch the browser-e2e-tester subagent** against the dev server (started from repo root with `yarn start`, port 8080 only) and the page `http://localhost:8080/test/pages/Tooltip.html`. Verify:
   - Hovering the plain button shows the styled popover after the delay; mouseout hides it.
   - Focusing the div via keyboard (Tab) shows the tooltip; blur hides it.
   - Escape closes an open tooltip.
@@ -842,7 +842,7 @@ git commit -m "docs(ui5-tooltip): public API doc + updated website sample"
   - `<ui5-button tooltip="...">` shows the tooltip on hover.
   - Removing an opener from the DOM while its tooltip exists leaves no console errors and no stuck popover (lifecycle/leak check).
 
-- [ ] **Step 2: Address any failures** found, re-verify.
+- [x] **Step 2: Address any failures** found, re-verify.
 
 ---
 
@@ -851,9 +851,9 @@ git commit -m "docs(ui5-tooltip): public API doc + updated website sample"
 **Files:**
 - Delete: `tooltip-api-research.md` (repo root), `docs/superpowers/specs/2026-10-30-enhanced-tooltip-design.md`, `docs/superpowers/plans/2026-10-30-enhanced-tooltip.md`, `docs/superpowers/specs/new-proposal.md`, `docs/superpowers/specs/old-tooltip-api-research.md`, `docs/superpowers/specs/old-tooltip-factory-and-react-hooks.md`.
 
-- [ ] **Step 1: Confirm content is captured** — the new design doc (`2026-11-23-tooltip-delegation-design.md`), `docs/internal/Tooltip.md`, and `docs/internal/Tooltip-stats.md` together carry everything from the retired files (cross-framework survey, the two extra variants, factory/hook sketch, statistics). Spot-check each retired file's unique content exists in a kept file.
+- [x] **Step 1: Confirm content is captured** — the new design doc (`2026-11-23-tooltip-delegation-design.md`), `docs/internal/Tooltip.md`, and `docs/internal/Tooltip-stats.md` together carry everything from the retired files (cross-framework survey, the two extra variants, factory/hook sketch, statistics). Spot-check each retired file's unique content exists in a kept file.
 
-- [ ] **Step 2: Delete and commit**
+- [x] **Step 2: Delete and commit**
 
 ```bash
 git rm tooltip-api-research.md \
@@ -865,7 +865,7 @@ git rm tooltip-api-research.md \
 git commit -m "chore(ui5-tooltip): remove superseded tooltip docs and research"
 ```
 
-- [ ] **Step 3: Final full check**
+- [x] **Step 3: Final full check**
 
 Run (repo root): `yarn ts`
 Expected: no tooltip-related errors.
@@ -969,3 +969,30 @@ Conditional: `ui5-tag` (interactive only with `interactive` set),
   double-announcement needs the closest review, since their accessible name often
   already equals the tooltip text.
 ```
+
+---
+
+## Status: complete
+
+All tasks executed and verified: 0 TypeScript errors, all affected Cypress specs
+green (Tooltip + 9 migrated components), and 6/6 real-browser checks. History was
+squashed to a clean set of commits on `tooltip-component` and pushed.
+
+### Post-plan fixes (found during real-browser testing)
+
+Two issues surfaced after the plan was written and were fixed on top of it:
+
+1. **Tooltip did not close when pointer/focus moved to another opener.** The
+   open/close timers were module-level singletons shared by all tooltips, so
+   moving from opener A to opener B let B's `scheduleOpen` cancel A's pending
+   close, leaving A stuck open. Fixed by giving each tooltip its own timers
+   (`WeakMap`) and dismissing the previously active tooltip when a new one opens.
+   Covered by two new specs in `Tooltip.cy.tsx`.
+
+2. **`aria-describedby` description was computed inconsistently.** Relying on the
+   clip-hidden text *node* to feed the description worked for a `<div tabindex=0>`
+   opener but not a native `<button>` in Chrome. Fixed by setting `aria-label`
+   equal to the text on the `role="tooltip"` host, giving the referenced node a
+   stable accessible name that `aria-describedby` reads as the description. Both
+   opener kinds now resolve the description (verified in the a11y tree). Supersedes
+   the plan's original "no `aria-label`, text-only" decision.

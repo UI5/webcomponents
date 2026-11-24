@@ -52,10 +52,13 @@ when the pointer/focus leaves.
   connects, detached when the last disconnects. Each event resolves the opener via
   `event.composedPath()` (so openers inside a component's shadow root are found)
   and drives the matching tooltip.
-- **Accessibility.** The light-DOM child text is the description; `aria-describedby`
-  reads it directly (no shadow piercing needed). The host reflects `role="tooltip"`.
-  No `aria-label`. The text is kept in the a11y tree but visually hidden while the
-  popover is closed (clip pattern, not `display:none`).
+- **Accessibility.** `aria-describedby` on the opener references the
+  `<ui5-tooltip>`; the screen reader reads the referenced node's accessible name as
+  the description. The host reflects `role="tooltip"` and sets `aria-label` equal
+  to its text (an explicit name is more reliable than relying on the clip-hidden
+  text node — Chrome computed the description for a `<div tabindex=0>` opener but
+  not a native `<button>` without it). The text node stays in the a11y tree
+  (visually hidden via clip, not `display:none`) as a fallback.
 
 ### Double-announcement (review when migrating)
 
