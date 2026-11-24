@@ -144,31 +144,6 @@ stable node to point `aria-describedby` at before open; no types/autocomplete.
 replacement — A keeps the attribute but pairs it with a real node, giving the
 stable describedby target G lacks.
 
-## Cross-framework reference
-
-Two shapes dominate: **wrapper/text-prop** (Material UI, Ant Design — the tooltip
-wraps the trigger, text is a prop) and **composition/slot** (React Aria,
-shadcn/Radix, Vaadin — separate elements, structural association). Vaadin is the
-closest peer: a real `<vaadin-tooltip>` in a `tooltip` slot with a `for`-by-id
-association mirroring our attribute link.
-
-| Framework | Shape | Text via | Placement | Delays | Controlled | A11y note |
-|---|---|---|---|---|---|---|
-| Material UI | wrapper | `title` (node) | `placement` (14) | enter/leave, touch | `open`/`onOpen`/`onClose` | `describeChild` toggles label↔description |
-| Ant Design | wrapper | `title` (node/fn) | `placement` (12) | mouseEnter/Leave | `open`/`onOpenChange` | `trigger` enum |
-| React Aria | composition | children | `placement` (6) | `delay` + warmup/cooldown | `isOpen`/`onOpenChange` | role=tooltip; strongest |
-| shadcn/Radix | composition + provider | children | `side` | provider delay/skipDelay | `open`/`onOpenChange` | Radix a11y built-in |
-| Vaadin | **slot (web component)** | `text` attr | `position` | hover/focus/hide + static globals | `manual` + `opened` | blur closes instantly |
-
-Design points adopted: text-only content, `placement` enum name, a single `delay`,
-`role="tooltip"` + description as the correct default, and Vaadin's "blur closes
-immediately".
-
-Sources: MUI `mui.com/material-ui/react-tooltip` · Ant `ant.design/components/tooltip`
-· React Aria `react-aria.adobe.com/Tooltip` · shadcn
-`ui.shadcn.com/docs/components/radix/tooltip` · Vaadin
-`vaadin.com/docs/latest/components/tooltip`.
-
 ## React prop-getter layer (detail of A, not exported)
 
 For React consumers the same contract can be a hook composing trigger props
@@ -182,3 +157,75 @@ consumer-side convenience over the same model — a design detail, not shipped A
 See [`Tooltip-stats.md`](./Tooltip-stats.md) — components with a public `tooltip`
 property, components using native `title`, and the interactive/non-interactive
 split (the stage-2 migration surface).
+
+## Cross-framework reference
+
+Two API shapes dominate: **wrapper/text-prop** (Material UI, Ant Design — the
+tooltip wraps the trigger, text is a prop) and **composition/slot** (React Aria,
+shadcn/Radix, Vaadin — separate elements, structural association). Vaadin is the
+closest peer: a real `<vaadin-tooltip>` in a `tooltip` slot with a `for`-by-id
+association mirroring our attribute link.
+
+| Framework | Shape | Text via | Placement | Delays | Controlled | A11y note |
+|---|---|---|---|---|---|---|
+| Material UI | wrapper | `title` (node) | `placement` (14) | enter/leave, touch | `open`/`onOpen`/`onClose` | `describeChild` toggles label↔description |
+| Ant Design | wrapper | `title` (node/fn) | `placement` (12) | mouseEnter/Leave | `open`/`onOpenChange` | `trigger` enum |
+| React Aria | composition | children | `placement` (6) | `delay` + warmup/cooldown | `isOpen`/`onOpenChange` | role=tooltip; strongest |
+| shadcn/Radix | composition + provider | children | `side` | provider delay/skipDelay | `open`/`onOpenChange` | Radix a11y built-in |
+| Vaadin | **slot (web component)** | `text` attr | `position` | hover/focus/hide + static globals | `manual` + `opened` | blur closes instantly |
+
+**Material UI** — wrapper + `title` prop; the single child is the trigger.
+
+```tsx
+<Tooltip title="Delete" placement="top" arrow enterDelay={100}>
+  <Button>Delete</Button>
+</Tooltip>
+```
+
+**Ant Design** — same wrapper shape; `trigger` is one enum rather than three
+`disable*` flags.
+
+```tsx
+<Tooltip title="prompt text" placement="topLeft" trigger="hover">
+  <Button>TL</Button>
+</Tooltip>
+```
+
+**React Aria** — composition; trigger and tooltip are siblings inside a
+`TooltipTrigger`, behavior config on the trigger, text as the tooltip's children.
+
+```tsx
+<TooltipTrigger delay={1500} trigger="focus" placement="top">
+  <Button aria-label="Edit"><Edit /></Button>
+  <Tooltip>Edit</Tooltip>
+</TooltipTrigger>
+```
+
+**shadcn/ui (Radix)** — composition + a root `TooltipProvider`; `asChild` merges
+behavior onto your own element instead of rendering an extra one.
+
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild><Button>Hover</Button></TooltipTrigger>
+  <TooltipContent side="top">Add to library</TooltipContent>
+</Tooltip>
+```
+
+**Vaadin** — slot-based web component; text via the `text` attribute, or associate
+by id with `for` when not slotting.
+
+```html
+<vaadin-button>
+  Click me
+  <vaadin-tooltip slot="tooltip" text="Home"></vaadin-tooltip>
+</vaadin-button>
+```
+
+Design points adopted: text-only content, `placement` enum name, a single `delay`,
+`role="tooltip"` + description as the correct default, and Vaadin's "blur closes
+immediately".
+
+Sources: MUI `mui.com/material-ui/react-tooltip` · Ant `ant.design/components/tooltip`
+· React Aria `react-aria.adobe.com/Tooltip` · shadcn
+`ui.shadcn.com/docs/components/radix/tooltip` · Vaadin
+`vaadin.com/docs/latest/components/tooltip`.
