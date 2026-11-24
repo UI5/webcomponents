@@ -98,6 +98,10 @@ import {
 	MCB_SELECTED_ITEMS,
 	INPUT_CLEAR_ICON_ACC_NAME,
 	FORM_MIXED_TEXTFIELD_REQUIRED,
+	MULTICOMBOBOX_LOADING,
+	MULTICOMBOBOX_LOADED,
+	MULTICOMBOBOX_LOADED_ITEM,
+	MULTICOMBOBOX_LOADED_ITEMS,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Templates
@@ -116,6 +120,8 @@ import type { InputEventDetail } from "./Input.js";
 import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type InputComposition from "./features/InputComposition.js";
+import type { LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 
 /**
  * Interface for components that may be slotted inside a `ui5-multi-combobox` as items
@@ -148,6 +154,11 @@ type MultiComboboxItemWithSelection = {
 type MultiComboBoxValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
 }
+
+type MultiComboBoxLoadItemsEventDetail = {
+	reason: LoadItemsReason;
+	value: string;
+};
 
 /**
  * @class
@@ -279,6 +290,21 @@ type MultiComboBoxValueStateChangeEventDetail = {
 	cancelable: true,
 })
 
+/**
+ * Fired when the application should provide items for the component to render.
+ * The event is fired when text is typed in the input field.
+ *
+ * **Note:** The application is expected to set the `loading` property to `true`
+ * while fetching items and back to `false` once the items have been provided.
+ * @since 2.29.0
+ * @param {string} reason the reason the event was fired - "input" when text is typed
+ * @param {string} value value of the input
+ * @public
+ */
+@event("load-items", {
+	bubbles: true,
+})
+
 class MultiComboBox extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		change: void,
@@ -287,6 +313,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		close: void,
 		"selection-change": MultiComboBoxSelectionChangeEventDetail,
 		"value-state-change": MultiComboBoxValueStateChangeEventDetail,
+		"load-items": MultiComboBoxLoadItemsEventDetail,
 	}
 	/**
 	 * Defines the value of the component.
@@ -598,6 +625,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_valueStateLinks: Array<HTMLElement>;
 	_composition?: InputComposition;
 	_suppressNextLiveChange: boolean; // prevent unwanted live change events during IME composition
+	_loadingDelegate: ComboBoxLazyLoading;
+	_loadItemsReason?: LoadItemsReason;
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 	static composition: typeof InputComposition;
@@ -650,6 +679,21 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.currentItemIdx = -1;
 		this._valueStateLinks = [];
 		this._suppressNextLiveChange = false;
+		this._loadingDelegate = new ComboBoxLazyLoading({
+			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
+			isLoading: () => this.loading,
+			isOpen: () => this.open,
+			fireLoadItems: reason => {
+				this._loadItemsReason = reason;
+				this.fireDecoratorEvent("load-items", { reason, value: this.value });
+			},
+			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
+			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
+			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
+			loadedItemsMessage: count => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count),
+			onLoadingEnd: () => this._handleItemsLoaded(),
+		});
+		this._loadingDelegate.init(this.loading);
 	}
 
 	onEnterDOM() {
@@ -729,6 +773,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	togglePopoverByDropdownIcon() {
+		if (!this.open && !this.loading && this._getItems().length === 0) {
+			this._loadingDelegate.fireOnDropdownOpen();
+		}
+
 		this._shouldFilterItems = false;
 		this.open = !this.open;
 		this.tokenizerOpen = false;
@@ -774,6 +822,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		}
 
+		this.value = input.value;
+
+		// Notify the application to provide items for the typed value (lazy loading).
+		// If the app sets `loading` to true synchronously in response, the checks below
+		// keep the picker open and skip the "no matching item" validation while the
+		// items are being fetched.
+		this._loadingDelegate.fireOnInput();
+
 		if (this._validationTimeout) {
 			if (this._filterItems(value).length) {
 				this._updateValueState(this._effectiveValueState);
@@ -788,7 +844,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._effectiveValueState = this.valueState;
 		}
 
-		if (!this._isComposing && !filteredItems.length && value && !this.noValidation) {
+		if (!this._isComposing && !this.loading && !filteredItems.length && value && !this.noValidation) {
 			this._updateValueState(ValueState.Negative);
 			this._shouldAutocomplete = false;
 		} else if ((filteredItems.length || !value) && this.valueState === ValueState.Negative) {
@@ -799,11 +855,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._inputLastValue = input.value;
 		}
 
-		this.value = input.value;
 		this._filteredItems = filteredItems;
 
 		if (!isPhone()) {
-			if (filteredItems.length === 0) {
+			if (!this.loading && filteredItems.length === 0) {
 				this.open = false;
 			} else {
 				this.open = true;
@@ -811,6 +866,48 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+	}
+
+	/**
+	 * Called once lazy loading finishes (the `loading` property switches back to `false`).
+	 * Mirrors ComboBox's `_selectItemOnLoadingEnd`: the follow-up action depends on what
+	 * triggered the load (tracked in `_loadItemsReason`):
+	 * - [Arrow Down] / [Arrow Up] on a closed component (`"navDown"` / `"navUp"`): navigates
+	 *   inline to the first / last loaded item **without** opening the picker.
+	 * - typing (`"input"`): re-applies the "no matching item" validation and opens the picker
+	 *   when there are matches.
+	 *
+	 * These steps were skipped in the handlers that fired `load-items` because the items were
+	 * not available yet.
+	 * @private
+	 */
+	_handleItemsLoaded() {
+		if (isPhone()) {
+			return;
+		}
+
+		const reason = this._loadItemsReason;
+		this._loadItemsReason = undefined;
+		this._filteredItems = this._filterItems(this.value);
+
+		// Arrow Up/Down on a closed component cycles through the values inline, keeping the
+		// picker closed. Replicate that once the items have loaded.
+		if (reason === "navDown" || reason === "navUp") {
+			if (this._filteredItems.length) {
+				if (reason === "navDown") {
+					this._navigateToNextItem();
+				} else {
+					this._navigateToPrevItem();
+				}
+			}
+			return;
+		}
+
+		if (!this._isComposing && !this._filteredItems.length && this.value && !this.noValidation) {
+			this._updateValueState(ValueState.Negative);
+		}
+
+		this.open = this._filteredItems.length > 0;
 	}
 
 	_updateValueState(newValueState: `${ValueState}`) {
@@ -1314,8 +1411,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	_handleArrowNavigation(e: KeyboardEvent, isDownControl: boolean) {
 		const isArrowDown = isDownControl || isDown(e);
-		const hasSuggestions = this._getItems().length;
-
+	
 		e.preventDefault();
 
 		if (this.hasValueStateMessage && !this.valueStateHeader) {
@@ -1329,7 +1425,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			}
 		}
 
-		if (isArrowDown && hasSuggestions) {
+		if (isArrowDown) {
 			this._handleArrowDown();
 		}
 
@@ -1339,10 +1435,17 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	async _handleArrowDown() {
-		const firstListItem = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0];
-		const focusRef = firstListItem?.hasAttribute("ui5-mcb-item-group") ? (firstListItem as MultiComboBoxItemGroup).getFocusDomRef() : firstListItem;
+		const hasSuggestions = this._getItems().length;
+
+		if (!hasSuggestions && !this.open) {
+			this._loadItemsReason = "navDown";
+			this.fireDecoratorEvent("load-items", { reason: this._loadItemsReason, value: this.value });
+			return;
+		}
 
 		if (this.open) {
+			const firstListItem = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0];
+			const focusRef = firstListItem?.hasAttribute("ui5-mcb-item-group") ? (firstListItem as MultiComboBoxItemGroup).getFocusDomRef() : firstListItem;
 			firstListItem && focusRef && this.list?._itemNavigation.setCurrentItem(focusRef);
 			this.value = this.valueBeforeAutoComplete || this.value;
 
@@ -1418,6 +1521,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_navigateToPrevItem() {
+		const hasSuggestions = this._getItems().length;
+
+		if (!hasSuggestions && !this.open) {
+			this._loadItemsReason = "navUp";
+			this.fireDecoratorEvent("load-items", { reason: this._loadItemsReason, value: this.value });
+			return;
+		}
+
 		const items = this._getItems();
 		let previousItemIdx = this.currentItemIdx;
 
@@ -1868,6 +1979,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const autoCompletedChars = input && (input.selectionEnd || 0) - (input.selectionStart || 0);
 		const value = input && input.value;
 
+		this._loadingDelegate.onBeforeRendering(this.loading);
+
 		if (this.open) {
 			const list = this._getList();
 			const selectableItems = this._getItems().filter(item => !item.isGroupItem);
@@ -1924,6 +2037,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._getList();
 		this.valueStateOpen = this.shouldDisplayOnlyValueStateMessage || (this._handleLinkNavigation && !this.open);
 		this.storeResponsivePopoverWidth();
+
+		this._loadingDelegate.announceLoadingState();
 
 		this._deleting = false;
 		// force resize of the tokenizer on invalidation
@@ -2417,4 +2532,5 @@ export type {
 	IMultiComboBoxItem,
 	MultiComboBoxSelectionChangeEventDetail,
 	MultiComboBoxValueStateChangeEventDetail,
+	MultiComboBoxLoadItemsEventDetail,
 };

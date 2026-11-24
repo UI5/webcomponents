@@ -1026,6 +1026,104 @@
 			</ui5-mcb-item-custom>
 		</ui5-multi-combobox>
 	</div>
+	<div class="demo-section">
+		<span>Lazy loading using the 'load-items' event</span>
+
+		<br />
+		<br />
+
+		<ui5-multi-combobox id="lazy-loading-mcb-1" class="multicombobox2auto" placeholder="Start typing to load items"></ui5-multi-combobox>
+		<ui5-button id="btn-clear-mcb-1">Clear items</ui5-button>
+
+		<script>
+			const createItem = (mcb, text) => {
+				const item = document.createElement("ui5-mcb-item");
+				item.text = text;
+				mcb.appendChild(item);
+			};
+
+			const fnClearItems = (control) => {
+				const itemSelector = "ui5-mcb-item, ui5-mcb-item-group";
+				let allClear = control.querySelectorAll(itemSelector).length === 0;
+				while (!allClear) {
+					const child = control.querySelector(itemSelector);
+					control.removeChild(child);
+					allClear = control.querySelectorAll(itemSelector).length === 0;
+				}
+				control.value = "";
+			};
+
+			// Simulates a network fetch that resolves after a delay and honors an AbortSignal.
+			// Rejects with an "AbortError" when the signal is aborted (i.e. superseded by newer input).
+			const fetchItems = (value, signal) => new Promise((resolve, reject) => {
+				const timer = setTimeout(() => {
+					const items = [];
+					for (let i = 0; i < 5; i++) {
+						items.push(`${value || "Item"} #${i + 1}`);
+					}
+					resolve(items);
+				}, 2000);
+
+				signal.addEventListener("abort", () => {
+					clearTimeout(timer);
+					reject(new DOMException("Aborted", "AbortError"));
+				});
+			});
+
+			// Removes the loaded items without touching the current value.
+			const removeItems = (control) => {
+				[...control.children]
+					.filter(c => c.matches("ui5-mcb-item, ui5-mcb-item-group"))
+					.forEach(c => {
+						removeItems(c);
+						control.removeChild(c);
+					});
+			};
+
+			// The app owns the AbortController per control, so a newer request cancels the previous one.
+			const abortControllers = new WeakMap();
+
+			const fnLoadItems = async (e) => {
+				const control = e.target;
+				const { reason, value } = e.detail;
+				const childItems = [...control.children].filter(c => c.matches("ui5-mcb-item, ui5-mcb-item-group"));
+
+				if (childItems.length > 0) {
+					return;
+				}
+
+				// Cancel any in-flight request for this control and create a fresh signal.
+				abortControllers.get(control)?.abort();
+				const abortController = new AbortController();
+				abortControllers.set(control, abortController);
+				const { signal } = abortController;
+
+				control.loading = true;
+				// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+				if (reason === "input") {
+					control.open = true;
+				}
+
+				try {
+					const items = await fetchItems(value, signal);
+					// A newer load-items event would have aborted this signal before we get here.
+					removeItems(control);
+					items.forEach((text) => createItem(control, text));
+					control.loading = false;
+				} catch (err) {
+					// Superseded by a newer load-items event - a fresh request is now in charge of loading state.
+					if (err.name !== "AbortError") {
+						throw err;
+					}
+				}
+			};
+
+			const mcbLazyLoad1 = document.getElementById("lazy-loading-mcb-1");
+			mcbLazyLoad1.addEventListener("load-items", fnLoadItems);
+
+			document.getElementById("btn-clear-mcb-1").addEventListener("click", () => fnClearItems(mcbLazyLoad1));
+		</script>
+	</div>
 
 </body>
 
