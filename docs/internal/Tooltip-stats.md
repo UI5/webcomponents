@@ -1,91 +1,97 @@
 # Tooltip / `title` usage statistics
 
-Migration surface for the tooltip rework. Three inventories: components with a
-public `tooltip` property, components using native `title`, and their
-interactive/non-interactive split. The **Interactive** column marks each record:
-Yes (natively focusable / handles input), No (display only), or Conditional
-(depends on a property/mode).
+Migration surface for the tooltip rework: every component that needs upgrading to
+the new `<ui5-tooltip>` + `data-ui5-has-tooltip` model.
 
-## 1. Components with a public `tooltip` property (21)
+Two facts drive the inventory:
 
-| Component | Package | Source | Interactive |
-|---|---|---|---|
-| `ui5-button` | main | `packages/main/src/Button.ts` | Yes |
-| `ui5-avatar-badge` | main | `packages/main/src/AvatarBadge.ts` | No |
-| `ui5-color-palette-item` | main | `packages/main/src/ColorPaletteItem.ts` | No (navigated by parent ColorPalette) |
-| `ui5-link` | main | `packages/main/src/Link.ts` | Yes |
-| `ui5-menu-item` | main | `packages/main/src/MenuItem.ts` (+ inherits ListItem) | Yes |
-| `ui5-option` | main | `packages/main/src/Option.ts` | Yes |
-| `ui5-option-custom` | main | `packages/main/src/OptionCustom.ts` | Yes |
-| `ui5-segmented-button-item` | main | `packages/main/src/SegmentedButtonItem.ts` | Yes |
-| `ui5-rating-indicator` | main | `packages/main/src/RatingIndicator.ts` | Yes |
-| `ui5-select` | main | `packages/main/src/Select.ts` | Yes |
-| `ui5-switch` | main | `packages/main/src/Switch.ts` | Yes |
-| `ui5-toolbar-button` | main | `packages/main/src/ToolbarButton.ts` | Yes |
-| `ui5-li` | main | inherited from `packages/main/src/ListItem.ts` | Yes |
-| `ui5-li-custom` | main | inherited from `packages/main/src/ListItem.ts` | Yes |
-| `ui5-tree-item` | main | inherited via TreeItemBase from `ListItem.ts` | Yes |
-| `ui5-tree-item-custom` | main | inherited via TreeItemBase from `ListItem.ts` | Yes |
-| `ui5-view-settings-dialog-custom-tab` | fiori | `packages/fiori/src/ViewSettingsDialogCustomTab.ts` | Yes |
-| `ui5-user-settings-item` | fiori | `packages/fiori/src/UserSettingsItem.ts` | Yes |
-| `ui5-side-navigation-item` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
-| `ui5-side-navigation-sub-item` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
-| `ui5-side-navigation-group` | fiori | inherited from `SideNavigationItemBase.ts` | Yes |
+- **Every component with a public `tooltip` property realizes it as a native
+  `title`** today. So a `tooltip` property always implies native `title` too.
+- The remaining components **have no `tooltip` property** but still render a native
+  `title` directly in their templates.
 
-Base classes defining the inherited property: `packages/main/src/ListItem.ts`,
-`packages/fiori/src/SideNavigationItemBase.ts`. No AI-package component declares a
-public `tooltip`.
+The single table below merges both groups. Columns:
 
-## 2. Components using native `title` (21)
+- **`tooltip` prop** — has a public `tooltip` property (Yes/No).
+- **Native `title`** — renders or forwards a native HTML `title` today (Yes).
+- **Interactive** — natively focusable / handles input (Yes), display only (No),
+  or depends on a property/mode (Conditional).
 
-| Component | Package | File | Use | Interactive |
+## Components to upgrade (37)
+
+| Component | Package | `tooltip` prop | Native `title` | Interactive |
 |---|---|---|---|---|
-| `ui5-icon` | main | `IconTemplate.tsx` / `Icon.ts` | renders `<ui5-tooltip>` from `effectiveAccessibleName` when `showTooltip` | Conditional (only in `mode="Interactive"`) |
-| `ui5-tag` | main | `TagTemplate.tsx` | native `title` on root button/div | Conditional (only with `interactive` set) |
-| `ui5-li` + ListItem family | main | `ListItemTemplate.tsx` | native `title` from `_accInfo.tooltip` | Yes |
-| `ui5-select` | main | `SelectTemplate.tsx` | native `title` from `_effectiveTooltip` | Yes |
-| `ui5-numeric-input` | main | `NumericInputTemplate.tsx` | native `title` on step icons | Yes |
-| `ui5-calendar` | main | `CalendarHeaderTemplate.tsx` | native `title` on nav buttons | Yes |
-| `ui5-daypicker` | main | `DayPickerTemplate.tsx` | native `title` per day cell | Yes |
-| `ui5-dialog` | main | `DialogTemplate.tsx` | native `title` on resize handle | Yes |
-| `ui5-popover` | main | `PopoverTemplate.tsx` | native `title` on resize handle | Yes |
-| `ui5-tab` | main | `TabInStripTemplate.tsx` | native `title` on expand button | Yes |
-| `ui5-busy-indicator` | main | `BusyIndicatorTemplate.tsx` | native `title` on busy area | No |
-| `ui5-panel` | main | `Panel.ts` | `title` ARIA key forwarded to inner button | Yes |
-| `ui5-split-button` | main | `SplitButton.ts` | `title` ARIA key forwarded to inner buttons | Yes |
-| `ui5-ai-button` | ai | `Button.ts` | `title` ARIA key forwarded to inner buttons | Yes |
-| `ui5-side-navigation-item` | fiori | `SideNavigationItemTemplate.tsx` | native `title` from `_tooltip` | Yes |
-| `ui5-side-navigation-sub-item` | fiori | `SideNavigationSubItemTemplate.tsx` | native `title` from `_tooltip` | Yes |
-| `ui5-side-navigation-group` | fiori | `SideNavigationGroupTemplate.tsx` | native `title` from `_tooltip` | Yes |
-| `ui5-shellbar` | fiori | `ShellBarLegacyTemplate.tsx` | native `title` on logo | Yes |
-| `ui5-li-notification-group` | fiori | `NotificationListGroupItemTemplate.tsx` | native `title` on toggle icon | Yes |
-| `ui5-user-menu` | fiori | `UserMenuTemplate.tsx` | native `title` on avatar wrapper | Yes |
-| `ui5-user-settings-account-view` | fiori | `UserSettingsAccountViewTemplate.tsx` | native `title` on avatar wrapper | No |
+| `ui5-button` | main | Yes | Yes | Yes |
+| `ui5-avatar-badge` | main | Yes | Yes | No |
+| `ui5-color-palette-item` | main | Yes | Yes | No (navigated by parent ColorPalette) |
+| `ui5-link` | main | Yes | Yes | Yes |
+| `ui5-menu-item` | main | Yes | Yes | Yes |
+| `ui5-option` | main | Yes | Yes | Yes |
+| `ui5-option-custom` | main | Yes | Yes | Yes |
+| `ui5-segmented-button-item` | main | Yes | Yes | Yes |
+| `ui5-rating-indicator` | main | Yes | Yes | Yes |
+| `ui5-select` | main | Yes | Yes | Yes |
+| `ui5-switch` | main | Yes | Yes | Yes |
+| `ui5-toolbar-button` | main | Yes | Yes | Yes |
+| `ui5-li` | main | Yes | Yes | Yes |
+| `ui5-li-custom` | main | Yes | Yes | Yes |
+| `ui5-tree-item` | main | Yes | Yes | Yes |
+| `ui5-tree-item-custom` | main | Yes | Yes | Yes |
+| `ui5-view-settings-dialog-custom-tab` | fiori | Yes | Yes | Yes |
+| `ui5-user-settings-item` | fiori | Yes | Yes | Yes |
+| `ui5-side-navigation-item` | fiori | Yes | Yes | Yes |
+| `ui5-side-navigation-sub-item` | fiori | Yes | Yes | Yes |
+| `ui5-side-navigation-group` | fiori | Yes | Yes | Yes |
+| `ui5-icon` | main | No | Yes | Conditional (only in `mode="Interactive"`) |
+| `ui5-tag` | main | No | Yes | Conditional (only with `interactive` set) |
+| `ui5-numeric-input` | main | No | Yes | Yes |
+| `ui5-calendar` | main | No | Yes | Yes |
+| `ui5-daypicker` | main | No | Yes | Yes |
+| `ui5-dialog` | main | No | Yes | Yes |
+| `ui5-popover` | main | No | Yes | Yes |
+| `ui5-tab` | main | No | Yes | Yes |
+| `ui5-busy-indicator` | main | No | Yes | No |
+| `ui5-panel` | main | No | Yes | Yes |
+| `ui5-split-button` | main | No | Yes | Yes |
+| `ui5-ai-button` | ai | No | Yes | Yes |
+| `ui5-shellbar` | fiori | No | Yes | Yes |
+| `ui5-li-notification-group` | fiori | No | Yes | Yes |
+| `ui5-user-menu` | fiori | No | Yes | No |
+| `ui5-user-settings-account-view` | fiori | No | Yes | No |
 
-## 3. Interactive vs non-interactive
+Base classes defining the inherited `tooltip` property:
+`packages/main/src/ListItem.ts` (ui5-li, ui5-li-custom, ui5-menu-item,
+ui5-tree-item, ui5-tree-item-custom) and
+`packages/fiori/src/SideNavigationItemBase.ts` (ui5-side-navigation-item,
+-sub-item, -group). No AI-package component declares a public `tooltip`.
 
-Interactive (focusable / handles input): `ui5-button`, `ui5-link`, `ui5-switch`,
-`ui5-menu-item`, `ui5-option`, `ui5-option-custom`, `ui5-segmented-button-item`,
-`ui5-rating-indicator`, `ui5-select`, `ui5-toolbar-button`, `ui5-li` /
-`ui5-li-custom`, `ui5-tree-item` / `ui5-tree-item-custom`,
-`ui5-view-settings-dialog-custom-tab`, `ui5-user-settings-item`,
-`ui5-side-navigation-item` / `-sub-item` / `-group`, `ui5-numeric-input`,
-`ui5-calendar`, `ui5-daypicker`, `ui5-dialog`, `ui5-popover`, `ui5-tab`,
-`ui5-split-button`, `ui5-ai-button`, `ui5-panel`, `ui5-shellbar`,
-`ui5-li-notification-group`, `ui5-user-menu`.
+### Source references
 
-Non-interactive (display only): `ui5-avatar-badge`, `ui5-busy-indicator`,
-`ui5-user-settings-account-view`, `ui5-color-palette-item` (navigated by the
-parent ColorPalette, not independently focusable).
-
-Conditional: `ui5-tag` (interactive only with `interactive` set),
-`ui5-icon` (interactive only in `mode="Interactive"`).
+Native `title` sites (for the no-`tooltip`-prop rows): `ui5-icon`
+`IconTemplate.tsx`/`Icon.ts` (renders `<ui5-tooltip>` from `effectiveAccessibleName`
+when `showTooltip`), `ui5-tag` `TagTemplate.tsx`, `ui5-numeric-input`
+`NumericInputTemplate.tsx` (step icons), `ui5-calendar` `CalendarHeaderTemplate.tsx`
+(nav buttons), `ui5-daypicker` `DayPickerTemplate.tsx` (day cells), `ui5-dialog`
+`DialogTemplate.tsx` / `ui5-popover` `PopoverTemplate.tsx` (resize handle),
+`ui5-tab` `TabInStripTemplate.tsx` (expand button), `ui5-busy-indicator`
+`BusyIndicatorTemplate.tsx`, `ui5-panel` `Panel.ts` / `ui5-split-button`
+`SplitButton.ts` / `ui5-ai-button` `ai/Button.ts` (`title` ARIA key forwarded to an
+inner button), `ui5-shellbar` `ShellBarLegacyTemplate.tsx` (logo),
+`ui5-li-notification-group` `NotificationListGroupItemTemplate.tsx` (toggle icon),
+`ui5-user-menu` `UserMenuTemplate.tsx` / `ui5-user-settings-account-view`
+`UserSettingsAccountViewTemplate.tsx` (avatar wrapper).
 
 ## Summary
 
-- 21 components expose a public `tooltip` property.
-- 21 components render or forward native `title`.
-- The union (~32 unique components) is predominantly interactive; only a handful
-  are display-only. Non-interactive hosts are the ones where `aria-describedby`
-  double-announcement needs the closest review, since their accessible name often
+- **37 components need the upgrade** to the new tooltip.
+- **21** expose a public `tooltip` property — and all 21 realize it as a native
+  `title` today, so every `tooltip`-property component is also a native-`title`
+  component.
+- **16** more have no `tooltip` property but render a native `title` directly.
+- All 37 render a native `title` in their current (pre-migration) state.
+- The set is predominantly interactive; only a handful are display-only
+  (`ui5-avatar-badge`, `ui5-busy-indicator`, `ui5-user-menu`,
+  `ui5-user-settings-account-view`, `ui5-color-palette-item`), plus two
+  conditional (`ui5-icon`, `ui5-tag`). The non-interactive hosts need the closest
+  `aria-describedby` double-announcement review, since their accessible name often
   already equals the tooltip text.
