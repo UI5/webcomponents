@@ -139,7 +139,7 @@ class Panel extends UI5Element {
 	/**
 	 * Sets the accessible ARIA role of the component.
 	 * Depending on the usage, you can change the role from the default `Form`
-	 * to `Region`, `Complementary`, or `None`.
+	 * to `Region`, `Complementary` or `None`.
 	 *
 	 * **Note:** When set to `None`, no ARIA role is rendered on the root element.
 	 * Use this when the Panel is purely presentational and should not appear as a landmark in the accessibility tree.
