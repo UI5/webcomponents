@@ -2270,6 +2270,18 @@ describe("Input general interaction", () => {
 		cy.get("@onInput").should("have.been.calledTwice");
 	});
 
+	it("Clear icon is exposed as a button with an accessible name", () => {
+		cy.mount(
+			<Input id="clear-input" showClearIcon={true} value="test" />
+		);
+
+		cy.get("#clear-input")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.should("have.attr", "role", "button")
+			.and("have.attr", "aria-label", "Clear");
+	});
+
 	it("Change event is called when value of input is cleared with clear icon and input is focused out", () => {
 		const onChange = cy.spy().as("onChange");
 		const onInput = cy.spy().as("onInput");
@@ -2609,6 +2621,64 @@ describe("XSS tests for suggestions", () => {
 		cy.get("#xss-input").find("ui5-suggestion-item").each(($item, index) => {
 			cy.wrap($item[0].shadowRoot.querySelector(".ui5-li-title")).should("have.prop", "innerText", expected[index]);
 		});
+	});
+
+	it("does not execute payload set via markupText JS property", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item" text="Safe Item" />
+			</Input>
+		);
+
+		cy.get("#suggestion-item").then(($item) => {
+			($item[0] as SuggestionItem).markupText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via markup-text HTML attribute", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem text="Safe Item" markup-text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("S");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#xss-input").find("ui5-suggestion-item").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property when no highlight is active", () => {
+		cy.mount(
+			<Input id="xss-input" showSuggestions>
+				<SuggestionItem id="suggestion-item-text" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>" />
+			</Input>
+		);
+
+		cy.get("#xss-input").shadow().find("input").realClick().realType("<");
+		cy.get("#xss-input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#suggestion-item-text").shadow().find(".ui5-li-title")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
 	});
 });
 

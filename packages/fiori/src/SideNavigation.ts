@@ -32,8 +32,6 @@ import SideNavigationTemplate from "./SideNavigationTemplate.js";
 
 import {
 	SIDE_NAVIGATION_POPOVER_HIDDEN_TEXT,
-	SIDE_NAVIGATION_COLLAPSED_LIST_ARIA_ROLE_DESC,
-	SIDE_NAVIGATION_LIST_ARIA_ROLE_DESC,
 	SIDE_NAVIGATION_OVERFLOW_ACCESSIBLE_NAME,
 	SIDE_NAVIGATION_FLEXIBLE_LIST_LABEL,
 	SIDE_NAVIGATION_FIXED_LIST_LABEL,
@@ -380,15 +378,6 @@ class SideNavigation extends UI5Element {
 
 	get accSideNavigationPopoverHiddenText() {
 		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_POPOVER_HIDDEN_TEXT);
-	}
-
-	get ariaRoleDescNavigationList() {
-		let key = SIDE_NAVIGATION_LIST_ARIA_ROLE_DESC;
-		if (this.collapsed) {
-			key = SIDE_NAVIGATION_COLLAPSED_LIST_ARIA_ROLE_DESC;
-		}
-
-		return SideNavigation.i18nBundle.getText(key);
 	}
 
 	get navigationMenuPrimaryHiddenText() {
@@ -963,6 +952,16 @@ class SideNavigation extends UI5Element {
 			item.tag.forEach((tagEl: HTMLElement) => {
 				const clonedTag = tagEl.cloneNode(true) as HTMLElement;
 				clonedTag.setAttribute("slot", "tag");
+				// the popover shows the full tag inline (like expanded mode), so it must
+				// not inherit the collapsed single-line wrapping forced on the rail item;
+				// restore the author's original wrapping-type (if any)
+				const authorWrapping = clonedTag.getAttribute("data-ui5-tag-wrapping-synced");
+				clonedTag.removeAttribute("data-ui5-tag-wrapping-synced");
+				if (authorWrapping) {
+					clonedTag.setAttribute("wrapping-type", authorWrapping);
+				} else {
+					clonedTag.removeAttribute("wrapping-type");
+				}
 				ref.appendChild(clonedTag);
 			});
 		}

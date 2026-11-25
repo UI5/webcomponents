@@ -49,4 +49,5 @@ class DateFormat extends DateFormatWrapped {
 	}
 }
 
+export type { DateFormatOptions };
 export default DateFormat;

@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import Toolbar from "../../src/Toolbar.js";
 import ToolbarButton from "../../src/ToolbarButton.js";
 import ToolbarSelect from "../../src/ToolbarSelect.js";

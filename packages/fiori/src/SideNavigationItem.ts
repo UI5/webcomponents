@@ -19,6 +19,7 @@ import {
 	SIDE_NAVIGATION_ICON_EXPAND,
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
 	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
+	SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import "@ui5/webcomponents/dist/Tag.js";
@@ -110,6 +111,8 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		this.items.forEach(item => {
 			item._parentDisabled = this.effectiveDisabled;
 		});
+
+		this._syncTagWrapping();
 	}
 
 	get overflowItems() : Array<SideNavigationItem> {
@@ -231,6 +234,14 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 	get hasTag() {
 		return !!this.tag.length;
+	}
+
+	get _tagText() {
+		return this.tag[0]?.textContent?.trim() ?? "";
+	}
+
+	get _tagDescriptionText() {
+		return this.hasTag ? SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_LIST_ITEM_TAG_TEXT, this._tagText) : undefined;
 	}
 
 	get _textId() {

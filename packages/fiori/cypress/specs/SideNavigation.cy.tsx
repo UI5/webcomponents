@@ -1505,11 +1505,6 @@ describe("Side Navigation Accessibility", () => {
 			.should("have.prop", "tagName", "NAV");
 
 		cy.get("#sideNav")
-			.shadow()
-			.find(".ui5-sn-flexible")
-			.should("have.attr", "aria-roledescription", "Navigation List Menu Bar");
-
-		cy.get("#sideNav")
 			.invoke("attr", "style", "height: 100px");
 
 		cy.get("#sideNav")
@@ -1832,6 +1827,58 @@ describe("Focusable items", () => {
 			.should("have.attr", "aria-label", "User Profile Settings");
 	});
 
+	it("Tests that SideNavigationItem drops aria-labelledby when accessibleName is set", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" expanded>
+					<SideNavigationSubItem id="subItem1" text="Profile" accessibleName="User Profile Settings" />
+				</SideNavigationItem>
+				<SideNavigationItem id="item2" text="Settings" expanded>
+					<SideNavigationSubItem id="subItem2" text="Privacy" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		// With accessibleName: the item is labelled by aria-label and aria-labelledby is not rendered
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-labelledby");
+
+		// Without accessibleName: aria-labelledby points at the text element and no aria-label
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-label");
+
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.invoke("attr", "aria-labelledby")
+			.should("not.be.empty")
+			.then(labelledBy => {
+				cy.get("#item2")
+					.shadow()
+					.find(".ui5-sn-item-text")
+					.should("have.attr", "id", labelledBy);
+			});
+
+		// Sub-items are labelled via aria-label when accessibleName is set
+		cy.get("#subItem1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "User Profile Settings");
+
+		cy.get("#subItem2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-label");
+	});
+
 	it("Tests accessibleName for SideNavigationItem in collapsed mode", () => {
 		cy.mount(
 			<SideNavigation collapsed={true}>
@@ -2050,6 +2097,78 @@ describe("Focusable items", () => {
 			.find("[ui5-tag]")
 			.should("exist")
 			.should("have.text", "New");
+	});
+
+	it("shows the full tag in the collapsed popover (not clamped to 6rem)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Leads" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>
+						Beta Long Text Beta Long Text Beta Long Text
+					</Tag>
+					<SideNavigationSubItem text="All Leads" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-side-navigation-item] > [ui5-tag]")
+			.then($tag => {
+				// the popover tag is not truncated: it renders wider than the 6rem rail clamp
+				expect($tag[0].getBoundingClientRect().width).to.be.greaterThan(96);
+			});
+	});
+
+	it("renders the overflow menu item tag inline right after the text", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem text="dummy" />
+				<SideNavigationItem text="Contacts">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").invoke("attr", "style", "height: 90px");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Contacts']")
+			.as("menuItem");
+
+		// the tag renders inline right after the text (tag.left close to text.right)
+		cy.get("@menuItem").shadow().find(".ui5-navmenu-item-text").then($text => {
+			const textRight = $text[0].getBoundingClientRect().right;
+			cy.get("@menuItem").find("[ui5-tag]").should("have.text", "Beta").then($tag => {
+				const tagLeft = $tag[0].getBoundingClientRect().left;
+				expect(tagLeft - textRight).to.be.lessThan(16);
+			});
+		});
+	});
+
+	it("forces the rail item tag onto a single line when collapsed", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Favorites Long Text" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>Beta Long Text Beta Long Text</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// collapsed: the tag is rendered non-wrapping so max-width truncates it
+		cy.get("#item1").find("[ui5-tag]").should("have.attr", "wrapping-type", "None");
+
+		// expanded: the author's wrapping is restored (no forced None)
+		cy.get("#sideNav").invoke("prop", "collapsed", false);
+		cy.get("#item1").find("[ui5-tag]").should("not.have.attr", "wrapping-type");
 	});
 });
 
@@ -2399,6 +2518,33 @@ describe("Side Navigation highlightedText", () => {
 
 		cy.window().its("__xss").should("not.exist");
 	});
+
+	it("does not highlight the tag text when the term matches a tag", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="Beta">
+				<SideNavigationItem id="item1" text="Leads">
+					<Tag slot="tag" design="Set2" hideStateIcon>Beta</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// the item stays visible
+		cy.get("#item1").should("be.visible");
+
+		// no highlight span is rendered inside the item (text does not match)
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-highlight")
+			.should("not.exist");
+
+		// the slotted tag text is not wrapped in a highlight span
+		cy.get("#item1")
+			.find("[ui5-tag] .ui5-sn-item-highlight")
+			.should("not.exist");
+		cy.get("#item1")
+			.find("[ui5-tag]")
+			.should("have.text", "Beta");
+	});
 });
 
 describe("Side Navigation search match announcement", () => {
@@ -2434,5 +2580,95 @@ describe("Side Navigation search match announcement", () => {
 		cy.get("body")
 			.find(".ui5-invisiblemessage-polite")
 			.should("have.text", "0 matches found");
+	});
+});
+
+describe("Security", () => {
+	it("does not execute payload set via _highlightedText JS property on SideNavigationItem", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="Safe Item"></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").then(($item) => {
+			($item[0] as SideNavigationItem)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationItem when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via _highlightedText JS property on SideNavigationSubItem", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem text="Parent">
+					<SideNavigationSubItem id="subItem1" text="Safe SubItem"></SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1").then(($item) => {
+			($item[0] as SideNavigationSubItem)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#subItem1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe SubItem");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationSubItem when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem text="Parent">
+					<SideNavigationSubItem id="subItem1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via _highlightedText JS property on SideNavigationGroup", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationGroup id="group1" text="Safe Group"></SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1").then(($item) => {
+			($item[0] as SideNavigationGroup)._highlightedText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("#group1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "Safe Group");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property on SideNavigationGroup when no highlight is active", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationGroup id="group1" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1").shadow().find(".ui5-sn-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
 	});
 });

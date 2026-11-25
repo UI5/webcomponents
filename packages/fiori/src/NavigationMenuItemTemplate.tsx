@@ -30,7 +30,19 @@ export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hoo
 }
 
 function listItemContent(this: NavigationMenuItem) {
-	return <>{this.text}</>;
+	return (
+		<div class="ui5-navmenu-item-text-tag-container">
+			<span class="ui5-navmenu-item-text">{this.text}</span>
+			{this.hasTag &&
+				<span id={this._tagContainerId} class="ui5-navmenu-item-tag-container" aria-hidden="true">
+					<slot name="tag"></slot>
+				</span>
+			}
+			{this.hasTag &&
+				<span id={this._tagTextId} class="ui5-hidden-text">{this._tagDescriptionText}</span>
+			}
+		</div>
+	);
 }
 
 function iconBegin(this: NavigationMenuItem) {
@@ -48,11 +60,6 @@ function iconBegin(this: NavigationMenuItem) {
 
 function iconEnd(this: NavigationMenuItem) {
 	return (<>
-		{this.hasTag &&
-			<span id={this._tagContainerId} class="ui5-navmenu-item-tag-container">
-				<slot name="tag"></slot>
-			</span>
-		}
 		{this.hasSubmenu &&
 			<Icon
 				part="icon"
