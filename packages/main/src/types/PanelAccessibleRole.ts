@@ -24,6 +24,14 @@ enum PanelAccessibleRole {
 	 * @public
 	 */
 	Region = "Region",
+
+	/**
+	 * No ARIA role is rendered on the root element.
+	 * Use this when the Panel is purely presentational and exposing it as a landmark would add noise for screen reader users.
+	 * @public
+	 * @since 2.30.0
+	 */
+	None = "None",
 }
 
 export default PanelAccessibleRole;
