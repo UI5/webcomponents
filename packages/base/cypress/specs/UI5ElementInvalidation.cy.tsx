@@ -1,5 +1,8 @@
 import type UI5Element from "../../src/UI5Element.js";
 import Generic from "../../test/test-elements/Generic.js";
+import Invalidation from "../../test/test-elements/Invalidation.js";
+
+void Invalidation; // prevents tree-shaking
 
 describe("Invalidation works", () => {
 	it("Tests that changing a property invalidates", () => {
@@ -248,5 +251,80 @@ describe("Invalidation works", () => {
 
 		cy.get("@rendering")
 			.should("have.been.calledOnce");
+	});
+
+	it("Tests that state changes triggered in onBeforeRendering are reported on initial render and property change", () => {
+		cy.mount(<div id="content"></div>);
+
+		cy.get("#content").then($0 => {
+			const elem = document.createElement("ui5-invalidation") as Invalidation;
+			elem.attachStateChange(cy.spy().as("stateChange"));
+			$0.append(elem);
+		});
+
+		// call 1: silentInvalidation set during first onBeforeRendering (suppressed path)
+		cy.get("@stateChange")
+			.should("have.been.calledWithMatch", {
+				type: "property",
+				name: "silentInvalidation",
+				newValue: "on-before-rendering:1",
+			})
+			.and("have.callCount", 1);
+
+		cy.get("[ui5-invalidation]")
+			.invoke("prop", "myProp", "new");
+
+		// call 2: myProp change (normal path)
+		cy.get("@stateChange")
+			.should("have.been.calledWithMatch", {
+				type: "property",
+				name: "myProp",
+				newValue: "new",
+			})
+			.and("have.callCount", 2);
+
+		// call 3: silentInvalidation set during onBeforeRendering re-render (suppressed path)
+		cy.get("@stateChange")
+			.should("have.been.calledWithMatch", {
+				type: "property",
+				name: "silentInvalidation",
+				newValue: "on-before-rendering:2",
+			})
+			.and("have.callCount", 3);
+	});
+
+	it("Tests that state changes triggered in onBeforeRendering are reported when invalidating property is set directly", () => {
+		cy.mount(<div id="content"></div>);
+
+		cy.get("#content").then($0 => {
+			const elem = document.createElement("ui5-invalidation") as Invalidation;
+			elem.attachStateChange(cy.spy().as("stateChange"));
+			$0.append(elem);
+		});
+
+		// call 1: silentInvalidation set during first onBeforeRendering (suppressed path)
+		cy.get("@stateChange")
+			.should("have.callCount", 1);
+
+		cy.get("[ui5-invalidation]")
+			.invoke("prop", "silentInvalidation", "test");
+
+		// call 2: silentInvalidation = "test" (normal path)
+		cy.get("@stateChange")
+			.should("have.been.calledWithMatch", {
+				type: "property",
+				name: "silentInvalidation",
+				newValue: "test",
+			})
+			.and("have.callCount", 2);
+
+		// call 3: silentInvalidation set during onBeforeRendering re-render (suppressed path)
+		cy.get("@stateChange")
+			.should("have.been.calledWithMatch", {
+				type: "property",
+				name: "silentInvalidation",
+				newValue: "on-before-rendering:2",
+			})
+			.and("have.callCount", 3);
 	});
 });
