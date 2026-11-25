@@ -237,6 +237,13 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 			classes.push("ui5-sn-item-selected");
 		}
 
+		// In actions-only mode the fixed items are no longer navigation tree items:
+		// href items behave as links, the rest as buttons. Add a discriminating class
+		// so each variant can get its matching visual appearance.
+		if (this._fixedItemsActionsOnly) {
+			classes.push(this.href ? "ui5-sn-item-action-link" : "ui5-sn-item-action-button");
+		}
+
 		return classes;
 	}
 
