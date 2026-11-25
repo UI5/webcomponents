@@ -95,6 +95,38 @@ describe("Properties", () => {
 			.should("be.focused");
 	});
 
+	it("returns focus to the input on ArrowUp from the first item (with message area)", () => {
+		cy.mount(
+			<Search showClearIcon={true}>
+				<SearchMessageArea slot="messageArea" description="You can try the following" text="Oh, there are no results"></SearchMessageArea>
+				<SearchItem text="List Item" icon={history}></SearchItem>
+				<SearchItem text="List Item" icon={history}></SearchItem>
+			</Search>
+		);
+
+		// open the suggestions and move focus to the first item
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("L");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("be.focused");
+
+		// ArrowUp on the first item must return focus to the search input, not lose it
+		cy.get("[ui5-search]")
+			.realPress("ArrowUp");
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+	});
+
 	it("items slot arrow navigation with groups and headerText", () => {
 		cy.mount(
 			<Search>
@@ -2437,5 +2469,65 @@ describe("Open property", () => {
 			.shadow()
 			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
+	});
+});
+
+describe("Security", () => {
+	it("does not execute payload set via highlightText JS property", () => {
+		cy.mount(
+			<Search>
+				<SearchItem id="search-item" text="Safe Item"></SearchItem>
+			</Search>
+		);
+
+		cy.get("#search-item").then(($item) => {
+			($item[0] as SearchItem).highlightText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("[ui5-search]").shadow().find("input").realClick().realType("S");
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#search-item").shadow().find(".ui5-search-item-text")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via highlight-text HTML attribute", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Safe Item" highlight-text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]").shadow().find("input").realClick().realType("S");
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-search-item]").shadow().find(".ui5-search-item-text")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property when no highlight is active", () => {
+		cy.mount(
+			<Search>
+				<SearchItem id="search-item-text" text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]").shadow().find("input").realClick().realType("<");
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#search-item-text").shadow().find(".ui5-search-item-text")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
 	});
 });

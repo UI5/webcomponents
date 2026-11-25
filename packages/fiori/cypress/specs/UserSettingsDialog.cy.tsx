@@ -9,7 +9,7 @@ import UserMenuAccount from "../../src/UserMenuAccount.js";
 import UserSettingsDialog from "../../src/UserSettingsDialog.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
-import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT, USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT} from "../../src/generated/i18n/i18n-defaults.js";
+import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT, USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT, USER_SETTINGS_DIALOG_SEARCH_IN_SETTINGS} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
 	it("tests no config provided", () => {
@@ -234,6 +234,37 @@ describe("Initial rendering", () => {
 		cy.get("@settingItem").shadow().find("div.ui5-user-settings-item-header-container").as("header");
 		cy.get("@header").should("exist");
 		cy.get("@header").find("[ui5-title]").contains("User Account");
+	});
+
+	it("tests setting item exposes a region landmark labelled with the header text (a11y)", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem headerText="User Account">
+				<UserSettingsView text="Setting1">
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+		cy.get("@settingItem").should("exist");
+
+		// The item root must be a region landmark labelled by aria-label (not
+		// aria-labelledby referencing the ui5-title, whose text lives in its
+		// shadow root and would yield an empty, invalid accessible name).
+		cy.get("@settingItem").shadow().find("div.ui5-user-settings-item").as("region");
+		cy.get("@region").should("have.attr", "role", "region");
+		cy.get("@region").should("have.attr", "aria-label", "User Account");
+		cy.get("@region").should("not.have.attr", "aria-labelledby");
+	});
+
+	it("tests search field icon has a translatable accessible name (a11y)", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").find("#searchFieldIcon").as("searchIcon");
+
+		cy.get("@searchIcon").should("exist");
+		cy.get("@searchIcon").should("have.attr", "accessible-name", USER_SETTINGS_DIALOG_SEARCH_IN_SETTINGS.defaultText);
 	});
 
 	it("tests setting tabs", () => {

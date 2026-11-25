@@ -5,8 +5,13 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import TagDesign from "@ui5/webcomponents/dist/types/TagDesign.js";
+import highlightText from "@ui5/webcomponents-base/dist/util/highlightText.js";
 
 export default function SearchItemTemplate(this: SearchItem) {
+	const highlightedMarkup = this.highlightText
+		? highlightText(this.text || "", this.highlightText)
+		: undefined;
+
 	return (
 		<li
 			part="native-li"
@@ -39,7 +44,10 @@ export default function SearchItemTemplate(this: SearchItem) {
 					}
 
 					<div class="ui5-search-item-titles-container">
-						<span part="title" class="ui5-search-item-text" dangerouslySetInnerHTML={{ __html: this._markupText }}></span>
+						{highlightedMarkup
+							? <span part="title" class="ui5-search-item-text" dangerouslySetInnerHTML={{ __html: highlightedMarkup }}></span>
+							: <span part="title" class="ui5-search-item-text">{this.text}</span>
+						}
 
 						<span part="subtitle" class="ui5-search-item-description">{this.description}</span>
 					</div>
