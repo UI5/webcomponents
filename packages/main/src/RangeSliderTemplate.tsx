@@ -141,6 +141,7 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
 					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
 					tickmarks={this.tickmarks}
+					activeValues={[this.startValue, this.endValue]}
 					progressTabIndex={this._tabIndex}
 					progressRole={this._progressRole}
 					progressAriaValueNow={this._ariaValueNow}

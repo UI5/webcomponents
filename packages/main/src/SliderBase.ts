@@ -114,13 +114,15 @@ abstract class SliderBase extends UI5Element {
 
 	/**
 	 * Defines custom tickmarks with labels on the slider scale.
-	 * Each tickmark object has a numeric `value` and an optional `label` string.
+	 * Each tickmark object has a numeric `value`, an optional `label` string
+	 * and an optional `tooltip` string.
 	 * Tickmarks are purely visual — they display labeled markers at specific positions
 	 * but do not affect the slider's movement behavior. The slider still moves
 	 * according to `min`, `max`, and `step`.
 	 *
-	 * When the current value matches a tickmark value, the tickmark's label
-	 * is shown in the tooltip and announced via `aria-valuetext`.
+	 * When the current value matches a tickmark value, the text shown in the tooltip
+	 * is resolved from the tickmark's `tooltip`, falling back to its `label` and then
+	 * to the raw value. The tickmark's `label` is announced via `aria-valuetext`.
 	 *
 	 * **Note:** When `tickmarks` is provided, the scale is automatically shown
 	 * (equivalent to `showTickmarks`), and `labelInterval` is ignored - every
@@ -610,6 +612,20 @@ abstract class SliderBase extends UI5Element {
 		const target = value.toFixed(precision);
 
 		return this.tickmarks.find(t => t.value.toFixed(precision) === target)?.label;
+	}
+
+	/**
+	 * Returns the tooltip text for the custom tickmark matching the given value.
+	 * Falls back from the tickmark's `tooltip` to its `label`, or `undefined` if
+	 * none matches or neither is set.
+	 * @private
+	 */
+	_getCustomTooltip(value: number): string | undefined {
+		const precision = SliderBase._getDecimalPrecisionOfNumber(this.step);
+		const target = value.toFixed(precision);
+		const tickmark = this.tickmarks.find(t => t.value.toFixed(precision) === target);
+
+		return tickmark?.tooltip ?? tickmark?.label;
 	}
 
 	/**

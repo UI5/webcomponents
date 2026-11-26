@@ -15,6 +15,7 @@ import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 type Tickmark = {
 		value: number;
 		label?: string;
+		tooltip?: string;
 };
 
 enum SliderScaleOrientation {
@@ -101,6 +102,16 @@ class SliderScale extends UI5Element {
 	 */
 	@property({ type: Array })
 	tickmarks: Array<Tickmark> = [];
+
+	/**
+	 * Defines the currently selected slider value(s) whose custom tickmark label
+	 * should be displayed. When custom `tickmarks` are set, only the labels of the
+	 * tickmarks matching these values are shown.
+	 * @default []
+	 * @private
+	 */
+	@property({ type: Array })
+	activeValues: Array<number> = [];
 
 	/**
 	 * Defines the interval for displaying labels on tickmarks.
@@ -380,6 +391,7 @@ class SliderScale extends UI5Element {
 		const allTickmarks = this._allTickmarks;
 		const stepPrecision = SliderBase._getDecimalPrecisionOfNumber(this.step);
 		const formatLabelPrecision = stepPrecision > 0 ? stepPrecision : 0;
+		const hasCustomTickmarks = this.tickmarks.length > 0;
 
 		if (allTickmarks.length === 0) {
 			return [];
@@ -395,7 +407,10 @@ class SliderScale extends UI5Element {
 
 			// Determine if the label should be visible
 			let showLabel = false;
-			if (shouldShowTickmark && !this._labelsOverlapping) {
+			if (hasCustomTickmarks) {
+				// For custom tickmarks only the label of the currently selected value(s) is shown
+				showLabel = shouldShowTickmark && this._isActiveValue(value, stepPrecision);
+			} else if (shouldShowTickmark && !this._labelsOverlapping) {
 				if (this.labelInterval > 0) {
 					showLabel = index % this.labelInterval === 0;
 				} else {
@@ -415,6 +430,15 @@ class SliderScale extends UI5Element {
 				visible: shouldShowTickmark,
 			};
 		}).filter(tick => tick.visible);
+	}
+
+	/**
+	 * Checks whether the given tickmark value matches one of the currently selected values.
+	 * @private
+	 */
+	_isActiveValue(value: number, precision: number): boolean {
+		const target = value.toFixed(precision);
+		return this.activeValues.some(activeValue => activeValue.toFixed(precision) === target);
 	}
 }
 

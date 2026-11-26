@@ -83,6 +83,7 @@ export default function SliderTemplate(this: Slider) {
 					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
 					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
 					tickmarks={this.tickmarks}
+					activeValues={[this.value]}
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
 					part="scale"
