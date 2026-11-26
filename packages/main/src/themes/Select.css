@@ -1,5 +1,4 @@
-@import "./FormComponents.css";
-@import "./InputIcon.css";
+@import "./InputField.css";
 @import "./Input.css";
 
 :host([icon]) {
