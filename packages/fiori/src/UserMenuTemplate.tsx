@@ -175,6 +175,7 @@ function otherAccountsList(this: UserMenu) {
 						"ariaSetsize": this._otherAccounts.length
 					}}
 					accessibleName={this.getAccountDescriptionText(account)}
+					tooltip={account.selected ? this._accountSelectedTooltipText : undefined}
 				>
 					<div class="ui5-user-menu-other-accounts-content">
 						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder} colorScheme={account.avatarColorScheme}>

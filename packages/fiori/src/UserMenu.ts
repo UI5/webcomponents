@@ -32,6 +32,7 @@ import {
 	USER_MENU_EDIT_ACCOUNTS_TXT,
 	USER_MENU_CLOSE_DIALOG_BUTTON,
 	USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT,
+	USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT,
 	USER_MENU_CURRENT_INFORMATION_TXT,
 	USER_MENU_ACTIONS_TXT,
 	USER_MENU_HEADING_TXT,
@@ -528,6 +529,10 @@ class UserMenu extends UI5Element {
 
 	get _closeDialogAriaLabel() {
 		return UserMenu.i18nBundle.getText(USER_MENU_CLOSE_DIALOG_BUTTON);
+	}
+
+	get _accountSelectedTooltipText() {
+		return UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT);
 	}
 
 	get accessibleNameText() {
