@@ -35,7 +35,6 @@ import {
 	USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT,
 	USER_MENU_CURRENT_INFORMATION_TXT,
 	USER_MENU_ACTIONS_TXT,
-	USER_MENU_HEADING_TXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 const MENU_OPEN_DELAY = 300;
@@ -548,10 +547,6 @@ class UserMenu extends UI5Element {
 
 	get _ariaLabelledByActions() {
 		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
-	}
-
-	get _userMenuHeadingText() {
-		return UserMenu.i18nBundle.getText(USER_MENU_HEADING_TXT);
 	}
 
 	get _hasCustomFooter(): boolean {
