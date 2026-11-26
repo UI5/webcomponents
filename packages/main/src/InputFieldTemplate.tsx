@@ -73,6 +73,8 @@ export default function InputFieldTemplate(this: InputField, hooks?: {
 					{this._effectiveShowClearIcon &&
 						<div
 							tabindex={-1}
+							role="button"
+							aria-label={this.clearIconAccessibleName}
 							class="ui5-input-clear-icon-wrapper inputIcon"
 							part="clear-icon-wrapper"
 							onClick={this._clear}
