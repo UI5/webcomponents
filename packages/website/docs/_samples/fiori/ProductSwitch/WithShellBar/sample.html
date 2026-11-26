@@ -6,6 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample</title>
+    <style>
+        /*
+            Cap the popover at 4 product-switch rows. The cap lives on the popover's
+            content part, which is the single scroll container, so no nested scrollbar
+            can appear. 32.5rem is the height of 4 standard rows (4 * 7.5rem item +
+            margins, plus the product-switch's own 2 * 1.25rem padding). Raise it if the
+            product items wrap to multiple lines.
+        */
+        #productswitch-popover::part(content) {
+            padding: 0;
+            max-height: 32.5rem;
+        }
+    </style>
 </head>
 
 <body style="background-color: var(--sapBackgroundColor); height: 400px;">
@@ -43,6 +56,11 @@
             <ui5-product-switch-item title-text="Customer Data Cloud"
                 icon="customer-briefing" target-src="about:blank" target="_blank"></ui5-product-switch-item>
             <ui5-product-switch-item title-text="S/4HANA" icon="batch-payments" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Field Service" subtitle-text="Service Cloud"
+                icon="family-care" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Subscription Billing" icon="credit-card" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Integration Suite" icon="shipping-status" target-src="about:blank" target="_blank"></ui5-product-switch-item>
+            <ui5-product-switch-item title-text="Build Process Automation" icon="cart-3" target-src="about:blank" target="_blank"></ui5-product-switch-item>
         </ui5-product-switch>
 
     </ui5-popover>
