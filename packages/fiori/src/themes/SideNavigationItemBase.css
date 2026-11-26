@@ -429,6 +429,91 @@ and there is an additional border that appears on hover. */
 	min-height: 0.625rem;
 }
 
+/* Actions-only fixed area: the items are no longer tree items but standalone
+   actions. They are visually set apart from the navigation items above them -
+   items without an href look like real buttons, items with an href like links. */
+
+
+:host(:not([side-nav-collapsed])) .ui5-sn-item.ui5-sn-item-action-button,
+:host(:not([side-nav-collapsed])) .ui5-sn-item.ui5-sn-item-action-link {
+	margin-inline-end: 1rem;
+}
+
+/* Button variant: filled, outlined, button-colored - clearly a button. */
+.ui5-sn-item.ui5-sn-item-action-button {
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
+	border-radius: var(--sapButton_BorderCornerRadius);
+	box-sizing: border-box;
+	background: var(--sapButton_Background);
+	color: var(--sapButton_TextColor);
+	font-family: var(--sapFontSemiboldDuplexFamily);
+	min-height: var(--sapElement_Height);
+}
+
+.ui5-sn-item.ui5-sn-item-action-button .ui5-sn-item-icon,
+.ui5-sn-item.ui5-sn-item-action-button .ui5-sn-item-text {
+	color: var(--sapButton_TextColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-button .ui5-sn-item-text-tag-container {
+	flex: initial;
+}
+
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):hover {
+	border-color: var(--sapButton_Hover_BorderColor);
+	background: var(--sapButton_Hover_Background);
+	color: var(--sapButton_Hover_TextColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):active {
+	border-color: var(--sapButton_Active_BorderColor);
+	background: var(--sapButton_Active_Background);
+	color: var(--sapButton_Active_TextColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):hover .ui5-sn-item-icon,
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):hover .ui5-sn-item-text {
+	color: var(--sapButton_Hover_TextColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):active .ui5-sn-item-icon,
+.ui5-sn-item.ui5-sn-item-action-button:not(.ui5-sn-item-disabled):active .ui5-sn-item-text {
+	color: var(--sapButton_Active_TextColor);
+}
+
+/* Link variant: bordered and filled, but link-colored and underlined - a link. */
+.ui5-sn-item.ui5-sn-item-action-link,
+.ui5-sn-item.ui5-sn-item-action-link .ui5-sn-item-text {
+	color: var(--sapLinkColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-link {
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
+	border-radius: var(--sapButton_BorderCornerRadius);
+	box-sizing: border-box;
+	background: var(--sapButton_Background);
+	min-height: var(--sapElement_Height);
+}
+
+.ui5-sn-item.ui5-sn-item-action-link .ui5-sn-item-text {
+	text-decoration: underline;
+}
+
+.ui5-sn-item.ui5-sn-item-action-link .ui5-sn-item-icon,
+.ui5-sn-item.ui5-sn-item-action-link .ui5-sn-item-external-link-icon {
+	color: var(--sapLinkColor);
+}
+
+.ui5-sn-item.ui5-sn-item-action-link:not(.ui5-sn-item-disabled):hover .ui5-sn-item-text {
+	color: var(--sapLink_Hover_Color);
+	text-decoration: underline;
+}
+
+.ui5-sn-item.ui5-sn-item-action-link:not(.ui5-sn-item-disabled):active,
+.ui5-sn-item.ui5-sn-item-action-link:not(.ui5-sn-item-disabled):active .ui5-sn-item-text {
+	color: var(--sapLink_Active_Color);
+}
+
 .ui5-sn-item-highlight {
 	background-color: var(--sapContent_SearchHighlightColor);
 	font-family: var(--sapFontBoldFamily);

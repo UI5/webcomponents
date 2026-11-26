@@ -53,7 +53,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 			{this.hasFixedItems && <>
 				<div role="separator" class="ui5-sn-spacer"></div>
 				{this.collapsed ?
-					<div role="menubar"
+					<div role={this._fixedItemsCollapsedRole}
 						class="ui5-sn-list ui5-sn-fixed"
 						aria-orientation="vertical"
 						aria-label={this.navigationMenuFooterHiddenText}
@@ -61,7 +61,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 						<slot name="fixedItems"></slot>
 					</div>
 					:
-					<ul role="tree"
+					<ul role={this._fixedItemsExpandedRole}
 						class="ui5-sn-list ui5-sn-fixed"
 						aria-label={this.navigationMenuFooterHiddenText}
 					>

@@ -1694,7 +1694,190 @@ describe("Side Navigation Accessibility", () => {
 			cy.get("#sn")
 			.shadow()
 			.find(".ui5-sn-fixed")
-			.should("have.attr", "aria-label", "Footer Navigation Menu");
+			.should("have.attr", "aria-label", "Bottom Navigation Area");
+	});
+
+	it("Tests fixed area with only unselectable leaf items drops tree semantics (expanded)", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
+			</SideNavigation>
+		);
+
+		// container is a plain group, not a tree
+		cy.get("#sn")
+			.shadow()
+			.find(".ui5-sn-fixed")
+			.should("have.attr", "role", "group");
+
+		// item without href exposes a button role
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "button");
+
+		// item with href (link) has no explicit role
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "role");
+
+		// no tree/selection state is exposed on the items
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
+	});
+
+	it("Tests fixed area with only unselectable leaf items drops tree semantics (collapsed)", () => {
+		cy.mount(
+			<SideNavigation id="sn" collapsed={true}>
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable selected />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
+			</SideNavigation>
+		);
+
+		// container is a plain group, not a menubar
+		cy.get("#sn")
+			.shadow()
+			.find(".ui5-sn-fixed")
+			.should("have.attr", "role", "group");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "button");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "role");
+
+		// no tree/selection state is exposed on the items, even if an item is selected
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-current");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-selected");
+	});
+
+	it("Tests fixed area keeps tree semantics when a selectable item is present", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
+				<SideNavigationItem slot="fixedItems" id="plain" text="Settings" />
+			</SideNavigation>
+		);
+
+		// a single selectable item reverts the whole fixed area to tree semantics
+		cy.get("#sn")
+			.shadow()
+			.find(".ui5-sn-fixed")
+			.should("have.attr", "role", "tree");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "treeitem");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "treeitem");
+
+		cy.get("#plain")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "treeitem");
+	});
+
+	it("Tests fixed area keeps tree semantics when an unselectable item has sub-items", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="parent" text="Useful Links" unselectable>
+					<SideNavigationSubItem text="Vacation Tool" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		// a parent with sub-items keeps the tree semantics
+		cy.get("#sn")
+			.shadow()
+			.find(".ui5-sn-fixed")
+			.should("have.attr", "role", "tree");
+
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "role", "treeitem");
+	});
+
+	it("Tests actions-only fixed items are each independently tabbable (no roving tabindex)", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
+			</SideNavigation>
+		);
+
+		// both fixed items are in the tab chain - there is no single roving tabindex
+		cy.get("#action")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "tabindex", "0");
+
+		cy.get("#external")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("Tests actions-only fixed items do not navigate with arrow keys", () => {
+		cy.mount(
+			<SideNavigation id="sn">
+				<SideNavigationItem text="Home"></SideNavigationItem>
+				<SideNavigationItem slot="fixedItems" id="action" text="Quick Create" design="Action" unselectable />
+				<SideNavigationItem slot="fixedItems" id="external" text="External Link" href="https://sap.com" target="_blank" unselectable />
+			</SideNavigation>
+		);
+
+		cy.get("#action").realClick();
+		cy.get("#action").should("be.focused");
+
+		// arrow keys must not move focus between fixed actions/links
+		cy.realPress("ArrowDown");
+		cy.get("#action").should("be.focused");
+		cy.get("#external").should("not.be.focused");
+
+		cy.realPress("ArrowUp");
+		cy.get("#action").should("be.focused");
 	});
 });
 
