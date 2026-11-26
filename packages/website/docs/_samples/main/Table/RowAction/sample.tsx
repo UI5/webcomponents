@@ -120,6 +120,7 @@ function App() {
             slot="actions"
             icon="edit"
             text="Edit"
+            disabled
           ></TableRowAction>
           <TableRowAction
             slot="actions"
