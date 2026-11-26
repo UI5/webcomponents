@@ -896,7 +896,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 1));
 			})
 	});
 
@@ -2826,15 +2826,17 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-		cy.get("@mcb")
-			.should("be.focused");
+			.as("mcb");
 
 		cy.get("@mcb")
 			.shadow()
 			.find("input")
 			.as("input")
+			.realClick();
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.get("@input")
 			.then(($input) => {
 				($input[0] as HTMLInputElement).setSelectionRange(0, 0);
 			})
@@ -2860,18 +2862,19 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb")
-			.should("be.focused");
+			.as("mcb");
 
 		cy.get("@mcb")
 			.shadow()
 			.find("input")
 			.as("input")
 			.realClick()
-			.should("have.focus")
+			.should("have.focus");
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.get("@input")
 			.then(($input) => {
 				($input[0] as HTMLInputElement).setSelectionRange(0, 0);
 			})
@@ -2895,10 +2898,7 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb").should("be.focused");
+			.as("mcb");
 
 		cy.get("@mcb")
 			.shadow()
@@ -2909,6 +2909,8 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 			.then(($input) => {
 				($input[0] as HTMLInputElement).setSelectionRange(2, 2);
 			});
+
+		cy.get("@mcb").should("be.focused");
 
 		cy.get("@mcb").realPress("ArrowRight");
 		cy.focused().should("not.have.class", "ui5-token--wrapper");
@@ -2927,8 +2929,12 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick()
+			.as("mcb");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.realClick();
 
 		cy.get("@mcb")
 			.should("be.focused")
@@ -2961,7 +2967,11 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
+			.as("mcb");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
 			.realClick();
 
 		cy.get("@mcb")
@@ -2990,17 +3000,16 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb").should("be.focused");
+			.as("mcb");
 
 		cy.get("@mcb")
 			.shadow()
 			.find("input")
 			.as("input")
 			.realClick()
-			.should("have.focus")
+			.should("have.focus");
+
+		cy.get("@mcb").should("be.focused");
 
 		cy.get("@input")
 			.should("have.value", "")
@@ -3730,6 +3739,8 @@ describe("Keyboard Handling", () => {
 			.should("have.length", 3);
 
 		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
 			.realClick();
 
 		cy.realPress("Backspace");
@@ -4126,6 +4137,8 @@ describe("Keyboard Handling", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
 			.realClick();
 
 		cy.get("[ui5-multi-combobox]")
@@ -4170,6 +4183,8 @@ describe("Keyboard Handling", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
 			.realClick();
 
 		cy.get("[ui5-multi-combobox]")

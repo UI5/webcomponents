@@ -5,6 +5,7 @@
 	box-sizing: border-box;
 	border: none;
 	height: 2.25rem;
+	width: 100%;
 }
 
 :host([multi-line]) {
@@ -61,7 +62,6 @@
 :host([expanded]) .ui5-tokenizer--content {
 	display: inline-flex;
 	white-space: nowrap;
-	overflow: hidden;
 }
 
 .ui5-tokenizer--content {
@@ -72,6 +72,16 @@
 	padding-inline-start: var(--_ui5_tokenizer_padding);
 	height: 100%;
 	box-sizing: border-box;
+}
+
+/* In collapsed mode prevent the content div from being flex-shrunk below its natural
+   width (the sum of visible tokens). Without this guard, any negative free space in the
+   tokenizer-root row is absorbed by the content div (overflow:hidden lets flex shrink it
+   to 0), which clips the last visible token through its own overflow:hidden.
+   In expanded mode the content div must be allowed to shrink so it fits inside the
+   tokenizer host element — tokens then scroll within the constrained content div via JS. */
+:host(:not([expanded])) .ui5-tokenizer--content {
+	flex-shrink: 0;
 }
 
 .ui5-tokenizer--list{
@@ -120,4 +130,23 @@
 .ui5-tokenizer--clear-all:active {
 	color: var(--sapLink_Active_Color);
 	text-decoration: var(--_ui5_link_active_text_decoration);
+}
+
+/* ── Hidden measurement span ────────────────────────────────────────────────
+   Used to measure the rendered width of "+N more" / "N Items" button text
+   before committing to a layout.  Must:
+   - Be invisible and out of document flow (no scrollbars, no layout shift).
+   - Remain measurable (avoid display:none — browsers return 0 for those).
+   - Not intercept pointer events or receive focus.                          */
+.ui5-tokenizer--measure-nmore {
+	visibility: hidden;
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+	white-space: nowrap;
+	pointer-events: none;
+	user-select: none;
+	margin: 0;
+	font-size: var(--sapFontSize);
+	font-weight: normal;
 }
