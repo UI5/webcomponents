@@ -1,0 +1,8 @@
+{
+  "codeConnect": {
+    "include": ["src/**/*.figma.ts"],
+    "exclude": ["node_modules/**", "dist/**"],
+    "parser": "html",
+    "label": "Web Components"
+  }
+}
