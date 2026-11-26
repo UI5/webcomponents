@@ -173,6 +173,30 @@ describe("Cell Custom Announcement - More details", () => {
 		checkAnnouncement("");
 	});
 
+	it("excludes disabled actions from row and action cell announcements", () => {
+		function checkActionAnnouncements(count: number) {
+			const text = count === 1 ? ONE_ROW_ACTION : Table.i18nBundle.getText(MULTIPLE_ACTIONS, count);
+			cy.get("@row1").realClick();
+			cy.get("#ui5-invisible-text").should(count ? "contain.text" : "not.contain.text", count ? text : ONE_ROW_ACTION);
+			cy.realPress("ArrowRight");
+			cy.realPress("End");
+			cy.focused().should("have.attr", "id", "actions-cell");
+			checkAnnouncement(count ? text : `Button ${DISABLED} Button ${DISABLED}`);
+		}
+
+		cy.get("#row1-edit-action").invoke("prop", "disabled", true);
+		cy.get("#row1-edit-action").shadow().find("[ui5-button]").should("have.attr", "disabled");
+		checkActionAnnouncements(2);
+
+		cy.get("#row1-add-action").invoke("prop", "disabled", true);
+		checkActionAnnouncements(1);
+		cy.get("#row1-nav-action").invoke("remove");
+		checkActionAnnouncements(0);
+
+		cy.get("#row1-edit-action").invoke("prop", "disabled", false);
+		checkActionAnnouncements(1);
+	});
+
 	it("should announce table header cells", () => {
 		cy.get("@headerRow").realClick(); // header row focused
 		cy.focused().should("have.attr", "aria-rowindex", "1")

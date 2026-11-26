@@ -22,6 +22,19 @@ import TableRowActionBase from "./TableRowActionBase.js";
 
 class TableRowAction extends TableRowActionBase {
 	/**
+	 * Defines whether the row action is disabled.
+	 *
+	 * A disabled row action remains visible but cannot be activated and is not counted
+	 * in the available row actions announcement.
+	 *
+	 * @default false
+	 * @since 2.29.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	disabled = false;
+
+	/**
 	 * Defines the icon of the row action.
 	 *
 	 * **Note:** For row actions to work properly, this property is mandatory.
@@ -46,11 +59,21 @@ class TableRowAction extends TableRowActionBase {
 	@property()
 	text = "";
 
+	constructor() {
+		super();
+		this.addEventListener("click", e => {
+			if (this.disabled) {
+				e.stopImmediatePropagation();
+			}
+		});
+	}
+
 	getRenderInfo() {
 		return {
 			text: this.text,
 			icon: this.icon,
 			interactive: true,
+			disabled: this.disabled,
 		};
 	}
 }
