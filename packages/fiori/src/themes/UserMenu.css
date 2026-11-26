@@ -155,7 +155,7 @@
     overflow: hidden;
     color: var(--sapList_TextColor);
     text-overflow: ellipsis;
-    font-family: var(--sapFontSemiboldDuplexFamily);
+    font-family: var(--sapFontBoldFamily);
     font-size: var(--sapFontSize);
     font-style: normal;
     line-height: normal;
