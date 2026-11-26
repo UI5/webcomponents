@@ -979,3 +979,77 @@ describe("Validation inside a form", () => {
 			.should("not.exist", "DateTimePicker with value below maxDate should not have :invalid CSS class");
 	});
 });
+
+describe("DateTimePicker at high zoom (viewport < 300 px)", () => {
+	beforeEach(() => {
+		cy.viewport(299, 800);
+	});
+
+	it("shows inputs view in time tab at high zoom", () => {
+		cy.mount(<DateTimePickerTemplate formatPattern="dd/MM/yyyy, HH:mm:ss" value="13/04/2020, 03:16:16" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[data-ui5-key='Time']")
+			.realClick();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.should("exist");
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.should("not.exist");
+	});
+
+	it("hides the time view toggle button in time tab at high zoom", () => {
+		cy.mount(<DateTimePickerTemplate formatPattern="dd/MM/yyyy, HH:mm:ss" value="13/04/2020, 03:16:16" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[data-ui5-key='Time']")
+			.realClick();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[slot='endContent']")
+			.should("not.exist");
+	});
+
+	it("shows AM/PM SegmentedButton in time tab at high zoom with 12-hour format", () => {
+		cy.mount(<DateTimePickerTemplate formatPattern="dd/MM/yyyy, hh:mm:ss a" value="13/04/2020, 03:16:16 AM" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[data-ui5-key='Time']")
+			.realClick();
+
+		cy.get<DateTimePicker>("@dtp")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-inputs]")
+			.shadow()
+			.find("[ui5-segmented-button]")
+			.should("exist");
+	});
+});

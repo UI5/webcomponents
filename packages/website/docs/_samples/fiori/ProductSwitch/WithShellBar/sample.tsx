@@ -47,6 +47,11 @@ function App() {
     }
   };
 
+  const handleProductSelect = () => {
+    // Selecting a product opens its homepage in a new tab, so close the popover in the original tab.
+    popoverRef.current!.open = false;
+  };
+
   const handleToggleButtonClick = (
     e: UI5CustomEvent<ToggleButtonClass, "click">,
   ) => {
@@ -79,54 +84,108 @@ function App() {
             titleText="Home"
             subtitleText="Central Home"
             icon="home"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Analytics Cloud"
             subtitleText="Analytics Cloud"
             icon="business-objects-experience"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Catalog"
             subtitleText="Ariba"
             icon="contacts"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
-          <ProductSwitchItem titleText="Guided Buying" icon="credit-card" />
-          <ProductSwitchItem titleText="Strategic Procurement" icon="cart-3" />
+          <ProductSwitchItem
+            titleText="Guided Buying"
+            icon="credit-card"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
+          <ProductSwitchItem
+            titleText="Strategic Procurement"
+            icon="cart-3"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
           <ProductSwitchItem
             titleText="Travel &amp; Expense"
             subtitleText="Concur"
             icon="flight"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Vendor Management"
             subtitleText="Fieldglass"
             icon="shipping-status"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Human Capital Management"
             icon="customer"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Sales Cloud"
             subtitleText="Sales Cloud"
             icon="sales-notification"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Commerce Cloud"
             subtitleText="Commerce Cloud"
             icon="retail-store"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
           <ProductSwitchItem
             titleText="Marketing Cloud"
             subtitleText="Marketing Cloud"
             icon="marketing-campaign"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
-          <ProductSwitchItem titleText="Service Cloud" icon="family-care" />
+          <ProductSwitchItem
+            titleText="Service Cloud"
+            icon="family-care"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
           <ProductSwitchItem
             titleText="Customer Data Cloud"
             icon="customer-briefing"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
           />
-          <ProductSwitchItem titleText="S/4HANA" icon="batch-payments" />
+          <ProductSwitchItem
+            titleText="S/4HANA"
+            icon="batch-payments"
+            targetSrc="about:blank"
+            target="_blank"
+            onClick={handleProductSelect}
+          />
         </ProductSwitch>
       </Popover>
     </>

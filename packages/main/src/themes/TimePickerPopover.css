@@ -2,11 +2,17 @@
 	width: 20rem;
 }
 
-.ui5-time-picker-popover .ui5-responsive-popover-header .row {
-	justify-content: flex-start;
+.ui5-tp-header-title {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader5Size);
 	color: var(--sapPageHeader_TextColor);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ui5-tp-mode-inputs {
+	padding: 1rem;
 }
 
 .ui5-time-picker-footer {
@@ -23,9 +29,4 @@
 
 .ui5-time-picker-popover::part(content) {
 	padding: 0;
-}
-
-.ui5-time-picker-inputs-popover::part(header) {
-	padding: 0;
-	width: 100%;
 }

@@ -536,6 +536,10 @@ abstract class Popup extends UI5Element {
 	 * @protected
 	 */
 	async applyInitialFocus() {
+		// Wait before reading "preventInitialFocus", so that properties applied
+		// in the same tick as "open" (e.g. on initial mount in React) are respected.
+		await this._waitForDomRef();
+
 		if (!this.preventInitialFocus) {
 			await this.applyFocus();
 		}

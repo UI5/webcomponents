@@ -7,9 +7,9 @@ export default function NavigationLayoutTemplate(this: NavigationLayout) {
 				<slot name="header"></slot>
 			</header>
 			<section class="ui5-nl-section">
-				<aside class="ui5-nl-aside">
+				<div class="ui5-nl-side">
 					<slot name="sideContent"></slot>
-				</aside>
+				</div>
 				<div class="ui5-nl-content">
 					<slot></slot>
 				</div>

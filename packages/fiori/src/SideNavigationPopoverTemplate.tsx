@@ -11,6 +11,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 			accessibilityAttributes={item.accessibilityAttributes}
 			text={item.text}
 			icon={item.icon}
+			accessibleName={item.accessibleName}
 			design={item.design}
 			disabled={item.disabled}
 			href={item.href}
@@ -23,6 +24,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 				(<NavigationMenuItem
 					class="ui5-navigation-menu-item-root-parent"
 					accessibilityAttributes={item.accessibilityAttributes}
+					accessibleName={item.accessibleName}
 					text={item.text}
 					design={item.design}
 					disabled={item.disabled}
