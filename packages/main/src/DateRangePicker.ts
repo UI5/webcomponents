@@ -530,6 +530,24 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return this.delimiter || DEFAULT_DELIMITER;
 	}
 
+	_getIntervalValueFormat() {
+		const delimiter = ` ${this._prevDelimiter || this._effectiveDelimiter} `;
+		return this.getValueFormat({
+			interval: true,
+			singleIntervalValue: true,
+			intervalDelimiter: delimiter,
+		});
+	}
+
+	_getIntervalDisplayFormat() {
+		const delimiter = ` ${this._effectiveDelimiter} `;
+		return this.getDisplayFormat({
+			interval: true,
+			singleIntervalValue: true,
+			intervalDelimiter: delimiter,
+		});
+	}
+
 	_splitValueByDelimiter(value: string) {
 		const valuesArray: Array<string> = [];
 		const partsArray = value.split(this._prevDelimiter || this._effectiveDelimiter);
@@ -576,11 +594,8 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 			return undefined;
 		}
 
-		const dateStrings = this._splitValueByDelimiter(value); // at least one item guaranteed due to the checks above (non-empty and valid)
-
-		const parsedDate = this.getValueFormat().parse(dateStrings[0], true) as Date;
-
-		return parsedDate.getTime() / 1000;
+		const parsedDates = this._getIntervalValueFormat().parse(value, true) as [Date, Date | null];
+		return parsedDates[0].getTime() / 1000;
 	}
 
 	/**
@@ -592,15 +607,16 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 			return undefined;
 		}
 
-		let dateStrings = this._splitValueByDelimiter(value);
-		dateStrings = dateStrings.filter(str => str !== " "); // remove empty strings
-		if (dateStrings[1]) {
-			const parsedDate = this.getValueFormat().parse(dateStrings[1], true) as Date;
+		const delimiter = ` ${this._prevDelimiter || this._effectiveDelimiter} `;
+		const parsedDates = this._getIntervalValueFormat().parse(value, true) as [Date, Date | null] | null;
 
-			return parsedDate.getTime() / 1000;
+		if (!parsedDates || parsedDates[0] === null) {
+			return undefined;
 		}
 
-		return undefined;
+		// singleIntervalValue may collapse same-start-end to [date, null]; restore from delimiter presence
+		const lastDate = parsedDates[1] ?? (value.includes(delimiter) ? parsedDates[0] : null);
+		return lastDate ? lastDate.getTime() / 1000 : undefined;
 	}
 
 	_exctractDisplayTimestamp(value: string) {
@@ -622,14 +638,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_buildValue(firstDateTimestamp: number | undefined, lastDateTimestamp: number | undefined): string {
 		this._prevDelimiter = this._effectiveDelimiter;
 		if (firstDateTimestamp) {
-			const firstDateString = this._getValueStringFromTimestamp(firstDateTimestamp * 1000);
-
-			if (!lastDateTimestamp) {
-				return firstDateString;
-			}
-
-			const lastDateString = this._getValueStringFromTimestamp(lastDateTimestamp * 1000);
-			return `${firstDateString} ${this._effectiveDelimiter} ${lastDateString}`;
+			const firstDate = UI5Date.getInstance(firstDateTimestamp * 1000);
+			const lastDate = lastDateTimestamp ? UI5Date.getInstance(lastDateTimestamp * 1000) : null;
+			return this._getIntervalValueFormat().format([firstDate, lastDate] as Date[], true);
 		}
 
 		return "";
@@ -642,14 +653,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_buildDisplayValue(firstDateTimestamp: number | undefined, lastDateTimestamp: number | undefined) {
 		this._prevDelimiter = this._effectiveDelimiter;
 		if (firstDateTimestamp) {
-			const firstDateString = this._getDisplayStringFromTimestamp(firstDateTimestamp * 1000);
-
-			if (!lastDateTimestamp) {
-				return firstDateString;
-			}
-
-			const lastDateString = this._getDisplayStringFromTimestamp(lastDateTimestamp * 1000);
-			return `${firstDateString} ${this._effectiveDelimiter} ${lastDateString}`;
+			const firstDate = UI5Date.getInstance(firstDateTimestamp * 1000);
+			const lastDate = lastDateTimestamp ? UI5Date.getInstance(lastDateTimestamp * 1000) : null;
+			return this._getIntervalDisplayFormat().format([firstDate, lastDate] as Date[], true);
 		}
 
 		return "";

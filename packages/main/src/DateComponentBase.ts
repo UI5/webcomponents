@@ -271,23 +271,30 @@ class DateComponentBase extends UI5Element {
 		return "";
 	}
 
-	getDisplayFormat() {
+	getDisplayFormat(formatOptions?: DateFormatOptions) {
 		return this._isDisplayFormatPattern
 			? DateFormat.getDateInstance({
 				strictParsing: true,
 				pattern: this._displayFormat,
 				calendarType: this._primaryCalendarType,
+				...formatOptions,
 			})
 			: DateFormat.getDateInstance({
 				strictParsing: true,
 				style: this._displayFormat,
 				calendarType: this._primaryCalendarType,
+				...formatOptions,
 			});
 	}
 
-	getValueFormat() {
+	getValueFormat(formatOptions?: DateFormatOptions) {
 		if (!this._valueFormat) {
-			return this.getISOFormat();
+			return DateFormat.getDateInstance({
+				strictParsing: true,
+				pattern: "yyyy-MM-dd",
+				calendarType: this._primaryCalendarType,
+				...formatOptions,
+			});
 		}
 
 		return this._isValueFormatPattern
@@ -295,11 +302,13 @@ class DateComponentBase extends UI5Element {
 				strictParsing: true,
 				pattern: this._valueFormat,
 				calendarType: this._primaryCalendarType,
+				...formatOptions,
 			})
 			: DateFormat.getDateInstance({
 				strictParsing: true,
 				style: this._valueFormat,
 				calendarType: this._primaryCalendarType,
+				...formatOptions,
 			});
 	}
 
