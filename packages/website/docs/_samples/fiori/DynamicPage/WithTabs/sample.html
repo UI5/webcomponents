@@ -52,14 +52,19 @@
             </div>
         </ui5-dynamic-page-header>
 
+        <!-- "Specifications" is a parent tab with two sub-tabs that scroll to its subsections. -->
         <ui5-tabcontainer id="tabs" slot="stickySubheaderArea" tab-layout="Standard" collapsed>
-            <ui5-tab text="Overview" selected></ui5-tab>
-            <ui5-tab text="Specifications"></ui5-tab>
-            <ui5-tab text="Related Items"></ui5-tab>
+            <ui5-tab data-section="overview" text="Overview" selected></ui5-tab>
+            <ui5-tab data-section="specifications" text="Specifications">
+                <ui5-tab slot="items" data-section="spec-hardware" text="Hardware"></ui5-tab>
+                <ui5-tab slot="items" data-section="spec-connectivity" text="Connectivity"></ui5-tab>
+            </ui5-tab>
+            <ui5-tab data-section="related" text="Related Items"></ui5-tab>
         </ui5-tabcontainer>
 
         <!-- Overview -->
-        <div id="tab-overview" class="tab-content active">
+        <section id="overview" class="page-section">
+            <ui5-title level="H3" size="H5">Overview</ui5-title>
             <div class="overview-grid">
                 <div class="overview-card">
                     <ui5-label>Stock</ui5-label>
@@ -78,25 +83,37 @@
                     <div class="value">4.3 / 5</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Specifications -->
-        <div id="tab-specifications" class="tab-content">
+        <!-- Specifications: Hardware subsection -->
+        <section id="spec-hardware" class="page-section">
+            <ui5-title level="H3" size="H5">Specifications — Hardware</ui5-title>
             <table class="spec-table">
                 <tr><td>Processor</td><td>Intel Core i7-1355U, 10 cores, up to 5.0 GHz</td></tr>
                 <tr><td>Memory</td><td>16 GB DDR5 RAM (upgradeable to 64 GB)</td></tr>
                 <tr><td>Storage</td><td>512 GB NVMe SSD (PCIe Gen 4)</td></tr>
                 <tr><td>Display</td><td>15.6" FHD IPS, 1920×1080, 300 nits, anti-glare</td></tr>
                 <tr><td>Battery</td><td>72 Wh, up to 10 hours</td></tr>
-                <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
                 <tr><td>Weight</td><td>1.85 kg</td></tr>
+            </table>
+        </section>
+
+        <!-- Specifications: Connectivity subsection -->
+        <section id="spec-connectivity" class="page-section">
+            <ui5-title level="H3" size="H5">Specifications — Connectivity</ui5-title>
+            <table class="spec-table">
+                <tr><td>Wireless</td><td>Wi-Fi 6E, Bluetooth 5.3</td></tr>
+                <tr><td>USB</td><td>2× USB-C (Thunderbolt 4), 2× USB-A</td></tr>
+                <tr><td>Video</td><td>HDMI 2.0</td></tr>
+                <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
                 <tr><td>Model Number</td><td>HT-1251</td></tr>
             </table>
-        </div>
+        </section>
 
         <!-- Related Items -->
-        <div id="tab-related" class="tab-content">
-            <ui5-list header-text="Related Products (12)" mode="SingleSelect">
+        <section id="related" class="page-section">
+            <ui5-title level="H3" size="H5">Related Items</ui5-title>
+            <ui5-list header-text="Related Products (12)" selection-mode="Single">
                 <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
                 <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch Widescreen Portable DVD Player w MP3</ui5-li>
                 <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
@@ -110,7 +127,7 @@
                 <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
                 <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
             </ui5-list>
-        </div>
+        </section>
 
     </ui5-dynamic-page>
     <!-- playground-fold -->

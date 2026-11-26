@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageHeaderClass from "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js";
@@ -28,6 +28,10 @@ const Title = createReactComponent(TitleClass);
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
+// The sections rendered in the page, in document order. "Specifications" is split into two
+// subsections reached via sub-tabs; the parent "specifications" id itself has no section.
+const sectionIds = ["overview", "spec-hardware", "spec-connectivity", "related"];
+
 const relatedProducts = [
   { description: "HT-2001", text: "10 inch Portable DVD", price: "47.00 EUR" },
   { description: "HT-2001", text: "7 inch Widescreen Portable DVD Player w MP3", price: "249.00 EUR" },
@@ -44,7 +48,78 @@ const relatedProducts = [
 ];
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const pageRef = useRef(null);
+  // The section currently anchored under the sticky band. Drives tab/sub-tab selection.
+  const [activeSection, setActiveSection] = useState("overview");
+  // While a tab-triggered scroll is animating, the scroll handler must not re-select
+  // a tab from an intermediate position (prevents flicker).
+  const isProgrammaticScroll = useRef(false);
+
+  // Distance of a section's top from the top of the scrollable area, in scroll units.
+  const sectionOffset = section => {
+    const container = pageRef.current.scrollContainer;
+    return section.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
+  };
+
+  const scrollToSection = id => {
+    const page = pageRef.current;
+    const section = page.querySelector(`#${id}`);
+    if (!section) {
+      return;
+    }
+    // DynamicPage exposes the sticky extent via `scrollPaddingTop`; reuse it instead of
+    // hard-coding offsets so the target never ends up hidden behind the sticky band.
+    const top = sectionOffset(section) - page.scrollPaddingTop;
+
+    isProgrammaticScroll.current = true;
+    page.scrollContainer.scrollTo({ top, behavior: "smooth" });
+    setTimeout(() => {
+      isProgrammaticScroll.current = false;
+    }, 400);
+  };
+
+  // Scroll-spy: mark the section (incl. subsection) currently under the sticky band.
+  // The DynamicPage scrolls its internal container, so listen there (the scroll event
+  // does not cross the shadow boundary to the host element). `scrollContainer` lives in
+  // the shadow DOM and only exists once the component has rendered, so wait for it.
+  useEffect(() => {
+    const page = pageRef.current;
+    let container;
+    let frame;
+
+    const onScroll = () => {
+      if (isProgrammaticScroll.current) {
+        return;
+      }
+      const line = container.scrollTop + page.scrollPaddingTop + 1;
+      let active = sectionIds[0];
+      sectionIds.forEach(id => {
+        if (sectionOffset(page.querySelector(`#${id}`)) <= line) {
+          active = id;
+        }
+      });
+      setActiveSection(active);
+    };
+
+    const attach = () => {
+      if (!page.scrollContainer) {
+        frame = requestAnimationFrame(attach);
+        return;
+      }
+      container = page.scrollContainer;
+      container.addEventListener("scroll", onScroll);
+    };
+    attach();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      container?.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  // A sub-tab is active when it matches; the parent "Specifications" is active when either
+  // of its subsections is the current one, so the parent stays highlighted in the strip.
+  const specActive = activeSection === "spec-hardware" || activeSection === "spec-connectivity";
 
   return (
     <>
@@ -86,8 +161,18 @@ function App() {
             font-size: var(--sapObjectHeader_Title_SnappedFontSize);
         }
 
-        .tab-content {
-            padding: 1rem 0;
+        .page-section {
+            padding: 1rem 0 2rem 0;
+        }
+
+        .page-section [ui5-title] {
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* Give the last section room to scroll fully up under the sticky tab band. */
+        .page-section:last-of-type {
+            min-height: 100%;
         }
 
         .overview-grid {
@@ -147,7 +232,7 @@ function App() {
         }
       `}</style>
       <div style={{ height: "580px" }}>
-        <DynamicPage>
+        <DynamicPage ref={pageRef}>
           <DynamicPageTitle slot="titleArea">
             <Breadcrumbs slot="breadcrumbs">
               <BreadcrumbsItem href="#">Products</BreadcrumbsItem>
@@ -190,74 +275,86 @@ function App() {
             </div>
           </DynamicPageHeader>
 
+          {/* "Specifications" is a parent tab with sub-tabs that scroll to its subsections. */}
           <TabContainer
             slot="stickySubheaderArea"
             tabLayout="Standard"
             collapsed
-            onTabSelect={e => setSelectedTab(e.detail.tabIndex)}
+            onTabSelect={e => scrollToSection(e.detail.tab.dataset.section)}
           >
-            <Tab text="Overview" selected={selectedTab === 0} />
-            <Tab text="Specifications" selected={selectedTab === 1} />
-            <Tab text="Related Items" selected={selectedTab === 2} />
+            <Tab text="Overview" data-section="overview" selected={activeSection === "overview"} />
+            <Tab text="Specifications" data-section="specifications" selected={specActive}>
+              <Tab slot="items" text="Hardware" data-section="spec-hardware" selected={activeSection === "spec-hardware"} />
+              <Tab slot="items" text="Connectivity" data-section="spec-connectivity" selected={activeSection === "spec-connectivity"} />
+            </Tab>
+            <Tab text="Related Items" data-section="related" selected={activeSection === "related"} />
           </TabContainer>
 
-          {selectedTab === 0 && (
-            <div className="tab-content">
-              <div className="overview-grid">
-                <div className="overview-card">
-                  <Label>Stock</Label>
-                  <div className="value positive">In Stock</div>
-                </div>
-                <div className="overview-card">
-                  <Label>Price</Label>
-                  <div className="value">947.00 EUR</div>
-                </div>
-                <div className="overview-card">
-                  <Label>Units Sold</Label>
-                  <div className="value">12,430</div>
-                </div>
-                <div className="overview-card">
-                  <Label>Rating</Label>
-                  <div className="value">4.3 / 5</div>
-                </div>
+          <section id="overview" className="page-section">
+            <Title level="H3" size="H5">Overview</Title>
+            <div className="overview-grid">
+              <div className="overview-card">
+                <Label>Stock</Label>
+                <div className="value positive">In Stock</div>
+              </div>
+              <div className="overview-card">
+                <Label>Price</Label>
+                <div className="value">947.00 EUR</div>
+              </div>
+              <div className="overview-card">
+                <Label>Units Sold</Label>
+                <div className="value">12,430</div>
+              </div>
+              <div className="overview-card">
+                <Label>Rating</Label>
+                <div className="value">4.3 / 5</div>
               </div>
             </div>
-          )}
+          </section>
 
-          {selectedTab === 1 && (
-            <div className="tab-content">
-              <table className="spec-table">
-                <tbody>
-                  <tr><td>Processor</td><td>Intel Core i7-1355U, 10 cores, up to 5.0 GHz</td></tr>
-                  <tr><td>Memory</td><td>16 GB DDR5 RAM (upgradeable to 64 GB)</td></tr>
-                  <tr><td>Storage</td><td>512 GB NVMe SSD (PCIe Gen 4)</td></tr>
-                  <tr><td>Display</td><td>15.6" FHD IPS, 1920×1080, 300 nits, anti-glare</td></tr>
-                  <tr><td>Battery</td><td>72 Wh, up to 10 hours</td></tr>
-                  <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
-                  <tr><td>Weight</td><td>1.85 kg</td></tr>
-                  <tr><td>Model Number</td><td>HT-1251</td></tr>
-                </tbody>
-              </table>
-            </div>
-          )}
+          <section id="spec-hardware" className="page-section">
+            <Title level="H3" size="H5">Specifications — Hardware</Title>
+            <table className="spec-table">
+              <tbody>
+                <tr><td>Processor</td><td>Intel Core i7-1355U, 10 cores, up to 5.0 GHz</td></tr>
+                <tr><td>Memory</td><td>16 GB DDR5 RAM (upgradeable to 64 GB)</td></tr>
+                <tr><td>Storage</td><td>512 GB NVMe SSD (PCIe Gen 4)</td></tr>
+                <tr><td>Display</td><td>15.6" FHD IPS, 1920×1080, 300 nits, anti-glare</td></tr>
+                <tr><td>Battery</td><td>72 Wh, up to 10 hours</td></tr>
+                <tr><td>Weight</td><td>1.85 kg</td></tr>
+              </tbody>
+            </table>
+          </section>
 
-          {selectedTab === 2 && (
-            <div className="tab-content">
-              <List headerText="Related Products (12)" selectionMode="Single">
-                {relatedProducts.map((product, index) => (
-                  <ListItemStandard
-                    key={index}
-                    description={product.description}
-                    icon="slim-arrow-right"
-                    iconEnd={true}
-                    additionalText={product.price}
-                  >
-                    {product.text}
-                  </ListItemStandard>
-                ))}
-              </List>
-            </div>
-          )}
+          <section id="spec-connectivity" className="page-section">
+            <Title level="H3" size="H5">Specifications — Connectivity</Title>
+            <table className="spec-table">
+              <tbody>
+                <tr><td>Wireless</td><td>Wi-Fi 6E, Bluetooth 5.3</td></tr>
+                <tr><td>USB</td><td>2× USB-C (Thunderbolt 4), 2× USB-A</td></tr>
+                <tr><td>Video</td><td>HDMI 2.0</td></tr>
+                <tr><td>Operating System</td><td>Windows 11 Home</td></tr>
+                <tr><td>Model Number</td><td>HT-1251</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="related" className="page-section">
+            <Title level="H3" size="H5">Related Items</Title>
+            <List headerText="Related Products (12)" selectionMode="Single">
+              {relatedProducts.map((product, index) => (
+                <ListItemStandard
+                  key={index}
+                  description={product.description}
+                  icon="slim-arrow-right"
+                  iconEnd={true}
+                  additionalText={product.price}
+                >
+                  {product.text}
+                </ListItemStandard>
+              ))}
+            </List>
+          </section>
         </DynamicPage>
       </div>
     </>

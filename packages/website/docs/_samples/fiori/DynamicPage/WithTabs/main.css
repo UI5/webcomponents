@@ -35,13 +35,19 @@
     font-size: var(--sapObjectHeader_Title_SnappedFontSize);
 }
 
-.tab-content {
-    display: none;
-    padding: 1rem 0;
+.page-section {
+    padding: 1rem 0 2rem 0;
 }
 
-.tab-content.active {
+.page-section [ui5-title] {
     display: block;
+    margin-bottom: 1rem;
+}
+
+/* Give the last section room to scroll fully up under the sticky tab band,
+   so its tab can become active even when the content is short. */
+.page-section:last-of-type {
+    min-height: 100%;
 }
 
 .overview-grid {
