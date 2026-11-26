@@ -903,12 +903,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get accInfo(): InputAccInfo {
+		const accessibleDescText = getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || "";
+		const ariaDescription = [this.roleDescription, accessibleDescText].filter(Boolean).join(" ");
 		return {
-			"ariaRoledescription": this.roleDescription,
 			"ariaHasPopup": "grid",
 			"ariaRequired": this.required,
 			"ariaLabel": this.ariaLabelText || undefined,
-			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
+			"ariaDescription": ariaDescription || undefined,
 		};
 	}
 
