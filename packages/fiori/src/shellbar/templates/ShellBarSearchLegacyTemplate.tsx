@@ -31,7 +31,7 @@ function ShellBarSearchFieldFullWidth(this: ShellBar) {
 				design={ButtonDesign.Transparent}
 				onClick={this.handleCancelButtonClick}
 			>
-				Cancel
+				{this.texts.cancel}
 			</Button>
 		</div>
 	);
