@@ -15,14 +15,14 @@ const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
 
 const employees = [
-  { name: "John Smith", department: "Engineering", location: "Building A", email: "john.smith@example.com", phone: "x1234", office: "A-101" },
-  { name: "Jane Doe", department: "Marketing", location: "Building B", email: "jane.doe@example.com", phone: "x2345", office: "B-204" },
-  { name: "James Wilson", department: "Sales", location: "Building A", email: "james.wilson@example.com", phone: "x3456", office: "A-115" },
-  { name: "Emily Brown", department: "Engineering", location: "Building C", email: "emily.brown@example.com", phone: "x4567", office: "C-309" },
-  { name: "Michael Lee", department: "HR", location: "Building B", email: "michael.lee@example.com", phone: "x5678", office: "B-210" },
-  { name: "Sarah Johnson", department: "Finance", location: "Building A", email: "sarah.johnson@example.com", phone: "x6789", office: "A-120" },
-  { name: "David Chen", department: "Engineering", location: "Building C", email: "david.chen@example.com", phone: "x7890", office: "C-312" },
-  { name: "Lisa Wang", department: "Marketing", location: "Building B", email: "lisa.wang@example.com", phone: "x8901", office: "B-215" },
+  { name: "Alice Morgan", department: "Engineering", location: "Building A", email: "alice.morgan@example.com", phone: "x1234", office: "A-101" },
+  { name: "Bob Turner", department: "Marketing", location: "Building B", email: "bob.turner@example.com", phone: "x2345", office: "B-204" },
+  { name: "Carol White", department: "Sales", location: "Building C", email: "carol.white@example.com", phone: "x3456", office: "C-115" },
+  { name: "David Chen", department: "Engineering", location: "Building A", email: "david.chen@example.com", phone: "x4567", office: "A-309" },
+  { name: "Emily Brown", department: "Finance", location: "Building B", email: "emily.brown@example.com", phone: "x5678", office: "B-210" },
+  { name: "Frank Lopez", department: "HR", location: "Building C", email: "frank.lopez@example.com", phone: "x6789", office: "C-120" },
+  { name: "Grace Kim", department: "Marketing", location: "Building A", email: "grace.kim@example.com", phone: "x7890", office: "A-312" },
+  { name: "Henry Ford", department: "Sales", location: "Building B", email: "henry.ford@example.com", phone: "x8901", office: "B-215" },
 ];
 
 function App() {
@@ -34,16 +34,21 @@ function App() {
 
   const query = search.trim().toLowerCase();
 
-  // Match the component's typeahead, which works on the first column only. "Per term"
-  // means the query must start a word in the name (so "James" and "Wilson" both match
-  // "James Wilson"), mirroring ui5-input's default StartsWithPerTerm filter.
-  const startsWithPerTerm = (name: string) => {
+  // Filter across the Name, Department and Location columns. "Per term" means the query
+  // must start a word in the value (so "James" and "Wilson" both match "James Wilson"),
+  // mirroring ui5-input's default StartsWithPerTerm filter.
+  const startsWithPerTerm = (text: string) => {
     const escaped = query.replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
-    return new RegExp(`(^|\\s)${escaped}`).test(name.toLowerCase());
+    return new RegExp(`(^|\\s)${escaped}`).test(text.toLowerCase());
   };
 
   const filteredEmployees = query
-    ? employees.filter((emp) => startsWithPerTerm(emp.name))
+    ? employees.filter(
+        (emp) =>
+          startsWithPerTerm(emp.name) ||
+          startsWithPerTerm(emp.department) ||
+          startsWithPerTerm(emp.location)
+      )
     : employees;
 
   // App-side highlighting using the same utility the component uses internally.

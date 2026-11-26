@@ -6,28 +6,32 @@ import "@ui5/webcomponents/dist/TableCell.js";
 import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
 
 const employees = [
-    { name: "John Smith", department: "Engineering", location: "Building A", email: "john.smith@example.com", phone: "x1234", office: "A-101" },
-    { name: "Jane Doe", department: "Marketing", location: "Building B", email: "jane.doe@example.com", phone: "x2345", office: "B-204" },
-    { name: "James Wilson", department: "Sales", location: "Building A", email: "james.wilson@example.com", phone: "x3456", office: "A-115" },
-    { name: "Emily Brown", department: "Engineering", location: "Building C", email: "emily.brown@example.com", phone: "x4567", office: "C-309" },
-    { name: "Michael Lee", department: "HR", location: "Building B", email: "michael.lee@example.com", phone: "x5678", office: "B-210" },
-    { name: "Sarah Johnson", department: "Finance", location: "Building A", email: "sarah.johnson@example.com", phone: "x6789", office: "A-120" },
-    { name: "David Chen", department: "Engineering", location: "Building C", email: "david.chen@example.com", phone: "x7890", office: "C-312" },
-    { name: "Lisa Wang", department: "Marketing", location: "Building B", email: "lisa.wang@example.com", phone: "x8901", office: "B-215" },
+    { name: "Alice Morgan", department: "Engineering", location: "Building A", email: "alice.morgan@example.com", phone: "x1234", office: "A-101" },
+    { name: "Bob Turner", department: "Marketing", location: "Building B", email: "bob.turner@example.com", phone: "x2345", office: "B-204" },
+    { name: "Carol White", department: "Sales", location: "Building C", email: "carol.white@example.com", phone: "x3456", office: "C-115" },
+    { name: "David Chen", department: "Engineering", location: "Building A", email: "david.chen@example.com", phone: "x4567", office: "A-309" },
+    { name: "Emily Brown", department: "Finance", location: "Building B", email: "emily.brown@example.com", phone: "x5678", office: "B-210" },
+    { name: "Frank Lopez", department: "HR", location: "Building C", email: "frank.lopez@example.com", phone: "x6789", office: "C-120" },
+    { name: "Grace Kim", department: "Marketing", location: "Building A", email: "grace.kim@example.com", phone: "x7890", office: "A-312" },
+    { name: "Henry Ford", department: "Sales", location: "Building B", email: "henry.ford@example.com", phone: "x8901", office: "B-215" },
 ];
 
 const input = document.getElementById("employee-input");
 
-function startsWithPerTerm(name, query) {
+function startsWithPerTerm(text, query) {
     const escaped = query.toLowerCase().replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
-    return new RegExp(`(^|\\s)${escaped}`).test(name.toLowerCase());
+    return new RegExp(`(^|\\s)${escaped}`).test(text.toLowerCase());
 }
 
 function updateSuggestions(filterValue) {
     input.querySelectorAll("[ui5-table-row]").forEach(row => row.remove());
 
+    // Filter across the Name, Department and Location columns.
     const filtered = filterValue
-        ? employees.filter(emp => startsWithPerTerm(emp.name, filterValue))
+        ? employees.filter(emp =>
+            startsWithPerTerm(emp.name, filterValue) ||
+            startsWithPerTerm(emp.department, filterValue) ||
+            startsWithPerTerm(emp.location, filterValue))
         : employees;
 
     filtered.forEach(emp => {

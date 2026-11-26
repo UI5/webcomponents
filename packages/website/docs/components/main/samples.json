@@ -763,7 +763,7 @@
 			{
 				"name": "CustomFiltering",
 				"title": "Custom Filtering",
-				"description": "This sample demonstrates how to implement custom filtering logic for tabular suggestions. The application filters employees by name, department, or location as the user types. With more columns than the fixed-width input can fit, the lower-importance columns move into the popin area."
+				"description": "This sample demonstrates how to implement custom filtering logic for tabular suggestions. The application filters employees by name, department, or location as the user types, and the matched text is highlighted app-side. With more columns than the fixed-width input can fit, the lower-importance columns move into the popin area."
 			},
 			{
 				"name": "RichCells",
