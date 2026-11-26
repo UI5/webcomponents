@@ -42,6 +42,14 @@ class ListItemGroupBase extends UI5Element {
 	headerText?: string;
 
 	/**
+	 * The ARIA role the parent list expects its items to carry (e.g. "option"
+	 * for role "ListBox"). Set by the parent `ui5-list` during item processing.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_inheritedAccessibleRole?: string;
+
+	/**
 	 * Defines the items of the group.
 	 * @public
 	 */

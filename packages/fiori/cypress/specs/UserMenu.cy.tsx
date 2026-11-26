@@ -45,10 +45,13 @@ describe("Initial rendering", () => {
     	cy.get("@userMenu").should("exist");
     	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
     	cy.get("@responsivePopover").should("exist");
+    	cy.get("@userMenu").then($menu => {
+    		($menu[0] as UserMenu)._titleMovedToHeader = false;
+    	});
     	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").as("name");
     	cy.get("@name").should("have.length", 1);
     	cy.get("@name").contains("Alain Chevalier");
-    	cy.get("@name").should("have.attr", "level", "H2");
+    	cy.get("@name").should("have.attr", "level", "H1");
 
     });
 
@@ -70,18 +73,105 @@ describe("Initial rendering", () => {
     	);
     	cy.get("[ui5-user-menu]").as("userMenu");
     	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+    	cy.get("@userMenu").then($menu => {
+    		($menu[0] as UserMenu)._titleMovedToHeader = false;
+    	});
 
-    	// invisible H1 "User menu" at the top
-    	cy.get("@responsivePopover").find("[ui5-title].ui5-hidden-text").as("heading");
-    	cy.get("@heading").should("have.length", 1);
-    	cy.get("@heading").should("have.attr", "level", "H1");
-    	cy.get("@heading").shadow().find("h1").should("exist");
+    	// selected account titleText is the single H1
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("have.attr", "level", "H1");
 
-    	// selected account titleText is H2
-    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("have.attr", "level", "H2");
+    	// "Other accounts" panel title is H2
+    	cy.get("@responsivePopover").find(".ui5-user-menu-other-accounts [ui5-title][slot=header]").should("have.attr", "level", "H2");
+    });
 
-    	// "Other accounts" panel title is H3
-    	cy.get("@responsivePopover").find(".ui5-user-menu-other-accounts [ui5-title][slot=header]").should("have.attr", "level", "H3");
+    it("renders exactly one H1 and no headings below H2", () => {
+    	cy.mount(
+    		<>
+    			<Button id="openUserMenuBtn">Open User Menu</Button>
+    			<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Alain Chevalier">
+    				</UserMenuAccount>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Jane Doe">
+    				</UserMenuAccount>
+    			</UserMenu>
+    		</>
+    	);
+    	cy.get("[ui5-user-menu]").as("userMenu");
+    	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+
+    	// ensure the resting state (inline title visible) - the IntersectionObserver
+    	// can briefly flip this during the popover open animation
+    	cy.get("@userMenu").then($menu => {
+    		($menu[0] as UserMenu)._titleMovedToHeader = false;
+    	});
+
+    	// exactly one H1 (the selected account title), rendered inside the Title's shadow root
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").shadow().find("h1").should("have.length", 1);
+
+    	// no other headings beyond H1 (name) and H2 (panel header)
+    	cy.get("@responsivePopover").find("[ui5-title]").each($title => {
+    		cy.wrap($title).invoke("attr", "level").should("match", /^(H1|H2)$/);
+    	});
+    });
+
+    it("renders other-account names as non-heading text", () => {
+    	cy.mount(
+    		<>
+    			<Button id="openUserMenuBtn">Open User Menu</Button>
+    			<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Alain Chevalier">
+    				</UserMenuAccount>
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Jane Doe">
+    				</UserMenuAccount>
+    			</UserMenu>
+    		</>
+    	);
+    	cy.get("[ui5-user-menu]").as("userMenu");
+    	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+
+    	// the other account names are ui5-text, not ui5-title (no stray headings in the list)
+    	cy.get("@responsivePopover").find("[ui5-text].ui5-user-menu-other-accounts-title").as("otherAccountName");
+    	cy.get("@otherAccountName").should("have.length", 2);
+    	cy.get("@otherAccountName").contains("Jane Doe");
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-other-accounts-title").should("not.exist");
+    });
+
+    it("shows the title in the header bar when the title moves to the header on scroll", () => {
+    	cy.mount(
+    		<>
+    			<Button id="openUserMenuBtn">Open User Menu</Button>
+    			<UserMenu open={true} opener="openUserMenuBtn">
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Alain Chevalier">
+    				</UserMenuAccount>
+    			</UserMenu>
+    		</>
+    	);
+    	cy.get("[ui5-user-menu]").as("userMenu");
+    	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+
+    	// simulate the inline title scrolling out of view -> title moves to the header bar
+    	cy.get("@userMenu").then($menu => {
+    		($menu[0] as UserMenu)._titleMovedToHeader = true;
+    	});
+
+    	// the header-bar title is shown
+    	cy.get("@responsivePopover").find(".ui5-user-menu-fixed-header [ui5-title]").as("headerTitle");
+    	cy.get("@headerTitle").should("have.attr", "level", "H1");
+    	cy.get("@headerTitle").contains("Alain Chevalier");
+
+    	// the inline title stays mounted so the IntersectionObserver keeps tracking it
+    	// and can move the title back out of the header when scrolling up again
+    	cy.get("@responsivePopover").find("[ui5-title].ui5-user-menu-selected-account-title").should("exist");
     });
 
 
