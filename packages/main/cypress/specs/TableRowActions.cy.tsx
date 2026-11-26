@@ -50,7 +50,66 @@ describe("TableRowActions", () => {
 	}
 
 	describe("Rendering", () => {
-		it("tests single row action", () => {
+		it("keeps disabled actions visible and non-interactive inline and in overflow", () => {
+			mountTable(2, () => <TableRow interactive>
+				<TableRowAction slot="actions" id="disabledAction" icon={edit} text="Edit" disabled></TableRowAction>
+				<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+			</TableRow>);
+
+			cy.get("#disabledAction").invoke("on", "click", cy.stub().as("actionClick"));
+			cy.get("@table").invoke("on", "row-click", cy.stub().as("rowClick"));
+			cy.get("#disabledAction").shadow().find("[ui5-button]").as("actionButton")
+				.should("be.visible").and("have.attr", "disabled");
+			cy.get("@actionButton").shadow().find("button").should("be.disabled");
+			cy.get("#disabledAction").then($action => {
+				const width = $action[0].getBoundingClientRect().width;
+				cy.get("@actionButton").realClick();
+				cy.get("@actionButton").trigger("keydown", { key: "Enter", force: true });
+				cy.get("@actionButton").trigger("keyup", { key: "Enter", force: true });
+				cy.get("@actionButton").trigger("keydown", { key: " ", force: true });
+				cy.get("@actionButton").trigger("keyup", { key: " ", force: true });
+				cy.get("@actionClick").should("not.have.been.called");
+				cy.get("@rowActionClick").should("not.have.been.called");
+				cy.get("@rowClick").should("not.have.been.called");
+				cy.wrap(width).as("actionWidth");
+			});
+
+			cy.get("@table").invoke("prop", "rowActionCount", 1);
+			cy.get("@row1").shadow().find("#overflow").as("overflowButton").realClick();
+			cy.get("[ui5-menu-item]").should("have.length", 2);
+			cy.get('[ui5-menu-item][text="Edit"]').as("disabledItem")
+				.should("be.visible").and("have.attr", "disabled");
+			cy.get("@disabledItem").ui5MenuItemClick();
+			cy.get("@disabledItem").then($item => $item[0].focus());
+			cy.get("@disabledItem").should("be.focused").realPress("Enter");
+			cy.get("@actionClick").should("not.have.been.called");
+			cy.get("@rowActionClick").should("not.have.been.called");
+			cy.get("[ui5-menu]").should("have.prop", "open", true);
+			cy.realPress("Escape");
+			cy.get("[ui5-menu]").should("not.have.attr", "open");
+
+			cy.get("#disabledAction").invoke("prop", "disabled", false);
+			cy.get("@overflowButton").realClick();
+			cy.get('[ui5-menu-item][text="Edit"]').should("not.have.attr", "disabled");
+			cy.get('[ui5-menu-item][text="Edit"]').ui5MenuItemClick();
+			cy.get("@actionClick").should("have.been.calledOnce");
+			cy.get("@rowActionClick").should("have.been.calledOnce");
+			cy.get("[ui5-menu]").should("not.have.attr", "open");
+			cy.get("[ui5-menu]").invoke("remove");
+
+			cy.get("@table").invoke("prop", "rowActionCount", 2);
+			cy.get("@actionButton").should("not.have.attr", "disabled");
+			cy.get("@actionWidth").then(width => {
+				cy.get("#disabledAction").should($action => {
+					expect($action[0].getBoundingClientRect().width).to.equal(width);
+				});
+			});
+			cy.get("@actionButton").realClick();
+			cy.get("@actionClick").should("have.been.calledTwice");
+			cy.get("@rowActionClick").should("have.been.calledTwice");
+		});
+
+		it("reserves the action column and forwards row action clicks", () => {
 			mountTable(1, () => <>
 				<TableRow id="addRow">
 					<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
@@ -69,19 +128,11 @@ describe("TableRowActions", () => {
 
 			cy.get("@headerRow").shadow().find("#actions-cell").should("exist");
 			checkTemplateColumn(`${8 + 36 + 8}px`);
-			cy.get("@row1").find("[icon=add]").shadow().find("ui5-button").should("exist");
-			cy.get("@row2").find("[icon=add]").should("have.css", "display", "block");
-			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
-			cy.get("@row4").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
 
-			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
 			cy.get("#addAction").realClick();
-			cy.get("@addActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.row.id").should("equal", "addRow");
 			cy.get("@rowActionClick").invoke("getCall", 0).its("args.0.detail.action.id").should("equal", "addAction");
-			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
 			cy.get("#navigationAction").realClick();
-			cy.get("@navigationActionClick").should("have.been.calledOnce");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.row.id").should("equal", "navigationRow");
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.action.id").should("equal", "navigationAction");
 
@@ -338,6 +389,50 @@ describe("TableRowActions", () => {
 			cy.get("@row1").realPress(["Alt", "Enter"]);
 			cy.get("@rowActionClick").should("not.have.been.called");
 		});
+	});
 
+	describe("Action components", () => {
+		beforeEach(() => {
+			cy.mount(
+				<Table rowActionCount={1}>
+					<TableHeaderRow slot="headerRow"></TableHeaderRow>
+					<>
+						<TableRow id="addRow">
+							<TableRowAction slot="actions" id="addAction" icon={add} text="Add"></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowAction slot="actions" icon={add} text="Add" invisible={true}></TableRowAction>
+						</TableRow>
+						<TableRow>
+							<TableRowActionNavigation slot="actions" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+						<TableRow id="navigationRow">
+							<TableRowActionNavigation slot="actions" id="navigationAction" interactive={true}></TableRowActionNavigation>
+						</TableRow>
+					</>
+				</Table>
+			);
+		});
+
+		it("renders the action icon and fires click", () => {
+			cy.get("#addAction").shadow().find("ui5-button").should("exist");
+			cy.get("#addAction").should("have.attr", "icon", "add");
+			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
+			cy.get("#addAction").realClick();
+			cy.get("@addActionClick").should("have.been.calledOnce");
+		});
+
+		it("keeps invisible actions rendered for alignment", () => {
+			cy.get("[ui5-table-row-action][invisible]").should("have.css", "display", "block");
+		});
+
+		it("renders navigation buttons and fires click", () => {
+			cy.get("[ui5-table-row-action-navigation]").each($action => {
+				cy.wrap($action).shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
+			});
+			cy.get("#navigationAction").invoke("on", "click", cy.stub().as("navigationActionClick"));
+			cy.get("#navigationAction").realClick();
+			cy.get("@navigationActionClick").should("have.been.calledOnce");
+		});
 	});
 });

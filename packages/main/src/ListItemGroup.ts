@@ -151,6 +151,32 @@ class ListItemGroup extends ListItemGroupBase {
 		return !!this.header.length;
 	}
 
+	/**
+	 * The label for the group wrapper and the inner item list.
+	 * Prefers `headerAccessibleName` over the visible `headerText`.
+	 */
+	get groupLabel(): string | undefined {
+		return this.headerAccessibleName || this.headerText;
+	}
+
+	/**
+	 * Whether the parent list uses the default `list` role. The parent sets
+	 * `_inheritedAccessibleRole` only for the non-default roles (option/menuitem/
+	 * treeitem), so an unset value identifies the default list role.
+	 */
+	get isDefaultListRole(): boolean {
+		return !this._inheritedAccessibleRole;
+	}
+
+	/**
+	 * Whether to expose the labelled grouping wrapper. A group without a header
+	 * has no accessible name, so it is left transparent rather than exposing an
+	 * unnamed `group`/`list`.
+	 */
+	get exposeGroupRole(): boolean {
+		return this.hasHeader;
+	}
+
 	get dropIndicatorDOM(): DropIndicator | null {
 		return this.shadowRoot!.querySelector("[ui5-drop-indicator]");
 	}

@@ -1684,6 +1684,11 @@
 				"name": "HAlign",
 				"title": "Horizontal cell alignment",
 				"description": "Controls the horizontal alignment of cells by using the `horizontalAlign` property.\n\nPlease note that the behavior of `horizontalAlign` depends on where you set it:\n- `horizontalAlign` is set on `TableHeaderCell` level<br />\nChanges the horizontal alignment of the `TableHeaderCell` and its corresponding `TableCell`.\n- `horizontalAlign` is set on `TableCell` level only<br />\nThe horizontal alignment is only changed for this one `TableCell`\n- `horizontalAlign` is set at the `TableHeaderCell` and `TableCell` level<br />\nChanging the `horizontalAlign` property at the `TableHeaderCell` level changes only the `TableHeaderCell` itself and those `TableCell` properties without a `horizontalAlign` property."
+			},
+			{
+				"name": "HeaderClick",
+				"title": "Interactive Column Headers",
+				"description": "Make a column header clickable by setting the `interactive` property of the `ui5-table-header-cell`. Clicking the header fires the `header-click` event, which can be used, for example, to open a column menu with sorting options. Set the `sortIndicator` property to display the sort direction icon in the header, and set the `aria-haspopup` attribute to announce the type of popup (`menu` or `dialog`) to assistive technologies."
 			}
 		]
 	},
@@ -1702,7 +1707,7 @@
 			{
 				"name": "StickyHeader",
 				"title": "Sticky Header Row",
-				"description": "Enable a sticky header by utilizing the properties `sticky` and `sticky-top`.\n\n### Sticky Behavior with scrollable table"
+				"description": "Enable a sticky header by setting `sticky` on `ui5-table-header-row`.\n\n### Sticky Behavior with scrollable table"
 			},
 			{
 				"name": "StickyHeaderContainer",

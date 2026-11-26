@@ -66,6 +66,10 @@ class TableRow extends TableRowBase<TableCell> {
 	@slot({
 		type: HTMLElement,
 		individualSlots: true,
+		invalidateOnChildChange: {
+			properties: ["disabled"],
+			slots: false,
+		},
 	})
 	actions!: Slot<TableRowActionBase>;
 
@@ -266,7 +270,7 @@ class TableRow extends TableRowBase<TableCell> {
 		}
 
 		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
-			return !action.invisible && action._isInteractive;
+			return !action.invisible && action._isInteractive && !action._isDisabled;
 		}).length + (this._hasOverflowActions ? 1 : 0);
 	}
 

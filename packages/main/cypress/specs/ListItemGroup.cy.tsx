@@ -2,6 +2,292 @@ import List from "../../src/List.js";
 import ListItemStandard from "../../src/ListItemStandard.js";
 import ListItemGroup from "../../src/ListItemGroup.js";
 
+describe("ListItemGroup Accessibility", () => {
+	const mountSingleGroup = () => cy.mount(
+		<List accessibleName="View settings" selectionMode="SingleStart">
+			<ListItemGroup headerText="Sort Order">
+				<ListItemStandard>Ascending</ListItemStandard>
+				<ListItemStandard selected>Descending</ListItemStandard>
+			</ListItemGroup>
+		</List>
+	);
+
+	it("wraps the group in a labelled role=group", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist")
+			.and("have.attr", "aria-label", "Sort Order");
+	});
+
+	it("nests the real items in a labelled role=list so they get positions", () => {
+		mountSingleGroup();
+
+		// The items live in an inner role="list" (labelled by the header) so each
+		// item gets a correct position within the group. The group header must not
+		// own the items via aria-owns.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("exist")
+			.and("have.attr", "aria-label", "Sort Order");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[aria-owns]")
+			.should("not.exist");
+	});
+
+	it("exposes the group header as a heading, not a counted list item", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "heading")
+			.and("have.attr", "aria-level")
+			.and("not.be.empty");
+
+		// The header carries the group-header roledescription but no item position
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "aria-roledescription")
+			.and("not.be.empty");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-posinset");
+	});
+
+	it("keeps the real items as listitems counted by the outer list", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "listitem");
+		});
+	});
+
+	it("does not add a 'sub groups' summary to the list aria-description", () => {
+		mountSingleGroup();
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then(ariaDesc => {
+				expect(ariaDesc ?? "").to.not.match(/sub\s?groups/i);
+			});
+	});
+
+	it("keeps group items as options under a ListBox list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="View settings" accessibleRole="ListBox" selectionMode="SingleStart">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard selected>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		// A role="list" between the listbox and its options would orphan them, so
+		// the group must not render one; the slot wrapper is transparent (role=none).
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		// The header is exposed as role=none (not a heading) under a listbox.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		// The real items keep role=option.
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "option");
+		});
+	});
+
+	it("labels the group and inner list with headerAccessibleName when provided", () => {
+		cy.mount(
+			<List accessibleName="View settings">
+				<ListItemGroup headerText="Sort Order" headerAccessibleName="Sort Order options">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("have.attr", "aria-label", "Sort Order options");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("have.attr", "aria-label", "Sort Order options");
+	});
+
+	it("keeps group items as menuitems under a Menu list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="Menu" accessibleRole="Menu">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "menuitem");
+		});
+	});
+
+	it("keeps group items as treeitems under a Tree list (no intervening role=list)", () => {
+		cy.mount(
+			<List accessibleName="Tree" accessibleRole="Tree">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "treeitem");
+		});
+	});
+
+	it("does not expose unnamed group/list wrappers for a group without a header", () => {
+		cy.mount(
+			<List accessibleName="Plain">
+				<ListItemGroup>
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='group']")
+			.should("not.exist");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("[role='list']")
+			.should("not.exist");
+
+		cy.get("[ui5-li]").should("have.length", 2);
+		cy.get("[ui5-li]").each($li => {
+			cy.wrap($li)
+				.shadow()
+				.find("[part='native-li']")
+				.should("have.attr", "role", "listitem");
+		});
+	});
+
+	it("drops ignored aria-roledescription/aria-label from a role=none group header", () => {
+		cy.mount(
+			<List accessibleName="View settings" accessibleRole="ListBox">
+				<ListItemGroup headerText="Sort Order">
+					<ListItemStandard>Ascending</ListItemStandard>
+					<ListItemStandard selected>Descending</ListItemStandard>
+				</ListItemGroup>
+			</List>
+		);
+
+		// role=none is presentational; it stays focusable but drops ignored naming attrs.
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("have.attr", "role", "none");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-roledescription");
+
+		cy.get("[ui5-li-group]")
+			.shadow()
+			.find("ui5-li-group-header")
+			.shadow()
+			.find("[part='native-li']")
+			.should("not.have.attr", "aria-label");
+	});
+});
+
 describe("ListItemGroup Tests", () => {
 	it("ListGroup is rendered", () => {
 		cy.mount(<ListItemGroup headerText="New Items" />);
