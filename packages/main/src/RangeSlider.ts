@@ -108,7 +108,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set startValue(value: number) {
 		this._startValue = value;
-		this.tooltipStartValue = this._getCustomLabel(value) || (value?.toString() ?? "");
+		this.tooltipStartValue = this._getCustomTooltip(value) || (value?.toString() ?? "");
 	}
 
 	get startValue(): number {
@@ -125,7 +125,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set endValue(value: number) {
 		this._endValue = value;
-		this.tooltipEndValue = this._getCustomLabel(value) || (value?.toString() ?? "");
+		this.tooltipEndValue = this._getCustomTooltip(value) || (value?.toString() ?? "");
 	}
 
 	get endValue(): number {
@@ -228,23 +228,11 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	get _isStartTooltipVisible(): boolean {
-		if (!this._tooltipsOpen) {
-			return false;
-		}
-		if (!this._hasCustomTickmarks) {
-			return true;
-		}
-		return this._getCustomLabel(this.startValue) !== undefined;
+		return this._tooltipsOpen;
 	}
 
 	get _isEndTooltipVisible(): boolean {
-		if (!this._tooltipsOpen) {
-			return false;
-		}
-		if (!this._hasCustomTickmarks) {
-			return true;
-		}
-		return this._getCustomLabel(this.endValue) !== undefined;
+		return this._tooltipsOpen;
 	}
 
 	get _ariaValueTextStart(): string | undefined {
@@ -462,8 +450,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this.update(affectedValue, newStartValue, newEndValue);
 		}
 
-		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
-		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
+		this.tooltipStartValue = this._getCustomTooltip(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomTooltip(this.endValue) || this.endValue.toString();
 	}
 
 	/**
@@ -630,8 +618,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		// Updates UI and state when dragging of the whole selected range
 		this._updateValueOnRangeDrag(e);
 
-		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
-		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
+		this.tooltipStartValue = this._getCustomTooltip(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomTooltip(this.endValue) || this.endValue.toString();
 	}
 
 	/**
@@ -999,8 +987,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			return;
 		}
 
-		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
-		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
+		this.tooltipStartValue = this._getCustomTooltip(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomTooltip(this.endValue) || this.endValue.toString();
 	}
 
 	_onTooltipInput(e: CustomEvent) {

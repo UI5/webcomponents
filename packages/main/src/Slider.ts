@@ -120,13 +120,7 @@ class Slider extends SliderBase implements IFormInputElement {
 	}
 
 	get _isTooltipVisible(): boolean {
-		if (!this._tooltipsOpen) {
-			return false;
-		}
-		if (!this._hasCustomTickmarks) {
-			return true;
-		}
-		return this._getCustomLabel(this.value) !== undefined;
+		return this._tooltipsOpen;
 	}
 
 	get _ariaValueText(): string | undefined {
@@ -182,7 +176,7 @@ class Slider extends SliderBase implements IFormInputElement {
 			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue);
 			this.value = newValue;
-			this.tooltipValue = this._getCustomLabel(newValue) || newValue.toFixed(stepPrecision);
+			this.tooltipValue = this._getCustomTooltip(newValue) || newValue.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
@@ -249,7 +243,7 @@ class Slider extends SliderBase implements IFormInputElement {
 	}
 
 	_onTooltipOpen() {
-		const customLabel = this._getCustomLabel(this.value);
+		const customLabel = this._getCustomTooltip(this.value);
 		if (customLabel) {
 			this.tooltipValue = customLabel;
 			return;
@@ -276,7 +270,7 @@ class Slider extends SliderBase implements IFormInputElement {
 
 		this._updateHandleAndProgress(newValue);
 		this.value = newValue;
-		this.tooltipValue = this._getCustomLabel(newValue) || newValue.toFixed(stepPrecision);
+		this.tooltipValue = this._getCustomTooltip(newValue) || newValue.toFixed(stepPrecision);
 		this.updateStateStorageAndFireInputEvent("value");
 	}
 
@@ -334,7 +328,7 @@ class Slider extends SliderBase implements IFormInputElement {
 			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue!);
 			this.value = newValue!;
-			this.tooltipValue = this._getCustomLabel(newValue!) || this.value.toFixed(stepPrecision);
+			this.tooltipValue = this._getCustomTooltip(newValue!) || this.value.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
