@@ -122,6 +122,25 @@ class TableRow extends TableRowBase<TableCell> {
 	@property({ type: Boolean })
 	movable = false;
 
+	/**
+	 * Defines whether the row is a placeholder for data that is not available yet.
+	 *
+	 * The cell content is hidden and row activation is disabled while loading.
+	 * Keep the cells of the row while it is loading, their content can be empty.
+	 * Once the data is available, remove the property.
+	 *
+	 * **Note:** When used with the `ui5-table-virtualizer`, the height of loading rows matches the estimated row height,
+	 * and their height is not taken into account for the row height estimation.
+	 *
+	 * **Note:** The `loading` property is in an experimental state and is a subject to change.
+	 *
+	 * @default false
+	 * @since 2.30.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
 	@query("#popin-cell")
 	_popinCell?: TableCell;
 
@@ -131,6 +150,7 @@ class TableRow extends TableRowBase<TableCell> {
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
+		toggleAttribute(this, "aria-busy", this.loading, "true");
 	}
 
 	async _onpointerdown(e: PointerEvent) {
@@ -144,6 +164,10 @@ class TableRow extends TableRowBase<TableCell> {
 	}
 
 	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
+		if (this.loading) {
+			return;
+		}
+
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
 			this._onclick();
@@ -157,7 +181,7 @@ class TableRow extends TableRowBase<TableCell> {
 	}
 
 	_onclick() {
-		if (this === getActiveElement() && !(this._isSelectable && !this._hasSelector) && (this.interactive || this._isNavigable)) {
+		if (!this.loading && this === getActiveElement() && !(this._isSelectable && !this._hasSelector) && (this.interactive || this._isNavigable)) {
 			this._table?._onRowClick(this);
 		}
 	}
@@ -176,7 +200,7 @@ class TableRow extends TableRowBase<TableCell> {
 	}
 
 	get _isInteractive() {
-		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
+		return !this.loading && (this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable);
 	}
 
 	get _navigationAction() {

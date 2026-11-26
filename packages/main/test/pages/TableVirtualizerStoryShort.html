@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<title>A million rows, a small window - the table virtualizer in three minutes</title>
+	<meta name="description" content="A three-minute animated introduction to table virtualization, variable heights and smooth scrolling. Works offline.">
+	<style>
+		:root {
+			--blue: #0070f2; --blue-soft: #e5f0ff; --navy: #12233a; --ink: #1d2d3e;
+			--muted: #556b82; --bg: #f5f6f7; --card: #fff; --line: #d5dadd;
+			--green: #1f8a4c; --green-soft: #e3f6ea; --red: #d20a3c; --red-soft: #ffe8ee;
+			--purple: #7247d6; --purple-soft: #f0eaff; --orange: #c35500;
+			--radius: 14px; --shadow: 0 6px 24px #12233a14;
+			--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+			--sans: "72", "72full", system-ui, -apple-system, "Segoe UI", sans-serif;
+			color-scheme: light;
+		}
+		* { box-sizing: border-box; }
+		html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+		body { margin: 0; background: var(--bg); color: var(--ink); font: clamp(1rem, 1.35vw, 1.3rem)/1.5 var(--sans); }
+		h1, h2, h3, p { margin: 0 0 .7em; }
+		h1, h2 { line-height: 1.1; letter-spacing: -.025em; }
+		h1 { font-size: clamp(2.6rem, 4.5vw, 5rem); }
+		h2 { font-size: clamp(2rem, 3.4vw, 3.8rem); }
+		h3 { font-size: 1em; }
+		a { color: var(--blue); }
+		button, a { touch-action: manipulation; }
+		button { font: inherit; border: 1px solid var(--line); background: white; color: var(--ink); border-radius: 9px; padding: .4em .75em; cursor: pointer; }
+		button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+		code { font: .85em var(--mono); overflow-wrap: anywhere; }
+		.slide { min-height: 100vh; min-height: 100dvh; padding: 64px clamp(20px, 5vw, 80px); display: flex; align-items: center; scroll-snap-align: start; }
+		.slide:nth-of-type(even):not(.dark) { background: #eef1f4; }
+		.dark { background: radial-gradient(ellipse at 90% 20%, #1b4b8f, var(--navy) 60%, #0b1626); color: white; }
+		.cols { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(24px, 4vw, 60px); align-items: center; width: 100%; max-width: 1500px; margin: auto; }
+		.kicker { font-size: .8em; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--blue); }
+		.lead { font-size: 1.15em; color: var(--muted); }
+		.dark .kicker { color: #7fb6ff; }
+		.dark .lead, .dark .small { color: #c5d4e6; }
+		.dark .stage .small { color: var(--muted); }
+		.takeaway { padding: 1em 1.1em; border-left: 5px solid var(--blue); border-radius: 0 10px 10px 0; background: var(--blue-soft); font-weight: 700; }
+		.dark .takeaway { background: #ffffff12; border-color: #7fb6ff; }
+		.small { font-size: .78em; color: var(--muted); }
+		.stage { position: relative; height: clamp(400px, 66vh, 640px); background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; padding: 22px; gap: 16px; }
+		.stage > * { flex-shrink: 0; }
+		.replay { position: absolute; bottom: 12px; right: 12px; z-index: 3; font-size: 13px; }
+		.stage-label { font-weight: 700; font-size: .9em; padding-right: 50px; }
+		.readout { background: var(--blue-soft); padding: 10px 14px; border-radius: 10px; font-weight: 700; font-variant-numeric: tabular-nums; font-size: .9em; }
+		.readout.purple { background: var(--purple-soft); color: var(--purple); }
+		.visual { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+		.row { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: white; border-bottom: 1px solid var(--line); font-size: 16px; }
+		.row b { flex: 1; }
+		.row small { color: var(--muted); font: 12px var(--mono); }
+		.row i { display: block; height: 8px; background: #dfe3e8; border-radius: 6px; }
+		.phone { position: relative; overflow: hidden; border: 3px solid #8da3ba; border-radius: 15px; background: #f5f6f7; min-width: 0; }
+		.phone .row { font-size: clamp(12px, 1.2vw, 17px); }
+		.phone-title { position: relative; z-index: 2; padding: 10px; background: var(--navy); color: white; text-align: center; font-size: 14px; font-weight: 700; }
+		.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+		.good { color: var(--green); }
+		.bad { color: var(--red); }
+		.marker { position: absolute; left: 0; right: 0; border-top: 3px dashed var(--green); z-index: 2; pointer-events: none; }
+		.marker span { position: absolute; right: 3px; bottom: 4px; background: white; color: var(--green); font-size: 12px; padding: 2px 5px; }
+		.skeleton { display: block; padding: 14px; }
+		.skeleton::before, .skeleton::after { content: ""; display: block; height: 12px; margin: 4px 0; width: 100%; border-radius: 6px; background: #dfe3e8; animation: pulse 1.2s ease-in-out infinite alternate; }
+		.skeleton::after { width: 60%; }
+		@keyframes pulse { to { opacity: .45; } }
+		.title-stage { background: #ffffff0a; border-color: #ffffff30; color: white; justify-content: center; }
+		.stream { position: absolute; inset: -60px 0; opacity: .18; transform: rotate(-8deg) scale(1.1); }
+		.stream .row { background: transparent; border-color: #ffffff55; height: 52px; }
+		.hero { position: relative; text-align: center; padding: 12px; background: #12233aee; border-radius: 12px; }
+		.hero strong { font-size: clamp(2.6rem, 5vw, 5.5rem); line-height: 1.2; display: block; font-variant-numeric: tabular-nums; }
+		.hero span { display: block; margin-top: 10px; font-size: 1.05em; }
+		.window-demo { display: grid; grid-template-columns: 80px 1fr; gap: 20px; }
+		.minimap { position: relative; border-radius: 8px; background: repeating-linear-gradient(to bottom, #d5dadd 0 2px, #eef1f4 2px 5px); }
+		.minimap-window { position: absolute; width: 100%; height: 40px; border: 3px solid var(--blue); background: #0070f244; }
+		.recycled .row { height: 44px; border-left: 7px solid var(--blue); }
+		.height-list .row { align-items: start; border-left: 6px solid var(--green); }
+		.height-list .row b { max-width: 40%; }
+		.height-list .row span { flex: 1; padding-top: 5px; }
+		.height-list i { margin: 6px 0; }
+		.guess-list .row { height: 44px; border: 1px dashed #8da3ba; background: repeating-linear-gradient(135deg, #eef1f4 0 8px, white 8px 16px); }
+		.guess-list .row.measured { border: 1px solid var(--green); background: var(--green-soft); }
+		.scan { position: absolute; inset: 0 0 auto; height: 150px; border: 3px solid var(--blue); box-shadow: 0 0 0 1000px #12233a12; pointer-events: none; }
+		.math { display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+		.bars { display: flex; gap: 4px; height: 110px; align-items: end; }
+		.bar { flex: 1; background: #d5dadd; position: relative; min-width: 0; border-radius: 5px 5px 0 0; }
+		.bar span { position: absolute; bottom: 3px; width: 100%; text-align: center; font: 11px var(--mono); }
+		.bar.on { background: var(--blue); color: white; }
+		.tree { display: grid; grid-template-columns: 8fr 4fr 1fr; gap: 6px; }
+		.tree span { padding: 14px 4px; border: 2px solid var(--line); text-align: center; font-size: 14px; border-radius: 7px; }
+		.tree span.on { background: var(--green-soft); border-color: var(--green); }
+		.math-result { font-size: clamp(22px, 2.7vw, 36px); text-align: center; font-weight: 700; }
+		.anchor-pair { padding-bottom: 36px; }
+		.anchor-track { position: relative; margin-top: -26px; }
+		.anchor-track .loading-row { height: 90px; }
+		.reading { background: var(--green-soft); color: var(--green); height: 58px; font-weight: 700; }
+		.result-tag { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 4px; background: white; text-align: center; font-weight: 700; font-size: 14px; z-index: 2; }
+		.fling-lane { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: 8px; }
+		.fling-lane .phone { flex: 1; min-height: 0; }
+		.graph { flex-shrink: 0; width: 100%; height: 65px; background: #eef1f4; border-radius: 8px; }
+		.graph polyline { fill: none; stroke: var(--green); stroke-width: 3; }
+		.graph.bad polyline { stroke: var(--red); }
+		.block-table { display: grid; grid-template-columns: 1.1fr 2fr 1fr; transform: translateY(0); }
+		.block-table div { padding: 12px 8px; border: 1px solid var(--line); font-size: 14px; background: white; }
+		.scale-diagram { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+		.ruler { height: 110px; position: relative; border-left: 8px solid var(--purple); background: repeating-linear-gradient(to bottom, transparent 0 19px, #d5dadd 19px 20px); padding-left: 12px; font-size: 14px; }
+		.thumb { position: absolute; width: 18px; height: 14px; left: -13px; top: 40px; background: var(--blue); border: 2px solid white; border-radius: 4px; }
+		.steps { padding-left: 1.3em; }
+		.steps li { padding: .3em; margin: .25em 0; border-radius: 6px; }
+		.steps li.on { background: var(--blue-soft); color: var(--blue); font-weight: 700; }
+		.contract .row { height: 54px; }
+		.contract .row.skeleton { height: 70px; }
+		.qr-box { display: flex; justify-content: center; gap: 24px; align-items: center; }
+		#qr { width: 170px; max-width: 45%; background: white; padding: 10px; border-radius: 10px; }
+		.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+		.kpi { border-radius: 12px; background: var(--blue-soft); padding: 16px; text-align: center; }
+		.kpi b { display: block; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.3; }
+		.kpi span { font-size: .75em; }
+		#progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--blue); z-index: 10; }
+		#nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #ffffffed; color: var(--ink); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); z-index: 10; font-size: 14px; white-space: nowrap; }
+		#nav-count { min-width: 46px; text-align: center; }
+		#notes { position: fixed; bottom: 75px; left: 20px; right: 20px; max-width: 800px; margin: auto; padding: 18px 22px; background: #12233af5; color: white; border-radius: 12px; z-index: 9; box-shadow: var(--shadow); font-size: 16px; }
+		#notes[hidden] { display: none; }
+		#notes-time { color: #7fb6ff; font-weight: 700; }
+		@media (max-width: 760px) {
+			.cols { grid-template-columns: 1fr; gap: 22px; }
+			.slide { padding: 50px 20px 75px; }
+			.stage { height: 440px; padding: 16px; gap: 10px; }
+			.pair { gap: 10px; }
+			.row { padding: 8px; }
+			.window-demo { grid-template-columns: 46px 1fr; gap: 12px; }
+			.tree span { font-size: 12px; }
+			.phone-title { font-size: 12px; }
+			.qr-box { gap: 14px; }
+			#notes { max-height: 50vh; overflow: auto; }
+			#nav { top: 8px; bottom: auto; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			html { scroll-behavior: auto; }
+			*, *::before, *::after { animation: none !important; transition: none !important; }
+		}
+	</style>
+</head>
+<body>
+	<div id="progress"></div>
+	<main>
+		<section class="slide dark" id="s-title" data-time="0:00 - 0:18" data-notes="Imagine a million orders in one table. Some are one line; others contain a whole delivery story. Creating every row would overwhelm the page. Our new table virtualizer keeps a tiny working window instead. The goal: scrolling that feels as natural as a short list.">
+			<div class="cols">
+				<div><p class="kicker">The new table virtualizer / 3 minutes</p><h1>A million rows.<br>A small window.</h1><p class="lead">Any row height. Built for smooth, native scrolling.</p><p class="takeaway">A big data set does not need a big page.</p><p class="small">Arrow keys to advance. Notes contains the 3-minute speaking script.</p></div>
+				<div class="stage title-stage" role="group" aria-label="A stream of orders behind a count of one million data rows"><div class="stream" aria-hidden="true"></div><div class="hero"><strong id="million">1,000,000</strong><span>rows in the data</span><strong>120 FPS</strong><span>target on a 120 Hz display</span></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-window" data-time="0:18 - 0:38" data-notes="This is virtualization: the blue window is what you can see, plus a small buffer. Watch the colored element labels. Those are the same page elements showing different orders as we scroll, even when we jump far away. The data can grow without creating a million elements.">
+			<div class="cols">
+				<div><p class="kicker">1 / A small working window</p><h2>Only build what you can see.</h2><p class="lead">Keep the visible rows and a little extra. Reuse elements as the window moves.</p><p class="takeaway">Data: 1,000,000 rows.<br>Page: a handful of row elements.</p><p class="small">Illustration: 12 reusable slots. The real count depends on row heights, screen size and the buffer.</p></div>
+				<div class="stage"><div class="stage-label">Same colored elements. New order numbers.</div><div class="visual window-demo"><div class="minimap"><div class="minimap-window"></div></div><div class="phone recycled"></div></div><div class="readout" id="window-status">12 row elements / 0 rebindings</div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-heights" data-time="0:38 - 0:53" data-notes="Equal-height rows are easy: multiply the row number by its height. Real tables are not like that. Text wraps, details expand, and content arrives later. One fixed height points to the wrong order. We need a map of where rows really start, without drawing them all.">
+			<div class="cols">
+				<div><p class="kicker">2 / The hard part</p><h2>Real rows are not all the same height.</h2><p class="lead">A short order and a long delivery note take different amounts of space.</p><p class="takeaway">One fixed height gives the wrong place.</p></div>
+				<div class="stage"><div class="stage-label">Same scroll distance. Different answers.</div><div class="visual phone"><div class="height-list"></div><div class="marker" style="top: 34px"><span>Actual row at the top</span></div></div><div class="readout" id="height-status"></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-guess" data-time="0:53 - 1:13" data-notes="We start with a sensible guess for unseen rows. When a row appears, the browser tells us its real height. Green means measured. The guess improves as we learn, but only at milestones: twice as many measured rows. That avoids constantly disturbing the scroll bar.">
+			<div class="cols">
+				<div><p class="kicker">3 / Learn as you go</p><h2>Guess the unseen.<br>Measure the visible.</h2><p class="lead">The browser measures real rows. Those measurements improve the estimate for the rest.</p><p class="takeaway">A better map, without drawing the whole table.</p><p class="small">Update the guess when the measured count doubles and the average changes by at least 1%.</p></div>
+				<div class="stage"><div class="stage-label">Striped = estimated / green = measured</div><div class="visual phone"><div class="guess-list"></div><div class="scan"></div></div><div class="readout" id="guess-status"></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-math" data-time="1:13 - 1:30" data-notes="How do we find a distant row quickly? Instead of adding every height again, we keep reusable subtotals. Here, thirteen additions become just three. The same idea scales to a million rows in about twenty steps. Better guesses are cheap too. You do not need to implement any of this.">
+			<div class="cols">
+				<div><p class="kicker">4 / Smart bookkeeping</p><h2>Take shortcuts through the height map.</h2><p class="lead">Reuse subtotals instead of adding every row again.</p><p class="takeaway">A million rows.<br>At most about 20 tree steps per lookup.</p><p class="small">Two Fenwick trees: measured heights + measured count. One shared guess. 17 bytes per row.</p></div>
+				<div class="stage"><div class="stage-label">Where does row 14 start?</div><div class="visual math"><div><p class="small">Add the preceding 13 heights one by one</p><div class="bars"></div></div><div><p class="small">Or use 3 stored subtotals</p><div class="tree"><span>Rows 1-8</span><span>9-12</span><span>13</span></div></div><div class="math-result" id="math-status">13 additions vs 3 subtotals</div></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-anchor" data-time="1:30 - 1:50" data-notes="Now an order just above the one you are reading gets taller. On the left, your place jumps. On the right, we keep the reading row at exactly the same spot. The extra space grows upward instead. This is anchoring: protect the reader's place while the map changes.">
+			<div class="cols">
+				<div><p class="kicker">5 / Protect the reader</p><h2>Keep your place when content grows.</h2><p class="lead">Late content above you should not push away the order you are reading.</p><p class="takeaway">The data changes. Your reading position stays.</p></div>
+				<div class="stage"><div class="stage-label">The partly visible order above grows by 80 px</div><div class="visual pair anchor-pair"><div class="phone" data-anchor="without"><div class="phone-title">Without anchoring</div><div class="anchor-track"></div><div class="marker" style="top: 105px"></div><div class="result-tag bad">Jumped 0 px</div></div><div class="phone" data-anchor="with"><div class="phone-title">With anchoring</div><div class="anchor-track"></div><div class="marker" style="top: 105px"></div><div class="result-tag good">Moved 0 px</div></div></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-drift" data-time="1:50 - 2:10" data-notes="There is a catch: changing the scroll position during a fling can stop the browser's glide. Instead, we temporarily offset the content. The finger's motion stays native. Once scrolling ends, we hand that correction back to the scroll position. No jump, and no fighting the browser.">
+			<div class="cols">
+				<div><p class="kicker">6 / Keep the glide</p><h2>Never fight a scrolling finger.</h2><p class="lead">Move the content temporarily. Settle the correction when native scrolling ends.</p><p class="takeaway">Keep the browser's natural momentum.</p><p class="small">Concept animation, not a live browser benchmark. Reconciliation uses the native <code>scrollend</code> event.</p></div>
+				<div class="stage"><div class="readout purple" id="drift-status">A native fling begins</div><div class="visual pair fling-pair"><div class="fling-lane"><div class="phone"><div class="phone-title">Change scrollTop now</div><div class="fling-track"></div></div><svg class="graph bad" viewBox="0 0 200 60" role="img" aria-label="Scroll speed drops suddenly"><polyline /></svg></div><div class="fling-lane"><div class="phone"><div class="phone-title">Offset content instead</div><div class="fling-track"></div></div><svg class="graph" viewBox="0 0 200 60" role="img" aria-label="Scroll speed slows naturally"><polyline /></svg></div></div><p class="small">Graphs: scroll speed over time</p><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-scale" data-time="2:10 - 2:26" data-notes="We also move the visible rows as one block, so the columns stay aligned. And a huge data set can exceed the browser's physical height limit. We fit its scroll bar into a safe range. Dragging it jumps proportionally; wheel and touch scrolling stay precise nearby.">
+			<div class="cols">
+				<div><p class="kicker">7 / Make it scale</p><h2>One moving block.<br>A bounded scroll area.</h2><p class="lead">Keep columns aligned, even when the data is taller than the browser can represent.</p><p class="takeaway">Big jumps with the scrollbar.<br>Precise movement with wheel and touch.</p></div>
+				<div class="stage"><div class="readout" id="block-status">One transform moves the whole grid</div><div class="visual phone"><div class="block-table"></div></div><div class="scale-diagram"><div class="ruler">Data<br><b>150,000,000 px</b><i class="thumb"></i></div><div class="ruler">Scroll area<br><b>16,000,000 px</b><i class="thumb"></i></div></div><p class="small" id="scale-status">Scrollbar drag: proportional mapping</p><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide" id="s-app" data-time="2:26 - 2:46" data-notes="The application still owns its rows, in any framework. It listens for the requested range, renders those rows with their positions, and marks missing data as loading. The table supplies the placeholder lines. Height calculations, scrolling and keyboard focus are handled for you. Reuse rows however your framework prefers.">
+			<div class="cols">
+				<div><p class="kicker">8 / A small app contract</p><h2>Your part:<br>three things.</h2><ol class="steps"><li>Listen for the requested range.</li><li>Render rows with their positions.</li><li>Mark missing data as loading.</li></ol><p class="takeaway">No height math. No custom scroll physics. No placeholder design.</p><p class="small">The app owns the rows. Keyed, pooled or positional reuse all work.</p></div>
+				<div class="stage"><div class="readout" id="range-status"><code>range-change { first: 120, last: 128 }</code></div><div class="visual phone contract"></div><p class="small">Positions 120-127; last is exclusive.</p><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+		<section class="slide dark" id="s-thanks" data-time="2:46 - 3:00" data-notes="The result is a big table that behaves like a small one, even with changing row heights. The prototype has reached 120 frames per second in our desktop runs, and kept keyboard navigation intact. Please try it, challenge it, and tell us what breaks. Thank you!">
+			<div class="cols">
+				<div><p class="kicker">Thank you</p><h2>Try it.<br>Break it.<br>Tell us.</h2><p class="lead">Huge data. Variable heights. A small working window.</p><p class="takeaway">What would you put in this table?</p><p class="small">Prototype observations, not universal guarantees. Real-device validation is still needed.</p></div>
+				<div class="stage"><div class="kpis"><div class="kpi"><b data-count="120">120</b><span>FPS in prior 120 Hz desktop runs</span></div><div class="kpi"><b data-count="1000000">1,000,000</b><span>rows exercised in the demo</span></div><div class="kpi"><b>0</b><span>lost keys in a 58-press delayed-render test</span></div><div class="kpi"><b>0</b><span>blank frames in selected settled runs</span></div></div><div class="visual qr-box"><!-- REPLACE QR: this pattern is decorative, not a scannable QR code. Replace it and the link with your public demo URL before presenting. --><svg id="qr" viewBox="0 0 29 29" role="img" aria-label="QR placeholder - replace with a real QR code before presenting"></svg><div><a id="qr-link" href="TableVirtualizerDynamicHeight.html">Open the live demo</a><p class="small">QR placeholder<br>Replace before the talk.</p><a class="small" href="TableVirtualizerStory.html">Full technical story</a></div></div><button class="replay" type="button">Replay</button></div>
+			</div>
+		</section>
+	</main>
+	<aside id="notes" aria-label="Presenter notes" hidden><p id="notes-time"></p><div id="notes-text"></div></aside>
+	<nav id="nav" aria-label="Slides"><span id="nav-count">1 / 10</span><button id="nav-prev" type="button" aria-label="Previous slide">&uarr;</button><button id="nav-next" type="button" aria-label="Next slide">&darr;</button><button id="notes-toggle" type="button" aria-expanded="false" aria-controls="notes">Notes</button></nav>
+	<script>
+		(() => {
+			"use strict";
+			const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+			const CANCEL = Symbol("cancel");
+			const $ = (selector, root = document) => root.querySelector(selector);
+			const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+			const fmt = value => Math.round(value).toLocaleString("en-US");
+			const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+			const rand = seed => { const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+			const colors = ["#0070f2", "#7247d6", "#1f8a4c", "#c35500", "#d20a3c", "#0a8a8a"];
+			const bars = '<i style="width:90%"></i><i style="width:60%"></i>';
+			function rows(count, start = 0) {
+				return Array.from({ length: count }, (_, i) => `<div class="row"><b>Order ${fmt(start + i)}</b><small>el. ${i + 1}</small></div>`).join("");
+			}
+			class Run {
+				alive = true;
+				stop() { this.alive = false; }
+				check() { if (!this.alive) { throw CANCEL; } }
+				async sleep(ms) {
+					this.check();
+					if (!reduced) { await new Promise(resolve => setTimeout(resolve, ms)); }
+					this.check();
+				}
+				async frame() {
+					this.check();
+					const time = await new Promise(resolve => requestAnimationFrame(resolve));
+					this.check(); return time;
+				}
+				async tween(duration, update) {
+					this.check();
+					if (reduced) { update(1); return; }
+					const start = performance.now();
+					for (;;) {
+						const t = clamp(((await this.frame()) - start) / duration);
+						update(t);
+						if (t >= 1) { return; }
+					}
+				}
+				async again(pause = 1600) {
+					if (reduced) { return false; }
+					await this.sleep(pause); return true;
+				}
+			}
+			const scenes = new Map();
+			function scene(id, play, setup) { scenes.set(id, { play, setup, run: undefined, ready: false }); }
+			function startScene(id) {
+				const entry = scenes.get(id);
+				entry.run?.stop();
+				if (!entry.ready) { entry.setup?.(); entry.ready = true; }
+				entry.run = new Run();
+				entry.play(entry.run).catch(error => { if (error !== CANCEL) { console.error(error); } });
+			}
+			function stopScene(id) { const entry = scenes.get(id); entry.run?.stop(); entry.run = undefined; }
+
+			scene("s-title", async run => {
+				do {
+					await run.tween(2500, t => {
+						$("#million").textContent = fmt(1000000 * t);
+						$(".stream").style.translate = `0 ${-100 * t}px`;
+					});
+				} while (await run.again(5000));
+			}, () => { $(".stream").innerHTML = rows(20); });
+
+			scene("s-window", async run => {
+				const elements = $$(".recycled .row");
+				let reused = 0, previous = -1;
+				const show = first => {
+					if (first === previous) { return; }
+					previous = first; reused += elements.length;
+					elements.forEach((row, i) => { $("b", row).firstChild.data = `Order ${fmt(first + i)}`; });
+					$(".minimap-window").style.top = `${first / 1000000 * 85}%`;
+					$("#window-status").textContent = `12 elements / ${fmt(reused)} rebindings / row ${fmt(first)}`;
+				};
+				do {
+					await run.tween(2800, t => show(Math.floor(t * 8)));
+					await run.sleep(700); show(700000);
+					await run.tween(2800, t => show(700000 + Math.floor(t * 8)));
+				} while (await run.again());
+			}, () => {
+				$(".recycled").innerHTML = rows(12);
+				$$(".recycled .row").forEach((row, i) => { row.style.borderLeftColor = colors[i % colors.length]; });
+			});
+
+			const heights = Array.from({ length: 24 }, (_, i) => 44 + Math.floor(rand(i + 2) * 95));
+			scene("s-heights", async run => {
+				do {
+					await run.tween(6500, t => {
+						const offset = Math.round(t * 850);
+						let sum = 0, index = 0;
+						while (sum + heights[index] <= offset) { sum += heights[index++]; }
+						$(".height-list").style.transform = `translateY(${-offset + 36}px)`;
+						const fixed = Math.floor(offset / 45);
+						$("#height-status").innerHTML = `<span class="bad">Fixed guess: row ${fixed + 1}</span><br><span class="good">Actual: row ${index + 1}</span> / off by ${fixed - index} rows`;
+					});
+				} while (await run.again());
+			}, () => {
+				$(".height-list").innerHTML = heights.map((height, i) => `<div class="row" style="height:${height}px"><b>Row ${i + 1}</b><span>${bars}</span></div>`).join("");
+			});
+
+			scene("s-guess", async run => {
+				const elements = $$(".guess-list .row");
+				do {
+					let sum = 0, guess = 44, nextUpdate = 1;
+					elements.forEach(row => { row.classList.remove("measured"); row.style.height = "44px"; });
+					for (let count = 1; count <= 16; count++) {
+						const index = count - 1;
+						sum += heights[index];
+						elements[index].classList.add("measured");
+						if (count === nextUpdate) {
+							const average = sum / count;
+							if (Math.abs(average - guess) / guess >= .01) { guess = average; }
+							nextUpdate *= 2;
+						}
+						elements.forEach((row, i) => { row.style.height = `${i < count ? heights[i] : guess}px`; });
+						const offset = Math.max(0, sum - 150);
+						$(".guess-list").style.transform = `translateY(${-offset}px)`;
+						$("#guess-status").textContent = `${count} measured / guess ${fmt(guess)} px / next milestone ${nextUpdate}`;
+						await run.sleep(380);
+					}
+				} while (await run.again());
+			}, () => { $(".guess-list").innerHTML = rows(24, 1); });
+
+			scene("s-math", async run => {
+				const elements = $$(".bar"), totals = $$(".tree span");
+				do {
+					elements.forEach(bar => bar.classList.remove("on")); totals.forEach(box => box.classList.remove("on"));
+					for (let i = 0; i < 13; i++) {
+						elements[i].classList.add("on");
+						$("#math-status").textContent = `${i + 1} additions...`;
+						await run.sleep(110);
+					}
+					for (const box of totals.toReversed()) { box.classList.add("on"); await run.sleep(450); }
+					$("#math-status").textContent = "13 additions vs 3 subtotals";
+					await run.sleep(1800);
+					$("#math-status").textContent = "1,000,000 rows / at most 20 steps";
+				} while (await run.again(2400));
+			}, () => { $(".bars").innerHTML = Array.from({ length: 16 }, (_, i) => `<div class="bar" style="height:${35 + rand(i) * 65}%"><span>${i + 1}</span></div>`).join(""); });
+
+			scene("s-anchor", async run => {
+				const tracks = $$(".anchor-track"), loading = $$(".loading-row");
+				do {
+					tracks.forEach(track => { track.style.transform = "translateY(0)"; });
+					loading.forEach(row => { row.classList.add("skeleton"); row.style.height = "90px"; row.textContent = ""; });
+					$("[data-anchor=without] .result-tag").textContent = "Jumped 0 px";
+					await run.sleep(1000);
+					loading.forEach(row => { row.classList.remove("skeleton"); row.textContent = "Delivery note arrived. The order above needs more space."; });
+					await run.tween(1600, t => {
+						loading.forEach(row => { row.style.height = `${90 + 80 * t}px`; });
+						tracks[1].style.transform = `translateY(${-80 * t}px)`;
+						$("[data-anchor=without] .result-tag").textContent = `Jumped ${Math.round(80 * t)} px`;
+					});
+				} while (await run.again(2600));
+			}, () => { $$(".anchor-track").forEach(track => { track.innerHTML = '<div class="row loading-row skeleton"></div><div class="row reading">You are reading this</div>' + rows(8, 42); }); });
+
+			scene("s-drift", async run => {
+				const tracks = $$(".fling-track"), graphs = $$(".graph polyline");
+				do {
+					const points = [[], []];
+					await run.tween(5200, t => {
+						const changed = t >= .38;
+						tracks.forEach((track, i) => {
+							const time = i === 0 ? Math.min(t, .38) : t;
+							track.style.transform = `translateY(${-650 * (1 - (1 - time) ** 3)}px)`;
+							points[i].push(`${t * 200},${55 - (changed && i === 0 ? 0 : (1 - t) ** 2 * 50)}`);
+							graphs[i].setAttribute("points", points[i].join(" "));
+						});
+						$("#drift-status").textContent = !changed ? "A native fling begins" : t < .95 ? "Row above grew: 120 px held as an offset" : "scrollend: correction handed back / offset 0";
+					});
+					if (reduced) {
+						graphs[0].setAttribute("points", "0,5 40,23 76,36 77,55 200,55");
+						graphs[1].setAttribute("points", "0,5 40,23 76,36 120,47 160,53 200,55");
+					}
+				} while (await run.again());
+			}, () => { $$(".fling-track").forEach(track => { track.innerHTML = rows(28, 100); }); });
+
+			scene("s-scale", async run => {
+				do {
+					await run.tween(3000, t => {
+						$(".block-table").style.transform = `translateY(${-90 * t}px)`;
+						$("#block-status").textContent = `One grid / translateY(-${Math.round(90 * t)}px)`;
+						$$(".thumb").forEach(thumb => { thumb.style.top = `${20 + 55 * t}px`; });
+						$("#scale-status").textContent = "Scrollbar drag: proportional positions";
+					});
+					await run.sleep(900);
+					await run.tween(2200, t => {
+						$$(".thumb").forEach(thumb => { thumb.style.top = `${75 + 10 * t}px`; });
+						$("#scale-status").textContent = "Wheel / touch: equal local pixel movement (illustration)";
+					});
+				} while (await run.again());
+			}, () => { $(".block-table").innerHTML = Array.from({ length: 12 }, (_, i) => `<div>SO-${100 + i}</div><div>Delivery ${i + 1}</div><div>Ready</div>`).join(""); });
+
+			scene("s-app", async run => {
+				const elements = $$(".contract .row"), steps = $$(".steps li");
+				do {
+					steps.forEach((step, i) => step.classList.toggle("on", i === 0));
+					elements.forEach(row => { row.style.visibility = "hidden"; row.classList.remove("skeleton"); });
+					await run.sleep(800);
+					steps.forEach((step, i) => step.classList.toggle("on", i === 1));
+					elements.forEach((row, i) => { row.style.visibility = "visible"; row.innerHTML = `<b>Order ${120 + i}</b><small>position=${120 + i}</small>`; });
+					await run.sleep(1200);
+					steps.forEach((step, i) => step.classList.toggle("on", i === 2));
+					elements.slice(2, 5).forEach(row => { row.classList.add("skeleton"); row.textContent = ""; });
+					await run.sleep(1800);
+					elements.slice(2, 5).forEach((row, i) => { row.classList.remove("skeleton"); row.innerHTML = `<b>Order ${122 + i}</b><small>data arrived</small>`; });
+				} while (await run.again(2200));
+			}, () => { $(".contract").innerHTML = rows(8, 120); });
+
+			scene("s-thanks", async run => {
+				do { await run.tween(1200, t => $$("[data-count]").forEach(number => { number.textContent = fmt(Number(number.dataset.count) * t); })); } while (await run.again(6000));
+			});
+			function drawQrPlaceholder() {
+				const cells = [], size = 29;
+				const finder = (x, y) => {
+					if (x > 7 || y > 7) { return undefined; }
+					if (x === 7 || y === 7) { return false; }
+					return x === 0 || y === 0 || x === 6 || y === 6 || (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+				};
+				for (let y = 0; y < size; y++) {
+					for (let x = 0; x < size; x++) {
+						const dark = finder(x, y) ?? finder(size - 1 - x, y) ?? finder(x, size - 1 - y) ?? rand(x * 31 + y * 17) > .5;
+						if (dark) { cells.push(`M${x} ${y}h1v1h-1z`); }
+					}
+				}
+				$("#qr").innerHTML = `<rect width="29" height="29" fill="white"/><path fill="#12233a" d="${cells.join("")}"/>`;
+			}
+
+			const slides = $$(".slide"), visibility = new Map();
+			let current = 0;
+			function setCurrent(index) {
+				current = index;
+				$("#nav-count").textContent = `${index + 1} / ${slides.length}`;
+				$("#progress").style.width = `${index / (slides.length - 1) * 100}%`;
+				$("#notes-time").textContent = slides[index].dataset.time;
+				$("#notes-text").textContent = slides[index].dataset.notes;
+			}
+			function go(index) {
+				const target = clamp(index, 0, slides.length - 1);
+				setCurrent(target);
+				slides[target].scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+			}
+			const observer = new IntersectionObserver(entries => {
+				entries.forEach(entry => {
+					const visible = entry.intersectionRect.height / Math.max(1, Math.min(innerHeight, entry.boundingClientRect.height));
+					visibility.set(entry.target, visible);
+					if (visible >= .5 && !scenes.get(entry.target.id).run) { startScene(entry.target.id); }
+					else if (visible < .15) { stopScene(entry.target.id); }
+				});
+				let best = current, bestVisible = -1;
+				slides.forEach((slide, index) => { const visible = visibility.get(slide) ?? 0; if (visible > bestVisible) { best = index; bestVisible = visible; } });
+				setCurrent(best);
+			}, { threshold: [0, .15, .3, .5, .7, .9, 1] });
+			slides.forEach(slide => observer.observe(slide));
+			document.addEventListener("keydown", event => {
+				if (event.altKey || event.ctrlKey || event.metaKey || event.target.closest?.("input, textarea, select, [contenteditable]")) { return; }
+				if (event.key === " " && event.target.closest?.("button, a")) { return; }
+				const next = ["ArrowRight", "ArrowDown", "PageDown"].includes(event.key) || (event.key === " " && !event.shiftKey);
+				const previous = ["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key) || (event.key === " " && event.shiftKey);
+				if (next || previous) { go(current + (next ? 1 : -1)); }
+				else if (event.key === "Home" || event.key === "End") { go(event.key === "Home" ? 0 : slides.length - 1); }
+				else { return; }
+				event.preventDefault();
+			});
+			$("#nav-prev").addEventListener("click", () => go(current - 1));
+			$("#nav-next").addEventListener("click", () => go(current + 1));
+			$("#notes-toggle").addEventListener("click", () => {
+				$("#notes").hidden = !$("#notes").hidden;
+				$("#notes-toggle").setAttribute("aria-expanded", String(!$("#notes").hidden));
+			});
+			$$(".replay").forEach(button => button.addEventListener("click", () => startScene(button.closest(".slide").id)));
+			drawQrPlaceholder(); setCurrent(0);
+		})();
+	</script>
+</body>
+</html>
