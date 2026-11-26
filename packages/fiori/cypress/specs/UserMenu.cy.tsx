@@ -11,6 +11,8 @@ import {
 	USER_MENU_MANAGE_ACCOUNT_BUTTON_TXT,
 	USER_MENU_OTHER_ACCOUNT_BUTTON_TXT,
 	USER_MENU_CURRENT_INFORMATION_TXT,
+	USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT,
+	USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
@@ -294,6 +296,81 @@ describe("Initial rendering", () => {
 		cy.get("@responsivePopover").find("[ui5-panel]").should("have.attr", "accessible-name", `${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
 
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
+	});
+
+	it("tests selected account accessible name", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1"
+						subtitleText="alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE"
+						selected={true}>
+					</UserMenuAccount>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 2"
+						subtitleText="test.alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+		cy.get("@responsivePopover").find(".ui5-user-menu-other-accounts [ui5-li-custom]").as("accountItems");
+		cy.get("@accountItems").should("have.length", 2);
+
+		// selected account accessible name includes the title and the "Selected" status text
+		cy.get("@accountItems").eq(0).shadow().find(".ui5-hidden-text").first().invoke("text").then(text => {
+			expect(text).to.contain("Alain Chevalier 1");
+			expect(text).to.contain(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT.defaultText);
+		});
+
+		// non-selected account accessible name does NOT include the "Selected" status text
+		cy.get("@accountItems").eq(1).shadow().find(".ui5-hidden-text").first().invoke("text").then(text => {
+			expect(text).to.contain("Alain Chevalier 2");
+			expect(text).not.to.contain(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT.defaultText);
+		});
+	});
+
+	it("tests selected account tooltip on the list item", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1"
+						subtitleText="alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE"
+						selected={true}>
+					</UserMenuAccount>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 2"
+						subtitleText="test.alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+		cy.get("@responsivePopover").find(".ui5-user-menu-other-accounts [ui5-li-custom]").as("accountItems");
+
+		// selected account list item exposes the "Account selected" tooltip (rendered as title on the li)
+		cy.get("@accountItems").eq(0).should("have.attr", "tooltip", USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT.defaultText);
+		cy.get("@accountItems").eq(0).shadow().find("li").should("have.attr", "title", USER_MENU_POPOVER_ACCOUNT_SELECTED_TOOLTIP_TXT.defaultText);
+
+		// non-selected account list item has no tooltip
+		cy.get("@accountItems").eq(1).should("not.have.attr", "tooltip");
+		cy.get("@accountItems").eq(1).shadow().find("li").should("not.have.attr", "title");
 	});
 
 	it("tests config show-edit-accounts", () => {
