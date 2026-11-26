@@ -541,7 +541,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_loadingDelegate: ComboBoxLazyLoading;
 	// Remembers what triggered the last "load-items" request, so the matching item can be
 	// selected once lazy loading finishes (see _selectItemOnLoadingEnd).
-	_loadItemsTrigger?: "input" | "iconClick" | "arrowDown" | "arrowUp";
+	_loadItemsReason?: LoadItemsReason;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -594,12 +594,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
 			fireLoadItems: reason => {
-				// Track what triggered the load so the correct item can be selected once loading ends.
-				if (reason === "input") {
-					this._loadItemsTrigger = "input";
-				} else if (reason === "open") {
-					this._loadItemsTrigger = "iconClick";
-				}
+				this._loadItemsReason = reason;
 				this.fireDecoratorEvent("load-items", { reason, value: this.value });
 			},
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
@@ -1058,8 +1053,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (this.items.length === 0 && !isOpen) {
-			this._loadItemsTrigger = "arrowDown";
-			this.fireDecoratorEvent("load-items", { reason: "arrowNav", value: this.value });
+			this._loadItemsReason = "navDown";
+			this.fireDecoratorEvent("load-items", { reason: this._loadItemsReason, value: this.value });
 			return;
 		}
 
@@ -1081,8 +1076,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const isOpen = this.open;
 
 		if (this.items.length === 0 && !isOpen) {
-			this._loadItemsTrigger = "arrowUp";
-			this.fireDecoratorEvent("load-items", { reason: "arrowNav", value: this.value });
+			this._loadItemsReason = "navUp";
+			this.fireDecoratorEvent("load-items", { reason: this._loadItemsReason, value: this.value });
 			return;
 		}
 
@@ -1505,19 +1500,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	/**
 	 * Selects the appropriate item once lazy loading finishes, based on what triggered the load:
 	 * - typing (`"input"`): autocompletes and selects the first non-group item matching the typed text
-	 * - arrow icon click / [F4] (`"iconClick"`): shows the loaded items without selecting any
-	 * - [Arrow Down] (`"arrowDown"`): focuses the first item
-	 * - [Arrow Up] (`"arrowUp"`): focuses the last item
+	 * - arrow icon click / [F4] (`"open"`): shows the loaded items without selecting any
+	 * - [Arrow Down] (`"navDown"`): focuses the first item
+	 * - [Arrow Up] (`"navUp"`): focuses the last item
 	 * @private
 	 */
 	_selectItemOnLoadingEnd() {
-		const trigger = this._loadItemsTrigger;
-		this._loadItemsTrigger = undefined;
+		const trigger = this._loadItemsReason;
+		this._loadItemsReason = undefined;
 
-		// Arrow click / F4 and arrow navigation show all loaded items; typing filters by the value.
-		// Refresh _filteredItems from the freshly loaded items - onBeforeRendering skips this while
-		// key navigating (_isKeyNavigation is still true), so _getItems() would otherwise be stale.
-		const showsAllItems = trigger === "iconClick" || trigger === "arrowDown" || trigger === "arrowUp";
+		const showsAllItems = trigger !== "input";
 		this._filteredItems = showsAllItems ? this._filterItems("") : this._filterItems(this.value);
 
 		const visibleItems = this._getItems().filter(item => !item.isGroupItem && item._isVisible);
@@ -1528,8 +1520,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (trigger === "arrowDown" || trigger === "arrowUp") {
-			this._navigateToEdgeItem(trigger === "arrowUp" /* selectLast */);
+		if (trigger === "navUp" || trigger==="navDown") {
+			this._navigateToEdgeItem(trigger === "navUp");
 		} else if (trigger === "input" && this.inner) {
 			// Same behavior as typing without lazy loading - autocomplete and select the match.
 			if (!this.noTypeahead && this.value) {
@@ -1537,7 +1529,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			}
 			this._selectMatchingItem();
 		}
-		// trigger === "iconClick" (arrow icon / F4) or programmatic loading - no selection is performed.
 	}
 
 	/**

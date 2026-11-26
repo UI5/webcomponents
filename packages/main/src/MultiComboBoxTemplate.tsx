@@ -4,9 +4,12 @@ import type MultiComboBox from "./MultiComboBox.js";
 import Tokenizer from "./Tokenizer.js";
 import Token from "./Token.js";
 import Icon from "./Icon.js";
+import BusyIndicator from "./BusyIndicator.js";
 
 export default function MultiComboBoxTemplate(this: MultiComboBox) {
-	return (<>
+	const inlineLoading = this.loading && !this.open && !this._isPhone;
+	return (
+	<BusyIndicator class="ui5-combobox-busy-indicator" active={inlineLoading}>
 		<div class="ui5-multi-combobox-root ui5-input-focusable-element">
 			<span id="ui5-multi-combobox-hiddenText-nMore" class="ui5-hidden-text">{this._tokensCountText}</span>
 
@@ -122,5 +125,5 @@ export default function MultiComboBoxTemplate(this: MultiComboBox) {
 		</div>
 
 		{MultiComboboxPopoverTemplate.call(this)}
-	</>);
+	</BusyIndicator>);
 }

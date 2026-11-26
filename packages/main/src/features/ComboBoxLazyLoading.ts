@@ -1,10 +1,10 @@
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
-export const LOADING_DELAY = 100;
+export const LOADING_DELAY = 50;
 
 type AnnounceState = "Loading" | "Loaded" | "None";
-type LoadItemsReason = "input" | "open" | "arrowNav";
+type LoadItemsReason = "input" | "open" | "navUp" | "navDown";
 
 export interface LoadingDelegateConfig {
 	getItemCount: () => number;
@@ -57,8 +57,6 @@ export default class ComboBoxLazyLoading {
 	}
 
 	// Fires load-items event when the picker is about to open and there are no items yet.
-	// shouldOpenPicker=false: caller will open the picker itself (e.g. arrow click).
-	// shouldOpenPicker=true: app must open the picker when loading starts.
 	fireOnDropdownOpen() {
 		if (!this._config.isOpen() && !this._config.isLoading() && this._config.getItemCount() === 0) {
 			this._config.fireLoadItems("open");
