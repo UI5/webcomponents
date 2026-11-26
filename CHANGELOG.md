@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.7](https://github.com/UI5/webcomponents/compare/v2.16.6...v2.16.7) (2026-11-26)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** fix full-width search overlay overflow ([#14292](https://github.com/UI5/webcomponents/issues/14292)) ([efc5c40](https://github.com/UI5/webcomponents/commit/efc5c40bc4fe71363bf56584b59458c930b89022))
+
+
+
+
+
 ## [2.16.6](https://github.com/UI5/webcomponents/compare/v2.16.5...v2.16.6) (2026-11-06)
 
 
