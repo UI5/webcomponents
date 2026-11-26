@@ -14,6 +14,7 @@ export default function TableRowActionBaseTemplate(this: TableRowActionBase) {
 					<Button
 						icon={this._icon}
 						tooltip={this._text}
+						disabled={this._isDisabled}
 						onClick={this._onActionClick}
 						design={ButtonDesign.Transparent}
 					></Button>

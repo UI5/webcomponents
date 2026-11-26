@@ -50,6 +50,9 @@
 				<ui5-option selected>Scroll</ui5-option>
 				<ui5-option>Button</ui5-option>
 			</ui5-select>
+
+			<ui5-label id="rowActionCountLabel">Row Actions:</ui5-label>
+			<ui5-slider id="rowActionCountSlider" min="0" max="4" step="1" value="2" show-tickmarks show-tooltip accessible-name-ref="rowActionCountLabel" style="width: 120px;"></ui5-slider>
 		</div>
 	</ui5-bar>
 	<ui5-bar design="Header">
@@ -98,7 +101,7 @@
 				<ui5-table-cell><b><ui5-text>34.50</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>0.08</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-select id="input-row2" accessible-name-ref="customInputCol"><ui5-option>1</ui5-option><ui5-option>2</ui5-option></ui5-select></ui5-table-cell>
-				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product" disabled></ui5-table-row-action>
 				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
 			</ui5-table-row>
 
@@ -121,7 +124,11 @@
 				<ui5-table-cell><b><ui5-text>0.10</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-toggle-button id="input-row4_1" accessible-name-ref="customInputCol">Favourite</ui5-toggle-button><ui5-button id="input-row4_2" accessible-name-ref="customInputCol">Order</ui5-button></ui5-table-cell>
 				<ui5-table-row-action slot="actions" icon="edit" text="Edit"></ui5-table-row-action>
-				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete" disabled></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="add" text="Add"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="share" text="Share" disabled></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="heart" text="Favourite"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="copy" text="Copy"></ui5-table-row-action>
 				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
 			</ui5-table-row>
 
@@ -162,8 +169,12 @@
 				<ui5-table-cell><b><ui5-text>159.00</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>1.10</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-date-picker id="input-row7" accessible-name-ref="customInputCol"></ui5-date-picker></ui5-table-cell>
-				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
-				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product" disabled></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete" disabled></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="add" text="Add" disabled></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="share" text="Share"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="heart" text="Favourite"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="copy" text="Copy" disabled></ui5-table-row-action>
 				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
 			</ui5-table-row>
 
@@ -175,7 +186,7 @@
 				<ui5-table-cell><b><ui5-text>119.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>0.18</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-step-input id="input-row8" accessible-name-ref="customInputCol"></ui5-step-input></ui5-table-cell>
-				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product" disabled></ui5-table-row-action>
 				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
 			</ui5-table-row>
 
@@ -208,6 +219,11 @@
 	<script>
 		// Selection mode change handler
 		const table = document.getElementById("productsTable");
+
+		const rowActionCountSlider = document.getElementById("rowActionCountSlider");
+		rowActionCountSlider.addEventListener("input", (e) => {
+			table.rowActionCount = e.target.value;
+		});
 
 		const selectionModeSelect = document.getElementById("selectionModeSelect");
 		selectionModeSelect.addEventListener("change", (e) => {
