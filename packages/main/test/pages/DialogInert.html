@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog Inert</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		.dialogFooter {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 0.25rem;
+			padding: 0.25rem 0;
+			width: 100%;
+		}
+		#outsideBranch { margin-top: 0.5rem; padding: 0.5rem; border: 1px solid var(--sapList_BorderColor); }
+	</style>
+</head>
+
+<body>
+	<!-- Background content. When the dialog opens, everything here (except the open dialog) becomes inert.
+	     "Nested" vs "outside" look identical on screen - the only difference is which DOM branch is inert,
+	     visible in DevTools (inert + data-ui5-dialog-old-no-inert). -->
+	<ui5-button id="openDialog">Open Dialog</ui5-button>
+	<ui5-button id="bgBtn">Background button</ui5-button>
+
+	<ui5-dialog id="dialog" header-text="Dialog" draggable resizable>
+		<ui5-label>The nested dialog is declared inside this dialog; the outside popover is declared in a separate branch and opened from here.</ui5-label>
+
+		<!-- Nested: declared INSIDE the dialog, i.e. already on the live (non-inert) branch -->
+		<ui5-dialog id="nestedDialog" header-text="Nested Dialog" draggable>
+			<ui5-label>Declared inside the dialog.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeNested" design="Emphasized">Close</ui5-button>
+			</div>
+		</ui5-dialog>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="openNested">Open nested dialog</ui5-button>
+			<ui5-button id="openOutsidePopover">Open outside popover</ui5-button>
+			<ui5-button id="closeDialog" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<!-- Outside branch: this block is inerted when the dialog opens. The popover is declared here but
+	     opened from a button inside the dialog, so it must "escape" the inert (_escapeInertness): on open,
+	     #outsideBranch is un-inerted and its #outsideBgBtn re-inerted, leaving the popover interactive. -->
+	<div id="outsideBranch">
+		<ui5-button id="outsideBgBtn">Background button (outside branch)</ui5-button>
+		<ui5-popover id="outsidePopover" opener="openOutsidePopover" header-text="Outside Popover">
+			<ui5-label>Declared outside the dialog, opened from inside it.</ui5-label>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="closeOutsidePopover" design="Emphasized">Close</ui5-button>
+			</div>
+		</ui5-popover>
+	</div>
+
+	<script>
+		const open = (id) => document.getElementById(id).open = true;
+		const close = (id) => document.getElementById(id).open = false;
+
+		document.getElementById("openDialog").addEventListener("click", () => open("dialog"));
+		document.getElementById("closeDialog").addEventListener("click", () => close("dialog"));
+		document.getElementById("openNested").addEventListener("click", () => open("nestedDialog"));
+		document.getElementById("closeNested").addEventListener("click", () => close("nestedDialog"));
+		document.getElementById("openOutsidePopover").addEventListener("click", () => open("outsidePopover"));
+		document.getElementById("closeOutsidePopover").addEventListener("click", () => close("outsidePopover"));
+	</script>
+</body>
+
+</html>

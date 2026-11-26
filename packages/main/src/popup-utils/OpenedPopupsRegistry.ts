@@ -5,6 +5,7 @@ import isEventMarked from "@ui5/webcomponents-base/dist/util/isEventMarked.js";
 import type OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import type Popup from "../Popup.js";
 import type { PopupInfo } from "@ui5/webcomponents-base/dist/features/patchPopup.js";
+import { clearResidualInert } from "./inert.js";
 
 type RegisteredPopup = {
 	instance: Popup;
@@ -53,6 +54,8 @@ const removeOpenedPopup = (instance: Popup) => {
 
 	if (!OpenedPopupsRegistry.openedRegistry.length) {
 		detachGlobalListener();
+		// backstop: nothing is open, so nothing should remain inerted-by-a-popup
+		clearResidualInert();
 	}
 };
 
@@ -86,17 +89,23 @@ const detachGlobalListener = () => {
 };
 
 const _updateTopModalPopup = () => {
-	let popup;
-	let hasModal = false;
+	let hasModalAbove = false;
 
 	for (let i = OpenedPopupsRegistry.openedRegistry.length - 1; i >= 0; i--) {
-		popup = OpenedPopupsRegistry.openedRegistry[i].instance;
+		const popup = OpenedPopupsRegistry.openedRegistry[i].instance;
 
-		if (!hasModal && popup.isModal) {
+		if (!hasModalAbove && popup.isModal) {
 			popup.isTopModalPopup = true;
-			hasModal = true;
+			popup._revertOwnShadowContent();
+			hasModalAbove = true;
 		} else {
 			popup.isTopModalPopup = false;
+
+			if (hasModalAbove) {
+				popup._inertOwnShadowContent();
+			} else {
+				popup._revertOwnShadowContent();
+			}
 		}
 	}
 };

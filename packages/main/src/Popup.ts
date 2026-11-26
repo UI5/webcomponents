@@ -27,10 +27,12 @@ import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.j
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import getParentElement from "@ui5/webcomponents-base/dist/util/getParentElement.js";
 import { registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import PopupTemplate from "./PopupTemplate.js";
 import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
 import { addOpenedPopup, removeOpenedPopup } from "./popup-utils/OpenedPopupsRegistry.js";
+import { POPUP_INERT_ATTR } from "./popup-utils/inert.js";
 
 // Styles
 import popupStlyes from "./generated/themes/Popup.css.js";
@@ -44,6 +46,11 @@ const createBlockingStyle = (): void => {
 createBlockingStyle();
 
 const pageScrollingBlockers = new Set<Popup>();
+
+/**
+ * Elements that are not rendered and therefore must not be marked as `inert`.
+ */
+const NON_RENDERED_ELEMENTS = ["SCRIPT", "STYLE", "LINK", "META", "TEMPLATE", "TITLE", "BASE", "HEAD", "UI5-ANNOUNCEMENT-AREA"];
 
 type PopupScrollEventDetail = {
 	scrollTop: number;
@@ -229,6 +236,16 @@ abstract class Popup extends UI5Element {
 	isTopModalPopup = false;
 
 	/**
+	 * When true, the popup is below the topmost modal dialog and its shadow chrome
+	 * is inerted — header, footer, focus traps, etc. become non-interactive and hidden
+	 * from assistive technology. Set by the registry's `_updateTopModalPopup`.
+	 * @private
+	 * @default false
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isBelowTopModal = false;
+
+	/**
 	 * Defines the content of the Popup.
 	 * @public
 	 */
@@ -253,6 +270,13 @@ abstract class Popup extends UI5Element {
 	_opened = false;
 	_open = false;
 	_resizeHandlerRegistered = false;
+	_inertElements: Array<HTMLElement> = [];
+	_unInertedElements: Array<HTMLElement> = [];
+	_inertPath: Set<HTMLElement> = new Set();
+	_inertContainers: Set<HTMLElement> = new Set();
+	_inertObserver?: MutationObserver;
+	_inertedShadowElements: Array<HTMLElement> = [];
+	_inertedAncestorPopups: Array<Popup> = [];
 
 	constructor() {
 		super();
@@ -309,6 +333,7 @@ abstract class Popup extends UI5Element {
 			this._removeOpenedPopup();
 		}
 
+		this._revertInert();
 		this._deregisterResizeHandler();
 		this._detachBrowserEvents();
 		this._deregisterInvisibleMessageRegion();
@@ -674,6 +699,317 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
+			this._escapeInertness();
+		}
+	}
+
+	/**
+	 * Mirrors the native `<dialog>.showModal()` behavior by marking everything outside this
+	 * popup's branch as `inert`, so background content becomes non-focusable, non-clickable
+	 * and hidden from assistive technology. Called by modal popups (e.g. Dialog).
+	 *
+	 * Elements inerted here are tagged so they can be reverted on close (see {@link _revertInert}),
+	 * while elements that were already `inert` are left untouched.
+	 * @protected
+	 */
+	_setInert() {
+		this._inertPath = new Set(this._getInertPath());
+		this._inertPath.forEach(element => {
+			this._inertSiblings(element);
+		});
+
+		// DOM-nested case: mute ancestor popups on the path (their shadow chrome stays
+		// live because the popup element itself can't be inerted without killing us)
+		this._inertedAncestorPopups = [];
+		this._inertPath.forEach(element => {
+			if (element !== this && Popup._isPopup(element) && "_inertOwnShadowContent" in element) {
+				const ancestor = element as Popup;
+				ancestor._inertOwnShadowContent();
+				this._inertedAncestorPopups.push(ancestor);
+			}
+		});
+
+		this._observeInertMutations();
+	}
+
+	/**
+	 * Returns the path from the popup to the top-most element of the DOM tree,
+	 * crossing shadow DOM boundaries.
+	 * @protected
+	 */
+	_getInertPath(): Array<HTMLElement> {
+		const path: Array<HTMLElement> = [];
+
+		Popup._collectInertPath(this, path);
+
+		return path;
+	}
+
+	/**
+	 * Adds the given element to the path and continues with its parent element,
+	 * crossing shadow DOM boundaries, until the document is reached.
+	 */
+	static _collectInertPath(element: HTMLElement, path: Array<HTMLElement>) {
+		path.push(element);
+
+		const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+
+		if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+			return;
+		}
+
+		Popup._collectInertPath((getParentElement(element) || parent) as HTMLElement, path);
+	}
+
+	/**
+	 * Marks all siblings of the given element as `inert`, so they become non-focusable,
+	 * non-clickable and hidden from assistive technology.
+	 *
+	 * Only siblings in the light DOM (the document tree) are inerted. When the popup is rendered
+	 * inside its host component's shadow DOM (e.g. a ComboBox rendering its picker next to its own
+	 * input), the elements along the path that still live in that shadow root are the host's own
+	 * internals, not background content - inerting them would break the host's focus handling. The
+	 * host element itself is still inerted as a sibling once the path reaches the light DOM.
+	 * @protected
+	 */
+	_inertSiblings(element: HTMLElement) {
+		const parent = element.parentNode as (Element | ShadowRoot | Document | null);
+
+		if (!parent || parent.nodeType === Node.DOCUMENT_NODE) {
+			return;
+		}
+
+		// skip siblings inside a shadow root - they belong to the popup's host component
+		if (element.getRootNode() !== element.ownerDocument) {
+			return;
+		}
+
+		// remember this container so the observer can watch it for late-added background siblings
+		this._inertContainers.add(parent as HTMLElement);
+
+		Array.from(parent.children).forEach(child => {
+			if (child !== element && Popup._shouldBeInert(child)) {
+				this._applyInert(child as HTMLElement);
+			}
+		});
+	}
+
+	/**
+	 * Marks a single element as `inert` and records it for reverting on close.
+	 */
+	_applyInert(element: HTMLElement) {
+		element.setAttribute("inert", "");
+		element.setAttribute(POPUP_INERT_ATTR, "");
+		this._inertElements.push(element);
+	}
+
+	/**
+	 * Watches for elements added to the document while this modal popup is open and inerts the
+	 * ones that become new background siblings - mirroring how the native modal keeps late-added
+	 * content inert. Elements added inside an already-inert branch inherit `inert` and need no action.
+	 * @protected
+	 */
+	_observeInertMutations() {
+		this._inertObserver ??= new MutationObserver(mutations => {
+			mutations.forEach(mutation => {
+				mutation.addedNodes.forEach(node => {
+					if (!(node instanceof HTMLElement) || this._inertPath.has(node)) {
+						return;
+					}
+
+					// a new direct child of an inert container is a new background sibling
+					if (Popup._shouldBeInert(node)) {
+						this._applyInert(node);
+					}
+				});
+			});
+		});
+
+		// Observe only the containers whose children get inerted (the inert-path parents), with
+		// childList and no subtree - so unrelated deep mutations elsewhere on the page do not fire.
+		// Nodes added inside an already-inert branch inherit `inert` and need no observation.
+		this._inertContainers.forEach(container => {
+			this._inertObserver!.observe(container, { childList: true });
+		});
+	}
+
+	/**
+	 * Popups are displayed in the top layer, but still inherit the `inert` state of their DOM
+	 * ancestors. Therefore, when a popup is opened from within a branch that another popup has
+	 * marked as `inert`, the inertness is "pushed down" - the ancestors of this popup are no longer
+	 * `inert`, but their remaining content is, so the modality of the other popup is preserved.
+	 *
+	 * The changes are reverted when this popup closes.
+	 * @protected
+	 */
+	_escapeInertness() {
+		const path = this._getInertPath();
+		let lastInertIndex = -1;
+
+		path.forEach((element, index) => {
+			if (index > 0 && Popup._isInertedByPopup(element)) {
+				lastInertIndex = index;
+			}
+		});
+
+		if (lastInertIndex === -1) {
+			return;
+		}
+
+		for (let index = 0; index <= lastInertIndex; index++) {
+			const element = path[index];
+
+			if (index > 0 && Popup._isInertedByPopup(element)) {
+				element.removeAttribute("inert");
+				this._unInertedElements.push(element);
+			}
+
+			if (index < lastInertIndex) {
+				this._inertSiblings(element);
+			}
+		}
+	}
+
+	/**
+	 * Reverts the `inert` attribute on the elements this popup marked with `POPUP_INERT_ATTR`
+	 * and restores the `inert` of the ancestors this popup has cleared, in case the popup that
+	 * has set it is still open. Any author-set `inert` is left untouched.
+	 * @protected
+	 */
+	_revertInert() {
+		this._inertObserver?.disconnect();
+
+		this._inertElements.forEach(element => {
+			if (element.hasAttribute(POPUP_INERT_ATTR)) {
+				element.removeAttribute("inert");
+				element.removeAttribute(POPUP_INERT_ATTR);
+			}
+		});
+
+		this._unInertedElements.forEach(element => {
+			if (element.hasAttribute(POPUP_INERT_ATTR)) {
+				element.setAttribute("inert", "");
+			}
+		});
+
+		this._inertElements = [];
+		this._unInertedElements = [];
+		this._inertPath = new Set();
+		this._inertContainers = new Set();
+
+		// revert ancestor popups' shadow content that we muted in _setInert
+		this._inertedAncestorPopups.forEach(popup => popup._revertOwnShadowContent());
+		this._inertedAncestorPopups = [];
+
+		// also clean up own shadow muting if this popup was below a modal when it closed
+		this._revertOwnShadowContent();
+	}
+
+	/**
+	 * Inerts this popup's own shadow DOM chrome (header, footer, focus traps, block layer)
+	 * so assistive technology no longer lists them. Called by the registry when a modal
+	 * dialog opens on top of this popup. The content slot is left alone — the nested
+	 * popup lives there. Idempotent.
+	 */
+	_inertOwnShadowContent() {
+		if (this._isBelowTopModal) {
+			return;
+		}
+
+		this._isBelowTopModal = true;
+
+		const shadow = this.shadowRoot;
+		if (!shadow) {
+			return;
+		}
+
+		const section = shadow.querySelector("[root-element]");
+		if (!section) {
+			return;
+		}
+
+		Array.from(section.children).forEach(child => {
+			if (child instanceof HTMLElement && child.getAttribute("part") !== "content" && !child.hasAttribute("inert")) {
+				child.setAttribute("inert", "");
+				this._inertedShadowElements.push(child);
+			}
+		});
+
+		// block layer sits outside the section
+		const blockLayer = shadow.querySelector(".ui5-block-layer");
+		if (blockLayer instanceof HTMLElement && !blockLayer.hasAttribute("inert")) {
+			blockLayer.setAttribute("inert", "");
+			this._inertedShadowElements.push(blockLayer);
+		}
+	}
+
+	/**
+	 * Reverts `_inertOwnShadowContent` — removes `inert` from shadow elements and
+	 * restores the popup's role/ARIA via the reactive `_isBelowTopModal` property.
+	 * Idempotent.
+	 */
+	_revertOwnShadowContent() {
+		if (!this._isBelowTopModal) {
+			return;
+		}
+
+		this._inertedShadowElements.forEach(el => el.removeAttribute("inert"));
+		this._inertedShadowElements = [];
+		this._isBelowTopModal = false;
+	}
+
+	/**
+	 * Determines whether the given element should be marked as `inert` by a popup.
+	 */
+	static _shouldBeInert(element: Element) {
+		if (NON_RENDERED_ELEMENTS.includes(element.tagName)) {
+			return false;
+		}
+
+		// an author-set "inert", as well as an "inert", set by another popup, must not be touched
+		if (element.hasAttribute("inert")) {
+			return false;
+		}
+
+		// never inert an element that is - or hosts - an open top-layer popover: an open popup, or a
+		// portal container such as OpenUI5's static UIArea / block layer. Such elements are not
+		// background content, and inerting them would make the popup they host non-interactive.
+		if (Popup._hasOpenPopover(element)) {
+			return false;
+		}
+
+		// a popup that is not open yet, but could be opened on top of this one later on
+		return !Popup._isPopup(element);
+	}
+
+	/**
+	 * Determines whether the `inert` of the given element is managed by a popup.
+	 */
+	static _isInertedByPopup(element: Element) {
+		return element.hasAttribute(POPUP_INERT_ATTR) && element.hasAttribute("inert");
+	}
+
+	/**
+	 * Duck-typing check whether the given element is a popup (popover, dialog, menu, etc.),
+	 * as such elements are displayed in the top layer and must not be inerted.
+	 */
+	static _isPopup(element: Element) {
+		return "isModal" in element && "open" in element;
+	}
+
+	/**
+	 * Checks whether the element is, or contains, an open popover (top-layer element).
+	 * Uses the `popover` attribute + open state instead of `:popover-open` which isn't
+	 * supported in all environments.
+	 */
+	static _hasOpenPopover(element: Element): boolean {
+		try {
+			return element.matches(":popover-open") || !!element.querySelector(":popover-open");
+		} catch {
+			// :popover-open not supported — can't detect open popovers reliably.
+			// _isPopup already prevents popup elements from being inerted, and
+			// _escapeInertness handles popovers opening inside an inerted branch.
+			return false;
 		}
 	}
 
@@ -696,6 +1032,7 @@ abstract class Popup extends UI5Element {
 	 * @protected
 	 */
 	hide() {
+		this._revertInert();
 		this.isConnected && this.hidePopover();
 	}
 
@@ -742,6 +1079,10 @@ abstract class Popup extends UI5Element {
 	}
 
 	get _role() {
+		if (this._isBelowTopModal) {
+			return "none" as const;
+		}
+
 		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
 	}
 
@@ -754,6 +1095,10 @@ abstract class Popup extends UI5Element {
 	}
 
 	get _ariaModal(): "true" | undefined {
+		if (this._isBelowTopModal) {
+			return undefined;
+		}
+
 		return this.accessibleRole === PopupAccessibleRole.None ? undefined : "true";
 	}
 

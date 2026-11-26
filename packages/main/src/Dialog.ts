@@ -454,7 +454,11 @@ class Dialog extends Popup {
 		return toLowercaseEnumValue(this.accessibleRole);
 	}
 
-	get _contentRole(): "region" {
+	get _contentRole(): "region" | undefined {
+		if (this._isBelowTopModal) {
+			return undefined;
+		}
+
 		return "region";
 	}
 
@@ -463,6 +467,10 @@ class Dialog extends Popup {
 	}
 
 	get _contentAriaLabel() {
+		if (this._isBelowTopModal) {
+			return undefined;
+		}
+
 		return Dialog.i18nBundle.getText(DIALOG_CONTENT_ARIA_LABEL);
 	}
 
@@ -473,6 +481,7 @@ class Dialog extends Popup {
 	_show() {
 		super._show();
 		this._center();
+		this._setInert();
 	}
 
 	onBeforeRendering() {
