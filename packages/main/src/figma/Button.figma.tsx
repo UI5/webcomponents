@@ -65,3 +65,31 @@ figma.connect(
     ),
   }
 );
+
+// Icon Button — same WC component, icon-only variant (node 91702:11885).
+figma.connect(
+  Button,
+  "https://www.figma.com/design/SILcWzK5uFghKun9jx6D7c/SAP-Web-UI-Kit?node-id=91702-11885",
+  {
+    props: {
+      design: figma.enum("Type", {
+        Primary: "Emphasized",
+        Secondary: "Default",
+        Tertiary: "Transparent",
+      }),
+      disabled: figma.enum("Interaction State", {
+        Disabled: true,
+        Regular: false,
+        Hover: false,
+        Down: false,
+      }),
+      badge: figma.enum("Counter Badge", {
+        True: <ButtonBadge design={ButtonBadgeDesign.OverlayText} text="72" />,
+        False: undefined,
+      }),
+    },
+    example: ({ design, disabled, badge }) => (
+      <Button design={design} icon="globe" disabled={disabled} badge={badge} />
+    ),
+  }
+);

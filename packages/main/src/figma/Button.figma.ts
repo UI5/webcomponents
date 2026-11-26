@@ -81,3 +81,36 @@ figma.connect(
       html`<ui5-button design="${design}" ${iconAttr} ${disabledAttr}>${label}${counterBadge}${attentionBadge}</ui5-button>`,
   }
 );
+
+// Icon Button — same WC component, icon-only variant (node 91702:11885).
+// No text child. Icon is INSTANCE_SWAP — name hardcoded to "globe".
+// Toggled=True maps to ui5-toggle-button (separate component) but Figma
+// models it here, so we surface it as a note in the snippet.
+figma.connect(
+  "https://www.figma.com/design/SILcWzK5uFghKun9jx6D7c/SAP-Web-UI-Kit?node-id=91702-11885",
+  {
+    props: {
+      design: figma.enum("Type", {
+        Primary: "Emphasized",
+        Secondary: "Default",
+        Tertiary: "Transparent",
+      }),
+      disabledAttr: figma.enum("Interaction State", {
+        Disabled: "disabled",
+        Regular: "",
+        Hover: "",
+        Down: "",
+      }),
+      counterBadge: figma.enum("Counter Badge", {
+        True: html`<ui5-button-badge slot="badge" design="OverlayText" text="72"></ui5-button-badge>`,
+        False: "",
+      }),
+      attentionBadge: figma.boolean("Attention Badge", {
+        true: html`<ui5-button-badge slot="badge" design="AttentionDot"></ui5-button-badge>`,
+        false: "",
+      }),
+    },
+    example: ({ design, disabledAttr, counterBadge, attentionBadge }) =>
+      html`<ui5-button design="${design}" icon="globe" ${disabledAttr}>${counterBadge}${attentionBadge}</ui5-button>`,
+  }
+);
