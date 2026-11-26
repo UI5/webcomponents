@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar - getSearchButtonDomRef() focus across states</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+	<style>
+		body {
+			background-color: var(--sapBackgroundColor);
+			padding: 1rem;
+			font-family: var(--sapFontFamily);
+		}
+		h1, h2, p {
+			color: var(--sapTextColor);
+		}
+		.shellbar-section {
+			margin-bottom: 2.5rem;
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			padding: 1rem;
+			border-radius: 0.5rem;
+		}
+		.description {
+			background: var(--sapInfobar_Background);
+			padding: 0.75rem;
+			border-radius: 0.25rem;
+			margin: 0.5rem 0 1rem 0;
+		}
+		.narrow {
+			max-width: 280px;
+		}
+		#log {
+			margin-top: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			border-radius: 0.5rem;
+			background: var(--sapGroup_ContentBackground);
+		}
+		#log-content {
+			max-height: 220px;
+			overflow-y: auto;
+			font-family: monospace;
+			font-size: 0.875rem;
+			white-space: pre-wrap;
+			color: var(--sapTextColor);
+		}
+	</style>
+</head>
+
+<body>
+	<h1>ShellBar - getSearchButtonDomRef() focus across states</h1>
+	<p>
+		Each section resolves the search button via the public
+		<code>getSearchButtonDomRef()</code> method and focuses it - the same single
+		call a shell AccessKeysHandler uses to restore the search shortcut. No shadow
+		DOM traversal is needed. Press <strong>Alt+F</strong> anywhere to focus the
+		search of section 1 (focus only, the search is not triggered).
+	</p>
+
+	<!-- 1. Collapsed search -->
+	<div class="shellbar-section">
+		<h2>1. Search collapsed</h2>
+		<div class="description">Collapsed search toggle is visible in the bar.</div>
+		<ui5-shellbar id="sb-collapsed" primary-title="Collapsed">
+			<ui5-shellbar-search slot="searchField" collapsed placeholder="Search"></ui5-shellbar-search>
+			<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<ui5-button class="focus-btn" data-target="sb-collapsed">Focus via getSearchButtonDomRef()</ui5-button>
+	</div>
+
+	<!-- 2. Expanded search -->
+	<div class="shellbar-section">
+		<h2>2. Search expanded</h2>
+		<div class="description">Search field is expanded; there is no toggle button, so the search input is resolved and focused. (<code>disable-search-collapse</code> keeps it expanded.)</div>
+		<ui5-shellbar id="sb-expanded" primary-title="Expanded" show-search-field disable-search-collapse>
+			<ui5-shellbar-search slot="searchField" placeholder="Search"></ui5-shellbar-search>
+			<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<ui5-button class="focus-btn" data-target="sb-expanded">Focus via getSearchButtonDomRef()</ui5-button>
+	</div>
+
+	<!-- 3. Collapsed in overflow -->
+	<div class="shellbar-section narrow">
+		<h2>3. Search collapsed in overflow</h2>
+		<div class="description">
+			The bar is narrow, so the search toggle moves into the overflow. The method
+			opens the overflow popover and resolves the search entry inside it.
+		</div>
+		<ui5-shellbar id="sb-overflow" primary-title="Overflow" show-notifications show-product-switch>
+			<ui5-button slot="content">Button 1</ui5-button>
+			<ui5-button slot="content">Button 2</ui5-button>
+			<ui5-button slot="content">Button 3</ui5-button>
+			<ui5-button slot="content">Button 4</ui5-button>
+			<ui5-shellbar-search slot="searchField" placeholder="Search"></ui5-shellbar-search>
+			<ui5-shellbar-item icon="activities" text="Action 1"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="Action 2"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="Action 3"></ui5-shellbar-item>
+			<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<ui5-button class="focus-btn" data-target="sb-overflow">Focus via getSearchButtonDomRef()</ui5-button>
+	</div>
+
+	<div id="log">
+		<strong>Resolved refs</strong>
+		<div id="log-content"></div>
+	</div>
+
+	<script type="module">
+		const logEl = document.getElementById("log-content");
+		function log(msg) {
+			logEl.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n" + logEl.textContent;
+		}
+
+		// Resolve the search button via the public API and focus it (focus only, no click).
+		async function focusSearch(shellbar) {
+			const ref = await shellbar.getSearchButtonDomRef();
+			if (!ref) {
+				log(shellbar.id + ": getSearchButtonDomRef() returned null");
+				return;
+			}
+			const label = ref.getAttribute("data-action-id")
+				|| ref.getAttribute("data-ui5-stable")
+				|| ref.className
+				|| ref.localName;
+			ref.focus();
+			log(shellbar.id + ": focused <" + ref.localName + "> (" + label + ")");
+		}
+
+		document.querySelectorAll(".focus-btn").forEach(btn => {
+			btn.addEventListener("click", () => {
+				const shellbar = document.getElementById(btn.dataset.target);
+				focusSearch(shellbar);
+			});
+		});
+
+		// Resolve the ShellBar that currently holds focus. When focus is inside a web
+		// component's shadow DOM, document.activeElement is the host element itself.
+		function activeShellbar() {
+			const el = document.activeElement;
+			if (el && el.localName === "ui5-shellbar") {
+				return el;
+			}
+			const host = el && el.closest && el.closest("ui5-shellbar");
+			return host || document.getElementById("sb-collapsed");
+		}
+
+		// Mirror the AccessKeysHandler use-case: Alt+F focuses the search, never triggers it.
+		// Note: on macOS Alt(Option)+F emits the "f with hook" character, so e.key is not "f".
+		// Match e.code (layout/modifier-independent) so the shortcut works on every keyboard.
+		// Use the capture phase so the shortcut fires even when focus is inside a component
+		// whose own handlers might stop the event from bubbling to document.
+		document.addEventListener("keydown", e => {
+			if (e.altKey && e.code === "KeyF") {
+				e.preventDefault();
+				focusSearch(activeShellbar());
+			}
+		}, true);
+	</script>
+</body>
+</html>
