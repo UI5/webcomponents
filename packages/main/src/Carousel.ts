@@ -120,6 +120,7 @@ type ItemsInfo = {
  * @since 1.0.0
  * @public
  * @csspart content - Used to style the content of the component
+ * @csspart item - Used to style the item of the component
  */
 @customElement({
 	tag: "ui5-carousel",

@@ -95,7 +95,7 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	 * @since 2.4.0
 	 * @private
 	 */
-	@property()
+	@property({ noAttribute: true })
 	markupText = "";
 }
 

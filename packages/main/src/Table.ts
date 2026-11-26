@@ -142,6 +142,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>F2</kbd> - Focuses the first tabbable element in the row
  * * <kbd>F7</kbd> - If focus position is remembered, moves focus to the corresponding focus position row, otherwise to the first tabbable element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on a cell, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Navigates down
@@ -156,6 +157,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>Enter</kbd> - Focuses the first tabbable cell content
  * * <kbd>F7</kbd> - If the focus is on an interactive element inside a row, moves focus to the corresponding row and remembers the focus position of the element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on an interactive cell content, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Move the focus to the interactive element in the same column of the previous row, unless the focused element prevents the default

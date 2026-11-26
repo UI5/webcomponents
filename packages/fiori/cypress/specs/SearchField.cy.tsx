@@ -60,6 +60,15 @@ describe("SearchField general interaction", () => {
 				.find("input")
 				.should("have.attr", "aria-description", "Test");
 		});
+
+		it("should expose a default aria-description when accessibleDescription is not set", () => {
+			cy.mount(<SearchField></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("input")
+				.should("have.attr", "aria-description", "Search results will be shown in the main area");
+		});
 	});
 
 	describe("Collapsed Search Field", () => {

@@ -66,7 +66,6 @@ import listCss from "./generated/themes/List.css.js";
 // Texts
 import {
 	LIST_ROLE_DESCRIPTION,
-	LIST_ROLE_LIST_GROUP_DESCRIPTION,
 	LIST_ROLE_LISTBOX_GROUP_DESCRIPTION,
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
@@ -583,7 +582,6 @@ class List extends UI5Element {
 	_forwardingFocus: boolean;
 	_selectionRequested?: boolean;
 	_groupCount: number;
-	_groupItemCount: number;
 	_endIntersectionObserver?: IntersectionObserver | null;
 	_startIntersectionObserver?: IntersectionObserver | null;
 	_itemNavigation: ItemNavigation;
@@ -617,7 +615,6 @@ class List extends UI5Element {
 		this.handleResizeCallback = this._handleResize.bind(this);
 
 		this._groupCount = 0;
-		this._groupItemCount = 0;
 
 		this.onItemFocusedBound = this.onItemFocused.bind(this);
 		this.onForwardAfterBound = this.onForwardAfter.bind(this);
@@ -843,12 +840,12 @@ class List extends UI5Element {
 	_getDescriptionForGroups(): string {
 		let description = "";
 
-		if (this._groupCount > 0) {
-			if (this.accessibleRole === ListAccessibleRole.List) {
-				description = List.i18nBundle.getText(LIST_ROLE_LIST_GROUP_DESCRIPTION, this._groupCount, this._groupItemCount);
-			} else if (this.accessibleRole === ListAccessibleRole.ListBox) {
-				description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
-			}
+		// The List role conveys grouping structurally via each group's role="group"
+		// and heading, so no extra "contains N sub groups" summary is added (it was
+		// the second confusing announcement reported in issue #14184). The ListBox
+		// role keeps its summary, as its grouping is announced differently.
+		if (this._groupCount > 0 && this.accessibleRole === ListAccessibleRole.ListBox) {
+			description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
 		}
 
 		return description;
@@ -918,6 +915,13 @@ class List extends UI5Element {
 			item.hasBorder = showBottomBorder;
 
 			(item as ListItem).mediaRange = this.mediaRange;
+		});
+
+		// Propagate the inherited item role to groups so each adapts its structure.
+		this.getSlottedNodes<ListItemBase>("items").forEach(item => {
+			if (isInstanceOfListItemGroup(item)) {
+				item._inheritedAccessibleRole = inheritedItemRole;
+			}
 		});
 	}
 
@@ -1041,15 +1045,12 @@ class List extends UI5Element {
 		const items: ListItemBase[] = [];
 		const slottedItems = this.getSlottedNodes<ListItemBase>("items");
 		let groupCount = 0;
-		let groupItemCount = 0;
 
 		slottedItems.forEach(item => {
 			if (isInstanceOfListItemGroup(item)) {
 				const groupItems = [item.groupHeaderItem, ...item.items.filter(listItem => listItem.assignedSlot)].filter(Boolean);
 				items.push(...groupItems);
 				groupCount++;
-				// subtract group itself for proper group header item count
-				groupItemCount += groupItems.length - 1;
 			} else if (hasListItems(item)) {
 				item.assignedSlot && items.push(...item.listItems);
 			} else {
@@ -1058,7 +1059,6 @@ class List extends UI5Element {
 		});
 
 		this._groupCount = groupCount;
-		this._groupItemCount = groupItemCount;
 
 		return items;
 	}

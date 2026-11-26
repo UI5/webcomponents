@@ -32,7 +32,13 @@ import {
 	DATETIME_PATTERN_MISMATCH,
 	DATETIME_RANGEUNDERFLOW,
 	DATETIME_RANGEOVERFLOW,
+	TIMEPICKER_SWITCH_TO_KEYBOARD,
+	TIMEPICKER_SWITCH_TO_CLOCK,
+	TIMEPICKER_ANNOUNCE_KEYBOARD,
+	TIMEPICKER_ANNOUNCE_CLOCK,
 } from "./generated/i18n/i18n-defaults.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import isHighZoom from "@ui5/webcomponents-base/dist/util/HighZoom.js";
 
 // Template
 import DateTimePickerTemplate from "./DateTimePickerTemplate.js";
@@ -148,6 +154,21 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	_phoneMode = false;
 
 	/**
+	 * True when the user has toggled to keyboard (numeric inputs) mode in the time section of the mobile picker.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_useTimeInputs = false;
+
+	/**
+	 * True when the viewport is narrower than the high-zoom breakpoint (< 300 px).
+	 * Forces numeric time inputs to replace the clock view and hides the toggle button.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	/**
 	 * Selected, but not yet confirmed date/time
 	 * @private
 	 */
@@ -176,6 +197,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	onResponsivePopoverAfterClose() {
 		super.onResponsivePopoverAfterClose();
 		this._showTimeView = false;
+		this._useTimeInputs = false;
 		this._previewValues = {};
 	}
 
@@ -185,6 +207,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 
 	onEnterDOM() {
 		ResizeHandler.register(document.body, this._handleResizeBound);
+		this._handleResize(); // sync phone mode and high-zoom on first attach
 	}
 
 	onExitDOM() {
@@ -303,6 +326,20 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
+	get showHeader() {
+		return this._phoneView;
+	}
+
+	/**
+	 * @override
+	 */
+	get _headerTitleText() {
+		return this.ariaLabelText;
+	}
+
+	/**
+	 * @override
+	 */
 	get roleDescription() {
 		return DateTimePicker.i18nBundle.getText(DATETIME_DESCRIPTION);
 	}
@@ -363,7 +400,8 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	}
 
 	/**
-	 * Handles document resize to switch between `phoneMode` and normal appearance.
+	 * Handles document resize to switch between `phoneMode` and normal appearance,
+	 * and to detect high-zoom (viewport < 300 px) for numeric inputs.
 	 */
 	_handleResize() {
 		const documentWidth = document.body.offsetWidth;
@@ -373,6 +411,8 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		if (modeChange) {
 			this._phoneMode = toPhoneMode;
 		}
+
+		this._highZoom = isHighZoom();
 	}
 
 	get _submitDisabled() {
@@ -399,6 +439,32 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	_cancelClick() {
 		this._togglePicker();
+	}
+
+	/**
+	 * Toggles between clock view and keyboard input view in the time section on mobile.
+	 * @private
+	 */
+	_toggleDtpTimeMode() {
+		this._useTimeInputs = !this._useTimeInputs;
+		announce(
+			DateTimePicker.i18nBundle.getText(this._useTimeInputs ? TIMEPICKER_ANNOUNCE_KEYBOARD : TIMEPICKER_ANNOUNCE_CLOCK),
+			"Assertive",
+		);
+	}
+
+	get _showTimeViewToggle() {
+		return this._phoneView && this.showTimeView && !this._highZoom;
+	}
+
+	get _effectiveUseTimeInputs() {
+		return this._highZoom || this._useTimeInputs;
+	}
+
+	get _dtpTimeToggleLabel() {
+		return this._useTimeInputs
+			? DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_CLOCK)
+			: DateTimePicker.i18nBundle.getText(TIMEPICKER_SWITCH_TO_KEYBOARD);
 	}
 
 	/**

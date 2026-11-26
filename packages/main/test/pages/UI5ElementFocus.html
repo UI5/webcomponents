@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Button</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body class="button1auto">
+	<ui5-button id="webCButton">Web Component Button</ui5-button>
+	<br>
+	<button id="htmlButton">HTML Button</button>
+	<br>
+	<button onclick="doFocus()">Focus</button>
+	<script>
+		function doFocus() {
+			setTimeout(() => {
+				document.getElementById("webCButton").focus();
+				document.getElementById("htmlButton").focus();
+			}, 100);
+		}
+	</script>
+</body>
+
+</html>

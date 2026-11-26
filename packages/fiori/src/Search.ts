@@ -14,6 +14,7 @@ import {
 	isDelete,
 	isEscape,
 	isTabNext,
+	isTabPrevious,
 	isPageUp,
 	isPageDown,
 	isHome,
@@ -502,6 +503,17 @@ class Search extends SearchField {
 
 			this.blur();
 		}
+
+		// ArrowDown moves focus from the mobile dialog input into the suggestions list,
+		// mirroring the desktop input (_onkeydown -> _handleDown). Without this the mobile
+		// input and the list are not connected by the keyboard and arrow navigation is lost.
+		if (isDown(e)) {
+			this._handleDown(e);
+		}
+
+		if (isEscape(e)) {
+			this._handleEscape();
+		}
 	}
 
 	_handleSearchEvent() {
@@ -567,6 +579,13 @@ class Search extends SearchField {
 		const isArrowDown = isDown(e);
 		const isTab = isTabNext(e);
 
+		// Shift+Tab leaves the suggestions through the natural back-tab order (e.g. to the
+		// Cancel button on phone, or the input), so let the browser handle it - calling
+		// preventDefault below would swallow it and the focus would be lost.
+		if (isTabPrevious(e)) {
+			return;
+		}
+
 		e.preventDefault();
 
 		if (isFirstItem && isArrowUp) {
@@ -577,7 +596,7 @@ class Search extends SearchField {
 				this._valueBeforeArrowNav = undefined;
 			}
 
-			this.nativeInput?.focus();
+			this._focusSearchInput();
 			this._shouldAutocomplete = true;
 		}
 
@@ -587,6 +606,20 @@ class Search extends SearchField {
 
 		if ((isLastItem && isArrowDown) || isTab) {
 			this._getFooterButton()?.focus();
+		}
+	}
+
+	/**
+	 * Returns focus to the active search input. On phone the open picker is a full-screen
+	 * dialog with its own input (`mobileInput`); the host focus ref sits under the dialog,
+	 * so focusing the host would lose the focus. Target the dialog input directly in that case.
+	 * @private
+	 */
+	_focusSearchInput() {
+		if (isPhone() && this.mobileInput) {
+			this.mobileInput.focus();
+		} else {
+			this.nativeInput?.focus();
 		}
 	}
 

@@ -18,6 +18,7 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	isRenderScheduled,
 	unregisterElement,
 	registerElement,
 } from "./Render.js";
@@ -67,6 +68,7 @@ type ChangeInfo = {
 }
 
 type InvalidationInfo = ChangeInfo & { target: UI5Element };
+type StateChangeInfo = ChangeInfo & { target: UI5Element };
 
 type ChildChangeListener = (param: InvalidationInfo) => void;
 
@@ -120,6 +122,8 @@ const defaultConverter = {
  * @private
  */
 function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
+	this._stateChangeEventProvider.fireEvent("state-change", { ...changeInfo, target: this });
+
 	// Invalidation should be suppressed: 1) before the component is rendered for the first time 2) and during the execution of onBeforeRendering
 	// This is necessary not only as an optimization, but also to avoid infinite loops on invalidation between children and parents (when invalidateOnChildChange is used)
 	if (this._suppressInvalidation) {
@@ -138,7 +142,6 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 	// Call the onInvalidation hook
 	this.onInvalidation(changeInfo);
 
-	this._changedState.push(changeInfo);
 	renderDeferred(this);
 	this._invalidationEventProvider.fireEvent("invalidate", { ...changeInfo, target: this });
 }
@@ -209,8 +212,8 @@ abstract class UI5Element extends HTMLElement {
 
 	__id?: string;
 	_suppressInvalidation: boolean;
-	_changedState: Array<ChangeInfo>;
 	_invalidationEventProvider: EventProvider<InvalidationInfo, void>;
+	_stateChangeEventProvider: EventProvider<StateChangeInfo, void>;
 	_componentStateFinalizedEventProvider: EventProvider<void, void>;
 	_inDOM: boolean;
 	_fullyConnected: boolean;
@@ -240,13 +243,13 @@ abstract class UI5Element extends HTMLElement {
 		super();
 
 		const ctor = this.constructor as typeof UI5Element;
-		this._changedState = []; // Filled on each invalidation, cleared on re-render (used for debugging)
 		this._suppressInvalidation = true; // A flag telling whether all invalidations should be ignored. Initialized with "true" because a UI5Element can not be invalidated until it is rendered for the first time
 		this._inDOM = false; // A flag telling whether the UI5Element is currently in the DOM tree of the document or not
 		this._fullyConnected = false; // A flag telling whether the UI5Element's onEnterDOM hook was called (since it's possible to have the element removed from DOM before that)
 		this._childChangeListeners = new Map(); // used to store lazy listeners per slot for the child change event of every child inside that slot
 		this._slotChangeListeners = new Map(); // used to store lazy listeners per slot for the slotchange event of all slot children inside that slot
 		this._invalidationEventProvider = new EventProvider(); // used by parent components for listening to changes to child components
+		this._stateChangeEventProvider = new EventProvider(); // used for listening to state changes
 		this._componentStateFinalizedEventProvider = new EventProvider(); // used by friend classes for synchronization
 		let deferredResolve;
 		this._domRefReadyPromise = new Promise(resolve => {
@@ -667,6 +670,26 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
+	 * Attach a callback that will be executed whenever the component state is changed
+	 *
+	 * @param callback
+	 * @public
+	 */
+	attachStateChange(callback: (param: StateChangeInfo) => void): void {
+		this._stateChangeEventProvider.attachEvent("state-change", callback);
+	}
+
+	/**
+	 * Detach the callback that is executed whenever the component state is changed
+	 *
+	 * @param callback
+	 * @public
+	 */
+	detachStateChange(callback: (param: StateChangeInfo) => void): void {
+		this._stateChangeEventProvider.detachEvent("state-change", callback);
+	}
+
+	/**
 	 * Callback that is executed whenever a monitored child changes its state
 	 *
 	 * @param slotName the slot in which a child was invalidated
@@ -936,29 +959,6 @@ abstract class UI5Element extends HTMLElement {
 			this._suppressInvalidation = false;
 		}
 
-		// Update the shadow root with the render result
-		/*
-		if (this._changedState.length) {
-			let element = this.localName;
-			if (this.id) {
-				element = `${element}#${this.id}`;
-			}
-			console.log("Re-rendering:", element, this._changedState.map(x => { // eslint-disable-line
-				let res = `${x.type}`;
-				if (x.reason) {
-					res = `${res}(${x.reason})`;
-				}
-				res = `${res}: ${x.name}`;
-				if (x.type === "property") {
-					res = `${res} ${JSON.stringify(x.oldValue)} => ${JSON.stringify(x.newValue)}`;
-				}
-
-				return res;
-			}));
-		}
-		*/
-		this._changedState = [];
-
 		// Update shadow root
 		if (ctor._needsShadowDOM()) {
 			updateShadowRoot(this);
@@ -1043,8 +1043,24 @@ abstract class UI5Element extends HTMLElement {
 	 * @public
 	 */
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await this._waitForDomRef();
+		// Focus synchronously when the shadow DOM is already rendered so that focus
+		// ordering matches native elements (await always defers to a microtask, even
+		// for an already-resolved promise, which lets a later sync focus() be stolen back).
+		// If the element is still queued for a (re-)render, its focus DOM ref may be
+		// stale or missing, so wait for the pending render before focusing.
+		if (this._rendered && !isRenderScheduled(this)) {
+			this._focusDomRef(focusOptions);
+			return;
+		}
 
+		await this._waitForDomRef();
+		this._focusDomRef(focusOptions);
+	}
+
+	/**
+	 * @private
+	 */
+	_focusDomRef(focusOptions?: FocusOptions): void {
 		const focusDomRef = this.getFocusDomRef();
 		if (focusDomRef === this || !this.isConnected) {
 			HTMLElement.prototype.focus.call(this, focusOptions);
@@ -1508,6 +1524,7 @@ export {
 export type {
 	ChangeInfo,
 	InvalidationInfo,
+	StateChangeInfo,
 	Renderer,
 	SlottedChild,
 };

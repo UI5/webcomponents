@@ -17,21 +17,29 @@ function App() {
           titleText="Home"
           subtitleText="Central Home"
           icon="home"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Analytics Cloud"
           subtitleText="Analytics Cloud"
           icon="business-objects-experience"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Catalog"
           subtitleText="Ariba"
           icon="contacts"
+          targetSrc="about:blank"
+          target="_blank"
         />
         <ProductSwitchItem
           titleText="Travel &amp; Expense"
           subtitleText="Concur"
           icon="flight"
+          targetSrc="about:blank"
+          target="_blank"
         />
       </ProductSwitch>
     </>

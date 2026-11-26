@@ -27,7 +27,7 @@
 	position: relative;
 }
 
-.ui5-nl-aside {
+.ui5-nl-side {
 	transition: transform 0.3s;
 	z-index: 2;
 }
@@ -43,7 +43,7 @@
 }
 
 @media (width < 600px) {
-	:host .ui5-nl-aside {
+	:host .ui5-nl-side {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -56,16 +56,16 @@
 		box-shadow: none;
 	}
 
-	:host([side-collapsed]) .ui5-nl-aside {
+	:host([side-collapsed]) .ui5-nl-side {
 		transform: translateX(-100%);
 	}
 
-	:host([side-collapsed]) :dir(rtl) .ui5-nl-aside {
+	:host([side-collapsed]) :dir(rtl) .ui5-nl-side {
 		transform: translateX(100%);
 	}
 }
 
-:host([is-phone]) .ui5-nl-aside {
+:host([is-phone]) .ui5-nl-side {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -78,11 +78,11 @@
 	box-shadow: none;
 }
 
-:host([side-collapsed][is-phone]) .ui5-nl-aside {
+:host([side-collapsed][is-phone]) .ui5-nl-side {
 	transform: translateX(-100%);
 }
 
-:host([side-collapsed][is-phone]) :dir(rtl) .ui5-nl-aside {
+:host([side-collapsed][is-phone]) :dir(rtl) .ui5-nl-side {
 	transform: translateX(100%);
 }
 
