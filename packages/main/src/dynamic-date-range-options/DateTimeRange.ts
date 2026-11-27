@@ -84,7 +84,12 @@ class DateTimeRange implements IDynamicDateRangeOption {
 	}
 
 	isValidString(value: string): boolean {
-		const splitValue = value.split(DEFAULT_DELIMITER);
+		const splitValue = value?.split(DEFAULT_DELIMITER);
+
+		if (!splitValue || !splitValue[0] || !splitValue[1]) {
+			return false;
+		}
+
 		const startDate = this._parseDate(splitValue[0].trim()) as Date;
 		const endDate = this._parseDate(splitValue[1].trim()) as Date;
 
