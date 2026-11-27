@@ -1,6 +1,6 @@
 :host {
 	--_ui5_value_state_message_border: none;
-	--_ui5_value_state_header_border: none;
+	--_ui5_value_state_header_border: 3px;
 	--_ui5_input_value_state_icon_display: none;
 	--_ui5_value_state_message_padding: 0.5rem;
 	--_ui5_value_state_message_padding_phone: 0.5rem 0.5rem 0.5rem 1rem;
