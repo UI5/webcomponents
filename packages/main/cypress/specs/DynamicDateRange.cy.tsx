@@ -904,3 +904,13 @@ describe("calendarTimestampToLocalDate", () => {
 		expect(result.getDate()).to.equal(ref.getUTCDate());
 	});
 });
+
+describe("DateTimeRange.isValidString", () => {
+	it("returns false for strings without the range delimiter instead of throwing", () => {
+		const option = new DateTimeRange();
+
+		expect(() => option.isValidString("not a range")).to.not.throw();
+		expect(option.isValidString("not a range")).to.equal(false);
+		expect(option.isValidString("")).to.equal(false);
+	});
+});
