@@ -10,7 +10,10 @@ Components use decorator-based definitions with Preact JSX templates:
 
 ```typescript
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { customElement, property, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
 @customElement({
@@ -19,12 +22,12 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
   template: MyButtonTemplate,
   styles: myButtonCss,
   languageAware: true,  // Re-render on language change
-  themeAware: true,     // Re-render on theme change
+  themeAware: true,     // Re-render on theme change — only when the rendered output, not just the CSS, depends on the theme
 })
 class MyButton extends UI5Element {
   @property() design: `${ButtonDesign}` = "Default";
   @property({ type: Boolean }) disabled = false;
-  @slot({ type: HTMLElement, "default": true }) content!: Array<HTMLElement>;
+  @slot({ type: HTMLElement, "default": true }) content!: DefaultSlot<HTMLElement>;
 }
 ```
 
@@ -60,15 +63,13 @@ Always modify child component state through the template:
 
 ### Always Use Template Literal Types for Enums
 
-This pattern eliminates runtime overhead from enum objects:
-
 **Imports:**
 ```typescript
-// BAD - imports the enum object (runtime overhead)
-import ButtonDesign from "./types/ButtonDesign.js";
-
-// GOOD - import type only (no runtime overhead)
+// Only used as a type — import type (lint rejects a runtime import here)
 import type ButtonDesign from "./types/ButtonDesign.js";
+
+// Members read at runtime (a comparison or fallback) — a runtime import is fine
+import AvatarMode from "./types/AvatarMode.js";
 ```
 
 **Property types:**
@@ -80,13 +81,10 @@ design: ButtonDesign = ButtonDesign.Default;
 design: `${ButtonDesign}` = "Default";
 ```
 
-**Value comparisons:**
+**Value comparisons** — both are valid; pick one form per enum within a file:
 ```typescript
-// BAD - runtime enum access
-if (this.design !== ButtonDesign.Transparent) { }
-
-// GOOD - string comparison (IDE autocomplete + TS type safety)
-if (this.design !== "Transparent") { }
+if (this.design !== "Transparent") { }          // type-only import
+if (this.mode === AvatarMode.Decorative) { }    // runtime import
 ```
 
 ### Scoping-Safe Code (Required for Micro-Frontend Support)
@@ -185,9 +183,8 @@ describe("MyButton", () => {
 
 | Rule | Bad | Good |
 |------|-----|------|
-| Enum imports | `import Enum from "..."` | `import type Enum from "..."` |
+| Enum imports | `import Enum from "..."` when used only as a type | `import type Enum from "..."` |
 | Enum types | `prop: Enum` | `prop: \`${Enum}\`` |
-| Enum values | `Enum.Value` | `"Value"` |
 | DOM queries | `querySelector("ui5-tag")` | `querySelector("[ui5-tag]")` |
 | CSS selectors | `ui5-tag { }` | `[ui5-tag] { }` |
 | Type checks | `instanceof Component` | `isInstanceOfComponent(el)` |

@@ -2,6 +2,10 @@
 
 When reviewing pull requests to UI5 Web Components project, follow these guidelines:
 
+## Source of Truth
+
+Follow the repository-wide agent rules in [`AGENTS.md`](../AGENTS.md).
+
 ## Commit Message and PR Title Validation
 
 Check that commit messages and PR titles follow the [Conventional Commits](https://conventionalcommits.org) specification as outlined in [Conventions and guidelines](../docs/5-contributing/02-conventions-and-guidelines.md):
@@ -143,7 +147,7 @@ if (element.tagName === "UI5-BUTTON") { }
 // Property modification in event handlers only
 onUserInteraction() {
   this.myPublicProperty = "newValue"
-  this.fireEvent("change")
+  this.fireDecoratorEvent("change")
 }
 ```
 
