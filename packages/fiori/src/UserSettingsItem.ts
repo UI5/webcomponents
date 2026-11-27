@@ -222,6 +222,10 @@ class UserSettingsItem extends UI5Element {
 		return this.pages.find(view => view.selected) || this.pages[0];
 	}
 
+	get _titleText() {
+		return this._hasSelectedPageView ? this._selectedPageView.text : this.headerText;
+	}
+
 	get ariaLabelledByText() {
 		return `${this.text} ${this.accessibleName || ""}`.trim();
 	}

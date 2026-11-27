@@ -55,17 +55,8 @@ describe("TableRow - Navigated", () => {
 			.should("exist")
 			.should("have.attr", "data-excluded-from-navigation");
 
-		// Navigated indicator differs between navigated and non-navigated rows
-		cy.get("#row1").shadow().find("#navigated").as("navigated1");
-		cy.get("#row2").shadow().find<HTMLElement>("#navigated")
-			.then($navigated2 => {
-				cy.get("@navigated1")
-					.should($navigated1 => {
-						const nav1BG = getComputedStyle($navigated1[0] as HTMLElement).backgroundColor;
-						const nav2BG = getComputedStyle($navigated2[0]).backgroundColor;
-						expect(nav1BG).to.not.be.eq(nav2BG);
-					});
-			});
+		cy.get("#row1").shadow().find("#navigated").should("exist");
+		cy.get("#row2").shadow().find("#navigated").should("not.exist");
 
 		cy.get("#table1")
 			.shadow()

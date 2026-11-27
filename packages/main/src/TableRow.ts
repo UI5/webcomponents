@@ -11,6 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type TableRowStatus from "./TableRowStatus.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -36,7 +37,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase<TableCell> {
+class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -66,8 +67,23 @@ class TableRow extends TableRowBase<TableCell> {
 	@slot({
 		type: HTMLElement,
 		individualSlots: true,
+		invalidateOnChildChange: {
+			properties: ["disabled"],
+			slots: false,
+		},
 	})
 	actions!: Slot<TableRowActionBase>;
+
+	/**
+	 * Defines the status indicator of the row.
+	 *
+	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
+	 *
+	 * @since 2.30.0
+	 * @public
+	 */
+	@slot({ type: HTMLElement })
+	status!: Slot<TableRowStatus>;
 
 	/**
 	 * Unique identifier of the row.
@@ -266,7 +282,7 @@ class TableRow extends TableRowBase<TableCell> {
 		}
 
 		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
-			return !action.invisible && action._isInteractive;
+			return !action.invisible && action._isInteractive && !action._isDisabled;
 		}).length + (this._hasOverflowActions ? 1 : 0);
 	}
 
