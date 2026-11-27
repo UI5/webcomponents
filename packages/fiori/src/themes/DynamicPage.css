@@ -11,6 +11,13 @@
     z-index: 4;
 }
 
+.ui5-dynamic-page-sticky-subheader {
+    position: sticky;
+    top: var(--_ui5_dp_sticky_subheader_top, 0);
+    z-index: 2;
+    background-color: var(--ui5_dynamic_page_background);
+}
+
 :host {
     display: block;
     height: 100%;

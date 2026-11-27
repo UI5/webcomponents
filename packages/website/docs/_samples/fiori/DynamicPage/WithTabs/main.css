@@ -1,0 +1,108 @@
+.text {
+    display: inline-block;
+    font-size: var(--sapFontSize);
+    font-family: var(--sapFontFamily);
+    color: var(--sapTextColor);
+    line-height: normal;
+    margin: 0;
+}
+
+.product-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.product-info-cell {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.availability {
+    font-size: 1.2rem;
+    color: var(--sapPositiveTextColor);
+}
+
+.snapped-title-heading {
+    display: flex;
+    align-items: center;
+}
+
+.snapped-title-heading [ui5-title] {
+    font-family: var(--sapObjectHeader_Title_FontFamily);
+    color: var(--sapObjectHeader_Title_TextColor);
+    font-size: var(--sapObjectHeader_Title_SnappedFontSize);
+}
+
+.page-section {
+    padding: 1rem 0 2rem 0;
+}
+
+.page-section [ui5-title] {
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Give the last section room to scroll fully up under the sticky tab band,
+   so its tab can become active even when the content is short. */
+.page-section:last-of-type {
+    min-height: 100%;
+}
+
+.overview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.overview-card {
+    flex: 1 1 180px;
+    background: var(--sapBaseColor);
+    border: 1px solid var(--sapGroup_TitleBorderColor);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.overview-card ui5-label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.overview-card .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--sapTextColor);
+    font-family: var(--sapFontFamily);
+}
+
+.overview-card .value.positive {
+    color: var(--sapPositiveTextColor);
+}
+
+.spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+}
+
+.spec-table tr {
+    border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+}
+
+.spec-table td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: top;
+}
+
+.spec-table td:first-child {
+    color: var(--sapContent_LabelColor);
+    width: 40%;
+    font-weight: 600;
+}
+
+.spec-table td:last-child {
+    color: var(--sapTextColor);
+}
+
