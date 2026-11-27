@@ -18,15 +18,14 @@ file. If the task touches no component code, you do not need it.
 | CSS, theming, design tokens, RTL, `::part`, `:host` | [`references/theming-and-css.md`](./references/theming-and-css.md) |
 | Keyboard navigation, ARIA, focus, screen reader output | [`references/accessibility.md`](./references/accessibility.md) |
 | Any text a user can see | [`references/i18n.md`](./references/i18n.md) |
-| Unnecessary re-renders, slow interaction, invalidation | [`references/performance.md`](./references/performance.md) |
-| A test that passes locally and fails in CI | [`references/performance.md`](./references/performance.md) |
+| Unnecessary re-renders, slow interaction, invalidation, or a test that passes locally and fails in CI | [`references/performance.md`](./references/performance.md) |
 | Build fails with a documentation error | [`references/api-design.md`](./references/api-design.md) (JSDoc that passes CEM) |
 | Which command to run | [`references/commands-and-debugging.md`](./references/commands-and-debugging.md) (Commands) |
 
 ## When sources disagree
 
-1. `references/` governs how you write new code. The rules are absolute even where existing code
-   disagrees; where legacy code is known to violate a rule, the reference names it so you can
-   recognise the violation rather than copy it.
+1. `references/` governs how you write new code. The rules hold even where existing code disagrees;
+   legacy code may violate them, so do not copy a pattern just because it exists.
 2. Neighbouring source code governs structure and idiom — file layout, naming, how a template is put
-   together. Copy its shape, not its rule violations. `Button.ts` is the reference component.
+   together. Copy the shape of the nearest component that does the same kind of thing (a popup, a
+   list item, a form control), not its rule violations.

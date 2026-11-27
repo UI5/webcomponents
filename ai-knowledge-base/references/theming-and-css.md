@@ -2,13 +2,13 @@
 
 ## Contents
 
-- The variable tiers
-- How CSS reaches the component
-- Where each file goes
-- Selectors
-- Right-to-left
-- Density
-- Focus, animation, high contrast
+- The variable tiers — `--sap*` design tokens vs `--_ui5_<component>_*` parameters, and when to add one
+- How CSS reaches the component — the generated `.css.js` module, `styles`, and `themeAware`
+- Where each file goes — component CSS, `-parameters.css` files, and theme bundles
+- Selectors — attribute selectors, state from reflected attributes, and `::part`
+- Right-to-left — logical properties and `effectiveDir`
+- Density — `@ui5-compact-size` and where it works
+- Focus, animation, high contrast — sizing units, the focus ring, and contrast themes
 
 ## The variable tiers
 
@@ -16,15 +16,10 @@
 |------|--------|------------|-----------|
 | Global design tokens | `--sap*` | Outside this repo | Colors, fonts, shadows, focus |
 | Component parameters | `--_ui5_<component>_*` | The component's `-parameters.css` | Values that differ per theme or density |
-| Cross-boundary values | `--ui5_*` / `--ui5-*`, no leading underscore | Component CSS, a shared partial, or a template | Values another module reads |
 
 A common point of confusion: this repo does not define the `--sap*` token set. Each theme's `parameters-bundle.css` under `packages/theming` only `@import`s it from `@sap-theming/theming-base-content` — install that npm package to browse which tokens exist. A few component files re-assign an individual `--sap*` value inside their own scope (`fiori`'s `HeroBanner.css`, `DynamicPageTitle-parameters.css`); that is a local override, not a token definition.
 
-For a **new** component, start with `Foo.css` and existing `--sap*` tokens — they already resolve across themes.
-
-Component-private `--_ui5_<component>_*` parameters live in a `-parameters.css` file. They exist throughout the codebase, but add one only when a value differs per theme in a way existing UI5 CSS parameters cannot express.
-
-Cross-boundary `--ui5_*` / `--ui5-*` variables (no leading underscore) are rare, and reserved for a value read across a boundary the declaring CSS cannot see — `--ui5-form-column-span-s` is written as an inline style by `FormTemplate.tsx` and read back in `FormLayout.css`.
+Older parameters without the leading underscore (`--ui5-avatar-initials-color`, `--ui5_carousel_button_size`) are legacy naming, not a separate tier; new ones use `--_ui5_<component>_*`.
 
 ```css
 :host {
@@ -59,13 +54,13 @@ Shared partials come in through `@import` at the top of the component CSS instea
 
 ## Where each file goes
 
-Most components need only `Foo.css`:
+Most components need only `Foo.css`, using existing `--sap*` tokens — they already resolve across themes — and shared `--_ui5_*` parameters:
 
 ```
-src/themes/Foo.css    structure and layout — use --sap* and existing shared --_ui5_* parameters
+src/themes/Foo.css    structure and layout
 ```
 
-Add `-parameters.css` only when structural values differ per theme and cannot be covered by existing UI5 CSS parameters:
+Add `-parameters.css` only when a value differs per theme in a way existing tokens and parameters cannot express — not for colours or fonts the `--sap*` tokens already cover:
 
 ```
 src/themes/base/Foo-parameters.css         default --_ui5_foo_* values
@@ -75,19 +70,17 @@ src/themes/sap_fiori_3/Foo-parameters.css  overrides
 
 A per-theme file usually `@import`s the base one and overrides only what changes. A few extend another *theme's* file instead of `base/` and override only the difference — `sap_horizon_hcw/rtl-parameters.css` imports `../sap_horizon/rtl-parameters.css`. That is the exception, not the pattern.
 
-The supported themes are `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`); `packages/tools/assets-meta.js` is the authoritative list. `packages/fiori/src/themes` has two extra sets. The `sap_belize*` folders have no `parameters-bundle.css` and are not built — ignore them. The `*_exp` folders are not in `assets-meta.js`, but they have their own `parameters-bundle.css` and are built, so a new fiori component adds its `@import` there too, as `HeroBanner` did.
+Only `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`) are maintained; `packages/tools/assets-meta.js` is the authoritative list, and only the themes in it are registered and loaded at runtime. Other theme folders in `packages/fiori/src/themes` (`sap_belize*`, `*_exp`) can be ignored.
 
 A new `--_ui5_*` parameter needs a value in `base/` only, not in every theme folder. Per-theme folders `@import` base, so the base value reaches every theme — `--_ui5_button_border_radius` is declared solely in `base/Button-parameters.css` and resolves everywhere. A theme folder gets a file only when it actually overrides something: `Bar-parameters.css` exists in `base/` and in the high-contrast folders, nowhere else. Central compact overrides live in `base/sizes-parameters.css` onward.
 
-Declaring the file is not enough — it must also be `@import`ed from the theme's `parameters-bundle.css`, or it has no effect. That file is the registration unit: `sap_horizon/parameters-bundle.css` aggregates every `-parameters.css` plus `sizes-parameters.css` and `rtl-parameters.css`. Add the `@import` in every theme folder that should load it.
+Declaring the file is not enough — it must also be `@import`ed from the theme's `parameters-bundle.css`, or it has no effect. That file is the registration unit: `sap_horizon/parameters-bundle.css` aggregates every `-parameters.css` plus `sizes-parameters.css` and `rtl-parameters.css`. Add the `@import` in every theme folder that should load it — except the `*_auto` folders (e.g. `sap_horizon_auto`), which are generated composites of their light/dark siblings; import only into the themes they draw from.
 
 ## Selectors
 
-Never use tag names — write `[ui5-button].accept`, not `ui5-button.accept`. When an application configures scoping, the framework registers the element under a suffixed tag name (`ui5-button-suffix`), so an element selector stops matching; it always also sets a bare `ui5-button` attribute on the host, which is why the attribute form keeps working. `yarn lint:scope` enforces it.
+Never use tag names — write `[ui5-button].accept`, not `ui5-button.accept`; scoping renames the tag but keeps the attribute (core-rules, Why attribute selectors). `yarn lint:scope` enforces it.
 
-Persistent state comes from reflected attributes, not classes. Transient classes for animation or measurement-driven layout are legitimate (`Popup`'s `ui5-popup-opening`, `Bar`'s `ui5-bar-root-shrinked`) — the rule is that *durable* state must be a reflected attribute, not that `classList` is never touched.
-
-This is the other half of the selector rule: properties reflect to an attribute by default, and `noAttribute: true` stops the attribute from ever being created or observed, so `[attribute]` can never match it. Give an internal property `noAttribute: true` only when no CSS reads that state.
+Persistent state comes from reflected attributes, not classes. Transient classes for animation or measurement-driven layout are legitimate (`Popup`'s `ui5-popup-opening`, `Bar`'s `ui5-bar-root-shrinked`) — the rule is that *durable* state must be a reflected attribute, not that `classList` is never touched. A `noAttribute: true` property has no attribute, so `[attribute]` can never match it: give an internal property `noAttribute: true` only when no CSS reads that state.
 
 ```css
 :host([design="Transparent"]) {

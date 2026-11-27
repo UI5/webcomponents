@@ -2,71 +2,39 @@
 
 ## Contents
 
-- The file set: beyond the standard set, `packages/ai` and `packages/compat`
-- Order inside the `.ts` file: order inside the class
-- Decorators: `@customElement` config keys
-- Lifecycle
-- Templates
+- The file set — a table of every file a component consists of, which are required, and what each is for
+- Order inside the `.ts` file — the usual order of imports, class members, and exports
+- Decorators — what each decorator does, and the `@customElement` config keys
+- Lifecycle — when each hook fires and what it is for
+- Templates — how a `.tsx` template reads the instance, `part`, and the focus marker
 
 ## The file set
 
-The table below uses a component named `Foo` in `packages/main`. The other component packages use the
-same file set; only the path changes:
-
-- `fiori` and `compat` are identical: replace `packages/main/` with `packages/fiori/` or
-  `packages/compat/` (e.g. `packages/fiori/src/ShellBar.ts`, `ShellBarTemplate.tsx`,
-  `themes/ShellBar.css`).
-- `ai` has a few incidental differences; see "packages/ai and packages/compat" below.
+The table below uses a component named `Foo` in `packages/main`. The other component packages
+(`fiori`, `ai`, `compat`) use the same file set; replace `packages/main/` with the package path.
 
 | File | Required | Purpose |
 |------|----------|---------|
 | `packages/main/src/Foo.ts` | yes | Class, decorators, logic, public API |
 | `packages/main/src/FooTemplate.tsx` | yes, unless the component is headless (no visible markup) | Preact JSX template |
-| `packages/main/src/themes/Foo.css` | yes, unless headless | Structure and layout. Use existing `--sap*` tokens and shared `--_ui5_*` parameters — most components need only this file |
-| `packages/main/src/themes/base/Foo-parameters.css` | rare | Only when values differ per theme in ways that cannot be expressed with existing UI5 CSS parameters — structural differences across all themes, not colours or fonts already covered by `--sap*`. See `theming-and-css.md` |
+| `packages/main/src/themes/Foo.css` | yes, unless headless | Structure and layout — most components need only this file |
+| `packages/main/src/themes/base/Foo-parameters.css` | rare | Per-theme values; when to add one is in `theming-and-css.md` (Where each file goes) |
 | `packages/main/src/themes/<theme>/Foo-parameters.css` | rare | Per-theme overrides for the above |
-| `packages/main/src/themes/<theme>/parameters-bundle.css` | only if parameters files exist | Per-theme aggregator and the registration unit. Add an `@import` for your `-parameters.css` to the theme families the component should be styled in, or the variables never load there. The `*_auto` folders (e.g. `sap_horizon_auto`) are generated composites of their light/dark siblings — never add a direct import there, only to the themes they draw from |
+| `packages/main/src/themes/<theme>/parameters-bundle.css` | only if parameters files exist | Registers the parameters files for that theme — see `theming-and-css.md` |
 | `packages/main/src/types/FooSomething.ts` | if it has a public enum | One enum per file. A private, unexported enum can live inline in `Foo.ts` instead |
-| `packages/main/src/i18n/messagebundle.properties` | if it has text | One bundle per package, mixing component-specific (`BUTTON_*`) and shared (`ACC_STATE_*`, `DELETE`) keys. Prefix new keys with the component name |
-| `packages/main/src/i18n/messagebundle_en.properties` | if the English text changes | The defaults generator merges this with `messagebundle.properties` and the translated file wins, so an English copy fix that only touches `messagebundle.properties` has no visible effect until this file is updated too. Edit it by hand alongside `messagebundle.properties`. Other locale files (`messagebundle_de.properties`, etc.) are pipeline-owned — never hand-edit those |
+| `packages/main/src/i18n/messagebundle.properties` | if it has text | One bundle per package; key naming is in `i18n.md` |
+| `packages/main/src/i18n/messagebundle_en.properties` | if the English text of an existing key changes | Overrides `messagebundle.properties` for English. See `i18n.md` |
 | `packages/main/cypress/specs/Foo.cy.tsx` | conventional | Behaviour tests. A subcomponent's tests usually live in its parent's spec — `AvatarBadge` is covered by `Avatar.cy.tsx`, `MenuItem` by `Menu.cy.tsx` |
 | `packages/main/cypress/specs/visuals/Foo.cy.tsx` | if visual | Screenshot tests |
 | `packages/main/test/pages/Foo.html` | recommended | Manual test page for the dev server |
 | `packages/website/docs/_samples/main/Foo/...` | if public | Documentation samples |
 
-### Beyond the standard set
-
-- Extra templates for popovers and detached subtrees: `InputPopoverTemplate.tsx`,
-  `SelectPopoverTemplate.tsx`, `features/InputSuggestionsTemplate.tsx`
-- Several entries in `styles: [...]` when composing shared CSS: `Select.ts`, `ShellBar.ts`
-- `features/` modules, lazily imported at runtime: `features/InputSuggestions.ts` from `Input.ts`
-- Registration entries in `src/bundle.esm.ts`, `src/bundle.scoped.esm.ts` (paired with
-  `bundle.scoped.config.ts`), and `src/Assets.ts` — plus `src/Assets-fetch.ts` and
-  `src/Assets-node.ts` for the fetch- and Node-targeted asset variants. Keep all of them in sync
-  when adding a component
-
-### packages/ai and packages/compat
-
-Both use the same file set and build pipeline as `main`. `compat` matches `main` structurally.
-
-`ai` differs in a few incidental ways — none of these are patterns to copy into new components:
-
-- It has no local `src/types/` directory; its components import enums from
-  `@ui5/webcomponents/dist/types/...` instead of declaring their own.
-- `src/themes/` contains only `sap_horizon*` folders — whatever theme set was supported when `ai`
-  was added, not an intentional Horizon-only policy.
-- Some components subclass a `main` component directly and import the parent's generated CSS, which
-  couples `ai` to `main` internals.
-- i18n acquisition is mixed: most components use `@i18n(bundleName)`, but a few still use the
-  deprecated `static async onDefine()` + `getI18nBundle()` pattern. Write new `ai` components
-  against `@i18n`; do not copy `onDefine()`.
+A new component is registered in `src/bundle.esm.ts` only; see `new-component.md`.
 
 ## Order inside the `.ts` file
 
-Framework, then base utilities and types, then local modules, then the template, then generated
-last — a common tendency, not a rule. Plenty of existing components import out of this order
-somewhere. Match the imports around where you're adding one rather than deriving a position from
-this list.
+Imports commonly go framework first, then base utilities and types, then local modules, then the
+template, and generated modules last.
 
 ```ts
 // A component's imports, condensed — a real file has more framework/base imports than shown
@@ -95,33 +63,17 @@ import {
 import buttonCss from "./generated/themes/Button.css.js";
 ```
 
-`Button.ts` imports `ButtonDesign` at runtime because it compares against the enum's members; an enum used only as a type is imported with `import type`. See `core-rules.md` (Enum import and comparison).
-
-Decorator imports come from individual files here; the Table family instead imports from
-`decorators.js`. Both compile identically; importing from `decorators.js` is essentially a
-Table-family convention — write new components with individual-file imports unless you are
-extending the Table family.
+Import decorators from individual files, as above. Importing from `decorators.js` compiles the same
+but is a Table-family convention — use it only when extending that family.
 
 ### Order inside the class
 
-A common tendency, not a rule: `eventDetails` first, then public `@property` fields, then `@slot`
-fields, then plain private fields and `@query` fields, then the static `@i18n` bundle, then the
-constructor, lifecycle hooks, event handlers, the getters the template calls, and static helpers
-last. A simple component follows this closely end-to-end.
+Classes commonly start with `eventDetails`, then public `@property` fields, then `@slot` fields, then
+plain private fields and `@query` fields, then the static `@i18n` bundle, then the constructor,
+lifecycle hooks, event handlers, the getters the template calls, and static helpers last.
 
-This pattern breaks down in larger components and subclasses, so don't enforce it across existing
-code. Larger components interleave `@property` and `@slot` fields around the `static i18nBundle`,
-put form-validity getters (`formValidityMessage`, `formValidity`, `formFormattedValue`) before the
-constructor, drop the constructor entirely, or declare a getter/setter property (like `opener`)
-after the constructor instead of with the other properties. A subclass may have no `eventDetails`,
-no i18n bundle, and no constructor of its own — those can live in the base class instead. Match the
-surrounding code in the file you're editing.
-
-`Foo.define()` runs at module scope after the class body, followed by `export default Foo`. A
-component with exported enums or constants often has a plain `export { ... }` here too, and
-`export type { ... }` only appears when there's a public API type left to export; not every component
-needs one. Every type used in a public API signature must be exported this way — see `api-design.md`
-for the CEM validation this satisfies.
+`Foo.define()` and `export default Foo` close the file, followed by an `export type { … }` of any type
+used in a public signature — CEM requires it (see `api-design.md`).
 
 ## Decorators
 
@@ -137,13 +89,9 @@ The `@ui5/webcomponents-base/dist/decorators.js` module re-exports every decorat
 | `@i18n(bundleName)` | static field | e.g. `@i18n("@ui5/webcomponents")` |
 | `@query(selector)` | field | Shadow DOM `querySelector`, evaluated on access |
 | `@queryAll(selector)` | field | Shadow DOM `querySelectorAll` |
-| `@bound` | method | Auto-binds `this`. Real, but not used by any shipped component — no example to copy if you reach for it |
 
 The strict decorators take their types from the class's `eventDetails` map and from `Slot<T>` /
-`DefaultSlot<T>`. Use `slot-strict.js` and `event-strict.js` (or `slotStrict`/`eventStrict` from
-`decorators.js`) for `@slot` and `@event`. The `wc-create-ui5-element` scaffolder emits the wrong `slot.js`
-import — fix it to `slot-strict.js` after scaffolding (its `event-strict.js` import is already
-correct).
+`DefaultSlot<T>`.
 
 ### `@customElement` config keys
 
@@ -158,7 +106,7 @@ correct).
 | `cldr` | boolean | The component formats dates or numbers |
 | `formAssociated` | boolean | The component participates in form submission — pairs with `formAssociatedCallback()`, see Lifecycle |
 | `fastNavigation` | boolean | The component is an F6 navigation group |
-| `shadowRootOptions` | object | `{ delegatesFocus: true }` only when the host has no focusable element in the natural tab order and the app may call native `element.focus()` on the host — rare (Button, ColorPicker, ColorPaletteItem). Most focusable components put `tabindex` on the inner element instead; see `accessibility.md` |
+| `shadowRootOptions` | object | `{ delegatesFocus: true }` — rare; see `accessibility.md` (Focus) for when it applies |
 | `dependencies` | array | Still consumed at runtime for micro-frontend tag scoping (`getUniqueDependencies`/`tagsToScope`), despite an `@deprecated` JSDoc on the field — that tag means only "unnecessary for the old Handlebars renderer," not "remove this." Some components still set it deliberately. Set it when your component slots in other custom elements and needs correct scoping |
 | `features` | array | A different, disused mechanism from the Table `features` *slot* pattern in `api-design.md` — don't confuse the two. Deprecated. Do not add |
 
@@ -167,21 +115,14 @@ correct).
 | Hook | Fires | Use it for |
 |------|-------|-----------|
 | `constructor` | once, on creation | Field initialisation only. No DOM |
-| `static async onDefine()` | once, inside `define()` | Deprecated for new code — use `@i18n` and the `cldr` option instead. Still relied on by a few `ai` components; don't copy that pattern into a new component |
+| `static async onDefine()` | once, inside `define()` | Deprecated for new code — use `@i18n` and the `cldr` option instead |
 | `onInvalidation(changeInfo)` | at invalidation time, before the deferred render | React to a specific property or slot change. Does not fire for language, theme, or RTL-direction changes — those bypass invalidation and re-render directly; see `performance.md` |
-| `onBeforeRendering` | before each render | Derive state the template needs. No DOM reads. May be declared `async` — several components do (`Button`, `Icon`, `AvatarBadge`) even though the base signature is `void` |
+| `onBeforeRendering` | before each render | Derive state the template needs. No DOM or layout reads — the DOM still reflects the previous render |
 | `onAfterRendering` | after each render | DOM measurement, positioning. Guard any `@property` write — an unconditional write re-invalidates and loops |
 | `onEnterDOM` | late in `connectedCallback`, after the first render, only if still connected | Listeners on `this`, `ResizeObserver`, delegate setup |
-| `onExitDOM` | `disconnectedCallback`, skipped if the element was never fully connected | Tear down everything `onEnterDOM` created |
+| `onExitDOM` | `disconnectedCallback`, skipped if the element was never fully connected | Tear down everything `onEnterDOM` created (core-rules, Why `onEnterDOM` / `onExitDOM`) |
 | `formAssociatedCallback()` | when the browser associates or disassociates the form, for `formAssociated: true` components | Calls `updateFormValue()`; override to react to the association changing |
 | `attributeChangedCallback` | on every attribute write | Framework-owned: converts the attribute and assigns the property. Never override |
-
-`onEnterDOM` and `onExitDOM` must be symmetric: whatever you register in one, tear down in the
-other. When the component reads `accessibleNameRef`, `accessibleDescriptionRef`, or `<label for>`
-associations that can change after mount, pair `registerUI5Element` in `onEnterDOM` with
-`deregisterUI5Element` in `onExitDOM` — see `accessibility.md`.
-
-Do not read layout in `onBeforeRendering`; the DOM still reflects the previous render.
 
 ## Templates
 
@@ -203,19 +144,11 @@ the component, so `this.foo` in the JSX reads the instance.
 
 - `part="..."` on anything an application may need to style, documented with a class-level
   `@csspart` tag — see `api-design.md` for the JSDoc shape this requires.
-- `data-sap-focus-ref` marks the element that receives focus when it is not the first shadow child
-  (e.g. Input's inner `<input>` inside a wrapper). `getFocusDomRef()` queries for it, then falls
-  back to `getDomRef()` (the first shadow child). ARIA and `tabindex` go on that inner focusable
-  element, never on the host — see `accessibility.md`.
+- `data-sap-focus-ref` marks the focus target when it is not the first shadow child; ARIA and
+  `tabindex` go on that element, never on the host — see `accessibility.md` (Wiring ARIA).
 - Computed values come from getters on the class, not from expressions in the template. Inline
   `class={{ ... }}` objects are the accepted exception, and much of the codebase uses them.
-- A template can take an `injectedProps` parameter and be reused by another component's template
-  via `templateFn.call(this, { ... })` — `ButtonTemplate.tsx` accepts one so
-  `ToggleButtonTemplate.tsx` can call `buttonTemplate.call(this, { ariaPressed: this.pressed })`.
-  Large templates are commonly split into local helper functions that take the instance
+- Large templates are commonly split into local helper functions that take the instance
   (`RangeSliderTemplate.tsx`'s `startTooltip`/`endTooltip`) rather than inlined as one long tree.
-- Putting `onKeyDown` directly on a child UI5 custom element in a template is fine and common
-  (`MultiComboBoxPopoverTemplate.tsx`, `RangeSliderTemplate.tsx`, `SearchPopoverTemplate.tsx`) — it
-  is not a pattern to avoid. If a container-level keydown or click handler misbehaves, check
-  whether it reads `event.target` instead of `event.composedPath()` first; see the Debugging
-  section of `commands-and-debugging.md`.
+- A subclass template can reuse its parent's by passing `injectedProps`:
+  `buttonTemplate.call(this, { ariaPressed: this.pressed })` in `ToggleButtonTemplate.tsx`.

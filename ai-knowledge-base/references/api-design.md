@@ -2,19 +2,13 @@
 
 ## Contents
 
-- Choosing the mechanism: writing your own public property, features as a slotted subcomponent
-- Properties: `@default`, boolean polarity, `@property` on a setter, naming, enums, accessibility properties, form-associated components, re-typing an inherited property
-- Slots: typing slot children
-- Events: subclasses and `eventDetails`, what one `fireDecoratorEvent` dispatches, cancelable events
-- Public methods
-- JSDoc that passes CEM: tag shape, allowed tags per member, class-level JSDoc, three misleading errors
-- Versioning
-
-Properties, slots, events, methods, CSS parts, and the JSDoc that documents them.
-
-JSDoc is validated when the Custom Elements Manifest is generated, by `yarn generateAPI`. Neither
-`yarn ts` nor `yarn start` runs it, so a documentation error is invisible while you type and fails
-later. Run `yarn generateAPI` before declaring an API change done.
+- Choosing the mechanism — a lookup table mapping application needs to the right mechanism (property, slot, event, CSS part, slotted subcomponent, or public method), and when a component may change its own public property
+- Properties — the `@property` options and how values reflect, `@default`, naming and boolean polarity, enums, accessibility and form properties, and re-typing an inherited property
+- Slots — what a slot is, the `@slot` decorator options, member types (`DefaultSlot<T>` vs `Slot<T>`), and how to type, address, and read slotted children
+- Events — declaring an event with `eventDetails`, what one `fireDecoratorEvent` dispatches, and naming and bubbling conventions
+- Public methods — the three cases that justify one, and the JSDoc they need
+- JSDoc that passes CEM — the tag shapes and per-member tags `yarn generateAPI` accepts, class-level JSDoc, and three misleading errors
+- Versioning — `@since`, deprecation, and `@experimental`
 
 This file covers how to shape and document the API. Invariants — declarative API, event ordering, boolean defaults, strict decorators — are in `core-rules.md`.
 
@@ -24,7 +18,7 @@ This file covers how to shape and document the API. Invariants — declarative A
 |---------------------------|-----|
 | Configure a value or a mode | property — `design`, `disabled`, `placeholder` |
 | Put the component into a state | property — `open`, `collapsed`, `selected` |
-| Compose child components, or supply markup, that the host renders and may talk to | slot — `content`, `header`, `valueStateMessage` |
+| Supply child content that the component renders at a specific place in its shadow root | slot — `content`, `header`, `valueStateMessage` |
 | React to something the user did | event — `click`, `selection-change` |
 | Restyle an internal element | CSS part |
 | Let the app switch an extra feature on or off | a slotted subcomponent with its own API — `Button`'s `badge`, `Table`'s `features`; see Features below |
@@ -33,20 +27,14 @@ This file covers how to shape and document the API. Invariants — declarative A
 Prefer a property. A public method is justified in three cases and no others: a pure computation over
 an argument (`isValidValue(value)`, `formatValue(date)`), a transient action with no resting state
 (`navigateTo`, `reset`, `closeOverflow`), or handing out a DOM reference. A method that would only
-flip a boolean the application already owns should be a property.
+flip a boolean the application already owns should be a property — `open`, not `show()` (core-rules
+rule 18, Why the API is declarative).
 
-`open` is the standard example of a state property. It is inherited from `Popup` by `Popover`,
-`Dialog`, and `ResponsivePopover` rather than redeclared, and also exists on `Menu`, `Input`,
-`ComboBox`, `MultiComboBox`, `Toast`, and the pickers. `Select` tracks open state in `opened`
-(`@private`), so it is absent from the public API and docs. It still reflects as an attribute
-because `@property({ type: Boolean })` does not set `noAttribute: true` — `@private` is a
-doc-visibility flag only, not a reflection guard.
+### When a component may change its own public property
 
-### Writing your own public property
-
-A component writes its own public property when a user interaction or its own lifecycle changes that
-state, then fires the matching event in the same handler. For example, `CheckBox.checked`,
-`Panel.collapsed`, and `Input.value` all follow it.
+When a user interaction changes the state a public property describes, the component updates the
+property and fires the matching event in the same handler — `CheckBox.checked`, `Panel.collapsed`,
+and `Input.value` all work this way:
 
 ```ts
 _afterPopoverClose() {
@@ -55,27 +43,18 @@ _afterPopoverClose() {
 }
 ```
 
-What is forbidden is different: never write to a *child or sibling* component's public property from
-JavaScript — pass the value through the template — and never write your own public property from a
-timer, observer, or fetch callback. See `core-rules.md`.
+It never writes its own public property from a timer, observer, or fetch callback (core-rules rule 17).
 
 ### Features: capability as a slotted subcomponent
 
-When an optional capability carries its own properties, events, state, and bundle cost, model it as a
-subcomponent the application slots in rather than as properties on the host.
-For example in `Button`'s `badge` slot case: `ButtonBadge` owns `design` and `text`, and a button without a badge never
-declares them.
+An optional capability with its own properties, events, and bundle cost can be a subcomponent the
+application puts in a slot, instead of properties on the host. `Button`'s `badge` slot takes a
+`ButtonBadge`, which owns `design` and `text`, so a button without a badge never declares them.
 
-`Table` is the other, bigger case. It has one `features` slot typed to `ITableFeature`, an interface of lifecycle hooks (`onTableActivate`, `onTableBeforeRendering`, `onTableAfterRendering`). The table looks each feature up by a string `identifier`, never by class.
-
-`TableSelectionMulti`, `TableGrowing`, and `TableVirtualizer` are separate imports, so a table that does not select does not pay for selection.
-
-**This is not the same as extending a class.** A subclass adds API too, but it gives you a new
-element: `ToggleButton` extends `Button` to add `pressed`, `ListItemCustom` extends `ListItem`.
-
-The app opts in by writing a different tag, and is then stuck with it. With a slot the tag stays the
-same, and the app can add or remove the feature whenever it likes. So extend when the feature
-decides what the element *is*, and slot when the element works fine without it.
+`Table` has one `features` slot typed to `ITableFeature`, an interface of lifecycle hooks
+(`onTableActivate`, `onTableBeforeRendering`, `onTableAfterRendering`). The table looks each feature up
+by a string `identifier`, never by class. `TableSelectionMulti`, `TableGrowing`, and `TableVirtualizer`
+are separate imports, so a table that does not select does not pay for selection.
 
 ## Properties
 
@@ -166,19 +145,11 @@ default slot varies by component (`Button.text` is a slot; `MenuItem.text`, `Tab
 
 ### Enums
 
-Type the property as `` `${Enum}` `` and default it to a string literal. The attribute path assigns a
-raw string, so a property typed as the enum itself is a type lie. One enum per file in `src/types/`.
-Whether the import is type-only depends on whether the code reads enum members — see `core-rules.md`
-(Enum import and comparison).
+The declaration is core-rules rule 1, because the attribute path assigns a raw string — a property typed as the enum itself is a type lie. One enum per file in `src/types/`. Imports: core-rules (Enum import and comparison).
 
 ### Accessibility properties
 
-An interactive component carries `accessibleName` and `accessibleNameRef` as optional strings with no
-default, `accessibleRole` typed to a component-specific enum rather than a raw ARIA role, and
-`accessibilityAttributes` as `{ type: Object }` defaulting to `{}` and narrowed with
-`Pick<AccessibilityAttributes, …>` to the fields it actually applies. Call `registerUI5Element` in
-`onEnterDOM` only when `accessibleNameRef`, `accessibleDescriptionRef`, or `<label for>` targets can
-change after mount — see `accessibility.md`.
+Which `accessible*` properties to declare, their types, and how to wire them are in `accessibility.md`.
 
 ### Form-associated components
 
@@ -199,6 +170,13 @@ Without it the class field shadows the prototype accessor, the component silentl
 invalidating, and the console warns that the property is "shadowed by the instance".
 
 ## Slots
+
+Slots let applications supply child content that the component renders in specific locations in its
+shadow root ([`docs/07-development/04-slots.md`](../../docs/07-development/04-slots.md)). A slot the
+component never interacts with — the docs call it *unnamed*, even when its `<slot>` has a `name` — needs
+only the `<slot name="…">` in the template and a class-level `@slot` JSDoc tag (see Class-level JSDoc).
+When the component must interact with its children to render itself, declare a class member with the
+`@slot` decorator.
 
 Import the default export of `decorators/slot-strict.js`.
 
@@ -232,7 +210,7 @@ template reads the generated name off each child: `<slot name={step._individualS
 
 Read through a re-projected slot with `this.getSlottedNodes<T>(slotName)` — a method inherited from
 `UI5Element` (the helper lives in `util/SlotsHelper.js`, but components call the method, they don't
-import it). There is no `getSlottedElements`.
+import it).
 
 ### Typing slot children
 
@@ -245,10 +223,8 @@ component defines both slot and item type (`IMenuItem` in `Menu.ts`, `ITab` in `
 the implementer when many unrelated containers slot the same element (`IButton` in `Button.ts`,
 `IIcon` in `Icon.ts`).
 
-On every implementing class, add `implements ITheInterface` and `@implements {ITheInterface}` JSDoc.
-For runtime checks across module boundaries, add a duck-typing marker getter (e.g.
-`get isMenuItem() { return true; }`) and export a `createInstanceChecker` helper from the same file
-— see `MenuItem.ts`.
+Runtime checks use a duck-typing marker rather than `instanceof`, because the class object differs
+when two copies of the library are loaded (core-rules rule 4):
 
 ```ts
 // Menu.ts — interface lives with the consumer
@@ -270,9 +246,6 @@ export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem"
 
 Never pass a component class as the slot `type` — it reintroduces `instanceof` and breaks under
 scoping.
-
-A slot with no accessor is documented with a class-level tag instead:
-`@slot {Array<Node>} default - Defines the content…`
 
 ## Events
 
@@ -324,28 +297,21 @@ eventDetails!: ListItem["eventDetails"] & {
 }
 ```
 
-If the parent has no events of its own, listing only your new events is enough.
-
 Export every detail type from the module, or CEM rejects it as an undocumented public type.
 
 ### What one `fireDecoratorEvent` dispatches
 
-Each call to `_fireEvent` fires up to two events with `composed: false`: `ui5-{name}` and `{name}`.
-For multi-word names like `selection-change`, a second `_fireEvent` call fires the PascalCase pair
-(`ui5-SelectionChange`, `SelectionChange`) when `kebabToPascalCase(name)` differs from `name`. A
-single-word name like `open` gets the same second call because `kebabToPascalCase("open")` is
-`"Open"`. So a four-event name is two independent `_fireEvent` calls, not one call with four
-variants — suppressing the kebab-named event via no-conflict configuration does not suppress the
-PascalCase pair from the second call.
+Two independent `_fireEvent` calls, each dispatching a pair with `composed: false`: first `ui5-{name}`
+and `{name}`, then the PascalCase pair (`ui5-SelectionChange`, `SelectionChange`) whenever
+`kebabToPascalCase(name)` differs from `name` — which includes single words (`open` → `Open`).
 
-The `ui5-` prefixed events always fire; the un-prefixed ones are what no-conflict configuration
-suppresses, so listen to the prefixed name inside the library. The PascalCase alias exists so
-React's `onSelectionChange` binds to a real dispatched event.
-
-Two consequences: a bubbling event stops at the first shadow boundary, so a host listening to its own
-slotted children attaches listeners directly; and preventing one kebab-named event from the first
-call does not prevent the PascalCase event from the second call, so a React consumer's handler may
-silently not run.
+- The `ui5-` events always fire; no-conflict configuration suppresses the un-prefixed ones, so listen
+  to the prefixed name inside the library. The PascalCase pair exists so React's `onSelectionChange`
+  binds to a real event.
+- The calls are independent: suppressing the kebab-named event via no-conflict configuration, or
+  preventing it, does not affect the PascalCase pair — so a React consumer's handler may silently not run.
+- A bubbling event stops at the first shadow boundary, so a host listening to its own slotted children
+  attaches listeners directly.
 
 `fireDecoratorEvent` returns `false` when prevented:
 
@@ -361,13 +327,9 @@ const prevented = !this.fireDecoratorEvent("item-click", { item, text: item.text
 
 ### Cancelable events
 
-Two patterns coexist. Lifecycle events fire first and act only if not prevented (`Popup.openPopup`,
-`TabContainer.selectTab`). Value and selection changes apply the change, fire, and revert if prevented
-(`CheckBox.toggle`, `List` selection) — so a `change` listener sees the new value while a
-`before-open` listener sees the old state. Use fire-then-act for new lifecycle events.
-
-Setting `open` on a popup from application code runs the full event sequence, since the setter drives
-it. Events here are not user-interaction-only.
+Whether the state changes before or after a cancelable event fires is core-rules rule 14 (Why event
+ordering matters). Setting `open` on a popup from application code runs the full event sequence,
+since the setter drives it, so events here are not user-interaction-only.
 
 ## Public methods
 
@@ -384,21 +346,23 @@ Expose focus by overriding `getFocusDomRef()`, not `focus()`.
 
 ## JSDoc that passes CEM
 
+JSDoc is part of the public API: the Custom Elements Manifest (CEM) built from it generates the
+documentation and the framework wrappers. It is validated only when the manifest is generated, by
+`yarn generateAPI`. Neither `yarn ts` nor `yarn start` runs it, so a documentation error is invisible
+while you type and fails later. Run `yarn generateAPI` before declaring an API change done.
+
 Every tag is checked twice: it must be allowed for that kind of member, and it must have the right
 shape. A tag in the wrong shape fails with the same "Incorrect use of @tag" error as a disallowed
 one, so the shape rules matter more than the error list.
 
-The table below is **CEM shape** — what `yarn generateAPI` accepts — not how you would write
-TypeScript in general. Put types on the function signature; CEM reads JSDoc separately. Method
-`@param` is prose only (no `{type}` braces — adding them fails the build). Event `@param` is the
-opposite: braces are required because CEM has no signature to read.
-
 ### CEM tag shape (not TypeScript syntax)
+
+What `yarn generateAPI` accepts. Put types on the function signature; CEM reads JSDoc separately.
 
 | Tag | Shape |
 |-----|-------|
-| `@param` on a **method** | prose only, no braces — `@param selectedSet A set of row keys` |
-| `@param` on an **event** | braces required — `@param {HTMLElement} item The previewed item` |
+| `@param` on a **method** | prose only — `{type}` braces fail the build. `@param selectedSet A set of row keys` |
+| `@param` on an **event** | braces required, since CEM has no signature to read — `@param {HTMLElement} item The previewed item` |
 | `@returns` | text, no braces |
 | `@implements` | braces — `@implements {IButton}` |
 | `@extends` | no braces — `@extends UI5Element` |
@@ -434,7 +398,8 @@ them the entire class JSDoc is skipped — silently, with no error and no manife
 `new-component.md`.
 
 A `part` in the template also needs a class-level `@csspart name - description`, or the part ships
-undocumented with no error.
+undocumented with no error. A slot with no `@slot` member is documented the same way:
+`@slot {Array<Node>} default - Defines the content…`.
 
 ### Three errors whose message misleads
 

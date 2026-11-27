@@ -2,9 +2,9 @@
 
 When reviewing pull requests to UI5 Web Components project, follow these guidelines:
 
-## AI Knowledge Base
+## Source of Truth
 
-  Detailed conventions, guardrails, and good/bad examples live in the **AI Knowledge Base** at [`ai-knowledge-base/`](../ai-knowledge-base/). When a change touches a `.ts`, `.tsx`, or `.css` file under `packages/`, a Cypress spec, or a `ui5-*` component/property/slot/event/design token/ARIA attribute, consult [`ai-knowledge-base/INDEX.md`](../ai-knowledge-base/INDEX.md) and open the reference files its routing table names for the areas under review. Review the diff against those rules.
+Follow the repository-wide agent rules in [`AGENTS.md`](../AGENTS.md).
 
 ## Commit Message and PR Title Validation
 

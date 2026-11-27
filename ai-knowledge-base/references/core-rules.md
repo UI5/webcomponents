@@ -2,15 +2,14 @@
 
 ## Contents
 
-- The rules: Blocking, Structural, Quality
-- Reviewing a diff
-- Enum import and comparison
-- Why each rule exists: attribute selectors, not `instanceof`, `@query` is read-only, `@property` is not free, `onEnterDOM` / `onExitDOM`, event ordering, children must not know their parent, the API is declarative
-- When imperative DOM calls are legitimate
+- The rules — numbered wrong/right tables: Blocking (breaks scoping, typing, or framework behaviour), Structural (component design), Quality (style and readability)
+- Reviewing a diff — which rules tooling catches and which need a manual check
+- Enum import and comparison — when the enum import is type-only and how to compare values
+- Why each rule exists — the reasoning behind the rules that are least obvious
+- When rules 7 and 8 don't apply — the narrow cases where imperative DOM calls are correct
 
-Every rule here is what you follow in code you write. Legacy code may violate them, sometimes at
-scale — do not copy those patterns, and do not migrate them as a drive-by. A rule being listed here
-does not mean the codebase is fully following it; it means new code must not add legacy practices.
+Consider these rules as modern guidelines when writing code. Legacy code may sometimes violate these
+patterns; avoid copying patterns from legacy code.
 
 ## Blocking
 
@@ -22,8 +21,8 @@ does not mean the codebase is fully following it; it means new code must not add
 | 4 | Identify UI5 components with an instance checker | `el instanceof Button` | `isInstanceOfButton(el)` |
 | 5 | Never compare `tagName` against a UI5 tag — native tags (`INPUT`, `IMG`, `SLOT`, `IFRAME`) are fine | `el.tagName === "UI5-BUTTON"` | `isInstanceOfButton(el)` |
 | 6 | Set child state through the template | `this._input.value = x` — any assignment to a property of a `@query` ref | `<Input value={x} />` |
-| 7 | No imperative attribute mutation on child UI5 elements — exceptions listed in section "When imperative DOM calls are legitimate" | `childUi5El.setAttribute("disabled", "")` | `<El disabled={this.isDisabled} />` |
-| 8 | No class toggling for persistent state — exceptions listed in section "When imperative DOM calls are legitimate" | `el.classList.add("active")` to track open/selected state | `:host([active]) { }` driven by a `@property` |
+| 7 | No imperative attribute mutation on child UI5 elements — exceptions in "When rules 7 and 8 don't apply" | `childUi5El.setAttribute("disabled", "")` | `<El disabled={this.isDisabled} />` |
+| 8 | No class toggling for persistent state — exceptions in "When rules 7 and 8 don't apply" | `el.classList.add("active")` to track open/selected state | `:host([active]) { }` driven by a `@property` |
 | 9 | No `any` — strongly discouraged; acceptable only as a documented workaround for an external/untyped API | `const d: any = f()`, `as any` | `const d: MyType = f()`, or `unknown` plus narrowing |
 | 10 | Boolean properties default to `false` | `@property({ type: Boolean }) open = true` | `@property({ type: Boolean }) open = false` |
 | 11 | Bubbled handlers that resolve a child component use `composedPath()`, not `event.target` | `e.target as ChildElement` when the event bubbles up from a child component | `e.composedPath()[0] as ChildElement` |
@@ -34,39 +33,38 @@ does not mean the codebase is fully following it; it means new code must not add
 |---|------|-------|-------|
 | 12 | Private `@property` fields get `noAttribute: true`, unless a CSS selector reads the attribute | `@property({ type: Boolean }) _open = false` with no `:host([_open])` selector | `@property({ type: Boolean, noAttribute: true }) _open = false` |
 | 13 | Non-rendered state is a plain field | `@property() _lastKey = ""` — a `@property` the `.tsx` and `.css` never read | `_lastKey = ""` |
-| 14 | Event ordering matches the pattern — value/selection changes mutate then fire (revert if prevented); lifecycle events fire first and act only if not prevented | one pattern applied to the wrong case | value/selection: mutate, then fire; lifecycle: fire, then act if not prevented |
-| 15 | Revert state when a cancelable event is prevented | fire and ignore the return value | revert if `fireDecoratorEvent` returns `false` |
-| 16 | Focusable components are reachable via `focus()` — either `delegatesFocus: true`, or an inner focusable element found through `getFocusDomRef()` | neither `delegatesFocus` nor an inner focus target | `shadowRootOptions: { delegatesFocus: true }`, **or** `tabindex` on the inner element (the majority pattern) |
-| 17 | Children never reach for their parent | `this.parentElement as Table`, `this.closest(`, `this.getRootNode().host` | the child fires, the parent listens |
-| 18 | Public properties change only in response to user interaction | reassigns `this.value` from a timer, observer, or fetch callback | update on user action, then fire the event |
-| 19 | State is declared, not commanded | `show(): void` — a new public method that sets a resting state: `open`, `show`, `close`, `toggle`, `expand` | `@property({ type: Boolean }) open = false` |
-| 20 | `fireDecoratorEvent`, never `fireEvent` | `this.fireEvent("change", d, true, true)`, or `.fireEvent(` on a child | `this.fireDecoratorEvent("change", d)` |
-| 21 | Strict decorators only | `decorators/slot.js`, `decorators/event.js` | `decorators/slot-strict.js`, `decorators/event-strict.js` |
-| 22 | Relative imports end in `.js` | `from "./Button"` | `from "./Button.js"` |
-| 23 | Keyboard checks use the `Keys.js` predicates where one exists | `e.key === "Enter"`, `e.keyCode` | `isEnter(e)` |
-| 24 | Register and deregister external listeners in `onEnterDOM`/`onExitDOM` | `connectedCallback`/`disconnectedCallback` overrides; `document.addEventListener` with no matching `removeEventListener` in `onExitDOM` | `ResizeHandler.register`/`deregister` in `onEnterDOM`/`onExitDOM`; paired `document.addEventListener`/`removeEventListener` with the same bound handler and options |
+| 14 | A property the user already changed is applied before the event fires, and reverted if the event is prevented; a request that has not happened yet fires first | `if (!this.fireDecoratorEvent("change")) { return; }` then `this.checked = !this.checked;` — a `change` listener reads the old value; or firing a cancelable event and ignoring the return value | already applied (`checked`, `value`, selection): change, fire, revert if `fireDecoratorEvent` returns `false`. Not yet applied (`before-open`, `before-close`, `tab-select`, `item-toggle`): fire, act only if not prevented |
+| 15 | Focusable components are reachable via `focus()` — either `delegatesFocus: true`, or an inner focusable element found through `getFocusDomRef()` | neither `delegatesFocus` nor an inner focus target | `shadowRootOptions: { delegatesFocus: true }`, **or** `tabindex` on the inner element (the majority pattern) |
+| 16 | Children never reach for their parent | `this.parentElement as Table`, `this.closest(`, `this.getRootNode().host` | the child fires, the parent listens |
+| 17 | Public properties change only in response to user interaction | reassigns `this.value` from a timer, observer, or fetch callback | update on user action, then fire the event |
+| 18 | State is declared, not commanded | `show(): void` — a new public method that sets a resting state: `open`, `show`, `close`, `toggle`, `expand` | `@property({ type: Boolean }) open = false` |
+| 19 | `fireDecoratorEvent`, never `fireEvent` | `this.fireEvent("change", d, true, true)`, or `.fireEvent(` on a child | `this.fireDecoratorEvent("change", d)` |
+| 20 | Strict decorators only | `decorators/slot.js`, `decorators/event.js` | `decorators/slot-strict.js`, `decorators/event-strict.js` |
+| 21 | Relative imports end in `.js` | `from "./Button"` | `from "./Button.js"` |
+| 22 | Keyboard checks use the `Keys.js` predicates where one exists | `e.key === "Enter"`, `e.keyCode` | `isEnter(e)` |
+| 23 | Register and deregister external listeners in `onEnterDOM`/`onExitDOM` | `connectedCallback`/`disconnectedCallback` overrides; `document.addEventListener` with no matching `removeEventListener` in `onExitDOM` | `ResizeHandler.register`/`deregister` in `onEnterDOM`/`onExitDOM`; paired `document.addEventListener`/`removeEventListener` with the same bound handler and options |
 
 ## Quality
 
 | # | Rule | Wrong | Right |
 |---|------|-------|-------|
-| 25 | Import every icon explicitly | an icon name in a template with no matching import | `import download from "@ui5/webcomponents-icons/dist/download.js"` |
-| 26 | Logical CSS direction properties | `margin-left`, `padding-right`, `border-left`, bare `left:`/`right:`, `text-align: left` | `margin-inline-start`, `inset-inline-start`, `text-align: start` |
-| 27 | Descriptive names in samples | `mgr`, `fd`, `q`, `asc` | `itemManager`, `firstDate`, `searchQuery`, `isAscending` |
-| 28 | No issue or PR numbers in comments | `// fixes #1234` | state the constraint, or nothing |
-| 29 | Comments state constraints, not what the code does | `// increment the counter` | `// Popover measures its opener, so this must run after layout` |
+| 24 | Import every icon explicitly | an icon name in a template with no matching import | `import download from "@ui5/webcomponents-icons/dist/download.js"` |
+| 25 | Logical CSS direction properties | `margin-left`, `padding-right`, `border-left`, bare `left:`/`right:`, `text-align: left` | `margin-inline-start`, `inset-inline-start`, `text-align: start` |
+| 26 | Descriptive names | `mgr`, `fd`, `q`, `asc` | `itemManager`, `firstDate`, `searchQuery`, `isAscending` |
+| 27 | No issue or PR numbers in comments | `// fixes #1234` | state the constraint, or nothing |
+| 28 | Comments state constraints, not what the code does | `// increment the counter` | `// Popover measures its opener, so this must run after layout` |
 
 ## Reviewing a diff
 
 Check every changed line against the **Wrong** column above. Tooling catches little of it:
-`yarn lint:scope` covers 2 (in `.ts` only, not `.tsx`) and 3; `yarn lint` covers 22
+`yarn lint:scope` covers 2 (in `.ts` only, not `.tsx`) and 3 (in `src/**/*.css`); `yarn lint` covers 21
 (`import/extensions`) and flags a runtime enum import that is only used as a type
-(`consistent-type-imports`). Everything else needs eyes. Before flagging 7 or 8, check "When imperative DOM
-calls are legitimate"; before flagging 16, confirm there is no inner focus target either.
+(`consistent-type-imports`). Everything else needs eyes. Before flagging 7 or 8, check "When rules 7
+and 8 don't apply"; before flagging 15, confirm there is no inner focus target either.
 
 ## Enum import and comparison
 
-Blocking rule 1 covers the property declaration. The import follows from how the code uses the enum:
+Rule 1 covers the property declaration. The import follows from how the code uses the enum:
 
 - Only as a type — `import type`. `yarn lint` rejects a runtime import here.
 - Its members are read at runtime — a comparison or a fallback value — a runtime import is fine.
@@ -87,7 +85,8 @@ Comparing a type-only import against a string literal (`this.design === "Positiv
 Pick one form per enum within a file, match the file you are editing, and do not migrate the other form
 as a drive-by.
 
-The enum file stays a real TypeScript enum and stays exported for consumers.
+The template-literal type applies to the property only. The enum in `src/types/` stays an exported
+TypeScript `enum` for applications to use; do not replace it with a string-union type.
 
 ## Why attribute selectors
 
@@ -95,13 +94,12 @@ Applications can register these components under scoped tag names so two version
 coexist on one page. `ui5-button` becomes `ui5-button-f5331039`, and every tag-name selector silently
 stops matching. The `ui5-button` attribute is present either way.
 
-`yarn lint:scope` fails on bare `ui5-*` selectors in `src/**/*.css` and on `querySelector("ui5-...")` in
-`src/**/*.ts`. It does not read `.tsx`.
-
 ## Why not `instanceof`
 
-Same scoping problem, plus module duplication: with two copies of the library loaded, `Button` from
-copy A is not the same class object as `Button` from copy B.
+Each copy of the library — a second scoped version, or a module the bundler duplicated — has its own
+`Button` class, so `el instanceof Button` is `false` for a button from the other copy. That matters
+whenever a component recognises one it did not create: a slotted child, an element found in
+`composedPath()`, or the item behind an event. A duck-typing marker works across copies:
 
 ```ts
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
@@ -112,11 +110,6 @@ class MenuItem extends UI5Element {
 
 export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem");
 ```
-
-This applies to UI5 component classes only. `instanceof HTMLElement`, `instanceof Node`,
-`instanceof Date` and the like are fine. `tagName ===` against native tags (`INPUT`, `IMG`, `SLOT`,
-`IFRAME`, `TEXTAREA`) is also fine. Some current code still uses `instanceof` against UI5 classes
-(Toolbar, NotificationList, ShellBar, UserMenuItem, Popover) — treat these as legacy, not precedent.
 
 ## Why `@query` is read-only
 
@@ -150,7 +143,8 @@ _lastPressedKey = "";        // only JS reads it — plain field is correct
 
 `noAttribute: true` is the convention for internal state (not the framework default — the framework
 reflects by default), but drop it when a CSS selector reads the attribute — `:host([_open])` needs the
-attribute to exist.
+attribute to exist. `@private` only hides a property from the docs; without `noAttribute: true` it
+still reflects.
 
 ## Why `onEnterDOM` / `onExitDOM`
 
@@ -164,9 +158,10 @@ each time never matches and leaks. See `Breadcrumbs.ts`, `AvatarGroup.ts`, `Rang
 
 ## Why event ordering matters
 
-Two patterns coexist — see `api-design.md` under Cancelable events. Value and selection changes
-mutate first so listeners see the new state; revert if `fireDecoratorEvent` returns `false`. Lifecycle
-events fire first and act only if not prevented.
+Listeners rely on the order. A `change` listener reads the new value from the component, so the user's
+change must already be applied when the event fires; preventing the event reverts it. A `before-open`
+or `tab-select` listener must be able to stop something that has not happened yet, so the component
+fires first and acts only if the event was not prevented (`Popup`, `TabContainer`).
 
 ```ts
 this.checked = !this.checked;
@@ -177,8 +172,11 @@ if (!this.fireDecoratorEvent("change")) {
 
 ## Why children must not know their parent
 
-`this.parentElement as Table` breaks the moment the child is wrapped in a `div`, slotted somewhere
-unexpected, or rendered standalone in a test, and it creates a module cycle.
+A child component does not choose its parent: the application composes it, and the same child can sit
+in different containers, inside a wrapper `div`, or alone in a test. A child that reads
+`this.parentElement as Table` breaks in all of those cases, and importing the parent class creates a
+circular import between the two modules. So information flows one way: the parent reads its slotted
+children, and the child reports changes by firing events.
 
 ```ts
 // wrong — a child reaching for its parent
@@ -187,8 +185,6 @@ const row = this.parentElement as TableRow | null;
 // right — the child announces, the parent decides
 this.fireDecoratorEvent("selection-change", { selected: this.selected });
 ```
-
-A few such casts remain in Table and Tree internals, where the parent contract is fixed. New components do not get that exemption.
 
 ## Why the API is declarative
 
@@ -201,12 +197,13 @@ attribute binding.
 ```
 
 A verb in a public API name is the signal: `open` the adjective is a property, `open()` the verb is
-not. When the user does something that changes that state — pressing Escape, for instance — the
-component updates its own property and fires the matching event.
+not. How the component updates that property itself on user interaction is in `api-design.md`
+(When a component may change its own public property).
 
-## When imperative DOM calls are legitimate
+## When rules 7 and 8 don't apply
 
-These are the known production exceptions to rules 7 and 8. They are narrow — do not expand them.
+These are the cases where rules 7 and 8 do not apply, listed so a review does not flag them. They are
+narrow — do not expand them.
 
 **`this.setAttribute` on the component's own host in a lifecycle hook** — for browser-API-required
 attributes (`popover="manual"` must be a real DOM attribute for the native Popover API to activate)

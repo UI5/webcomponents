@@ -2,14 +2,14 @@
 
 ## Contents
 
-- The invalidation model
-- What schedules a render
-- One suppression flag, two phases
-- The four rules: state only JavaScript reads, scoped `invalidateOnChildChange`, guarding `onAfterRendering`, cleanup in `onExitDOM`
-- Repo patterns to reuse
-- Animations
-- Awaiting a render
-- Large lists
+- The invalidation model — what happens between a property write and the DOM update
+- What schedules a render — every trigger, and which ones bypass invalidation
+- One suppression flag, two phases — where a `@property` write is silent and where it queues another render
+- The four rules — state only JavaScript reads, scoped `invalidateOnChildChange`, guarding `onAfterRendering`, cleanup in `onExitDOM`
+- Repo patterns to reuse — the existing helpers for resize, scroll, throttling, and caching
+- Animations — gating on the global animation mode
+- Awaiting a render — what `renderFinished()` waits for
+- Large lists — where the reference implementation is
 
 ## The invalidation model
 
@@ -32,9 +32,9 @@ assign to an @property
 Renders are batched and deduped, so you cannot read the DOM right after setting a property.
 `RenderQueue.add()` ignores a component already queued, and `scheduleRenderTask()` drains the whole
 queue inside a single `requestAnimationFrame`: N assignments in one synchronous turn cost
-one render per component. A component re-queued during the drain is processed again; the queue throws
-once a component exceeds `MAX_PROCESS_COUNT` renders in one task — the only guard against a render
-loop.
+one render per component. A component re-queued during the drain is processed again. A render loop is
+prevented by `_suppressInvalidation` during `onBeforeRendering` (below); the backstop is
+`MAX_PROCESS_COUNT` (10 renders of one component in one task), after which the queue throws.
 
 ## What schedules a render
 
@@ -86,19 +86,14 @@ Assigning an `@property` there queues a second render, so cache into a plain fie
 
 ### 1. State only JavaScript reads is not a property
 
-The rule is in `core-rules.md` ("Non-rendered state is a plain field"). The invalidation consequence: the wasted render runs
-`onBeforeRendering`, which can overwrite input the user is still editing. A re-render on the first
-keystroke reset the value and moved the caret to the start of the field.
-
-`@property({ type: Object })` and `type: Array` never reflect to an attribute — the setter returns
-early ("Don't reflect arrays and objects to the DOM"). Reassigning still invalidates,
-but a CSS attribute selector will never see the value. `noAttribute: true` on any other property skips
-the per-render `setAttribute`/`removeAttribute`; use it for private state not read by CSS.
+The rule and its cost are in `core-rules.md` (rule 13, Why `@property` is not free). On the
+reflection side, `noAttribute: true` skips the per-render `setAttribute`/`removeAttribute`; Object and
+Array properties never reflect (`api-design.md`, Properties) but reassigning them still invalidates.
 
 ### 2. Scope `invalidateOnChildChange` to the properties you depend on
 
-Unscoped, every property change on every child re-renders the parent. The option takes an object form
-`{ properties, slots }` where each is a boolean or a list of names:
+Unscoped, every property change on every child re-renders the parent. Use the object form (options
+in `api-design.md`, Slots):
 
 ```ts
 // Follow two named properties, ignore slot changes
@@ -127,11 +122,10 @@ before assigning, and keep measurements in plain fields. `getDomRef()` is not ca
 
 ### 4. Clean up in `onExitDOM`
 
-The symmetry list is in `component-anatomy.md`. Nothing is torn down automatically: an unmatched
-`ResizeHandler`, `IntersectionObserver`, scroll listener, or `setTimeout`/`setInterval` keeps firing
-on a detached component and blocks GC. Deregister with the **same bound reference** you registered — a
-fresh arrow each time never matches and leaks. Gate registration on `open` inside
-`onAfterRendering` and keep a safety deregister in `onExitDOM`.
+Pairing rules are in `core-rules.md` (Why `onEnterDOM` / `onExitDOM`). Nothing is torn down
+automatically: an unmatched `ResizeHandler`, `IntersectionObserver`, scroll listener, or
+`setTimeout`/`setInterval` keeps firing on a detached component and blocks GC. Gate registration on
+`open` inside `onAfterRendering` and keep a safety deregister in `onExitDOM`.
 
 ## Repo patterns to reuse
 
@@ -160,10 +154,10 @@ Animation state is global configuration, not a per-component decision.
 return this.noAnimation || getAnimationMode() === AnimationMode.None;
 ```
 
-`getAnimationMode` comes from `@ui5/webcomponents-base/dist/config/AnimationMode.js`. Compare against
-the `AnimationMode` enum member — `getAnimationMode() === AnimationMode.None` — as every component does.
-The enum values are the lowercase strings `"full"`, `"basic"`, `"minimal"`, `"none"`, so a raw
-`=== "none"` is equivalent, but the enum member is the established pattern; import the enum object.
+`getAnimationMode` comes from `@ui5/webcomponents-base/dist/config/AnimationMode.js`. Import the
+`AnimationMode` enum object and compare against its member, as every component does. Its values are
+the lowercase strings `"full"`, `"basic"`, `"minimal"`, `"none"`, so `=== "none"` works too, but is
+not the pattern.
 
 A component that animates unconditionally produces timing-dependent tests, because the test
 environment may have animations disabled while the component waits for a transition that never fires.

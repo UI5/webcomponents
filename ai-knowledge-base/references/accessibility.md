@@ -2,31 +2,29 @@
 
 ## Contents
 
-- The accessibility API: which properties to expose, resolving the texts, keeping the ref texts live
-- Wiring ARIA in the template: presence-only vs state attributes, `accessibilityInfo` for containers, `tooltip`
-- Focus
-- Keyboard: F6 fast navigation, roving tabindex with `ItemNavigation`, `div` with `role="button"`
-- Announcing dynamic changes
-- Disabled state
-- Checklist
-- Testing
+- The accessibility API — the `accessible*` properties a component exposes, the helpers that resolve them, and keeping referenced texts live
+- Wiring ARIA in the template — where ARIA goes, presence-only vs state attributes, `accessibilityInfo`, and `tooltip`
+- Focus — `delegatesFocus` vs an inner focus target, and the focus helpers
+- Keyboard — `Keys.js` predicates, F6 groups, roving tabindex with `ItemNavigation`, and `role="button"`
+- Announcing dynamic changes — the shared live region
+- Disabled state — native `disabled` vs `aria-disabled`
+- Checklist — what to confirm before a component is done
+- Testing — what accessibility coverage means here
 
 ## The accessibility API
 
 These six properties are the public accessibility contract. Application developers set them from outside the component; component developers wire the resolved values into the shadow DOM. They exist because shadow DOM breaks native ARIA ID relationships — a `for` attribute or `aria-labelledby` in the light DOM cannot reach into the shadow tree — so the framework provides a typed abstraction instead.
 
-Interactive components expose a subset of this surface; match the property names exactly.
-
 | Property | Type | Purpose |
 |----------|------|---------|
-| `accessibleName` | string | Direct label text |
-| `accessibleNameRef` | string | Space-separated IDs of elements whose text forms the label |
+| `accessibleName` | optional string, no default | Direct label text |
+| `accessibleNameRef` | optional string, no default | Space-separated IDs of elements whose text forms the label |
 | `accessibleDescription` | string | Longer description |
 | `accessibleDescriptionRef` | string | IDs of elements forming the description |
-| `accessibleRole` | `` `${SomeRole}` `` | Overrides the default ARIA role |
-| `accessibilityAttributes` | `AccessibilityAttributes` | `expanded`, `hasPopup`, `controls`, `role`, `ariaLabel`, ... |
+| `accessibleRole` | `` `${SomeRole}` `` — a component-specific enum, not a raw ARIA role | Overrides the default ARIA role |
+| `accessibilityAttributes` | `AccessibilityAttributes`, `{ type: Object }`, default `{}` | `expanded`, `hasPopup`, `controls`, `role`, `ariaLabel`, ... |
 
-Components opt into a subset — not every one carries all six. `accessibleDescriptionRef` in particular is absent from many (Button, Link, Icon).
+Components opt into a subset — not every one carries all six (`accessibleDescriptionRef` is absent from Button, Link, Icon, and others). Match the property names exactly.
 
 ### Which properties to expose on a new component
 
@@ -37,7 +35,7 @@ Components opt into a subset — not every one carries all six. `accessibleDescr
 | `accessibleRole` | The component can legitimately take on semantically distinct roles by use case — not as a general-purpose escape hatch. |
 | `accessibilityAttributes` | The component has interactive states or relationships its own properties cannot express, or it opens/controls other components. |
 
-`AccessibilityAttributes` is a real type, not a free-form object. Narrow it per component with `Pick`:
+`AccessibilityAttributes` is a real type, not a free-form object. Narrow it with `Pick` to the fields the component actually applies:
 
 ```ts
 type ButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "hasPopup" | "controls" | "ariaKeyShortcuts" | "ariaLabel">;
@@ -91,7 +89,7 @@ ARIA and `tabindex` go on the focusable inner element, **not on the host**. Focu
 Two patterns exist for marking the focusable element:
 
 - **`data-sap-focus-ref`** — an explicit marker (Button's inner `<button>`, Input's inner `<input>`). Required when the focus target is not the first shadow child (e.g. a non-focusable wrapper precedes the control).
-- **First shadow child** — CheckBox, RadioButton, Link, Switch put ARIA/`tabindex`/`role` on the first element in the shadow root and skip the marker; `getFocusDomRef()` falls back to `getDomRef()` (the first shadow child).
+- **First shadow child** — CheckBox, RadioButton, Link, Switch put ARIA/`tabindex`/`role` on the first element in the shadow root and skip the marker; `getFocusDomRef()` falls back to it (see Focus).
 
 ```tsx
 disabled={this.disabled}
@@ -166,17 +164,11 @@ Use the predicates from `Keys.js`, never a raw `event.key` comparison — they e
 
 ### F6 fast navigation
 
-`fastNavigation: true` in `@customElement` does exactly one thing: `UI5Element` sets `data-sap-ui-fastnavgroup="true"` on the host. Two more pieces are required.
-
-- The application must import the feature or nothing listens for the key: `import "@ui5/webcomponents-base/dist/features/F6Navigation.js"`.
-- Handlers react through `isF6Next` / `isF6Previous`, which also cover Shift+F6 and Ctrl+Alt+Arrow.
-- Any element carrying `data-sap-ui-fastnavgroup="true"` is a group; it need not be a UI5 component.
+`fastNavigation: true` in `@customElement` does exactly one thing: `UI5Element` sets `data-sap-ui-fastnavgroup="true"` on the host. Two more pieces are required: the application imports `@ui5/webcomponents-base/dist/features/F6Navigation.js` (otherwise nothing listens for the key), and handlers use `isF6Next` / `isF6Previous`. Any element carrying `data-sap-ui-fastnavgroup="true"` is a group; it need not be a UI5 component.
 
 ### Roving tabindex with `ItemNavigation`
 
-Use this when a component presents a group of related items where arrow keys navigate between them and Tab treats the whole group as a single stop (lists, tabs, segmented buttons, breadcrumbs, etc.).
-
-An item group is a single tab stop. `ItemNavigation` computes which item is current and writes `"0"` / `"-1"` into each item's `forcedTabIndex` property; it never touches the DOM `tabindex` attribute directly — the item maps `forcedTabIndex` onto its rendered `tabindex` (see below).
+Use this when arrow keys move between related items and Tab treats the whole group as a single stop (lists, tabs, segmented buttons, breadcrumbs). `ItemNavigation` computes the current item and writes `"0"` / `"-1"` into each item's `forcedTabIndex` property; it never touches the DOM `tabindex` — the item maps `forcedTabIndex` onto it (see below).
 
 ```ts
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
@@ -202,7 +194,7 @@ Call `setCurrentItem(item)` when a click selects an item, and `setRowSize(n)` wh
 
 **Arrow keys do nothing unless the current item already holds focus** — `_canNavigate()` compares `_getCurrentItem()` with `getActiveElement()`. This explains most reports of broken arrow navigation.
 
-Items must expose `forcedTabIndex` as an `@property()` — `ItemNavigation` writes `"0"` / `"-1"` into it, and on a `UI5Element` item the decorator is what triggers the re-render that flushes the new `tabindex`. A plain class field will not re-render. The item maps it onto the rendered `tabindex`:
+Items must expose `forcedTabIndex` as an `@property()` — on a `UI5Element` item the decorator is what triggers the re-render that flushes the new `tabindex`; a plain class field will not re-render. The item maps it onto the rendered `tabindex`:
 
 ```ts
 get _effectiveTabIndex() {
@@ -237,7 +229,7 @@ import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 announce(selectedText, "Polite");
 ```
 
-Both `announce(text, "Polite")` and `announce(text, InvisibleMessageMode.Polite)` are valid — `InvisibleMessageMode` is a const-object, and most call sites access its members. The string literal is accepted by the signature and reads cleaner, but the enum form is not a rule violation. Compose the text from the i18n bundle first — build "option text + position" before announcing. See `i18n.md`.
+`announce(text, InvisibleMessageMode.Polite)` is equally valid: `InvisibleMessageMode` is a const object and most call sites use its members, though the string literal reads cleaner. Compose the text from the i18n bundle first — build "option text + position" before announcing (`i18n.md`).
 
 ## Disabled state
 
