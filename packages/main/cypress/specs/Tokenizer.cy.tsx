@@ -3,6 +3,7 @@ import Token from "../../src/Token.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 import Button from "../../src/Button.js";
 import { TOKENIZER_ARIA_LABEL, MULTIINPUT_SHOW_MORE_TOKENS } from "../../src/generated/i18n/i18n-defaults.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 
 const onTokenDelete = (event: UI5CustomEvent<Tokenizer, "token-delete">) => {
 	event.detail.tokens.forEach(token => {
@@ -2171,5 +2172,44 @@ describe("Token deletion announcements", () => {
 
 		cy.get("@liveRegion")
 			.should("have.text", "3 tokens deleted");
+	});
+});
+
+describe("Overflow calculation", () => {
+	afterEach(() => {
+		// Reset language regardless of test outcome to avoid leaking into other specs.
+		cy.wrap(setLanguage("en"));
+	});
+
+	it("should not cause a render loop when the 'n more' width toggles overflow at boundary widths", () => {
+		// Regression for a render loop: at narrow widths the number of overflowing tokens
+		// depends on the "n more" indicator width, which changes between its "+N More" and
+		// "Show All (N)" variants as the last token flips visible/hidden, so the overflow
+		// count oscillates. Korean copy is wider than English, exposing the bug at this
+		// width. A loop trips RenderQueue's "processed too many times" guard, surfacing as
+		// an uncaught exception that fails this test automatically — no polling needed.
+		cy.wrap(setLanguage("ko"));
+
+		cy.mount(
+			<Tokenizer style="width: 208px">
+				<Token text="보기"></Token>
+				<Token text="임포트"></Token>
+				<Token text="편집"></Token>
+			</Tokenizer>
+		);
+
+		// The component must settle on a stable state: at this width one token fits and
+		// two overflow, so the indicator reports "2". Cypress retries this until it holds;
+		// a render loop would trip RenderQueue's guard and throw before this resolves.
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.and("contain.text", "2");
+
+		// All three tokens remain in the DOM (overflowing tokens are hidden, not removed).
+		cy.get("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 3);
 	});
 });
