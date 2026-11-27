@@ -268,6 +268,8 @@ describe("General API", () => {
 			.realPress("Enter");
 
 		cy.get("@signInDialog")
-			.should("be.visible");
+			.shadow()
+			.find(".ui5-popup-root")
+			.should($root => { expect($root[0].matches(":modal")).to.be.true; });
 	});
 });
