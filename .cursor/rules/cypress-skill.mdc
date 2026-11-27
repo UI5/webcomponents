@@ -1,0 +1,14 @@
+# UI5 Web Components — Cypress Skill
+
+Full conventions live in `skills/cypress/SKILL.md`. For quick answers without loading the full skill, use the reference files below directly.
+
+## Where to look
+
+| Task | Go to |
+|------|-------|
+| Selectors, async API calls, popups, prop/attr, ARIA, cleanup | [`skills/cypress/references/QUICK-REFERENCE.md`](../../skills/cypress/references/QUICK-REFERENCE.md) |
+| Writing or restructuring a spec | [`skills/cypress/references/WRITING-SPECS.md`](../../skills/cypress/references/WRITING-SPECS.md) |
+| Complete working examples | [`skills/cypress/references/EXAMPLES.md`](../../skills/cypress/references/EXAMPLES.md) |
+| Custom commands | [`skills/cypress/references/COMMANDS.md`](../../skills/cypress/references/COMMANDS.md) |
+| Reviewing an existing spec | [`skills/cypress/references/REVIEWING.md`](../../skills/cypress/references/REVIEWING.md) |
+| Flaky or failing test | [`skills/cypress/references/DEBUGGING.md`](../../skills/cypress/references/DEBUGGING.md) |
