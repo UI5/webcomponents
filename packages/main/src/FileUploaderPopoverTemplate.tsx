@@ -9,6 +9,7 @@ export default function FileUploaderPopoverTemplate(this: FileUploader) {
 			preventInitialFocus={true}
 			preventFocusRestore={true}
 			hideArrow={true}
+			accessibleRole="None"
 			placement="Bottom"
 			horizontalAlign="Start"
 			class="ui5-valuestatemessage-popover"
