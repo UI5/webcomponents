@@ -45,8 +45,9 @@ export default function LastNextTemplate(this: DynamicDateRange) {
 	return (
 		<div class="ui5-last-next-container ui5-last-next-container-padded">
 			<div class="ui5-ddr-input-container ui5-ddr-input-container-right-aligned">
-				<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_VALUE_LABEL_TEXT)}</Label>
+				<Label class="ui5-ddr-label" for="ddr-value-step-input">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_VALUE_LABEL_TEXT)}</Label>
 				<StepInput
+					id="ddr-value-step-input"
 					value={currentNumber}
 					min={1}
 					max={isGrouped ? 9999 : 999}
@@ -55,8 +56,8 @@ export default function LastNextTemplate(this: DynamicDateRange) {
 
 				{isGrouped && (
 					<>
-						<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_UNIT_OF_TIME_LABEL_TEXT)}</Label>
-						<Select value={currentOperator} onChange={handleUnitChange}>
+						<Label class="ui5-ddr-label" for="ddr-unit-select">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_UNIT_OF_TIME_LABEL_TEXT)}</Label>
+						<Select id="ddr-unit-select" value={currentOperator} onChange={handleUnitChange}>
 							{filteredOptions.map(option => (
 								<Option value={option.operator} key={option.operator}>
 									{option.unitText}

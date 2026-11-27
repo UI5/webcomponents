@@ -10,6 +10,10 @@ import NextOptions from '../../src/dynamic-date-range-options/NextOptions.js';
 import DateTimeRange from '../../src/dynamic-date-range-options/DateTimeRange.js';
 import FromDateTime from '../../src/dynamic-date-range-options/FromDateTime.js';
 import ToDateTime from '../../src/dynamic-date-range-options/ToDateTime.js';
+import {
+	DYNAMIC_DATE_RANGE_VALUE_LABEL_TEXT,
+	DYNAMIC_DATE_RANGE_UNIT_OF_TIME_LABEL_TEXT,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("DynamicDateRange Component", () => {
 	beforeEach(() => {
@@ -355,6 +359,16 @@ describe("DynamicDateRange Last/Next Options", () => {
 			.shadow()
 			.find("input")
 			.as("stepInputInner");
+
+		// a11y: step input and unit select expose accessible names from their associated labels
+		cy.get("@stepInputInner")
+			.should("have.attr", "aria-label", DYNAMIC_DATE_RANGE_VALUE_LABEL_TEXT.defaultText);
+
+		cy.get("@popover")
+			.find("[ui5-select]")
+			.shadow()
+			.find("[role='combobox']")
+			.should("have.attr", "aria-label", DYNAMIC_DATE_RANGE_UNIT_OF_TIME_LABEL_TEXT.defaultText);
 
 		cy.get("@stepInputInner")
 			.clear()
