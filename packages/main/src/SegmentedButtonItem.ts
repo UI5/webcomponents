@@ -264,7 +264,14 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	}
 
 	get ariaDescriptionText() {
-		return `${(getEffectiveAriaDescriptionText(this) || "")} ${SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`.trim();
+		const describedBy = SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY);
+		// The visual tooltip replaces the native title; announce a custom tooltip
+		// as a description unless it already serves as the accessible name.
+		const tooltipText = this.tooltip && this.ariaLabelText !== this.tooltip ? this.tooltip : "";
+		return [getEffectiveAriaDescriptionText(this) || "", tooltipText, describedBy]
+			.filter(part => part)
+			.join(" ")
+			.trim();
 	}
 
 	get showIconTooltip() {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tooltip test page</title>
+	<script type="module" src="../../src/Button.ts"></script>
+	<script type="module" src="../../src/Tooltip.ts"></script>
+	<style>
+		body { padding: 4rem; font-family: sans-serif; display: flex; flex-direction: column; gap: 2rem; align-items: flex-start; }
+	</style>
+</head>
+<body>
+	<h2>Stage 1 — data-ui5-has-tooltip on plain elements</h2>
+
+	<!-- Plain HTML button -->
+	<button data-ui5-has-tooltip="t1" aria-describedby="t1">Plain button</button>
+	<ui5-tooltip id="t1">Tooltip on a plain button</ui5-tooltip>
+
+	<!-- Plain div -->
+	<div tabindex="0" data-ui5-has-tooltip="t2" aria-describedby="t2" style="padding:.5rem;border:1px solid #ccc">Focusable div</div>
+	<ui5-tooltip id="t2" placement="Bottom">Tooltip on a div</ui5-tooltip>
+
+	<h2>Stage 2 — component with internal tooltip</h2>
+
+	<!-- Component property path -->
+	<ui5-button tooltip="Save the current document">Save</ui5-button>
+	<ui5-button icon="edit" tooltip="Edit"></ui5-button>
+</body>
+</html>

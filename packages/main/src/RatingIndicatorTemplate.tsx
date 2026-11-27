@@ -1,10 +1,13 @@
 import type RatingIndicator from "./RatingIndicator.js";
 import type { Star } from "./RatingIndicator.js";
 import Icon from "./Icon.js";
+import Tooltip from "./Tooltip.js";
 
 export default function RatingIndicatorTemplate(this: RatingIndicator) {
 	return (
+		<>
 		<div
+			id={`${this._id}-root`}
 			class="ui5-rating-indicator-root"
 			role="slider"
 			aria-roledescription={this._ariaRoleDescription}
@@ -16,17 +19,25 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			aria-disabled={this._ariaDisabled}
 			aria-readonly={this.ariaReadonly}
 			aria-description={this._ariaDescription}
+			data-ui5-has-tooltip={this.ratingTooltip ? `${this._id}-tooltip` : undefined}
 			tabindex={this.effectiveTabIndex}
 			onFocusIn={this._onfocusin}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
-			title={this.ratingTooltip}
 			aria-label={this._ariaLabel}
 		>
 			<ul class="ui5-rating-indicator-list" aria-hidden="true">
 				{ this._stars.map(star => starLi.call(this, star))}
 			</ul>
 		</div>
+		{ this.ratingTooltip &&
+			// Review (double-announcement): a custom `tooltip` is announced via
+			// `aria-description={this._ariaDescription}`; the default tooltip is
+			// decorative. Either way no `aria-describedby` here. Tooltip is visual
+			// only; `data-ui5-has-tooltip` drives the gesture.
+			<Tooltip id={`${this._id}-tooltip`}>{this.ratingTooltip}</Tooltip>
+		}
+		</>
 	);
 }
 

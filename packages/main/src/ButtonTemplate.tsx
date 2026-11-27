@@ -2,6 +2,7 @@ import type Button from "./Button.js";
 import Icon from "./Icon.js";
 import BusyIndicator from "./BusyIndicator.js";
 import BusyIndicatorSize from "./types/BusyIndicatorSize.js";
+import Tooltip from "./Tooltip.js";
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,
@@ -12,6 +13,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 }) {
 	return (<>
 		<button
+			id={`${this._id}-root`}
 			type="button"
 			class={{
 				"ui5-button-root": true,
@@ -21,6 +23,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			}}
 			disabled={this.disabled}
 			data-sap-focus-ref
+			data-ui5-has-tooltip={this.buttonTitle ? `${this._id}-tooltip` : undefined}
 			aria-pressed={injectedProps?.ariaPressed}
 			aria-valuemin={injectedProps?.ariaValueMin}
 			aria-valuemax={injectedProps?.ariaValueMax}
@@ -41,7 +44,6 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			aria-keyshortcuts={this._computedAccessibilityAttributes?.ariaKeyShortcuts}
 			aria-description={this.ariaDescriptionText}
 			aria-busy={this.loading ? "true" : undefined}
-			title={this.buttonTitle}
 			part="button"
 			role={this.effectiveAccRole}
 		>
@@ -73,6 +75,15 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 				<slot name="badge"/>
 			}
 		</button>
+		{this.buttonTitle &&
+			// Review (double-announcement): Button already exposes the tooltip text
+			// to screen readers via `aria-description={this.ariaDescriptionText}` on
+			// the root button (guarded by `ariaLabelText !== buttonTitle` in
+			// Button.ts). So we intentionally do NOT add `aria-describedby` here —
+			// that would announce the same text twice. The tooltip provides the
+			// visual only; `data-ui5-has-tooltip` on the button drives the gesture.
+			<Tooltip id={`${this._id}-tooltip`}>{this.buttonTitle}</Tooltip>
+		}
 		{this.loading &&
 			<BusyIndicator
 				id={`${this._id}-button-busy-indicator`}

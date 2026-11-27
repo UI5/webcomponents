@@ -66,7 +66,8 @@ export default function CarouselTemplate(this: Carousel) {
 function arrowBack(this: Carousel) {
 	return <Icon name={slimArrowLeft}
 		data-ui5-arrow-back
-		title={this.previousPageText}
+		accessibleName={this.previousPageText}
+		showTooltip
 		mode="Decorative"
 		class={{
 			"ui5-carousel-navigation-button": true,
@@ -79,7 +80,8 @@ function arrowBack(this: Carousel) {
 function arrowForward(this: Carousel) {
 	return <Icon name={slimArrowRight}
 		data-ui5-arrow-forward
-		title={this.nextPageText}
+		accessibleName={this.nextPageText}
+		showTooltip
 		mode="Decorative"
 		class={{
 			"ui5-carousel-navigation-button": true,
