@@ -7,6 +7,11 @@ import TableSelectionSingle from "../../src/TableSelectionSingle.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import Label from "../../src/Label.js";
 import Input from "../../src/Input.js";
+import TableRowStatus from "../../src/TableRowStatus.js";
+import TableHeaderRowStatus from "../../src/TableHeaderRowStatus.js";
+import TableGroupRow from "../../src/TableGroupRow.js";
+
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 class TableSlotForwarder extends HTMLElement {
 	connectedCallback() {
@@ -401,6 +406,206 @@ describe("Table - Horizontal Scrolling", () => {
 				const leftOffset = $table[0].scrollLeft;
 				expect(leftOffset).to.be.greaterThan(0);
 			});
+	});
+});
+
+describe("Table Row - Status", () => {
+	it("renders no status by default and supports setting and clearing the value", () => {
+		cy.mount(
+			<Table>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowStatus slot="status" design="Extended" />
+					<TableHeaderCell>Column A</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableRowStatus id="status" slot="status" text="Custom status" icon="information" />
+					<TableCell>Cell A</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get<TableRowStatus>("#status").should($status => {
+			expect($status[0].value).to.equal(undefined);
+			expect($status[0].colorScheme).to.equal(undefined);
+			expect($status[0]._accessibleText).to.equal(undefined);
+		});
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-icon").should("not.exist");
+
+		cy.get("#status").invoke("prop", "value", "Positive");
+		cy.get("#status").shadow().find("#status").should("not.have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-icon").should("have.attr", "name", "information");
+		cy.get("#status").shadow().find("#status-tooltip").should("have.attr", "title", "Custom status");
+
+		cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
+		cy.get<TableRowStatus>("#status").should($status => {
+			expect($status[0]._accessibleText).to.equal(undefined);
+		});
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");
+	});
+
+	it("uses semantic and indication colors in both designs with semantic value precedence", () => {
+		cy.mount(
+			<>
+				<Table>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderRowStatus id="status-header" slot="status" />
+						<TableHeaderCell>Column A</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow>
+						<TableRowStatus id="status" slot="status" text="Custom status" />
+						<TableCell>Cell A</TableCell>
+					</TableRow>
+				</Table>
+				<div id="palette" />
+			</>
+		);
+
+		const checkColors = (extended: boolean) => {
+			cy.get("#status").should($status => {
+				const status = $status[0];
+				const palette = status.ownerDocument.querySelector("#palette")!;
+				const barColor = getComputedStyle(palette).borderTopColor;
+				const background = getComputedStyle(palette).backgroundColor;
+				const icon = status.shadowRoot!.querySelector("#status-icon");
+				if (icon) {
+					expect(getComputedStyle(icon).color).to.equal(getComputedStyle(palette).color);
+				}
+				const context = `value ${status.getAttribute("value")} / scheme ${status.getAttribute("color-scheme")}`;
+				expect(getComputedStyle(status.shadowRoot!.querySelector("#status")!).backgroundColor, context).to.equal(barColor);
+				expect(getComputedStyle(status).backgroundColor).to.equal(extended ? background : TRANSPARENT);
+			});
+		};
+
+		cy.get("#status-header").invoke("prop", "design", "Extended");
+		cy.get("#status").invoke("attr", "color-scheme", "1");
+		cy.get("#status").shadow().find("#status-icon").should("not.exist");
+		cy.get("#status").invoke("prop", "icon", "information");
+
+		["Simple", "Extended"].forEach(design => {
+			cy.get("#status-header").invoke("prop", "design", design);
+			const schemeCount = design === "Extended" ? 10 : 1;
+			for (let scheme = 1; scheme <= schemeCount; scheme++) {
+				const palette = `--sapIndicationColor_${scheme}`;
+				cy.get("#status").invoke("attr", "color-scheme", `${scheme}`);
+				cy.get("#palette").invoke("attr", "style", `background: var(${palette}b_Background); border-color: var(${palette}); color: var(${palette}b_TextColor)`);
+				checkColors(design === "Extended");
+			}
+
+			[
+				{ value: "Negative", bar: "--sapErrorBorderColor", icon: "--sapNegativeColor", background: "--sapErrorBackground" },
+				{ value: "Critical", bar: "--sapWarningBorderColor", icon: "--sapCriticalColor", background: "--sapWarningBackground" },
+				{ value: "Positive", bar: "--sapSuccessBorderColor", icon: "--sapPositiveColor", background: "--sapSuccessBackground" },
+				{ value: "Information", bar: "--sapInformationBorderColor", icon: "--sapInformativeColor", background: "--sapInformationBackground" },
+			].forEach(({ value, bar, icon, background }) => {
+				cy.get("#status").invoke("prop", "value", value);
+				cy.get("#palette").invoke("attr", "style", `background: var(${background}); border-color: var(${bar}); color: var(${icon})`);
+				checkColors(design === "Extended");
+			});
+
+			cy.get<TableRowStatus>("#status").then($status => { $status[0].value = undefined; });
+			const palette = `--sapIndicationColor_${schemeCount}`;
+			cy.get("#palette").invoke("attr", "style", `background: var(${palette}b_Background); border-color: var(${palette}); color: var(${palette}b_TextColor)`);
+			checkColors(design === "Extended");
+		});
+
+		cy.get("#status").shadow().find("#status-icon").should("have.attr", "name", "information");
+		cy.get("#status").shadow().find("#status-tooltip").should("have.attr", "title", "Custom status");
+
+		cy.get("#status").invoke("removeAttr", "color-scheme");
+		cy.get("#status").shadow().find("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").should("have.css", "background-color", TRANSPARENT);
+		cy.get("#status").shadow().find("#status-tooltip").should("not.exist");
+	});
+
+	it("reserves the column from the header element and renders the bar per row", () => {
+		cy.mount(
+			<Table id="table1">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowStatus slot="status" />
+					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableGroupRow id="group1">Group A</TableGroupRow>
+				<TableRow id="row1">
+					<TableRowStatus slot="status" value="Negative" />
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+				<TableRow id="row2">
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// row with a status paints the bar; a row without the element reserves the column but paints nothing
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status").should($bar => {
+			expect(getComputedStyle($bar[0]).backgroundColor).to.not.equal(TRANSPARENT);
+			expect($bar[0].getBoundingClientRect().width).to.equal(6);
+		});
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip").should("not.exist");
+		cy.get("#row2").find("[ui5-table-row-status]").should("not.exist");
+		cy.get("#row2").shadow().find("#status-cell").should("exist");
+		// the column is reserved by header presence, not by any row having a status (virtualization-jump guard)
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.include("table_status_cell_width)");
+		});
+		// group rows never get a status cell
+		cy.get("#group1").shadow().find("#status-cell").should("not.exist");
+
+		// removing the header element removes the whole column
+		cy.get("[ui5-table-header-row-status]").then($el => $el[0].remove());
+		cy.get("#row1").shadow().find("#status-cell").should("not.exist");
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.not.include("table_status_cell_width)");
+		});
+	});
+
+	it("renders the extended design with an icon and a wider column", () => {
+		cy.mount(
+			<Table id="table1">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderRowStatus slot="status" design="Extended" />
+					<TableHeaderCell id="colA"><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableRowStatus slot="status" value="Negative" text="Out of stock" />
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// table fans the design down and a default icon is derived from the value
+		cy.get("#row1").find("[ui5-table-row-status]").should("have.prop", "_design", "Extended");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon").should("have.attr", "name", "error");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon")
+			.should("have.attr", "accessible-name", "Out of stock")
+			.and("not.have.attr", "show-tooltip");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-icon")
+			.should("not.have.css", "cursor", "help");
+		cy.get("#row1").shadow().find("#status-cell").should("have.css", "width", "32px");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status").should("have.css", "width", "2px");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip")
+			.should($tooltip => {
+				expect($tooltip).to.have.attr("title", "Out of stock");
+				expect(getComputedStyle($tooltip[0]).cursor).to.not.equal("help");
+				const cell = $tooltip[0].getBoundingClientRect();
+				const icon = $tooltip[0].querySelector("[ui5-icon]")!.getBoundingClientRect();
+				expect(cell.width).to.equal(32);
+				expect(icon.x + icon.width / 2).to.equal(cell.x + cell.width / 2);
+				expect(icon.y + icon.height / 2).to.equal(cell.y + cell.height / 2);
+			});
+
+		cy.get("#table1").invoke("attr", "dir", "rtl");
+		cy.get("#row1").find("[ui5-table-row-status]").shadow().find("#status-tooltip").should($tooltip => {
+			const cell = $tooltip[0].getBoundingClientRect();
+			const icon = $tooltip[0].querySelector("[ui5-icon]")!.getBoundingClientRect();
+			expect(icon.x + icon.width / 2).to.equal(cell.x + cell.width / 2);
+		});
+		// the extended column uses the wider track
+		cy.get("#table1").shadow().find("#table").should($table => {
+			expect($table[0].style.gridTemplateColumns).to.include("table_status_cell_extended_width)");
+		});
 	});
 });
 

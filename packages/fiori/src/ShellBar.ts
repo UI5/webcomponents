@@ -69,6 +69,7 @@ import {
 	SHELLBAR_ADDITIONAL_CONTEXT,
 	SHELLBAR_BRANDING_HOME,
 	SHELLBAR_HOME,
+	SHELLBAR_CANCEL,
 } from "./generated/i18n/i18n-defaults.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
@@ -1346,6 +1347,7 @@ class ShellBar extends UI5Element {
 			notifications: ShellBar.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0),
 			notificationsNoCount: ShellBar.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT),
 			contentItems: this.content.length > 1 ? ShellBar.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined,
+			cancel: ShellBar.i18nBundle.getText(SHELLBAR_CANCEL),
 		};
 	}
 
