@@ -145,7 +145,7 @@ describe("Basic mobile picker rendering and interaction", () => {
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-		
+
 		cy.get("@popover")
 			.find(".ui5-responsive-popover-footer")
 			.find("[ui5-button]")
@@ -570,24 +570,26 @@ describe("Mobile Highlighting", () => {
 		// Type in mobile input
 		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
 
-		// Check that SuggestionItems are highlighted
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
-			.shadow().find(".ui5-li-title")
-			.should("contain.html", "<b>A</b>");
+		// Check that ComboBox items are highlighted
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").eq(0)
+			.should($item => {
+				expect($item[0].shadowRoot!.querySelector(".ui5-li-title")!.innerHTML).to.include("<b>A</b>");
+			});
 
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
-			.shadow().find(".ui5-li-title")
-			.should("contain.html", "<b>A</b>");
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").eq(1)
+			.should($item => {
+				expect($item[0].shadowRoot!.querySelector(".ui5-li-title")!.innerHTML).to.include("<b>A</b>");
+			});
 	});
 
 	it("Should highlight grouped items in mobile mode", () => {
 		cy.mount(
 			<ComboBox>
-				<ComboBoxItemGroup header-text="Group A">
+				<ComboBoxItemGroup headerText="Group A">
 					<ComboBoxItem text="Argentina" />
 					<ComboBoxItem text="Australia" />
 				</ComboBoxItemGroup>
-				<ComboBoxItemGroup header-text="Group B">
+				<ComboBoxItemGroup headerText="Group B">
 					<ComboBoxItem text="South Africa" />
 					<ComboBoxItem text="Brazil" />
 				</ComboBoxItemGroup>
@@ -605,18 +607,21 @@ describe("Mobile Highlighting", () => {
 		// Type in mobile input
 		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
 
-		// Check that the first three suggestion items are highlighted (Argentina, Australia, South Africa)
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
-			.shadow().find(".ui5-li-title")
-			.should("contain.html", "<b>A</b>");
+		// Check that the first three ComboBox items with 'A' are highlighted (Argentina, Australia, South Africa)
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").eq(0)
+			.should($item => {
+				expect($item[0].shadowRoot!.querySelector(".ui5-li-title")!.innerHTML).to.include("<b>A</b>");
+			});
 
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
-			.shadow().find(".ui5-li-title")
-			.should("contain.html", "<b>A</b>");
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").eq(1)
+			.should($item => {
+				expect($item[0].shadowRoot!.querySelector(".ui5-li-title")!.innerHTML).to.include("<b>A</b>");
+			});
 
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(2)
-			.shadow().find(".ui5-li-title")
-			.should("contain.html", "<b>A</b>");
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").eq(2)
+			.should($item => {
+				expect($item[0].shadowRoot!.querySelector(".ui5-li-title")!.innerHTML).to.include("<b>A</b>");
+			});
 	});
 });
 

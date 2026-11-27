@@ -400,6 +400,11 @@ describe("ViewSettingsDialog Tests", () => {
 			.should("not.exist");
 
 		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-title")
+			.should("have.text", "Filter By");
+
+		cy.get("@vsd")
 			.invoke("prop", "open", false);
 	});
 
@@ -465,6 +470,11 @@ describe("ViewSettingsDialog Tests", () => {
 			.should("not.exist");
 
 		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-title")
+			.should("have.text", "Sort By");
+
+		cy.get("@vsd")
 			.invoke("prop", "open", false);
 	});
 
@@ -488,6 +498,11 @@ describe("ViewSettingsDialog Tests", () => {
 			.shadow()
 			.find("[ui5-segmented-button]")
 			.should("not.exist");
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-title")
+			.should("have.text", "Group By");
 
 		cy.get("@vsd")
 			.invoke("prop", "open", false);

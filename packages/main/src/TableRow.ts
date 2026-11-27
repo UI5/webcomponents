@@ -1,8 +1,8 @@
 import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
-import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEnter, isEnterAlt } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import { toggleAttribute } from "./TableUtils.js";
+import { toggleAttribute, isFocusedElementInside } from "./TableUtils.js";
 import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
@@ -11,6 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type TableRowStatus from "./TableRowStatus.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -36,7 +37,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase<TableCell> {
+class TableRow extends TableRowBase<TableCell, TableRowStatus> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -66,8 +67,23 @@ class TableRow extends TableRowBase<TableCell> {
 	@slot({
 		type: HTMLElement,
 		individualSlots: true,
+		invalidateOnChildChange: {
+			properties: ["disabled"],
+			slots: false,
+		},
 	})
 	actions!: Slot<TableRowActionBase>;
+
+	/**
+	 * Defines the status indicator of the row.
+	 *
+	 * **Note:** The status is only rendered if the `ui5-table-header-row` contains a `ui5-table-header-row-status`.
+	 *
+	 * @since 2.30.0
+	 * @public
+	 */
+	@slot({ type: HTMLElement })
+	status!: Slot<TableRowStatus>;
 
 	/**
 	 * Unique identifier of the row.
@@ -134,11 +150,7 @@ class TableRow extends TableRowBase<TableCell> {
 			return;
 		}
 
-		const composedPath = e.composedPath();
-		composedPath.splice(composedPath.indexOf(this));
-		await new Promise(resolve => setTimeout(resolve)); // wait for the focus to be set
-		const activeElement = getActiveElement() as Element;
-		if (!composedPath.includes(activeElement)) {
+		if (!await isFocusedElementInside(this, e)) {
 			this._setActive("pointerup");
 		}
 	}
@@ -147,6 +159,12 @@ class TableRow extends TableRowBase<TableCell> {
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
 			this._onclick();
+		} else if ((eventOrigin === this || eventOrigin.hasAttribute("ui5-table-cell-base")) && isEnterAlt(e)) {
+			const navigationAction = this._navigationAction;
+			if (navigationAction?._isInteractive) {
+				navigationAction._fireClickEvent();
+				e.preventDefault();
+			}
 		}
 	}
 
@@ -173,10 +191,15 @@ class TableRow extends TableRowBase<TableCell> {
 		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
 	}
 
+	get _navigationAction() {
+		return this.actions.find(action => {
+			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible;
+		});
+	}
+
 	get _isNavigable() {
-		return this._fixedActions.find(action => {
-			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
-		}) !== undefined;
+		const action = this._navigationAction;
+		return !!action && !action._isInteractive;
 	}
 
 	get _rowIndex() {
@@ -259,7 +282,7 @@ class TableRow extends TableRowBase<TableCell> {
 		}
 
 		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
-			return !action.invisible && action._isInteractive;
+			return !action.invisible && action._isInteractive && !action._isDisabled;
 		}).length + (this._hasOverflowActions ? 1 : 0);
 	}
 

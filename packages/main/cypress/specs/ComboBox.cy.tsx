@@ -26,6 +26,56 @@ describe("Security", () => {
 		cy.get("@combobox").find("[ui5-cb-item]").eq(2).shadow().find(".ui5-li-title")
 			.should("have.text", "Albania<button onClick='alert(1)'>alert</button>");
 	});
+
+	it("does not execute payload set via markupText JS property", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Safe Item"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+
+		cy.get("@combobox").find("[ui5-cb-item]").then(($item) => {
+			($item[0] as ComboBoxItem).markupText = "<img src=x onerror=document.body.setAttribute('data-xss','1')>";
+		});
+
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("@combobox").find("[ui5-cb-item]").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload set via markup-text HTML attribute", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Safe Item" markup-text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("@combobox").find("[ui5-cb-item]").shadow().find(".ui5-li-title")
+			.should("have.text", "Safe Item");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
+
+	it("does not execute payload in text property when no highlight is active", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="<img src=x onerror=document.body.setAttribute('data-xss','1')>"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("@combobox").find("[ui5-cb-item]").shadow().find(".ui5-li-title")
+			.should("have.text", "<img src=x onerror=document.body.setAttribute('data-xss','1')>");
+		cy.get("body").should("not.have.attr", "data-xss");
+	});
 });
 
 describe("General Interaction", () => {

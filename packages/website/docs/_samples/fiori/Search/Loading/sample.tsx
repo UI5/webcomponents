@@ -12,7 +12,7 @@ function App() {
   const [resultText, setResultText] = useState(
     "Enter a search term and press Enter or click the search icon",
   );
-  const searchFieldRef = useRef(null);
+  const searchFieldRef = useRef<InstanceType<typeof SearchFieldClass>>(null);
 
   const handleSearch = async () => {
     const query = searchFieldRef.current!.value;

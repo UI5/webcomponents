@@ -181,6 +181,7 @@ const getScripts = (options) => {
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
 			mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
+			generateLLMs: `ui5nps-script "${LIB}cem/llms.mjs"`,
 		},
 	};
 

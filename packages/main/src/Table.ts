@@ -142,6 +142,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>F2</kbd> - Focuses the first tabbable element in the row
  * * <kbd>F7</kbd> - If focus position is remembered, moves focus to the corresponding focus position row, otherwise to the first tabbable element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on a cell, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Navigates down
@@ -156,6 +157,7 @@ type TableRowActionClickEventDetail = {
  * * <kbd>Enter</kbd> - Focuses the first tabbable cell content
  * * <kbd>F7</kbd> - If the focus is on an interactive element inside a row, moves focus to the corresponding row and remembers the focus position of the element within the row
  * * <kbd>[Shift]Tab</kbd> - Move focus to the element in the tab chain outside the table
+ * * <kbd>Alt + Enter</kbd> - Triggers the navigation action of the row, if available
  *
  * If the focus is on an interactive cell content, the following keyboard shortcuts are available:
  * * <kbd>Down</kbd> - Move the focus to the interactive element in the same column of the previous row, unless the focused element prevents the default
@@ -190,9 +192,11 @@ type TableRowActionClickEventDetail = {
  * @ui5subcomponent TableHeaderCell
  * @ui5subcomponent TableHeaderCellActionAI
  * @ui5subcomponent TableHeaderRow
+ * @ui5subcomponent TableHeaderRowStatus
  * @ui5subcomponent TableRow
  * @ui5subcomponent TableRowAction
  * @ui5subcomponent TableRowActionNavigation
+ * @ui5subcomponent TableRowStatus
  * @ui5subcomponent TableSelection
  * @ui5subcomponent TableSelectionMulti
  * @ui5subcomponent TableSelectionSingle
@@ -287,7 +291,7 @@ class Table extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 		invalidateOnChildChange: {
-			properties: ["navigated", "position"],
+			properties: ["navigated", "position", "status"],
 			slots: false,
 		},
 	})
@@ -421,6 +425,9 @@ class Table extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_renderNavigated = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_renderStatus = false;
+
 	@query("[ui5-drop-indicator]")
 	dropIndicatorDOM!: DropIndicator;
 
@@ -478,17 +485,25 @@ class Table extends UI5Element {
 		let alternateIndex = 0;
 		const hasFlexibleColumns = this._hasFlexibleColumns;
 		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
+		const headerStatus = this.headerRow[0]?._status;
+		this._renderStatus = !!headerStatus;
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach(row => {
 			if (!row.isGroupRow()) {
 				row._rowActionCount = rowActionCount;
 				row._renderDummyCell = !hasFlexibleColumns;
 				row._renderNavigated = this._renderNavigated;
+				row._renderStatus = this._renderStatus;
 				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
+				if (headerStatus && !row.isHeaderRow()) {
+					const rowStatus = (row as TableRow)._status;
+					rowStatus && (rowStatus._design = headerStatus.design);
+				}
 			} else {
 				row._rowActionCount = 0;
 				row._renderDummyCell = !hasFlexibleColumns && !this._hasPopin;
 				row._renderNavigated = false;
+				row._renderStatus = false;
 				row._alternate = false;
 				alternateIndex = 1;
 			}
@@ -658,6 +673,7 @@ class Table extends UI5Element {
 
 	get styles() {
 		const virtualizer = this._getVirtualizer();
+		const headerStatus = this.headerRow[0]?._status;
 		const headerStyleMap: Record<string, string> = {};
 		this.headerRow[0]?.cells.forEach(headerCell => {
 			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
@@ -665,7 +681,8 @@ class Table extends UI5Element {
 		return {
 			table: {
 				"grid-template-columns": this._gridTemplateColumns,
-				"--row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
+				"--_ui5_table_row-height": virtualizer ? `${virtualizer.rowHeight}px` : "auto",
+				"--_ui5_table_status_width": headerStatus ? headerStatus._width : "0",
 				...headerStyleMap,
 			},
 			spacer: {
@@ -682,6 +699,12 @@ class Table extends UI5Element {
 
 		const widths = [];
 		const visibleHeaderCells = this.headerRow[0]._visibleCells;
+
+		// Status Cell Width
+		const headerStatus = this.headerRow[0]._status;
+		if (headerStatus) {
+			widths.push(headerStatus._width);
+		}
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {

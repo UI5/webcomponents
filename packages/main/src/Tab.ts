@@ -8,7 +8,6 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -272,12 +271,6 @@ class Tab extends UI5Element implements ITabbable, ITab {
 		return willShowContent(this.content);
 	}
 
-	get expandBtnAccessibilityAttributes(): Pick<AccessibilityAttributes, "hasPopup"> {
-		return {
-			hasPopup: "menu",
-		};
-	}
-
 	receiveStripInfo({
 		getElementInStrip, posinset, setsize, isInline, isTopLevelTab, mixedMode,
 	}: TabContainerStripInfo) {
@@ -444,7 +437,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	}
 
 	get _ariaHasPopup() {
-		return this.isSingleClickArea ? "menu" : undefined;
+		return this.items.length > 0 ? "menu" : undefined;
 	}
 
 	get semanticIconName() {
@@ -525,12 +518,6 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	captureRef(ref: HTMLElement & { realTabReference?: UI5Element} | null) {
 		if (ref) {
 			ref.realTabReference = this;
-		}
-	}
-
-	captureButtonRef(ref: HTMLElement & { tab?: UI5Element} | null) {
-		if (ref) {
-			ref.tab = this;
 		}
 	}
 }
