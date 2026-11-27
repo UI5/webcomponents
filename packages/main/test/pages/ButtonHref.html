@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Button with href (Link Mode)</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<link rel="stylesheet" type="text/css" href="./styles/Button.css">
+
+	<style>
+		section {
+			margin-bottom: 2rem;
+		}
+
+		section > ui5-button {
+			margin: 0.25rem;
+		}
+
+		h3 {
+			font-family: var(--sapFontFamily, "72", Arial, sans-serif);
+			color: var(--sapTextColor);
+			margin: 0.5rem 0;
+		}
+	</style>
+</head>
+
+<body class="button1auto">
+
+	<ui5-title>Button with href — All Designs</ui5-title>
+	<p>Each button below renders as a native <code>&lt;a&gt;</code> element. Hover to see URL in status bar, middle-click to open in new tab, right-click for link context menu.</p>
+
+	<section>
+		<h3>All Design Variants</h3>
+		<ui5-button design="Default" href="https://sap.github.io/ui5-webcomponents/" icon="home">Default</ui5-button>
+		<ui5-button design="Emphasized" href="https://sap.github.io/ui5-webcomponents/" icon="action">Emphasized</ui5-button>
+		<ui5-button design="Positive" href="https://sap.github.io/ui5-webcomponents/" icon="accept">Positive</ui5-button>
+		<ui5-button design="Negative" href="https://sap.github.io/ui5-webcomponents/" icon="decline">Negative</ui5-button>
+		<ui5-button design="Attention" href="https://sap.github.io/ui5-webcomponents/" icon="alert">Attention</ui5-button>
+		<ui5-button design="Transparent" href="https://sap.github.io/ui5-webcomponents/" icon="navigation-right-arrow">Transparent</ui5-button>
+	</section>
+
+	<section>
+		<h3>With target="_blank" (opens new tab, auto-computes rel="noreferrer noopener" for cross-origin)</h3>
+		<ui5-button design="Default" href="https://openui5.org" target="_blank" icon="world">External Link (new tab)</ui5-button>
+		<ui5-button design="Emphasized" href="https://openui5.org" target="_blank" icon="action">Emphasized (new tab)</ui5-button>
+		<ui5-button design="Transparent" href="https://openui5.org" target="_blank" icon="share">Share (new tab)</ui5-button>
+	</section>
+
+	<section>
+		<h3>Disabled State (aria-disabled, no navigation)</h3>
+		<ui5-button design="Default" href="https://sap.github.io/ui5-webcomponents/" disabled icon="home">Default Disabled</ui5-button>
+		<ui5-button design="Emphasized" href="https://sap.github.io/ui5-webcomponents/" disabled icon="action">Emphasized Disabled</ui5-button>
+		<ui5-button design="Positive" href="https://sap.github.io/ui5-webcomponents/" disabled icon="accept">Positive Disabled</ui5-button>
+		<ui5-button design="Negative" href="https://sap.github.io/ui5-webcomponents/" disabled icon="decline">Negative Disabled</ui5-button>
+		<ui5-button design="Attention" href="https://sap.github.io/ui5-webcomponents/" disabled icon="alert">Attention Disabled</ui5-button>
+		<ui5-button design="Transparent" href="https://sap.github.io/ui5-webcomponents/" disabled icon="navigation-right-arrow">Transparent Disabled</ui5-button>
+	</section>
+
+	<section>
+		<h3>Icon-Only with href (tooltip required for accessibility)</h3>
+		<ui5-button design="Default" href="https://sap.github.io/ui5-webcomponents/" icon="home" tooltip="Go to homepage"></ui5-button>
+		<ui5-button design="Emphasized" href="https://sap.github.io/ui5-webcomponents/" icon="download" tooltip="Download file"></ui5-button>
+		<ui5-button design="Transparent" href="https://sap.github.io/ui5-webcomponents/" icon="share" tooltip="Share page" target="_blank"></ui5-button>
+		<ui5-button design="Negative" href="https://sap.github.io/ui5-webcomponents/" icon="delete" tooltip="Delete item"></ui5-button>
+	</section>
+
+	<section>
+		<h3>With End Icon</h3>
+		<ui5-button design="Default" href="https://sap.github.io/ui5-webcomponents/" end-icon="navigation-right-arrow">Navigate Forward</ui5-button>
+		<ui5-button design="Emphasized" href="https://openui5.org" target="_blank" end-icon="action">Open Details</ui5-button>
+		<ui5-button design="Transparent" href="https://sap.github.io/ui5-webcomponents/" icon="download" end-icon="slim-arrow-down">Download Options</ui5-button>
+	</section>
+
+	<section>
+		<h3>Text-Only (no icon)</h3>
+		<ui5-button design="Default" href="https://sap.github.io/ui5-webcomponents/">Learn More</ui5-button>
+		<ui5-button design="Emphasized" href="https://sap.github.io/ui5-webcomponents/" target="_blank">Get Started</ui5-button>
+		<ui5-button design="Transparent" href="https://sap.github.io/ui5-webcomponents/">View Documentation</ui5-button>
+	</section>
+
+	<section>
+		<h3>Comparison: Button without href (renders native &lt;button&gt;)</h3>
+		<ui5-button design="Default" icon="home">Regular Button</ui5-button>
+		<ui5-button design="Emphasized" icon="action">Regular Emphasized</ui5-button>
+		<ui5-button design="Transparent" icon="share">Regular Transparent</ui5-button>
+	</section>
+
+	<section>
+		<h3>Click Event Test</h3>
+		<ui5-button id="eventTestButton" design="Emphasized" href="https://sap.github.io/ui5-webcomponents/" icon="home">Click me (check console)</ui5-button>
+		<span id="clickResult" style="margin-left: 1rem; font-family: monospace;"></span>
+	</section>
+
+	<script>
+		const eventTestButton = document.getElementById("eventTestButton");
+		const clickResult = document.getElementById("clickResult");
+
+		eventTestButton.addEventListener("click", function (event) {
+			clickResult.textContent = "Click event fired! Alt: " + event.detail.altKey + ", Ctrl: " + event.detail.ctrlKey;
+		});
+	</script>
+
+</body>
+</html>
