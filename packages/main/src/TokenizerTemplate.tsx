@@ -43,6 +43,11 @@ export default function TokenizerTemplate(this: Tokenizer) {
 						onClick={this._handleNMoreClick}
 					>{this._nMoreText}</span>
 				}
+
+				<span class="ui5-tokenizer--measure-nmore" aria-hidden="true">
+					<span>{this._nMoreTextMoreVariant}</span>
+					<span>{this._nMoreTextShowAllVariant}</span>
+				</span>
 			</div>
 
 			{ TokenizerPopoverTemplate.call(this) }

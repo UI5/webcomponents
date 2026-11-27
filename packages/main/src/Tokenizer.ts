@@ -385,13 +385,28 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 */
 	_scrollToEndOnExpand = false;
 
-	// Tracks the previous _nMoreCount to detect render-loop oscillation at the
-	// "Show All" boundary (where the n-more text switches between two variants
-	// with different rendered widths, flipping the overflow count each render).
 	_prevNMoreCount = -1;
 
 	_handleResize() {
-		this._nMoreCount = this.overflownTokens.length;
+		this._updateNMoreCount();
+	}
+
+	_updateNMoreCount() {
+		const newCount = this.overflownTokens.length;
+		// Stop a render loop at the "Show All" edge: when every token is hidden the
+		// n-more text becomes the shorter "Show All (N)" label, which frees up enough
+		// space for one token to fit. That brings back the wider "N More" label, which
+		// hides the token again — so the count keeps flipping on every render.
+		// We detect it when the count would go straight back to the value it had
+		// right before the last change (meaning we've already been here and flipped back).
+		const isFlipping = this._nMoreCount === this._tokens.length
+			&& newCount === this._tokens.length - 1
+			&& this._prevNMoreCount === newCount;
+
+		if (newCount !== this._nMoreCount && !isFlipping) {
+			this._prevNMoreCount = this._nMoreCount;
+			this._nMoreCount = newCount;
+		}
 	}
 
 	get formFormattedValue(): FormData | null {
@@ -532,21 +547,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const tokensArray = this._tokens;
 		const firstToken = tokensArray[0];
 
-		const newCount = this.overflownTokens.length;
-		// Guard against render loops at the "Show All" boundary: when all tokens are
-		// hidden the n-more text switches to a narrower "Show All (N)" string, which
-		// makes one token appear to fit, switching back to the wider "N More" string,
-		// which hides it again — oscillating every render.
-		// The oscillation signature: count would return to exactly the value it held
-		// before the last update (i.e. we've already been here and bounced).
-		const isOscillating = this._nMoreCount === tokensArray.length
-			&& newCount === tokensArray.length - 1
-			&& this._prevNMoreCount === newCount;
-
-		if (newCount !== this._nMoreCount && !isOscillating) {
-			this._prevNMoreCount = this._nMoreCount;
-			this._nMoreCount = newCount;
-		}
+		this._updateNMoreCount();
 
 		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
@@ -1266,16 +1267,31 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		return Tokenizer.i18nBundle.getText(TOKENIZER_CLEAR_ALL);
 	}
 
+	// Both "n more" indicator variants, formatted for the fixed total token count so
+	// the reserved width does not depend on the overflow count being computed.
+	get _nMoreTextMoreVariant() {
+		return Tokenizer.i18nBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS, this._tokens.length);
+	}
+
+	get _nMoreTextShowAllVariant() {
+		return Tokenizer.i18nBundle.getText(TOKENIZER_SHOW_ALL_ITEMS, this._tokens.length);
+	}
+
+	get _reservedNMoreWidth() {
+		const measureDom = this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer--measure-nmore");
+		if (!measureDom) {
+			return 0;
+		}
+
+		return Math.max(...Array.from(measureDom.children).map(child => child.getBoundingClientRect().width));
+	}
+
 	get showNMore() {
 		return !this.expanded && !!this.overflownTokens.length;
 	}
 
 	get contentDom() {
 		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer--content")!;
-	}
-
-	get moreLink() {
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer-more-text");
 	}
 
 	get tokenizerLabel() {
@@ -1323,12 +1339,13 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const parentEnd = Number(parentRect.right.toFixed(2));
 		const parentStart = Number(parentRect.left.toFixed(2));
 
-		// Measure "n more" width
-		let nMoreWidth = 0;
-		const nMoreElement = this.moreLink;
-		if (nMoreElement) {
-			nMoreWidth = nMoreElement.getBoundingClientRect().width;
-		}
+		// Reserve a fixed width for the "n more" indicator that does not depend on
+		// how many tokens are hidden. The indicator text has two labels ("+N More"
+		// and "Show All (N)") of different widths; measuring the live indicator would
+		// tie the reserved space to the count we are still working out, which makes
+		// the count keep changing at the edge. Reserving the width of the wider label
+		// (using the full token count) keeps it steady across renders and stops the loop.
+		const nMoreWidth = this._reservedNMoreWidth;
 
 		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
 		let firstOverflowIndex = -1;

@@ -95,6 +95,26 @@
 	color: var(--_ui5_tokenizer_n_more_text_color);
 }
 
+/* Off-screen clone of the "n more" indicator used to reserve a stable, count-
+   independent width for the wider of its two text variants. Font metrics and
+   inline margin must match .ui5-tokenizer-more-text so the measurement is exact. */
+.ui5-tokenizer--measure-nmore {
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+	visibility: hidden;
+	pointer-events: none;
+	white-space: nowrap;
+}
+
+.ui5-tokenizer--measure-nmore > span {
+	display: inline-block;
+	margin-inline-start: var(--_ui5_token_right_margin);
+	white-space: nowrap;
+	font-size: var(--sapFontSize);
+	font-weight: normal;
+}
+
 .ui5-tokenizer-more-text:hover {
 	text-decoration: underline;
 }
