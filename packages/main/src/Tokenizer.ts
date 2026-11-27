@@ -1098,7 +1098,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
  	 * Otherwise, the focus defaults to the first visible token.
  	 */
 	getFocusDomRef(): HTMLElement | undefined {
-		if (this._lastFocusedToken && !this.overflownTokens.includes(this._lastFocusedToken)) {
+		if (this._lastFocusedToken && !this._lastFocusedToken.overflows) {
 			this._itemNav._currentIndex = this.tokens.indexOf(this._lastFocusedToken);
 			this._isFocusSetInternally = true;
 			this.tokens[0].forcedTabIndex = "-1";
@@ -1287,7 +1287,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get showNMore() {
-		return !this.expanded && !!this.overflownTokens.length;
+		return !this.expanded && this._nMoreCount > 0;
 	}
 
 	get contentDom() {
@@ -1335,6 +1335,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			token.overflows = false;
 		});
 
+		// When expanded, every token is visible and nothing overflows, so skip the
+		// per-token getBoundingClientRect() measurement (a forced layout read) entirely.
+		if (this.expanded) {
+			return [];
+		}
+
 		const parentRect = this.contentDom.getBoundingClientRect();
 		const parentEnd = Number(parentRect.right.toFixed(2));
 		const parentStart = Number(parentRect.left.toFixed(2));
@@ -1351,6 +1357,13 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		let firstOverflowIndex = -1;
 
 		tokensArray.forEach((token, index) => {
+			// Once the first overflowing token is found, every later token overflows
+			// too — mark it without measuring to avoid a getBoundingClientRect() reflow.
+			if (firstOverflowIndex !== -1) {
+				token.overflows = true;
+				return;
+			}
+
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
@@ -1361,14 +1374,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			// For other tokens, check if token + "n more" fits together
 			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
 
-			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+			const tokenOverflows = (tokenStart < parentStart) || (tokenEnd > effectiveParentEnd);
 
-			if (tokenOverflows && firstOverflowIndex === -1) {
+			if (tokenOverflows) {
 				firstOverflowIndex = index;
+				token.overflows = true;
 			}
-
-			// Mark this and all subsequent tokens as overflow
-			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
 
 		return tokensArray.filter(token => token.overflows);
