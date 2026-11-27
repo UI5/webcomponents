@@ -44,6 +44,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					preventFocusRestore={true}
 					preventInitialFocus={true}
 					hideArrow={true}
+					accessibleRole="None"
 					tabindex={-1}
 					class="ui5-valuestatemessage-popover"
 					horizontalAlign={PopoverHorizontalAlign.Start}

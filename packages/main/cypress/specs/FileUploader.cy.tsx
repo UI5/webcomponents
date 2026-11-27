@@ -217,6 +217,11 @@ describe("Interaction", () => {
 		cy.get("@popover")
 			.find(".ui5-valuestatemessage-root")
 			.should("have.class", "ui5-valuestatemessage--success");
+
+		cy.get("@popover")
+			.shadow()
+			.find("[root-element]")
+			.should("not.have.attr", "role");
 	});
 
 	it("LTR focus in and out of the tokenizer", () => {
