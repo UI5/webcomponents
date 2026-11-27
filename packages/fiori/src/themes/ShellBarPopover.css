@@ -3,6 +3,14 @@
 	padding: 0;
 }
 
+/* The popover grows to fit its content (logo + title side by side).
+   min-width keeps it from collapsing on very short content. The oversized-logo
+   horizontal scrollbar lives on the branding row itself (see ShellBar.css),
+   because the List between here and the row would otherwise clip it. */
+.ui5-shellbar-overflow-popover::part(content) {
+	min-width: 6.25rem;
+}
+
 .ui5-shellbar-overflow-popover [ui5-li]::part(icon) {
 	color: var(--sapList_TextColor);
 }
