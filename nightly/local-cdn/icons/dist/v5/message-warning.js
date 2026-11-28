@@ -1,0 +1,15 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { ICON_MESSAGE_WARNING } from "../generated/i18n/i18n-defaults.js";
+
+const name = "message-warning";
+const pathData = "M6.491 1.856a1.75 1.75 0 0 1 3.01-.001l6.248 10.504c.694 1.166-.147 2.644-1.504 2.644H1.752c-1.357 0-2.197-1.478-1.504-2.644L6.491 1.856Zm1.72.766a.25.25 0 0 0-.43 0L1.536 13.126a.25.25 0 0 0 .215.377h12.493a.25.25 0 0 0 .215-.377L8.211 2.622ZM8 10.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM8 5a.75.75 0 0 1 .75.75v2.993A.756.756 0 0 1 8 9.5a.755.755 0 0 1-.756-.75l.006-3A.75.75 0 0 1 8 5Z";
+const ltr = false;
+const accData = ICON_MESSAGE_WARNING;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, accData, collection, packageName });
+
+export default "SAP-icons-v5/message-warning";
+export { pathData, ltr, viewBox, accData };

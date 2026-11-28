@@ -1,0 +1,6 @@
+import { jsx as _jsx, jsxs as _jsxs } from "@ui5/webcomponents-base/jsx-runtime";
+export default function MonthPickerTemplate() {
+    return (_jsx("div", { class: "ui5-mp-root", part: "month-picker-root", role: "grid", "aria-roledescription": this.roleDescription, "aria-readonly": "false", "aria-multiselectable": "false", onMouseOver: this._onmouseover, onKeyDown: this._onkeydown, onKeyUp: this._onkeyup, onClick: this._selectMonth, onMouseDown: this._onmousedown, children: this._monthsInterval.map(months => _jsx("div", { role: "row", class: "ui5-mp-quarter", children: months.map(month => _jsxs("div", { "data-sap-timestamp": month.timestamp, tabindex: month._tabIndex, "data-sap-focus-ref": month.focusRef ? "true" : undefined, class: month.classes, part: month.parts, role: "gridcell", "aria-selected": month.ariaSelected, "aria-disabled": month.ariaDisabled, children: [_jsx("span", { class: "ui5-dp-monthtext", children: month.name }), month.nameInSecType &&
+                        _jsx("span", { class: "ui5-dp-monthtext ui5-dp-monthsectext", children: month.nameInSecType })] })) })) }));
+}
+//# sourceMappingURL=MonthPickerTemplate.js.map

@@ -1,0 +1,93 @@
+// @ts-nocheck
+import { registerLocaleDataLoader } from "@ui5/webcomponents-base/dist/asset-registries/LocaleData.js";
+const availableLocales = ["ar", "ar_EG", "ar_SA", "bg", "ca", "cnr", "cs", "da", "de", "de_AT", "de_CH", "el", "el_CY", "en", "en_AU", "en_GB", "en_HK", "en_IE", "en_IN", "en_NZ", "en_PG", "en_SG", "en_ZA", "es", "es_AR", "es_BO", "es_CL", "es_CO", "es_MX", "es_PE", "es_UY", "es_VE", "et", "fa", "fi", "fr", "fr_BE", "fr_CA", "fr_CH", "fr_LU", "he", "hi", "hr", "hu", "id", "it", "it_CH", "ja", "kk", "ko", "lt", "lv", "ms", "mk", "nb", "nl", "nl_BE", "pl", "pt", "pt_PT", "ro", "ru", "ru_UA", "sk", "sl", "sr", "sr_Latn", "sv", "th", "tr", "uk", "vi", "zh_CN", "zh_HK", "zh_SG", "zh_TW"];
+const importCldrJson = async (localeId) => {
+    switch (localeId) {
+        case "ar": return (await fetch(new URL("../assets/cldr/ar.json", import.meta.url))).json();
+        case "ar_EG": return (await fetch(new URL("../assets/cldr/ar_EG.json", import.meta.url))).json();
+        case "ar_SA": return (await fetch(new URL("../assets/cldr/ar_SA.json", import.meta.url))).json();
+        case "bg": return (await fetch(new URL("../assets/cldr/bg.json", import.meta.url))).json();
+        case "ca": return (await fetch(new URL("../assets/cldr/ca.json", import.meta.url))).json();
+        case "cnr": return (await fetch(new URL("../assets/cldr/cnr.json", import.meta.url))).json();
+        case "cs": return (await fetch(new URL("../assets/cldr/cs.json", import.meta.url))).json();
+        case "da": return (await fetch(new URL("../assets/cldr/da.json", import.meta.url))).json();
+        case "de": return (await fetch(new URL("../assets/cldr/de.json", import.meta.url))).json();
+        case "de_AT": return (await fetch(new URL("../assets/cldr/de_AT.json", import.meta.url))).json();
+        case "de_CH": return (await fetch(new URL("../assets/cldr/de_CH.json", import.meta.url))).json();
+        case "el": return (await fetch(new URL("../assets/cldr/el.json", import.meta.url))).json();
+        case "el_CY": return (await fetch(new URL("../assets/cldr/el_CY.json", import.meta.url))).json();
+        case "en": return (await fetch(new URL("../assets/cldr/en.json", import.meta.url))).json();
+        case "en_AU": return (await fetch(new URL("../assets/cldr/en_AU.json", import.meta.url))).json();
+        case "en_GB": return (await fetch(new URL("../assets/cldr/en_GB.json", import.meta.url))).json();
+        case "en_HK": return (await fetch(new URL("../assets/cldr/en_HK.json", import.meta.url))).json();
+        case "en_IE": return (await fetch(new URL("../assets/cldr/en_IE.json", import.meta.url))).json();
+        case "en_IN": return (await fetch(new URL("../assets/cldr/en_IN.json", import.meta.url))).json();
+        case "en_NZ": return (await fetch(new URL("../assets/cldr/en_NZ.json", import.meta.url))).json();
+        case "en_PG": return (await fetch(new URL("../assets/cldr/en_PG.json", import.meta.url))).json();
+        case "en_SG": return (await fetch(new URL("../assets/cldr/en_SG.json", import.meta.url))).json();
+        case "en_ZA": return (await fetch(new URL("../assets/cldr/en_ZA.json", import.meta.url))).json();
+        case "es": return (await fetch(new URL("../assets/cldr/es.json", import.meta.url))).json();
+        case "es_AR": return (await fetch(new URL("../assets/cldr/es_AR.json", import.meta.url))).json();
+        case "es_BO": return (await fetch(new URL("../assets/cldr/es_BO.json", import.meta.url))).json();
+        case "es_CL": return (await fetch(new URL("../assets/cldr/es_CL.json", import.meta.url))).json();
+        case "es_CO": return (await fetch(new URL("../assets/cldr/es_CO.json", import.meta.url))).json();
+        case "es_MX": return (await fetch(new URL("../assets/cldr/es_MX.json", import.meta.url))).json();
+        case "es_PE": return (await fetch(new URL("../assets/cldr/es_PE.json", import.meta.url))).json();
+        case "es_UY": return (await fetch(new URL("../assets/cldr/es_UY.json", import.meta.url))).json();
+        case "es_VE": return (await fetch(new URL("../assets/cldr/es_VE.json", import.meta.url))).json();
+        case "et": return (await fetch(new URL("../assets/cldr/et.json", import.meta.url))).json();
+        case "fa": return (await fetch(new URL("../assets/cldr/fa.json", import.meta.url))).json();
+        case "fi": return (await fetch(new URL("../assets/cldr/fi.json", import.meta.url))).json();
+        case "fr": return (await fetch(new URL("../assets/cldr/fr.json", import.meta.url))).json();
+        case "fr_BE": return (await fetch(new URL("../assets/cldr/fr_BE.json", import.meta.url))).json();
+        case "fr_CA": return (await fetch(new URL("../assets/cldr/fr_CA.json", import.meta.url))).json();
+        case "fr_CH": return (await fetch(new URL("../assets/cldr/fr_CH.json", import.meta.url))).json();
+        case "fr_LU": return (await fetch(new URL("../assets/cldr/fr_LU.json", import.meta.url))).json();
+        case "he": return (await fetch(new URL("../assets/cldr/he.json", import.meta.url))).json();
+        case "hi": return (await fetch(new URL("../assets/cldr/hi.json", import.meta.url))).json();
+        case "hr": return (await fetch(new URL("../assets/cldr/hr.json", import.meta.url))).json();
+        case "hu": return (await fetch(new URL("../assets/cldr/hu.json", import.meta.url))).json();
+        case "id": return (await fetch(new URL("../assets/cldr/id.json", import.meta.url))).json();
+        case "it": return (await fetch(new URL("../assets/cldr/it.json", import.meta.url))).json();
+        case "it_CH": return (await fetch(new URL("../assets/cldr/it_CH.json", import.meta.url))).json();
+        case "ja": return (await fetch(new URL("../assets/cldr/ja.json", import.meta.url))).json();
+        case "kk": return (await fetch(new URL("../assets/cldr/kk.json", import.meta.url))).json();
+        case "ko": return (await fetch(new URL("../assets/cldr/ko.json", import.meta.url))).json();
+        case "lt": return (await fetch(new URL("../assets/cldr/lt.json", import.meta.url))).json();
+        case "lv": return (await fetch(new URL("../assets/cldr/lv.json", import.meta.url))).json();
+        case "ms": return (await fetch(new URL("../assets/cldr/ms.json", import.meta.url))).json();
+        case "mk": return (await fetch(new URL("../assets/cldr/mk.json", import.meta.url))).json();
+        case "nb": return (await fetch(new URL("../assets/cldr/nb.json", import.meta.url))).json();
+        case "nl": return (await fetch(new URL("../assets/cldr/nl.json", import.meta.url))).json();
+        case "nl_BE": return (await fetch(new URL("../assets/cldr/nl_BE.json", import.meta.url))).json();
+        case "pl": return (await fetch(new URL("../assets/cldr/pl.json", import.meta.url))).json();
+        case "pt": return (await fetch(new URL("../assets/cldr/pt.json", import.meta.url))).json();
+        case "pt_PT": return (await fetch(new URL("../assets/cldr/pt_PT.json", import.meta.url))).json();
+        case "ro": return (await fetch(new URL("../assets/cldr/ro.json", import.meta.url))).json();
+        case "ru": return (await fetch(new URL("../assets/cldr/ru.json", import.meta.url))).json();
+        case "ru_UA": return (await fetch(new URL("../assets/cldr/ru_UA.json", import.meta.url))).json();
+        case "sk": return (await fetch(new URL("../assets/cldr/sk.json", import.meta.url))).json();
+        case "sl": return (await fetch(new URL("../assets/cldr/sl.json", import.meta.url))).json();
+        case "sr": return (await fetch(new URL("../assets/cldr/sr.json", import.meta.url))).json();
+        case "sr_Latn": return (await fetch(new URL("../assets/cldr/sr_Latn.json", import.meta.url))).json();
+        case "sv": return (await fetch(new URL("../assets/cldr/sv.json", import.meta.url))).json();
+        case "th": return (await fetch(new URL("../assets/cldr/th.json", import.meta.url))).json();
+        case "tr": return (await fetch(new URL("../assets/cldr/tr.json", import.meta.url))).json();
+        case "uk": return (await fetch(new URL("../assets/cldr/uk.json", import.meta.url))).json();
+        case "vi": return (await fetch(new URL("../assets/cldr/vi.json", import.meta.url))).json();
+        case "zh_CN": return (await fetch(new URL("../assets/cldr/zh_CN.json", import.meta.url))).json();
+        case "zh_HK": return (await fetch(new URL("../assets/cldr/zh_HK.json", import.meta.url))).json();
+        case "zh_SG": return (await fetch(new URL("../assets/cldr/zh_SG.json", import.meta.url))).json();
+        case "zh_TW": return (await fetch(new URL("../assets/cldr/zh_TW.json", import.meta.url))).json();
+        default: throw "unknown locale";
+    }
+};
+const importAndCheck = async (localeId) => {
+    const data = await importCldrJson(localeId);
+    if (typeof data === "string" && data.endsWith(".json")) {
+        throw new Error(`[LocaleData] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the "Assets" documentation for more information.`);
+    }
+    return data;
+};
+availableLocales.forEach(localeId => registerLocaleDataLoader(localeId, importAndCheck));
+//# sourceMappingURL=LocaleData-fetch.js.map
